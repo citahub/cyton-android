@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cita.wallet.citawallet.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:title="@string/title_import_wallet"
+        app:isShowLeft="true"
+        app:isShowRight="true"
+        app:right_img="@drawable/qrcode_menu"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="@string/import_wallet_content"
+        android:textColor="@color/font_black"
+        android:textSize="14sp"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_wallet_name"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_marginTop="10dp"
+        android:hint="keystore"
+        android:gravity="start"
+        android:padding="5dp"
+        android:background="@drawable/edit_input_shape"
+        android:layout_width="match_parent"
+        android:layout_height="160dp" />
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/read_service_file"/>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/create_wallet_ok"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_corner_shape"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/font_black"
+        android:text="@string/import_wallet"/>
+
+
+</LinearLayout>

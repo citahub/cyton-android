@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cita.wallet.citawallet.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:title="@string/title_transfer"
+        app:isShowLeft="true"
+        app:isShowRight="true"
+        app:right_img="@drawable/qrcode_menu"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/transfer_token_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerInside"/>
+
+        <TextView
+            android:id="@+id/transfer_token_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:textSize="20sp"
+            android:textColor="@color/font_black"/>
+
+        <TextView
+            android:id="@+id/transfer_token_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:textSize="20sp"
+            android:textColor="@color/font_black"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="收款地址"
+        android:textColor="@color/font_black"
+        android:textSize="14sp"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_receive_address"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="65dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="转账金额"
+        android:textColor="@color/font_black"
+        android:textSize="14sp"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_transfer_value"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="钱包密码"
+        android:textColor="@color/font_black"
+        android:textSize="14sp"/>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_wallet_password"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"/>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/transfer_button"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_corner_shape"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/font_black"
+        android:text="@string/ok"/>
+
+
+</LinearLayout>

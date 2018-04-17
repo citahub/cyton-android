@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/chain_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="钱包A"
+                android:textColor="@color/font_black"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/chain_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="北京创意文化公司"
+                android:textColor="@color/font_black"
+                android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/chain_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="web3.abc.com"
+                android:textColor="@color/font_black"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="移除"
+            android:textSize="15sp"
+            android:textColor="@color/font_black"
+            android:background="@drawable/button_corner_shape"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

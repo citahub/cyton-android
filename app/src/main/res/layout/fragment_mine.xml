@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cita.wallet.citawallet.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:title="我"
+        app:isShowLeft="false"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/wallet_manage_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/wallet"
+            android:drawablePadding="3dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/font_black"
+            android:textSize="16sp"
+            android:text="@string/wallet_manage"/>
+
+        <TextView
+            android:id="@+id/chain_manage_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/chain"
+            android:drawablePadding="3dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/font_black"
+            android:textSize="16sp"
+            android:text="@string/chain_manage"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/default_gray_c"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:drawableEnd="@drawable/arrow"
+            android:gravity="center_vertical"
+            android:text="版本日志"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:drawableEnd="@drawable/arrow"
+            android:gravity="center_vertical"
+            android:text="隐私条款"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:drawableEnd="@drawable/arrow"
+            android:gravity="center_vertical"
+            android:text="关于软件"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+    </LinearLayout>
+
+</LinearLayout>

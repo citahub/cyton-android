@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context=".activity.WalletActivity"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_wallet">
 
     <TextView
         android:id="@+id/cita_account"

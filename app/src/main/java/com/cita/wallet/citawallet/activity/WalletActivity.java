@@ -1,4 +1,4 @@
-package com.cita.wallet.citawallet;
+package com.cita.wallet.citawallet.activity;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cita.wallet.citawallet.R;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.account.Account;
@@ -32,10 +34,10 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class WalletActivity extends AppCompatActivity {
 
     private Web3j service;
-    private MainActivity mainActivity;
+    private WalletActivity mainActivity;
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     private static final String ACCOUNT = "0dbd369a741319fa5107733e2c9db9929093e3c7";
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_wallet);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mainActivity = this;

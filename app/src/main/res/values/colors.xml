@@ -4,4 +4,29 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
+    <color name="font_black">#333333</color>
+
+
+    <color name="navigation_tab_background_color">#fff5f5f5</color>
+
+    <color name="default_black">#333333</color>
+    <color name="default_separate_gray">#d7d7d7</color>
+    <color name="default_gray_e1">#ffe1e1e1</color>
+    <color name="default_gray_9">#ff999999</color>
+    <color name="default_gray_6">#ff666666</color>
+    <color name="default_background">#fff4f4f4</color>
+    <color name="default_gray_c9">#ffc9c9c9</color>
+    <color name="default_gray_d5">#ffd5d5d5</color>
+    <color name="default_title">#f9f9f9</color>
+    <color name="default_white_f9">#fff9f9f9</color>
+    <color name="default_white_f4">#fff4f4f4</color>
+    <color name="default_gray_c">#cccccc</color>
+    <color name="default_gray_a">#ffaaaaaa</color>
+    <color name="default_title_bg">#3F51B5</color>
+    <color name="default_title_text_color">#ffffffff</color>
+    <color name="white">#ffffffff</color>
+    <color name="red">#ffff4d55</color>
+    <color name="orange">#ff9d45</color>
+    <color name="code_yellow">#ffbd54</color>
+
 </resources>
