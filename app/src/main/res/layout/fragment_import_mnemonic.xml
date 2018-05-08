@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/default_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:background="@color/white"
+            android:paddingStart="@dimen/default_margin"
+            android:text="@string/import_wallet_content"
+            android:textColor="@color/font_black"
+            android:textSize="14sp"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edit_wallet_mnemonic"
+            android:padding="5dp"
+            android:layout_margin="@dimen/default_margin"
+            android:hint="助记词，按空格分隔"
+            android:gravity="start"
+            android:background="@drawable/edit_input_shape"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="格式"
+                android:textColor="@color/font_black"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_format"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:entries="@array/mnemonic_format"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@color/default_gray_c"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="钱包名称"
+                android:textColor="@color/font_black"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_wallet_name"
+                android:background="@android:color/white"
+                android:gravity="end|center_vertical"
+                android:hint="请输入钱包名称"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@color/default_gray_c"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="0.5dp"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:gravity="center_vertical"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="解锁密码"
+                android:textColor="@color/font_black"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_wallet_password"
+                android:layout_marginStart="@dimen/default_margin"
+                android:background="@android:color/white"
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:textSize="12sp"
+                android:gravity="end|center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@color/default_gray_c"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="0.5dp"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:gravity="center_vertical"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="重复密码"
+                android:textColor="@color/font_black"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_wallet_repassword"
+                android:layout_marginStart="@dimen/default_margin"
+                android:background="@android:color/white"
+                android:hint="请重新输入密码"
+                android:inputType="textPassword"
+                android:textSize="12sp"
+                android:gravity="end|center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@color/default_gray_c"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            android:layout_marginTop="20dp" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/wallet_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/read_service_file"/>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/import_mnemonic_button"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_corner_blue_shape"
+            android:layout_gravity="center_horizontal"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:text="@string/import_wallet"/>
+
+    </LinearLayout>
+
+</ScrollView>

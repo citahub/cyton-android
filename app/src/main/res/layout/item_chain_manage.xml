@@ -45,7 +45,7 @@
             android:text="移除"
             android:textSize="15sp"
             android:textColor="@color/font_black"
-            android:background="@drawable/button_corner_shape"
+            android:background="@drawable/button_corner_blue_shape"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"/>
 

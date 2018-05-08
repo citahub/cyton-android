@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.cita.wallet.citawallet.custom.TitleBar
+    <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -26,7 +26,7 @@
         android:id="@+id/button_import_chain"
         android:layout_width="120dp"
         android:layout_height="40dp"
-        android:background="@drawable/button_corner_shape"
+        android:background="@drawable/button_corner_blue_shape"
         android:layout_marginTop="60dp"
         android:text="批量导入"
         android:textColor="@color/font_black"

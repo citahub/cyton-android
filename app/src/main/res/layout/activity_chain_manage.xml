@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.cita.wallet.citawallet.custom.TitleBar
+    <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/button_corner_shape"
+            android:background="@drawable/button_corner_blue_shape"
             android:text="@string/add_chain"/>
 
         <android.support.v7.widget.AppCompatButton
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_marginStart="30dp"
-            android:background="@drawable/button_corner_shape"
+            android:background="@drawable/button_corner_blue_shape"
             android:text="@string/import_chain"/>
 
     </LinearLayout>
