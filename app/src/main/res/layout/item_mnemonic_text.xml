@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tag_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="backup"
+    android:textSize="14sp"
+    android:clickable="true"
+    android:textColor="@color/default_black"
+    android:padding="6dp"
+    android:layout_marginEnd="8dp"
+    android:background="@drawable/rectangle_border_white_corner">
+
+</TextView>

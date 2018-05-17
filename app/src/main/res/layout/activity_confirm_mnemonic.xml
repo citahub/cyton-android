@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:zhy="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.nervos.neuron.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:title="@string/confirm_mnemonic"
+        app:isShowLeft="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:textColor="@color/warning_font"
+        android:drawableStart="@drawable/warning"
+        android:drawablePadding="5dp"
+        android:textSize="12sp"
+        android:text="@string/confirm_mnemonic_warning"
+        android:padding="10dp" />
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/mnemonic_text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        zhy:max_select="-1"
+        android:layout_margin="@dimen/default_margin"
+        android:background="@color/default_white_f4"
+        android:padding="5dp">
+    </com.zhy.view.flowlayout.TagFlowLayout>
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/mnemonic_tag_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zhy:max_select="-1"
+        android:layout_margin="@dimen/default_margin">
+    </com.zhy.view.flowlayout.TagFlowLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/backup_complete"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:background="@drawable/button_corner_blue_shape"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/backup_complete"/>
+
+
+</LinearLayout>

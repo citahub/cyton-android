@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0C92F7</color>
-    <color name="colorPrimaryDark">#0C92F7</color>
-    <color name="default_title_bg">#0C92F7</color>
+    <color name="colorPrimary">#2E46F0</color>
+    <color name="colorPrimaryDark">#2E46F0</color>
+    <color name="default_title_bg">#2E46F0</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
     <color name="font_black">#333333</color>
 
 
     <color name="navigation_tab_background_color">#fff5f5f5</color>
+    <color name="warning_background">#FFFEED</color>
+    <color name="warning_font">#FE8227</color>
 
     <color name="default_black">#333333</color>
     <color name="default_separate_gray">#d7d7d7</color>

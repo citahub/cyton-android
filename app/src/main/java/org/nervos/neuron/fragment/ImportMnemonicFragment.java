@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImportMnemonicFragment extends Fragment {
+public class ImportMnemonicFragment extends BaseFragment {
 
     List<String> formats;
     List<String> paths;
@@ -47,8 +48,7 @@ public class ImportMnemonicFragment extends Fragment {
     private AppCompatEditText rePasswordEdit;
     private AppCompatEditText mnemonicEdit;
     private AppCompatButton importButton;
-    private RadioButton radioButton;
-    private ProgressBar progressBar;
+    private AppCompatCheckBox checkBox;
 
     @Nullable
     @Override
@@ -60,8 +60,7 @@ public class ImportMnemonicFragment extends Fragment {
         passwordEdit = view.findViewById(R.id.edit_wallet_password);
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         mnemonicEdit = view.findViewById(R.id.edit_wallet_mnemonic);
-        radioButton = view.findViewById(R.id.wallet_radio);
-        progressBar = view.findViewById(R.id.progress_bar);
+        checkBox = view.findViewById(R.id.wallet_checkbox);
         return view;
     }
 
@@ -91,7 +90,7 @@ public class ImportMnemonicFragment extends Fragment {
                         rePasswordEdit.getText().toString().trim())) {
                     Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
                 } else {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showProgressBar("钱包导入中...");
                     cachedThreadPool.execute(() -> {
                         try {
                             WalletEntity walletEntity = WalletEntity.fromMnemonic(
@@ -104,7 +103,7 @@ public class ImportMnemonicFragment extends Fragment {
                             WalletItem walletItem1 = DBUtil.getCurrentWallet(getContext());
 
                             rePasswordEdit.post(() -> {
-                                progressBar.setVisibility(View.INVISIBLE);
+                                dismissProgressBar();
                                 String name = walletItem1 == null? "wallet is null" : walletItem1.address;
                                 Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
                             });
@@ -167,7 +166,7 @@ public class ImportMnemonicFragment extends Fragment {
                 setCreateButtonStatus(isWalletValid());
             }
         });
-        radioButton.setOnCheckedChangeListener((compoundButton, b) ->{
+        checkBox.setOnCheckedChangeListener((compoundButton, b) ->{
             check4 = b;
             setCreateButtonStatus(isWalletValid());
         } );

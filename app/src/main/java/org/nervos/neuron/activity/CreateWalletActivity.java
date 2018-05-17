@@ -23,7 +23,7 @@ import org.web3j.crypto.CipherException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CreateWalletActivity extends AppCompatActivity {
+public class CreateWalletActivity extends BaseActivity {
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     private static final String MnemonicPath = "m/44'/60'/0'/0/0";
@@ -33,8 +33,6 @@ public class CreateWalletActivity extends AppCompatActivity {
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
     private AppCompatButton createWalletButton;
-    private AppCompatRadioButton radioButton;
-    private ProgressBar progressBar;
 
     private WalletEntity mWalletEntity;
 
@@ -54,8 +52,6 @@ public class CreateWalletActivity extends AppCompatActivity {
         passwordEdit = findViewById(R.id.edit_wallet_password);
         rePasswordEdit = findViewById(R.id.edit_wallet_password_repeat);
         createWalletButton = findViewById(R.id.create_wallet_button);
-        radioButton = findViewById(R.id.wallet_radio);
-        progressBar = findViewById(R.id.progress_bar);
     }
 
     private void initListener() {
@@ -64,23 +60,20 @@ public class CreateWalletActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(CreateWalletActivity.this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateWalletActivity.this, "两次输入的密码不一致",
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showProgressBar("钱包创建中...");
                     cachedThreadPool.execute(() -> {
-                        try {
-                            mWalletEntity = WalletEntity.createWithMnemonic(
-                                    passwordEdit.getText().toString().trim(), MnemonicPath);
-                            rePasswordEdit.post(() -> {
-                                Log.d("wallet", mWalletEntity.getMnemonic());
-                                progressBar.setVisibility(View.INVISIBLE);
-                                Intent intent = new Intent(CreateWalletActivity.this, BackupMnemonicActivity.class);
-                                 intent.putExtra(EXTRA_MNEMONIC, mWalletEntity.getMnemonic());
-                                startActivity(intent);
-                            });
-                        } catch (CipherException e) {
-                            e.printStackTrace();
-                        }
+                        mWalletEntity = WalletEntity.createWithMnemonic(
+                                passwordEdit.getText().toString().trim(), MnemonicPath);
+                        rePasswordEdit.post(() -> {
+                            dismissProgressBar();
+                            Intent intent = new Intent(CreateWalletActivity.this,
+                                    BackupMnemonicActivity.class);
+                            intent.putExtra(EXTRA_MNEMONIC, mWalletEntity.getMnemonic());
+                            startActivity(intent);
+                        });
                     });
                 }
             }
@@ -89,8 +82,9 @@ public class CreateWalletActivity extends AppCompatActivity {
     }
 
 
+
     private boolean isWalletValid() {
-        return check1 && check2 && check3 && check4;
+        return check1 && check2 && check3;
     }
 
     private void setCreateButtonStatus(boolean status) {
@@ -100,7 +94,7 @@ public class CreateWalletActivity extends AppCompatActivity {
     }
 
 
-    private boolean check1 = false, check2 = false, check3 = false, check4 = false;
+    private boolean check1 = false, check2 = false, check3 = false;
     private void checkWalletStatus() {
         walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
             @Override
@@ -126,10 +120,6 @@ public class CreateWalletActivity extends AppCompatActivity {
                 setCreateButtonStatus(isWalletValid());
             }
         });
-        radioButton.setOnCheckedChangeListener((compoundButton, b) ->{
-            check4 = b;
-            setCreateButtonStatus(isWalletValid());
-        } );
     }
 
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,12 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="发现"
-        app:isShowLeft="false"/>
-
-    <com.just.agentweb.AgentWebView
-        android:id="@+id/discover_webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        app:title="@string/title_token_management"
+        app:isShowLeft="true"
+        app:isShowRight="true"
+        app:right_img="@drawable/add"/>
 
 </LinearLayout>

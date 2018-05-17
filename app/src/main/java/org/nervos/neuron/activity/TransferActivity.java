@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.nervos.neuron.config.BlockChainConfig;
+import org.nervos.neuron.service.CITAJsonRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.custom.TitleBar;
@@ -50,7 +50,7 @@ public class TransferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
-        BlockChainConfig.init();
+        CITAJsonRpcService.init();
 
         initView();
         initListener();
@@ -89,10 +89,10 @@ public class TransferActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             cachedThreadPool.execute(() -> {
                 String value = transferValueEdit.getText().toString().trim();
-                BlockChainConfig.transfer(CONTRACT_ADDRESS,
+                CITAJsonRpcService.transfer(CONTRACT_ADDRESS,
                     receiveAddressEdit.getText().toString().trim(),
                     Long.parseLong(value),
-                    new BlockChainConfig.OnTransferResultListener() {
+                    new CITAJsonRpcService.OnTransferResultListener() {
                         @Override
                         public void onSuccess(EthGetTransactionReceipt receipt) {
                             Toast.makeText(TransferActivity.this,
@@ -114,7 +114,7 @@ public class TransferActivity extends AppCompatActivity {
 
     private void getBalance() {
         cachedThreadPool.execute(() -> {
-            TokenItem tokenItem = BlockChainConfig.getTokenInfo(CONTRACT_ADDRESS);
+            TokenItem tokenItem = CITAJsonRpcService.getTokenInfo(CONTRACT_ADDRESS);
             tokenAmountText.post(() -> {
                 if (tokenItem != null) {
                     tokenAmountText.setText(tokenItem.amount);

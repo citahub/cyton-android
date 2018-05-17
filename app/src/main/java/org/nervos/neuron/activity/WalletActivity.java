@@ -160,7 +160,7 @@ public class WalletActivity extends AppCompatActivity {
         cachedThreadPool.execute(() -> {
             try {
                 AbiDefinition balanceOf = mContract.getFunctionAbi("balanceOf", 1);
-                Object object = account.callContract(CONTRACT_ADDRESS, balanceOf, randomNonce(), quota, version, ACCOUNT);
+                Object object = account.callContract(CONTRACT_ADDRESS, balanceOf, randomNonce(), quota, version, 0, ACCOUNT);
                 balanceText.post(() -> balanceText.setText(String.format("余额： %s CIT", object.toString())));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -173,7 +173,7 @@ public class WalletActivity extends AppCompatActivity {
         try {
             AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
             EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(CONTRACT_ADDRESS,
-                    transfer, randomNonce(), quota, version, address, BigInteger.valueOf(value));
+                    transfer, randomNonce(), quota, version, 0, address, BigInteger.valueOf(value));
 //            asyncGetReceipt(ethSendTransaction.getSendTransactionResult().getHash(), new ReceiptListener() {
 //                @Override
 //                public void getReceipt(EthGetTransactionReceipt receipt) {

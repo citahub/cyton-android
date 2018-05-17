@@ -1,4 +1,4 @@
-package org.nervos.neuron.config;
+package org.nervos.neuron.service;
 
 public class WalletConfig {
 

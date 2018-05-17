@@ -7,16 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
@@ -24,18 +21,16 @@ import org.nervos.neuron.util.DBUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 
-import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImportKeystoreFragment extends Fragment {
+public class ImportKeystoreFragment extends BaseFragment {
 
     private AppCompatEditText keystoreEdit;
     private AppCompatEditText walletNameEdit;
     private AppCompatEditText passwordEdit;
     private AppCompatCheckBox checkBox;
     private AppCompatButton importButton;
-    private ProgressBar progressBar;
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -48,7 +43,6 @@ public class ImportKeystoreFragment extends Fragment {
         passwordEdit = view.findViewById(R.id.edit_wallet_password);
         checkBox = view.findViewById(R.id.wallet_checkbox);
         importButton = view.findViewById(R.id.import_keystore_button);
-        progressBar = view.findViewById(R.id.progress_bar);
         return view;
     }
 
@@ -61,12 +55,10 @@ public class ImportKeystoreFragment extends Fragment {
 
     private void initListener() {
         importButton.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
+            showProgressBar("钱包导入中...");
             cachedThreadPool.execute(() -> {
                 generateAndSaveWallet();
-                passwordEdit.post(() -> {
-                    progressBar.setVisibility(View.INVISIBLE);
-                });
+                passwordEdit.post(this::dismissProgressBar);
             });
         });
     }
@@ -74,16 +66,12 @@ public class ImportKeystoreFragment extends Fragment {
 
     private void generateAndSaveWallet() {
         try {
-            Log.d("wallet", "time1: " + System.currentTimeMillis());
             WalletEntity walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(),
                     keystoreEdit.getText().toString().trim());
-            Log.d("wallet", "time2: " + System.currentTimeMillis());
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
             DBUtil.saveWallet(getContext(), walletItem);
-            Log.d("wallet", "time3: " + System.currentTimeMillis());
-            Log.d("wallet", "address: " + walletItem.address);
         } catch (CipherException e) {
             e.printStackTrace();
         }

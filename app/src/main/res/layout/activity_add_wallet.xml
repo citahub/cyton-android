@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.nervos.neuron.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:title="@string/title_add_wallet"
+        app:isShowLeft="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@color/default_white_f4"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:padding="@dimen/default_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="没有「找回密码」!"
+            android:textColor="@color/default_black"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="您的钱包不会被保存在云端，无法提供找回服务，请您谨慎保管"
+            android:textAlignment="center"
+            android:textColor="@color/default_gray_9"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawableLeft="@drawable/selected"
+        android:text="我已充分了解本地钱包风险"
+        android:textSize="12sp"
+        android:textColor="@color/default_gray_6"
+        android:drawablePadding="3dp"
+        android:layout_marginTop="10dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/create_wallet_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:background="@drawable/button_corner_blue_shape"
+        android:text="生成钱包"
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
+
+
+    <TextView
+        android:id="@+id/import_wallet_button"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:text="导入钱包"
+        android:textColor="@color/font_blue"
+        android:textSize="14sp"/>
+
+</LinearLayout>

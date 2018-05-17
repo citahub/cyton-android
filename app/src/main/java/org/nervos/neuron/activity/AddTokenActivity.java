@@ -6,37 +6,44 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.nervos.neuron.config.BlockChainConfig;
+import org.nervos.neuron.service.CITAJsonRpcService;
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.TokenItem;
-import com.facebook.drawee.view.SimpleDraweeView;
+import org.nervos.neuron.service.ETHJsonRpcService;
+
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AddTokenActivity extends AppCompatActivity {
+public class AddTokenActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
-    public static final String CONTRACT_ADDRESS = "0xbd51c4669a21df5afd1fb661d5aab67171fbec35";
 
     private ImageView qrcodeImage;
-    private SimpleDraweeView tokenImage;
-    private TextView tokenAmountText;
-    private AppCompatButton saveButton;
-    private AppCompatEditText addressEdit;
+    private AppCompatButton addTokenButton;
+    private AppCompatEditText contractAddressEdit;
+    private AppCompatEditText tokenNameEdit;
+    private AppCompatEditText tokenSymbolEdit;
+    private AppCompatEditText tokenDecimalEdit;
+    private AppCompatSpinner blockChainSpinner;
 
     private String walletName;
     private String walletAddress;
+    private List<String> chainList;
+    private String chainItem;
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -46,29 +53,29 @@ public class AddTokenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_token);
 
         initView();
-        initListener();
         initData();
-        BlockChainConfig.init();
-    }
-
-    private void initData() {
-        Intent intent = getIntent();
-        walletName = intent.getStringExtra(WalletFragment.EXTRA_WALLET_NAME);
-        walletAddress = intent.getStringExtra(WalletFragment.EXTRA_WALLET_ADDRESS);
-        ((TextView)findViewById(R.id.wallet_address)).setText(String.format("%s", walletAddress));
-        ((TextView)findViewById(R.id.wallet_name)).setText(walletName);
+        initListener();
+        CITAJsonRpcService.init();
+        ETHJsonRpcService.init();
     }
 
     private void initView() {
-        qrcodeImage = findViewById(R.id.qrcode_scan_image);
-        tokenImage = findViewById(R.id.token_image);
-        tokenAmountText = findViewById(R.id.token_amount);
-        saveButton = findViewById(R.id.token_save);
-        addressEdit = findViewById(R.id.address_edit);
+        qrcodeImage = findViewById(R.id.add_token_contract_address_scan);
+        addTokenButton = findViewById(R.id.add_token_button);
+        contractAddressEdit = findViewById(R.id.edit_add_token_contract_address);
+        tokenNameEdit = findViewById(R.id.edit_add_token_name);
+        tokenSymbolEdit = findViewById(R.id.edit_add_token_symbol);
+        tokenDecimalEdit = findViewById(R.id.edit_add_token_decimal);
+        blockChainSpinner = findViewById(R.id.spinner_add_token_block_chain);
+    }
+
+    private void initData() {
+        chainList = Arrays.asList(getResources().getStringArray(R.array.chain_items));
+        chainItem = chainList.get(0);
     }
 
     private void initListener() {
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        addTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -83,24 +90,46 @@ public class AddTokenActivity extends AppCompatActivity {
             }
         });
 
-        addressEdit.addTextChangedListener(new TextWatcher() {
+        blockChainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                chainItem = chainList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        contractAddressEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                cachedThreadPool.execute(() -> {
-                    TokenItem tokenItem = BlockChainConfig.getTokenInfo(s.toString());
-                    tokenAmountText.post(() -> {
-                        tokenAmountText.setText(String.format("%s %s", tokenItem.amount, tokenItem.name));
-                    });
-                });
 
             }
             @Override
             public void afterTextChanged(Editable s) {
-
+                showProgressBar();
+                cachedThreadPool.execute(() -> {
+                    TokenItem tokenItem;
+                    if (TextUtils.equals(chainItem, chainList.get(1))) {
+                        tokenItem = CITAJsonRpcService.getTokenInfo(s.toString());
+                    } else {
+                        tokenItem = ETHJsonRpcService.getTokenInfo(s.toString());
+                    }
+                    tokenNameEdit.post(() -> {
+                        if (tokenItem != null) {
+                            tokenNameEdit.setText(tokenItem.name);
+                            tokenSymbolEdit.setText(tokenItem.symbol);
+                            tokenDecimalEdit.setText(String.valueOf(tokenItem.decimals));
+                            dismissProgressBar();
+                        }
+                    });
+                });
             }
         });
     }
@@ -109,7 +138,6 @@ public class AddTokenActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
             if (null != data) {
                 Bundle bundle = data.getExtras();
                 if (bundle == null) {
@@ -117,7 +145,7 @@ public class AddTokenActivity extends AppCompatActivity {
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    addressEdit.setText(result);
+                    contractAddressEdit.setText(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(AddTokenActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }

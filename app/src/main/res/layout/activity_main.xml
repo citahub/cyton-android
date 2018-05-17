@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/default_background">
 
     <RelativeLayout
         android:id="@+id/navigation_layout"
@@ -12,52 +13,45 @@
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/navigation_tab_background_color"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/navigation_discover"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:gravity="center"
+                android:id="@+id/navigation_application"
+                style="@style/tab_bottom_radio_button_style"
+                android:drawableTop="@drawable/tab_application"
                 android:checked="false"
-                android:background="@drawable/tab_background_color"
-                android:textColor="@color/tab_text_color"
-                android:textSize="@dimen/navigation_tab_text_size"
-                android:text="发现" />
+                android:text="@string/tab_application" />
 
             <RadioButton
                 android:id="@+id/navigation_wallet"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:checked="true"
-                android:gravity="center"
-                android:background="@drawable/tab_background_color"
-                android:textColor="@color/tab_text_color"
-                android:textSize="@dimen/navigation_tab_text_size"
-                android:text="钱包" />
-
+                style="@style/tab_bottom_radio_button_style"
+                android:drawableTop="@drawable/tab_wallet"
+                android:text="@string/tab_wallet" />
 
             <RadioButton
-                android:id="@+id/navigation_mine"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:gravity="center"
-                android:background="@drawable/tab_background_color"
-                android:textColor="@color/tab_text_color"
-                android:textSize="@dimen/navigation_tab_text_size"
-                android:text="我" />
+                android:id="@+id/navigation_transaction"
+                style="@style/tab_bottom_radio_button_style"
+                android:drawableTop="@drawable/tab_transaction"
+                android:text="@string/tab_transaction" />
+
+            <RadioButton
+                android:id="@+id/navigation_settings"
+                style="@style/tab_bottom_radio_button_style"
+                android:drawableTop="@drawable/tab_settings"
+                android:text="@string/tab_settings" />
 
 
         </RadioGroup>
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/main_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@id/navigation_layout"
+        android:background="@color/default_gray_d5"/>
 
 
     <FrameLayout
@@ -65,6 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_above="@id/navigation_layout" />
+        android:layout_above="@id/main_line" />
 
 </RelativeLayout>

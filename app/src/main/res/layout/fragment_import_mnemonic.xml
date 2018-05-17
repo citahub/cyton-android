@@ -172,27 +172,20 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@color/default_gray_c"/>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/wallet_checkbox"
+            android:layout_marginTop="@dimen/default_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="invisible"
-            android:layout_marginTop="20dp" />
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/wallet_radio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/read_service_file"/>
 
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/import_mnemonic_button"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_margin="@dimen/default_margin"
             android:background="@drawable/button_corner_blue_shape"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"

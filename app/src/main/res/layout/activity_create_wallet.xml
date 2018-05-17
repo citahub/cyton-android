@@ -15,11 +15,14 @@
         app:isShowLeft="true"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center_vertical"
-        android:paddingStart="5dp"
-        android:text="钱包注意事项"
+        android:paddingStart="15dp"
+        android:background="#FFFEED"
+        android:drawableStart="@drawable/warning"
+        android:drawablePadding="5dp"
+        android:text="此密码将被用于保护私钥和交易授权"
         android:textColor="#F97C00"
         android:textSize="12sp"/>
 
@@ -51,6 +54,12 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/default_gray_d5"
+        android:layout_marginStart="@dimen/default_margin"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -81,6 +90,11 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/default_gray_d5"
+        android:layout_marginStart="@dimen/default_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -112,52 +126,23 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="invisible"
-        android:layout_marginTop="20dp"
-        />
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="30dp"
-        android:gravity="bottom">
+        android:layout_height="0.5dp"
+        android:background="@color/default_gray_d5"
+        android:layout_marginStart="@dimen/default_margin"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/wallet_radio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:textSize="12sp"
-                android:textColor="@color/default_gray_6"
-                android:text="我已充分了解本地钱包风险"/>
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/create_wallet_button"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:enabled="false"
-                android:background="@drawable/button_corner_gray_shape"
-                android:layout_marginTop="10dp"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:text="@string/create_wallet"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/create_wallet_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:enabled="false"
+        android:background="@drawable/button_corner_gray_shape"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/next_action"/>
 
 </LinearLayout>

@@ -8,6 +8,11 @@
         <item>Fabric</item>
     </string-array>
 
+    <string-array name="chain_items">
+        <item>以太坊Mainnet</item>
+        <item>宇宙链【001】</item>
+    </string-array>
+
     <string-array name="mnemonic_format">
         <item>m/44\'/60\'/0\'/0/0 Jaxx, Metamask(ETH)</item>
         <item>m/44\'/60\'/0\'/0 Ledger(ETH) </item>

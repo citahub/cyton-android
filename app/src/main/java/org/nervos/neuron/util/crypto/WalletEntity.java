@@ -109,7 +109,8 @@ public class WalletEntity {
      * @return
      * @throws CipherException
      */
-    public static WalletEntity createWithMnemonic(String password, String path) throws CipherException {
+    public static WalletEntity createWithMnemonic(String password, String path) {
+
         WalletEntity wa = new WalletEntity();
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
@@ -117,7 +118,11 @@ public class WalletEntity {
         byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         if (password != null) {
-            wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
+            try {
+                wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
+            } catch (CipherException e) {
+                e.printStackTrace();
+            }
         }
         wa.credentials = Credentials.create(ecKeyPair);
         wa.walletPass = password;

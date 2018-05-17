@@ -1,7 +1,7 @@
 package org.nervos.neuron.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private AppFragment appFragment;
     private WalletFragment walletFragment;
     private SettingsFragment settingsFragment;
+    private TransactionFragment transactionFragment;
     private FragmentManager fMgr;
 
     @Override
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView(){
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);
-        fMgr = getFragmentManager();
+        fMgr = getSupportFragmentManager();
     }
 
     private void initListener() {
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction transaction = fMgr.beginTransaction();
             hideFragments(transaction);
             switch (checkedId) {
-                case R.id.navigation_discover:
+                case R.id.navigation_application:
                     if(appFragment == null){
                         appFragment = new AppFragment();
                         transaction.add(R.id.fragment, appFragment);
@@ -61,12 +63,20 @@ public class MainActivity extends AppCompatActivity {
                         transaction.show(walletFragment);
                     }
                     break;
-                case R.id.navigation_mine:
+                case R.id.navigation_settings:
                     if(settingsFragment == null){
                         settingsFragment = new SettingsFragment();
                         transaction.add(R.id.fragment, settingsFragment);
                     } else {
                         transaction.show(settingsFragment);
+                    }
+                    break;
+                case R.id.navigation_transaction:
+                    if(transactionFragment == null){
+                        transactionFragment = new TransactionFragment();
+                        transaction.add(R.id.fragment, transactionFragment);
+                    } else {
+                        transaction.show(transactionFragment);
                     }
                     break;
                 default:
@@ -92,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setNavigationItem(String tag) {
         if (TextUtils.equals(tag, AppFragment.TAG)) {
-            navigation.check(R.id.navigation_discover);
+            navigation.check(R.id.navigation_application);
         } else if (TextUtils.equals(tag, WalletFragment.TAG)) {
             navigation.check(R.id.navigation_wallet);
+        } else if (TextUtils.equals(tag, TransactionFragment.TAG)) {
+            navigation.check(R.id.navigation_transaction);
         } else if (TextUtils.equals(tag, SettingsFragment.TAG)) {
-            navigation.check(R.id.navigation_mine);
+            navigation.check(R.id.navigation_settings);
         }
     }
 
@@ -110,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (walletFragment != null) {
             transaction.hide(walletFragment);
+        }
+        if (transactionFragment != null) {
+            transaction.hide(transactionFragment);
         }
         if (settingsFragment != null) {
             transaction.hide(settingsFragment);

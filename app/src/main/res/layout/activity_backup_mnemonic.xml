@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,18 +17,48 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/default_black"
-        android:textSize="14sp"
-        android:text="备份助记词非常重要"
-        android:padding="10dp"/>
+        android:background="@color/warning_background"
+        android:textColor="@color/warning_font"
+        android:drawableStart="@drawable/warning"
+        android:drawablePadding="5dp"
+        android:paddingStart="@dimen/default_margin"
+        android:textSize="12sp"
+        android:text="@string/backup_mnemonic_warning1"
+        android:paddingEnd="@dimen/default_margin"
+        android:paddingTop="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:textColor="@color/warning_font"
+        android:drawablePadding="3dp"
+        android:paddingStart="30dp"
+        android:textSize="12sp"
+        android:text="@string/backup_mnemonic_warning2"
+        android:paddingEnd="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin"/>
 
     <TextView
         android:id="@+id/mnemonic_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="10dp"
+        android:layout_margin="@dimen/default_margin"
+        android:background="@color/default_white_f4"
+        android:padding="@dimen/default_margin"
         android:textColor="@color/default_black"
         android:textSize="15sp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/backup_next_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/button_corner_blue_shape"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/next_action"/>
 
 </LinearLayout>

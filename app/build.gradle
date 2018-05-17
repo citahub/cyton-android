@@ -64,23 +64,25 @@ dependencies {
     implementation 'org.abstractj.kalium:kalium:0.7.0'
     implementation 'com.google.protobuf:protobuf-java:3.4.0'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
-    implementation 'com.facebook.fresco:fresco:1.8.1'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
     implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
     implementation 'com.just.agentweb:agentweb:4.0.2'
     implementation 'com.google.guava:guava:24.1-android'
-    implementation 'com.just.agentweb:agentweb:4.0.2'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.madgag.spongycastle:prov:1.54.0.0'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
     implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
     implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation files('libs/abi-3.2.0.jar')
-    implementation files('libs/protobuf-3.2.0.jar')
-    implementation files('libs/core-3.2.0.jar')
     implementation files('libs/utils-3.2.0-android.jar')
     implementation files('libs/crypto-3.2.0-android.jar')
+    implementation files('libs/core-3.2.0.jar')
+    implementation files('libs/protobuf-3.2.0.jar')
+    implementation files('libs/infura-3.2.0.jar')
 }

@@ -28,7 +28,7 @@ import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImportPrivateKeyFragment extends Fragment {
+public class ImportPrivateKeyFragment extends BaseFragment {
 
     private AppCompatEditText privateKeyEdit;
     private AppCompatEditText walletNameEdit;
@@ -36,7 +36,6 @@ public class ImportPrivateKeyFragment extends Fragment {
     private AppCompatEditText rePasswordEdit;
     private AppCompatCheckBox checkBox;
     private AppCompatButton importButton;
-    private ProgressBar progressBar;
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -50,7 +49,6 @@ public class ImportPrivateKeyFragment extends Fragment {
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         checkBox = view.findViewById(R.id.wallet_checkbox);
         importButton = view.findViewById(R.id.import_private_key_button);
-        progressBar = view.findViewById(R.id.progress_bar);
         return view;
     }
 
@@ -68,11 +66,11 @@ public class ImportPrivateKeyFragment extends Fragment {
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
             } else {
-                progressBar.setVisibility(View.VISIBLE);
+                showProgressBar("钱包导入中...");
                 cachedThreadPool.execute(() -> {
                     generateAndSaveWallet();
                     passwordEdit.post(() -> {
-                        progressBar.setVisibility(View.INVISIBLE);
+                        dismissProgressBar();
                     });
                 });
             }
@@ -88,7 +86,6 @@ public class ImportPrivateKeyFragment extends Fragment {
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
             DBUtil.saveWallet(getContext(), walletItem);
-            Log.d("wallet", "address: " + walletItem.address);
         } catch (CipherException e) {
             e.printStackTrace();
         }

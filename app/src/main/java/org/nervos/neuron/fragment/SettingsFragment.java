@@ -1,6 +1,6 @@
 package org.nervos.neuron.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +23,7 @@ public class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         walletManageText = view.findViewById(R.id.wallet_manage_text);
         chainManageText = view.findViewById(R.id.chain_manage_text);
         return view;

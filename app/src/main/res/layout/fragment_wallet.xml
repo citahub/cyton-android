@@ -1,92 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
+    
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
         <org.nervos.neuron.custom.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="100dp"
             android:background="@color/colorPrimary"
             app:title="钱包"
-            app:isShowLeft="false"/>
-
-        <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/chain_spinner"
+            app:isShowLeft="true"
+            app:left_img="@drawable/list"
+            app:isShowRight="true"
+            app:right_img="@drawable/add"/>
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_gravity="center_horizontal"
-            android:entries="@array/blockchains"/>
+            android:layout_height="190dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="50dp"
+            android:elevation="10dp"
+            android:background="@drawable/rectangle_border_gray_corner">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/wallet_photo"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/default_margin"
+                android:src="@drawable/wallet_photo"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/default_gray_d5"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
             <TextView
                 android:id="@+id/wallet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="@color/font_black"
-                android:text="钱包A"/>
-            <ImageView
-                android:id="@+id/image_add_wallet"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:text="Watson"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/wallet_photo"/>
+
+            <TextView
+                android:id="@+id/wallet_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_input_add"/>
-        </LinearLayout>
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:lines="1"
+                android:ellipsize="end"
+                android:maxEms="12"
+                android:text="0x12ab3987de32323244343423223"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/wallet_name"/>
+            
+            <LinearLayout
+                android:id="@+id/wallet_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true">
 
+                <FrameLayout
+                    android:id="@+id/wallet_receive_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="200">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/receive"
+                        android:drawablePadding="10dp"
+                        android:layout_gravity="center"
+                        android:text="收款"
+                        android:textColor="@color/default_black"
+                        android:textSize="14sp"/>
+                </FrameLayout>
 
-        <TextView
-            android:id="@+id/wallet_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxEms="12"
-            android:lines="1"
-            android:textSize="14sp"
-            android:textColor="@color/font_black"/>
+                <View
+                    android:id="@+id/wallet_line"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/default_gray_c"/>
 
-        <View
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/default_gray_d5"/>
+                <FrameLayout
+                    android:id="@+id/wallet_token_management_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="200">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/wallet"
+                        android:drawablePadding="10dp"
+                        android:layout_gravity="center"
+                        android:text="资产管理"
+                        android:textColor="@color/default_black"
+                        android:textSize="14sp"/>
+                </FrameLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/token_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"/>
+            </LinearLayout>
 
-    </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/default_gray_c"
+                android:layout_above="@id/wallet_layout"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@color/white"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        </RelativeLayout>
+    </FrameLayout>
 
-</RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/token_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"/>
+
+</LinearLayout>

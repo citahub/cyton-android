@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@color/default_background">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
@@ -14,93 +14,216 @@
         app:title="@string/title_add_token"
         app:isShowLeft="true"/>
 
-    <TextView
-        android:id="@+id/wallet_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/default_margin"
-        android:textSize="24sp"
-        android:textColor="@color/font_black"
-        android:text="钱包A"/>
-
-    <TextView
-        android:id="@+id/wallet_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center_horizontal"
-        android:ellipsize="end"
-        android:maxEms="12"
-        android:lines="1"
-        android:textSize="14sp"
-        android:textColor="@color/font_black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:textSize="14sp"
-        android:textColor="@color/font_black"
-        android:text="@string/erc20_address"/>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/address_edit"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"/>
-        <ImageView
-            android:id="@+id/qrcode_scan_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/qrcode_scan"/>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="区块链"
+                android:textColor="@color/font_black"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:id="@+id/triangle_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/triangle"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_add_token_block_chain"
+                android:layout_marginStart="5dp"
+                android:background="@android:color/white"
+                android:layout_toStartOf="@id/triangle_spinner"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:entries="@array/chain_items"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/add_token_contract_address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="合约地址"
+                android:textColor="@color/font_black"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:id="@+id/add_token_contract_address_scan"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:scaleType="centerInside"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/qrcode_scan"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_add_token_contract_address"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/add_token_contract_address_scan"
+                android:layout_toRightOf="@id/add_token_contract_address_text"
+                android:background="@null"
+                android:hint="请输入ERC20代币合约地址"
+                android:lines="1"
+                android:singleLine="true"
+                android:maxEms="20"
+                android:ellipsize="end"
+                android:textColor="@color/default_black"
+                android:gravity="end|center_vertical"
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="代币名称"
+                android:textColor="@color/font_black"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_add_token_name"
+                android:layout_marginStart="5dp"
+                android:background="@android:color/white"
+                android:gravity="end|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="代币缩写"
+                android:textColor="@color/font_black"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_add_token_symbol"
+                android:layout_marginStart="5dp"
+                android:background="@android:color/white"
+                android:gravity="end|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小数位数"
+                android:textColor="@color/font_black"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_add_token_decimal"
+                android:layout_marginStart="5dp"
+                android:background="@android:color/white"
+                android:gravity="end|center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
     </LinearLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/token_image"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:scaleType="centerInside"/>
-
-    <TextView
-        android:id="@+id/token_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:textColor="@color/font_black"/>
-
-    <FrameLayout
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/add_token_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/token_save"
-            android:layout_width="160dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_corner_blue_shape"
-            android:text="@string/save"
-            android:textColor="@color/font_black"
-            android:textSize="14sp"/>
-    </FrameLayout>
-
-
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:background="@drawable/button_corner_blue_shape"
+        android:text="添加"
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
 
 </LinearLayout>

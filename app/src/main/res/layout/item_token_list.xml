@@ -5,9 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin">
+        android:layout_height="60dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/token_image"
@@ -15,7 +13,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:scaleType="centerInside"
-            android:src="@drawable/bitcore"
+            android:src="@drawable/ethereum"
             />
 
         <TextView

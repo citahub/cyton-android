@@ -13,12 +13,18 @@
     <string name="sending">发送中...</string>
     <string name="select_wallet">请选择钱包</string>
     <string name="title_add_token">添加资产</string>
+    <string name="title_add_wallet">新增钱包</string>
+    <string name="title_token_management">资产管理</string>
+    <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>
+    <string name="confirm_mnemonic">确认助记词</string>
     <string name="title_transaction_list">交易记录</string>
     <string name="title_transfer">转账</string>
     <string name="title_create_wallet">创建钱包</string>
     <string name="title_import_wallet">导入钱包</string>
     <string name="create_wallet">生成钱包</string>
+    <string name="next_action">下一步</string>
+    <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
     <string name="add_chain">添加链</string>
     <string name="import_chain">导入链</string>
@@ -30,4 +36,15 @@
     <string name="chain_manage">链管理</string>
     <string name="import_wallet_content">将备份好的keystore文件内容拷贝到输入框，或扫描二维码，导入密钥数据</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
+    <string name="tab_application">应用</string>
+    <string name="tab_wallet">钱包</string>
+    <string name="tab_settings">设置</string>
+    <string name="tab_transaction">交易</string>
+    <string name="add_custom_token">添加自定义资产</string>
+    <string name="qrcode_transfer">扫一扫向我付款</string>
+    <string name="copy_address">复制地址</string>
+    <string name="backup_mnemonic_warning1">助记词将被用来恢复钱包或重置钱包密码</string>
+    <string name="backup_mnemonic_warning2"> - 如您的助记词被他人获取，您的财产可能受到损失 \n
+        - 不要截图或传送给他人 \n - 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
+    <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
 </resources>
