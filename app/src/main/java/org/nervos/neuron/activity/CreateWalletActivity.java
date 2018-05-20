@@ -15,7 +15,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.kenai.jffi.Main;
+
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.fragment.AppFragment;
+import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 import org.web3j.crypto.CipherException;
@@ -33,6 +40,7 @@ public class CreateWalletActivity extends BaseActivity {
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
     private AppCompatButton createWalletButton;
+    private TitleBar titleBar;
 
     private WalletEntity mWalletEntity;
 
@@ -52,6 +60,7 @@ public class CreateWalletActivity extends BaseActivity {
         passwordEdit = findViewById(R.id.edit_wallet_password);
         rePasswordEdit = findViewById(R.id.edit_wallet_password_repeat);
         createWalletButton = findViewById(R.id.create_wallet_button);
+        titleBar = findViewById(R.id.title);
     }
 
     private void initListener() {
@@ -65,8 +74,7 @@ public class CreateWalletActivity extends BaseActivity {
                 } else {
                     showProgressBar("钱包创建中...");
                     cachedThreadPool.execute(() -> {
-                        mWalletEntity = WalletEntity.createWithMnemonic(
-                                passwordEdit.getText().toString().trim(), MnemonicPath);
+                        saveWalletInfo();
                         rePasswordEdit.post(() -> {
                             dismissProgressBar();
                             Intent intent = new Intent(CreateWalletActivity.this,
@@ -79,6 +87,32 @@ public class CreateWalletActivity extends BaseActivity {
             }
         });
 
+        titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
+            @Override
+            public void onLeftClick() {
+                if (TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
+                    Intent intent = new Intent(CreateWalletActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
+                    startActivity(intent);
+                } else {
+                    finish();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 存储钱包信息至数据库
+     */
+    private void saveWalletInfo(){
+        mWalletEntity = WalletEntity.createWithMnemonic(
+                passwordEdit.getText().toString().trim(), MnemonicPath);
+        WalletItem walletItem = WalletItem.fromWalletEntity(mWalletEntity);
+        walletItem.name = walletNameEdit.getText().toString().trim();
+        walletItem.password = passwordEdit.getText().toString().trim();
+        DBUtil.saveWallet(CreateWalletActivity.this, walletItem);
+        SharePrefUtil.putWalletName(walletItem.name);
     }
 
 

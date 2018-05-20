@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -15,8 +16,11 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
+import org.nervos.neuron.util.SharePrefUtil;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String EXTRA_TAG = "extra_tag";
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -42,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         fMgr = getSupportFragmentManager();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setNavigationItem(intent.getStringExtra(EXTRA_TAG));
+    }
+
     private void initListener() {
         navigation.setOnCheckedChangeListener((group, checkedId) -> {
             FragmentTransaction transaction = fMgr.beginTransaction();
@@ -56,11 +66,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.navigation_wallet:
-                    if(walletFragment == null){
-                        walletFragment = new WalletFragment();
-                        transaction.add(R.id.fragment, walletFragment);
+                    if (TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
+                        startActivity(new Intent(MainActivity.this, CreateWalletActivity.class));
                     } else {
-                        transaction.show(walletFragment);
+                        if(walletFragment == null){
+                            walletFragment = new WalletFragment();
+                            transaction.add(R.id.fragment, walletFragment);
+                        } else {
+                            transaction.show(walletFragment);
+                        }
                     }
                     break;
                 case R.id.navigation_settings:
@@ -91,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.commitAllowingStateLoss();
         });
 
-        setNavigationItem(WalletFragment.TAG);
+        setNavigationItem(AppFragment.TAG);
 
     }
 

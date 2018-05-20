@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="380dp"
+        android:background="@drawable/rectangle_border_white_corner"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="title"
+            android:textColor="@color/default_black"
+            android:textSize="20sp"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="5dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/default_gray_c"/>
+
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_margin="@dimen/default_margin"
+            android:textSize="12sp"
+            android:textColor="@color/default_gray_6"
+            android:padding="5dp"
+            android:background="@color/default_white_f4"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/dialog_button_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/separate"
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/default_gray_c"/>
+
+                <TextView
+                    android:id="@+id/dialog_copy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_toStartOf="@id/separate"
+                    android:text="复制"
+                    android:textColor="@color/button_blue"
+                    android:textSize="14sp"
+                    />
+
+                <TextView
+                    android:id="@+id/dialog_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_toEndOf="@id/separate"
+                    android:text="分享"
+                    android:textColor="@color/button_blue"
+                    android:textSize="14sp"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/default_gray_c"
+                android:layout_above="@id/dialog_button_layout"/>
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</FrameLayout>

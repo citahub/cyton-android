@@ -26,7 +26,7 @@ public class TokenTransferDialog extends Dialog {
 
 
     public TokenTransferDialog(Context context, TokenItem tokenItem) {
-        super(context, R.style.CustomDialog);
+        super(context, R.style.InputDialog);
         this.tokenItem = tokenItem;
     }
 

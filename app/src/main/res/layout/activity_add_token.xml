@@ -85,7 +85,7 @@
                 android:layout_marginStart="5dp"
                 android:scaleType="centerInside"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/qrcode_scan"/>
+                android:src="@drawable/scan"/>
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_add_token_contract_address"

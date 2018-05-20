@@ -81,8 +81,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation files('libs/abi-3.2.0.jar')
     implementation files('libs/utils-3.2.0-android.jar')
-    implementation files('libs/crypto-3.2.0-android.jar')
-    implementation files('libs/core-3.2.0.jar')
-    implementation files('libs/protobuf-3.2.0.jar')
     implementation files('libs/infura-3.2.0.jar')
+    implementation files('libs/core-3.3.0.jar')
+    implementation files('libs/protobuf-3.3.0.jar')
+    implementation files('libs/crypto-3.3.0.jar')
 }

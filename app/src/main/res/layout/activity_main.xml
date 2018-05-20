@@ -20,7 +20,7 @@
                 android:id="@+id/navigation_application"
                 style="@style/tab_bottom_radio_button_style"
                 android:drawableTop="@drawable/tab_application"
-                android:checked="false"
+                android:checked="true"
                 android:text="@string/tab_application" />
 
             <RadioButton

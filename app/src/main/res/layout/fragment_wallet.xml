@@ -28,6 +28,15 @@
             android:elevation="10dp"
             android:background="@drawable/rectangle_border_gray_corner">
 
+            <ImageView
+                android:id="@+id/wallet_setting"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tab_settings_default"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"/>
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
                 android:layout_width="60dp"

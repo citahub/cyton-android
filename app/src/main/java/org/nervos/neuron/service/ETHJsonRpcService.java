@@ -118,7 +118,7 @@ public class ETHJsonRpcService {
 
             AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
             EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(contractAddress,
-                    transfer, randomNonce(), BigInteger.valueOf(1000), 0, 0, address, BigInteger.valueOf(value));
+                    transfer, randomNonce(), BigInteger.valueOf(1000), 0, 0, WalletConfig.ADDRESS, BigInteger.valueOf(value));
             Thread.sleep(6000);
             service.ethGetTransactionReceipt(ethSendTransaction.getSendTransactionResult().getHash())
                     .observable()

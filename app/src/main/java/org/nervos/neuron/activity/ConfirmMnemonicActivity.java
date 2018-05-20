@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.zhy.view.flowlayout.TagView;
 
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.WalletFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,6 +112,9 @@ public class ConfirmMnemonicActivity extends BaseActivity {
             public void onClick(View v) {
                 if (confirmList.equals(originList)) {
                     Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
                 }

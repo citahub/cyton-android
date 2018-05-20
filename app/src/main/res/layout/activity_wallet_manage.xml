@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_white_f4"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.nervos.neuron.custom.TitleBar
@@ -12,41 +14,142 @@
         app:title="钱包管理"
         app:isShowLeft="true"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/wallet_list"
-        android:layout_below="@id/title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"/>
+        android:layout_height="70dp"
+        android:background="@color/white"
+        android:paddingStart="@dimen/default_margin">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="钱包头像"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/wallet_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/wallet_photo"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/default_gray_d5"/>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/transaction_list_button"
+    <View style="@style/separateLineLong"/>
+
+    <RelativeLayout
+        android:id="@+id/wallet_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="钱包名称"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+
+        <TextView
+            android:id="@+id/wallet_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:drawableEnd="@drawable/arrow"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentEnd="true"
+            android:text="钱包名称"
+            android:textSize="16sp"
+            android:textColor="@color/default_gray_9"/>
+    </RelativeLayout>
+
+    <View style="@style/separateLineShort"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin">
+
+        <TextView
+            android:id="@+id/wallet_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="钱包地址"
+            android:textSize="16sp"
+            android:textColor="@color/font_black"/>
+
+        <TextView
+            android:id="@+id/wallet_address"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/wallet_address_text"
+            android:layout_marginStart="30dp"
+            android:text="1234566677742343454534342323453454"
+            android:maxEms="16"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="@color/default_gray_9"/>
+    </RelativeLayout>
+
+    <View style="@style/separateLineLong"/>
+
+    <View
+        style="@style/separateLineLong"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/change_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:drawableEnd="@drawable/arrow"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:background="@color/white"
+        android:text="修改密码"
+        android:textSize="16sp"
+        android:textColor="@color/font_black"/>
+
+    <View style="@style/separateLineShort"/>
+
+    <TextView
+        android:id="@+id/export_keystore"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:drawableEnd="@drawable/arrow"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:background="@color/white"
+        android:text="导出KeyStore"
+        android:textSize="16sp"
+        android:textColor="@color/font_black"/>
+
+    <View style="@style/separateLineLong"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/delete_wallet_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/default_margin"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:background="@drawable/button_corner_blue_shape"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/delete_wallet"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_create_wallet"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_corner_blue_shape"
-            android:text="@string/create_wallet"/>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_import_wallet"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/button_corner_blue_shape"
-            android:text="@string/import_wallet"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

@@ -1,5 +1,7 @@
 package org.nervos.neuron.service;
 
+import android.util.Log;
+
 import org.nervos.neuron.item.TokenItem;
 
 import org.web3j.protocol.Web3j;
@@ -11,10 +13,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,12 +33,8 @@ public class CITAJsonRpcService {
     private static int chainId = 0;
 
     public static void init() {
-        if(service == null ) {
-            service = Web3j.build(new HttpService(NODE_IP));
-        }
-        if (account == null) {
-            account = new Account(WalletConfig.PRIVKEY, service);
-        }
+        service = Web3j.build(new HttpService(NODE_IP));
+        account = new Account(WalletConfig.PRIVKEY, service);
     }
 
     private static BigInteger randomNonce() {

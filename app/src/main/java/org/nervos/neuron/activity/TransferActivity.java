@@ -3,14 +3,20 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSeekBar;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.CITAJsonRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.WalletFragment;
@@ -20,109 +26,160 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import org.nervos.neuron.util.DBUtil;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TransferActivity extends AppCompatActivity {
+public class TransferActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
-    private static final String CONTRACT_ADDRESS = "0xbd51c4669a21df5afd1fb661d5aab67171fbec35";
+    private static final String CONTRACT_ADDRESS = "0x73552bc4e960a1d53013b40074569ea05b950b4d";
+    private static final int DEFAULT_FEE = 20;
+    private static final int MAX_FEE = 100;
 
-    private SimpleDraweeView tokenImageView;
-    private TextView tokenNameText;
-    private TextView tokenAmountText;
-    private TitleBar titleBar;
-
+    private TextView walletAddressText;
+    private TextView walletNameText;
+    private ImageView scanImage;
+    private TextView feeText;
     private AppCompatEditText receiveAddressEdit;
     private AppCompatEditText transferValueEdit;
-    private AppCompatEditText walletPasswordEdit;
-    private AppCompatButton transferButton;
-    private ProgressBar progressBar;
+    private AppCompatButton nextActionButton;
+    private AppCompatSeekBar feeSeekBar;
+
+    private WalletItem walletItem;
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-
-    private String walletAddress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
-        CITAJsonRpcService.init();
+        walletItem = DBUtil.getCurrentWallet(this);
 
+        CITAJsonRpcService.init();
         initView();
         initListener();
 
     }
 
     private void initView() {
-        titleBar = findViewById(R.id.title);
-        tokenImageView = findViewById(R.id.transfer_token_image);
-        tokenNameText = findViewById(R.id.transfer_token_name);
-        tokenAmountText = findViewById(R.id.transfer_token_amount);
+        scanImage = findViewById(R.id.transfer_address_scan);
+        nextActionButton = findViewById(R.id.next_action_button);
+        walletAddressText = findViewById(R.id.wallet_address);
+        walletNameText = findViewById(R.id.wallet_name);
+        feeText = findViewById(R.id.fee_text);
+        receiveAddressEdit = findViewById(R.id.transfer_address);
+        transferValueEdit = findViewById(R.id.transfer_value);
+        feeSeekBar = findViewById(R.id.fee_seek_bar);
 
-        String tokenName = getIntent().getStringExtra(WalletFragment.EXTRA_TOKEN_NAME);
-        String tokenImage = getIntent().getStringExtra(WalletFragment.EXTRA_TOKEN_IMAGE);
-        String tokenAmount = getIntent().getStringExtra(WalletFragment.EXTRA_TOKEN_AMOUNT);
-        walletAddress = getIntent().getStringExtra(WalletFragment.EXTRA_WALLET_ADDRESS);
+        feeSeekBar.setMax(MAX_FEE);
+        feeSeekBar.setProgress(DEFAULT_FEE);
 
-        tokenNameText.setText(tokenName);
-        tokenAmountText.setText(tokenAmount);
-        tokenImageView.setImageURI(tokenImage);
-
-        receiveAddressEdit = findViewById(R.id.edit_receive_address);
-        transferValueEdit = findViewById(R.id.edit_transfer_value);
-        walletPasswordEdit = findViewById(R.id.edit_wallet_password);
-        transferButton = findViewById(R.id.transfer_button);
-        progressBar = findViewById(R.id.progress_bar);
+        walletAddressText.setText(walletItem.address);
+        walletNameText.setText(walletItem.name);
     }
 
     private void initListener() {
-        titleBar.setOnRightClickListener(() -> {
+        scanImage.setOnClickListener((view) -> {
             Intent intent = new Intent(TransferActivity.this, CaptureActivity.class);
             startActivityForResult(intent, REQUEST_CODE);
         });
 
-        transferButton.setOnClickListener(v -> {
-            progressBar.setVisibility(View.VISIBLE);
-            cachedThreadPool.execute(() -> {
-                String value = transferValueEdit.getText().toString().trim();
-                CITAJsonRpcService.transfer(CONTRACT_ADDRESS,
+        nextActionButton.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(receiveAddressEdit.getText().toString().trim())) {
+                Toast.makeText(TransferActivity.this, "转账地址不能为空", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
+                Toast.makeText(TransferActivity.this, "转账金额不能为空", Toast.LENGTH_SHORT).show();
+            } else {
+                BottomSheetDialog sheetDialog = new BottomSheetDialog(TransferActivity.this);
+                sheetDialog.setCancelable(false);
+                sheetDialog.setContentView(getConfirmTransferView(sheetDialog));
+                sheetDialog.show();
+            }
+        });
+        feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                feeText.setText(String.valueOf(progress/100.0));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private View getConfirmTransferView(BottomSheetDialog sheetDialog) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_confirm_transfer, null);
+        TextView toAddress = view.findViewById(R.id.to_address);
+        TextView fromAddress = view.findViewById(R.id.from_address);
+        TextView valueText = view.findViewById(R.id.transfer_value);
+        TextView feeConfirmText = view.findViewById(R.id.transfer_fee);
+        ProgressBar progressBar = view.findViewById(R.id.transfer_progress);
+
+        fromAddress.setText(walletItem.address);
+        toAddress.setText(receiveAddressEdit.getText().toString());
+        valueText.setText(transferValueEdit.getText().toString());
+        feeConfirmText.setText(feeText.getText().toString());
+
+        view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sheetDialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.transfer_confirm_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                transfer(progressBar);
+            }
+        });
+        return view;
+    }
+
+    private void transfer(ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
+        cachedThreadPool.execute(() -> {
+            String value = transferValueEdit.getText().toString().trim();
+            CITAJsonRpcService.transfer(CONTRACT_ADDRESS,
                     receiveAddressEdit.getText().toString().trim(),
                     Long.parseLong(value),
                     new CITAJsonRpcService.OnTransferResultListener() {
                         @Override
                         public void onSuccess(EthGetTransactionReceipt receipt) {
                             Toast.makeText(TransferActivity.this,
-                                    "Transfer success", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
-                            getBalance();
+                                    "转账成功", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toast.makeText(TransferActivity.this,
-                                    "Transfer fail because of " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
+                            e.printStackTrace();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
-            });
         });
     }
 
-    private void getBalance() {
-        cachedThreadPool.execute(() -> {
-            TokenItem tokenItem = CITAJsonRpcService.getTokenInfo(CONTRACT_ADDRESS);
-            tokenAmountText.post(() -> {
-                if (tokenItem != null) {
-                    tokenAmountText.setText(tokenItem.amount);
-                }
-            });
-
-        });
-    }
+//    private void getBalance() {
+//        cachedThreadPool.execute(() -> {
+//            TokenItem tokenItem = CITAJsonRpcService.getTokenInfo(CONTRACT_ADDRESS);
+//            tokenAmountText.post(() -> {
+//                if (tokenItem != null) {
+//                    tokenAmountText.setText(tokenItem.amount);
+//                }
+//            });
+//
+//        });
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

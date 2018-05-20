@@ -12,24 +12,43 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:background="@color/white"
-            android:paddingStart="@dimen/default_margin"
-            android:text="@string/import_wallet_content"
-            android:textColor="@color/font_black"
-            android:textSize="14sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_mnemonic"
-            android:padding="5dp"
-            android:layout_margin="@dimen/default_margin"
-            android:hint="助记词，按空格分隔"
-            android:gravity="start"
-            android:background="@drawable/edit_input_shape"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="wrap_content"
+            android:background="@color/warning_background"
+            android:textColor="@color/warning_font"
+            android:drawableStart="@drawable/warning"
+            android:drawablePadding="5dp"
+            android:paddingStart="@dimen/default_margin"
+            android:textSize="12sp"
+            android:text="@string/import_mnemonic_warning"
+            android:paddingEnd="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
+            android:paddingBottom="@dimen/default_margin"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin">
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit_wallet_mnemonic"
+                android:padding="5dp"
+                android:hint="助记词，按空格分隔"
+                android:textSize="12sp"
+                android:textColor="@color/default_black"
+                android:gravity="start"
+                android:background="@drawable/edit_input_shape"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <ImageView
+                android:id="@+id/wallet_scan"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/scan"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"/>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,20 +191,12 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@color/default_gray_c"/>
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/wallet_checkbox"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/read_service_file"/>
-
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/import_mnemonic_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="@dimen/default_margin"
+            android:layout_margin="30dp"
             android:background="@drawable/button_corner_blue_shape"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"

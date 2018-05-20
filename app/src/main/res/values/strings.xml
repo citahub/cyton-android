@@ -26,6 +26,8 @@
     <string name="next_action">下一步</string>
     <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
+    <string name="change_password">修改密码</string>
+    <string name="delete_wallet">删除钱包</string>
     <string name="add_chain">添加链</string>
     <string name="import_chain">导入链</string>
     <string name="erc20_address">资产合约（ERC20）地址：</string>
@@ -35,6 +37,9 @@
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
     <string name="import_wallet_content">将备份好的keystore文件内容拷贝到输入框，或扫描二维码，导入密钥数据</string>
+    <string name="change_password_warning">再次提示密码不能找回</string>
+    <string name="import_mnemonic_warning">请输入钱包助记词并选择助记词模式</string>
+    <string name="import_private_key_warning">请将私钥粘贴至输入框，或通过二维码输入</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
     <string name="tab_application">应用</string>
     <string name="tab_wallet">钱包</string>
@@ -47,4 +52,6 @@
     <string name="backup_mnemonic_warning2"> - 如您的助记词被他人获取，您的财产可能受到损失 \n
         - 不要截图或传送给他人 \n - 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
+    <string name="input_password">输入密码</string>
+    <string name="confirm_action">确认</string>
 </resources>

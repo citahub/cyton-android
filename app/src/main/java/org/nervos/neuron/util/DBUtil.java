@@ -8,22 +8,21 @@ import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.WalletItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DBUtil {
 
-    private static final String CURRENT_WALLET = "current_wallet";
+    private static final String DB_WALLET_PREFIX = "neuron-";
+    private static final String DB_WALLET = "db_wallet";
+    private static final String DB_TOKEN = "db_token";
+    private static final String DB_CHAIN = "db_chain";
+    private static final String DB_TRANSATION = "db_transaction";
 
-    public static void setCurrentWallet(DB db, WalletItem wallet) {
+    public static WalletItem getWallet(Context context, String walletName) {
         try {
-            db.put(CURRENT_WALLET, wallet);
-        } catch (SnappydbException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static WalletItem getCurrentWallet(Context context) {
-        try {
-            DB db = DBFactory.open(context);
-            WalletItem walletItem = db.getObject(CURRENT_WALLET, WalletItem.class);
+            DB db = DBFactory.open(context, DB_WALLET);
+            WalletItem walletItem = db.getObject(getDbWalletKey(walletName), WalletItem.class);
             db.close();
             return walletItem;
         } catch (SnappydbException e) {
@@ -32,24 +31,72 @@ public class DBUtil {
         return null;
     }
 
-    public static WalletItem getCurrentWallet(DB db) {
+    public static WalletItem getCurrentWallet(Context context) {
+        return getWallet(context, SharePrefUtil.getWalletName());
+    }
+
+    public static List<String> getAllWalletName(Context context) {
+        List<String> walletList = new ArrayList<>();
         try {
-            return db.getObject(CURRENT_WALLET, WalletItem.class);
+            DB db = DBFactory.open(context, DB_WALLET);
+            String[] keys = db.findKeys(DB_WALLET_PREFIX);
+            db.close();
+            for(String key: keys) {
+                walletList.add(key.substring(DB_WALLET_PREFIX.length()));
+            }
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
-        return null;
+        return walletList;
     }
 
     public static void saveWallet(Context context, WalletItem walletItem){
         try {
-            DB db = DBFactory.open(context);
-            db.put(walletItem.name, walletItem);
-            setCurrentWallet(db, walletItem);
+            DB db = DBFactory.open(context, DB_WALLET);
+            db.put(getDbWalletKey(walletItem.name), walletItem);
             db.close();
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void updateWalletPassword(Context context, String name, String password) {
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            WalletItem walletItem = db.getObject(getDbWalletKey(name), WalletItem.class);
+            walletItem.password = password;
+            db.put(getDbWalletKey(name), walletItem);
+            db.close();
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateWalletName(Context context, String name, String newName) {
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            WalletItem walletItem = db.getObject(getDbWalletKey(name), WalletItem.class);
+            db.del(getDbWalletKey(name));
+            walletItem.name = newName;
+            db.put(getDbWalletKey(newName), walletItem);
+            db.close();
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteWallet(Context context, String name) {
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            db.del(getDbWalletKey(name));
+            db.close();
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getDbWalletKey(String name) {
+        return DB_WALLET_PREFIX + name;
     }
 
 }

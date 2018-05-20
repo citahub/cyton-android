@@ -1,5 +1,6 @@
 package org.nervos.neuron.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,12 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 import org.web3j.utils.Numeric;
@@ -30,12 +36,13 @@ import java.util.concurrent.Executors;
 
 public class ImportPrivateKeyFragment extends BaseFragment {
 
+    private static final int REQUEST_CODE = 0x01;
     private AppCompatEditText privateKeyEdit;
     private AppCompatEditText walletNameEdit;
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
-    private AppCompatCheckBox checkBox;
     private AppCompatButton importButton;
+    private ImageView scanImage;
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -47,8 +54,8 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         walletNameEdit = view.findViewById(R.id.edit_wallet_name);
         passwordEdit = view.findViewById(R.id.edit_wallet_password);
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
-        checkBox = view.findViewById(R.id.wallet_checkbox);
         importButton = view.findViewById(R.id.import_private_key_button);
+        scanImage = view.findViewById(R.id.wallet_scan);
         return view;
     }
 
@@ -75,6 +82,13 @@ public class ImportPrivateKeyFragment extends BaseFragment {
                 });
             }
         });
+        scanImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
     }
 
 
@@ -86,6 +100,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
             DBUtil.saveWallet(getContext(), walletItem);
+            SharePrefUtil.putWalletName(walletItem.name);
         } catch (CipherException e) {
             e.printStackTrace();
         }
@@ -93,7 +108,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
 
 
     private boolean isWalletValid() {
-        return check1 && check2 && check3 && check4;
+        return check1 && check2 && check3;
     }
 
     private void setCreateButtonStatus(boolean status) {
@@ -103,7 +118,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
     }
 
 
-    private boolean check1 = false, check2 = false, check3 = false, check4 = false;
+    private boolean check1 = false, check2 = false, check3 = false;
     private void checkWalletStatus() {
         walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
             @Override
@@ -131,10 +146,6 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             }
         });
 
-        checkBox.setOnCheckedChangeListener((compoundButton, b) ->{
-            check4 = b;
-            setCreateButtonStatus(isWalletValid());
-        } );
     }
 
 
@@ -150,6 +161,26 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            //处理扫描结果（在界面上显示）
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    privateKeyEdit.setText(result);
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 }

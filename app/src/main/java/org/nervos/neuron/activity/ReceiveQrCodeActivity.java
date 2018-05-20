@@ -20,6 +20,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.DBUtil;
 
 public class ReceiveQrCodeActivity extends AppCompatActivity {
 
@@ -36,7 +37,7 @@ public class ReceiveQrCodeActivity extends AppCompatActivity {
 
         activity = this;
 
-        WalletItem walletItem = getIntent().getParcelableExtra(WalletFragment.EXTRA_WALLET_ITEM);
+        WalletItem walletItem = DBUtil.getCurrentWallet(this);
 
         qrCodeImage = findViewById(R.id.receive_qrcode_image);
         walletNameText = findViewById(R.id.qrcode_wallet_name);

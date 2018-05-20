@@ -7,6 +7,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.*;
 
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.bip44.HdKeyNode;
 import org.nervos.neuron.util.bip44.hdpath.HdKeyPath;
 import com.fasterxml.jackson.core.JsonParser;
@@ -215,6 +216,10 @@ public class WalletEntity {
         this.walletFile = walletFile;
         this.walletPass = password;
         return walletFile;
+    }
+
+    public static String exportKeyStore(WalletItem walletItem){
+        return walletFileJson(walletItem.walletFile);
     }
 
     /**
