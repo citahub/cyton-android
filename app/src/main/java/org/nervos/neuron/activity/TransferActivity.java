@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -17,17 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.CITAJsonRpcService;
+import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.WalletFragment;
-import org.nervos.neuron.custom.TitleBar;
-import org.nervos.neuron.item.TokenItem;
-import com.facebook.drawee.view.SimpleDraweeView;
+
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
-import org.nervos.neuron.util.DBUtil;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.nervos.neuron.util.DBWalletUtil;
+import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,9 +53,9 @@ public class TransferActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
-        walletItem = DBUtil.getCurrentWallet(this);
+        walletItem = DBWalletUtil.getCurrentWallet(this);
 
-        CITAJsonRpcService.init();
+        CitaRpcService.init();
         initView();
         initListener();
 
@@ -149,10 +145,10 @@ public class TransferActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         cachedThreadPool.execute(() -> {
             String value = transferValueEdit.getText().toString().trim();
-            CITAJsonRpcService.transfer(CONTRACT_ADDRESS,
+            CitaRpcService.transfer(CONTRACT_ADDRESS,
                     receiveAddressEdit.getText().toString().trim(),
                     Long.parseLong(value),
-                    new CITAJsonRpcService.OnTransferResultListener() {
+                    new CitaRpcService.OnTransferResultListener() {
                         @Override
                         public void onSuccess(EthGetTransactionReceipt receipt) {
                             Toast.makeText(TransferActivity.this,
@@ -169,17 +165,6 @@ public class TransferActivity extends BaseActivity {
         });
     }
 
-//    private void getBalance() {
-//        cachedThreadPool.execute(() -> {
-//            TokenItem tokenItem = CITAJsonRpcService.getTokenInfo(CONTRACT_ADDRESS);
-//            tokenAmountText.post(() -> {
-//                if (tokenItem != null) {
-//                    tokenAmountText.setText(tokenItem.amount);
-//                }
-//            });
-//
-//        });
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

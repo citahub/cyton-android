@@ -15,4 +15,11 @@
         app:isShowRight="true"
         app:right_img="@drawable/add"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/token_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"/>
+
 </LinearLayout>

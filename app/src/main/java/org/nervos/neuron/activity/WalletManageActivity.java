@@ -18,9 +18,8 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.ExportDialog;
 import org.nervos.neuron.dialog.SimpleDialog;
-import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.DBWalletUtil;
 import org.nervos.neuron.util.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
@@ -35,7 +34,7 @@ public class WalletManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_manage);
 
-        walletItem = DBUtil.getCurrentWallet(this);
+        walletItem = DBWalletUtil.getCurrentWallet(this);
 
         initView();
         initListener();
@@ -63,7 +62,7 @@ public class WalletManageActivity extends AppCompatActivity {
                             Toast.makeText(WalletManageActivity.this, "钱包名称不能为空", Toast.LENGTH_SHORT).show();
                         } else {
                             walletNameText.setText(simpleDialog.getMessage());
-                            DBUtil.updateWalletName(WalletManageActivity.this, walletItem.name, simpleDialog.getMessage());
+                            DBWalletUtil.updateWalletName(WalletManageActivity.this, walletItem.name, simpleDialog.getMessage());
                             SharePrefUtil.putWalletName(simpleDialog.getMessage());
                             simpleDialog.dismiss();
                         }
@@ -124,7 +123,7 @@ public class WalletManageActivity extends AppCompatActivity {
                 }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        DBUtil.deleteWallet(WalletManageActivity.this, walletItem.name);
+//                        DBWalletUtil.deleteWallet(WalletManageActivity.this, walletItem.name);
                         dialog.dismiss();
                         Toast.makeText(WalletManageActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                     }

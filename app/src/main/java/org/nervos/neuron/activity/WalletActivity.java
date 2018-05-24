@@ -13,15 +13,15 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.account.Account;
-import org.web3j.protocol.account.CompiledContract;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.http.HttpService;
+import org.nervos.web3j.protocol.Web3j;
+import org.nervos.web3j.protocol.account.Account;
+import org.nervos.web3j.protocol.account.CompiledContract;
+import org.nervos.web3j.protocol.core.DefaultBlockParameter;
+import org.nervos.web3j.protocol.core.methods.response.AbiDefinition;
+import org.nervos.web3j.protocol.core.methods.response.EthBlock;
+import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.nervos.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.nervos.web3j.protocol.http.HttpService;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -160,7 +160,7 @@ public class WalletActivity extends AppCompatActivity {
         cachedThreadPool.execute(() -> {
             try {
                 AbiDefinition balanceOf = mContract.getFunctionAbi("balanceOf", 1);
-                Object object = account.callContract(CONTRACT_ADDRESS, balanceOf, randomNonce(), quota, version, 0, ACCOUNT);
+                Object object = account.callContract(CONTRACT_ADDRESS, balanceOf, randomNonce(), quota, version, 0, 0, ACCOUNT);
                 balanceText.post(() -> balanceText.setText(String.format("余额： %s CIT", object.toString())));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -173,7 +173,7 @@ public class WalletActivity extends AppCompatActivity {
         try {
             AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
             EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(CONTRACT_ADDRESS,
-                    transfer, randomNonce(), quota, version, 0, address, BigInteger.valueOf(value));
+                    transfer, randomNonce(), quota, version, 0, 0, address, BigInteger.valueOf(value));
 //            asyncGetReceipt(ethSendTransaction.getSendTransactionResult().getHash(), new ReceiptListener() {
 //                @Override
 //                public void getReceipt(EthGetTransactionReceipt receipt) {
@@ -250,7 +250,7 @@ public class WalletActivity extends AppCompatActivity {
                 public void onNext(EthGetTransactionReceipt receipt) {
                     if (listener != null) {
                         if (receipt.getTransactionReceipt() != null &&
-                                receipt.getTransactionReceipt().getBlockHash() != null) {
+                                receipt.getTransactionReceipt() != null) {
                             receiptSubscription.unsubscribe();
                             listener.getReceipt(receipt);
                         }

@@ -11,21 +11,28 @@ import android.widget.TextView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ChainManageActivity;
+import org.nervos.neuron.activity.QuickBackupActivity;
+import org.nervos.neuron.activity.QuickRestoreActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
+import org.nervos.neuron.activity.WebActivity;
 
 public class SettingsFragment extends Fragment {
 
     public static final String TAG = SettingsFragment.class.getName();
 
-    private TextView walletManageText;
-    private TextView chainManageText;
+    private TextView backupText;
+    private TextView restoreText;
+    private TextView aboutText;
+    private TextView contactText;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        walletManageText = view.findViewById(R.id.wallet_manage_text);
-        chainManageText = view.findViewById(R.id.chain_manage_text);
+        backupText = view.findViewById(R.id.setting_backup);
+        restoreText = view.findViewById(R.id.setting_restore);
+        aboutText = view.findViewById(R.id.setting_about);
+        contactText = view.findViewById(R.id.setting_contact);
         return view;
     }
 
@@ -37,10 +44,10 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initListener() {
-        walletManageText.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), WalletManageActivity.class));
-        });
+        backupText.setOnClickListener(v -> startActivity(new Intent(getActivity(), QuickBackupActivity.class)));
 
-        chainManageText.setOnClickListener(v -> startActivity(new Intent(getActivity(), ChainManageActivity.class)));
+        restoreText.setOnClickListener(v -> startActivity(new Intent(getActivity(), QuickRestoreActivity.class)));
+
+        aboutText.setOnClickListener(v -> startActivity(new Intent(getActivity(), WebActivity.class)));
     }
 }

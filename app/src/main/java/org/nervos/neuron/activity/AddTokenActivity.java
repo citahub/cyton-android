@@ -3,8 +3,6 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
@@ -12,18 +10,20 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.nervos.neuron.service.CITAJsonRpcService;
+import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.ETHJsonRpcService;
+import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.util.DBChainUtil;
+import org.nervos.neuron.util.DBWalletUtil;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,18 +32,17 @@ public class AddTokenActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
 
-    private ImageView qrcodeImage;
-    private AppCompatButton addTokenButton;
     private AppCompatEditText contractAddressEdit;
     private AppCompatEditText tokenNameEdit;
     private AppCompatEditText tokenSymbolEdit;
     private AppCompatEditText tokenDecimalEdit;
     private AppCompatSpinner blockChainSpinner;
 
-    private String walletName;
-    private String walletAddress;
-    private List<String> chainList;
-    private String chainItem;
+    private List<String> chainNameList;
+    private List<ChainItem> chainItemList;
+    private ChainItem chainItem;
+    private TokenItem tokenItem;
+    private WalletItem walletItem;
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -55,13 +54,11 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        CITAJsonRpcService.init();
-        ETHJsonRpcService.init();
+        CitaRpcService.init();
+        EthRpcService.init();
     }
 
     private void initView() {
-        qrcodeImage = findViewById(R.id.add_token_contract_address_scan);
-        addTokenButton = findViewById(R.id.add_token_button);
         contractAddressEdit = findViewById(R.id.edit_add_token_contract_address);
         tokenNameEdit = findViewById(R.id.edit_add_token_name);
         tokenSymbolEdit = findViewById(R.id.edit_add_token_symbol);
@@ -70,30 +67,40 @@ public class AddTokenActivity extends BaseActivity {
     }
 
     private void initData() {
-        chainList = Arrays.asList(getResources().getStringArray(R.array.chain_items));
-        chainItem = chainList.get(0);
+        walletItem = DBWalletUtil.getCurrentWallet(this);
+        chainItemList = DBChainUtil.getAllChain(this);
+        chainNameList = DBChainUtil.getAllChainName(this);
+        chainItem = chainItemList.get(0);
     }
 
     private void initListener() {
-        addTokenButton.setOnClickListener(new View.OnClickListener() {
+        // add token data into local database
+        findViewById(R.id.add_token_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (tokenItem == null) {
+                    Toast.makeText(mActivity, "请输入Token信息", Toast.LENGTH_SHORT).show();
+                } else {
+                    DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
+                    finish();
+                }
             }
         });
 
-        qrcodeImage.setOnClickListener(new View.OnClickListener() {
+        // scan qrcode to get contract address
+        findViewById(R.id.add_token_contract_address_scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddTokenActivity.this, CaptureActivity.class);
+                Intent intent = new Intent(mActivity, CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
+        // select the type of blockchain
         blockChainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                chainItem = chainList.get(position);
+                chainItem = chainItemList.get(position);
             }
 
             @Override
@@ -115,19 +122,21 @@ public class AddTokenActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
-                    TokenItem tokenItem;
-                    if (TextUtils.equals(chainItem, chainList.get(1))) {
-                        tokenItem = CITAJsonRpcService.getTokenInfo(s.toString());
+                    if (TextUtils.equals(chainItem.chainId, DBChainUtil.ETHEREUM_ID)) {
+                        tokenItem = EthRpcService.getTokenInfo(s.toString());
                     } else {
-                        tokenItem = ETHJsonRpcService.getTokenInfo(s.toString());
+                        tokenItem = CitaRpcService.getTokenInfo(s.toString());
+                    }
+                    if (chainItem != null && tokenItem != null) {
+                        tokenItem.chainId = chainItem.chainId;
                     }
                     tokenNameEdit.post(() -> {
                         if (tokenItem != null) {
                             tokenNameEdit.setText(tokenItem.name);
                             tokenSymbolEdit.setText(tokenItem.symbol);
                             tokenDecimalEdit.setText(String.valueOf(tokenItem.decimals));
-                            dismissProgressBar();
                         }
+                        dismissProgressBar();
                     });
                 });
             }

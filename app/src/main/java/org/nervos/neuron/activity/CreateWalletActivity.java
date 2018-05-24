@@ -3,29 +3,21 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.kenai.jffi.Main;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.DBWalletUtil;
 import org.nervos.neuron.util.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
-
-import org.web3j.crypto.CipherException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -111,7 +103,7 @@ public class CreateWalletActivity extends BaseActivity {
         WalletItem walletItem = WalletItem.fromWalletEntity(mWalletEntity);
         walletItem.name = walletNameEdit.getText().toString().trim();
         walletItem.password = passwordEdit.getText().toString().trim();
-        DBUtil.saveWallet(CreateWalletActivity.this, walletItem);
+        DBWalletUtil.saveWallet(CreateWalletActivity.this, walletItem);
         SharePrefUtil.putWalletName(walletItem.name);
     }
 

@@ -6,12 +6,14 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class DBUtil {
+public class DBWalletUtil {
 
     private static final String DB_WALLET_PREFIX = "neuron-";
     private static final String DB_WALLET = "db_wallet";
@@ -97,6 +99,21 @@ public class DBUtil {
 
     private static String getDbWalletKey(String name) {
         return DB_WALLET_PREFIX + name;
+    }
+
+    public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem){
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.tokenItems == null) {
+                walletItem.tokenItems = new ArrayList<>();
+            }
+            walletItem.tokenItems.add(tokenItem);
+            saveWallet(context, walletItem);
+        }
+    }
+
+    public static List<TokenItem> getAllTokenFromWallet(Context context, String walletName) {
+        return Objects.requireNonNull(getWallet(context, walletName)).tokenItems;
     }
 
 }

@@ -1,18 +1,25 @@
 package org.nervos.neuron.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.AddAppWebsiteActivity;
+import org.nervos.neuron.activity.WebActivity;
 
 public class AppFragment extends Fragment {
 
@@ -51,5 +58,18 @@ public class AppFragment extends Fragment {
                 return true;
             }
         });
+
+        webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
+
     }
+
+    private class AppHybrid {
+
+        @JavascriptInterface
+        public void startAddWebsitePage() {
+            startActivity(new Intent(getActivity(), AddAppWebsiteActivity.class));
+        }
+    }
+
+
 }

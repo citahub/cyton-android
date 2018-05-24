@@ -9,18 +9,15 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
-import org.nervos.neuron.activity.CreateWalletActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.activity.TransferActivity;
@@ -30,7 +27,7 @@ import org.nervos.neuron.dialog.DialogUtil;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.DBWalletUtil;
 import org.nervos.neuron.util.SharePrefUtil;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -77,7 +74,6 @@ public class WalletFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initTokenData();
         initWalletData();
         initView();
         initAdapter();
@@ -91,18 +87,13 @@ public class WalletFragment extends Fragment {
         initWalletData();
     }
 
-    private void initTokenData() {
-
-        tokenItemList.add(new TokenItem("ETH", R.drawable.ethereum, 100.0f));
-        tokenItemList.add(new TokenItem("CIT", R.drawable.ethereum, 200.0f));
-        tokenItemList.add(new TokenItem("ETH", R.drawable.ethereum, 150.0f));
-        tokenItemList.add(new TokenItem("ETH", R.drawable.ethereum, 123.45f));
-    }
-
     private void initWalletData() {
         if (!TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
-            walletNameList = DBUtil.getAllWalletName(getContext());
-            walletItem = DBUtil.getWallet(getContext(), SharePrefUtil.getWalletName());
+            walletNameList = DBWalletUtil.getAllWalletName(getContext());
+            walletItem = DBWalletUtil.getWallet(getContext(), SharePrefUtil.getWalletName());
+            if (walletItem != null && walletItem.tokenItems != null) {
+                tokenItemList.addAll(walletItem.tokenItems);
+            }
         }
     }
 
@@ -115,27 +106,9 @@ public class WalletFragment extends Fragment {
     }
 
     private void initListener() {
-        receiveLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class));
-            }
-        });
-
-        tokenManageLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), TokenManageActivity.class));
-            }
-        });
-
-        settingImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), WalletManageActivity.class));
-            }
-        });
-
+        receiveLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class)));
+        tokenManageLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), TokenManageActivity.class)));
+        settingImage.setOnClickListener(v -> startActivity(new Intent(getActivity(), WalletManageActivity.class)));
     }
 
 
@@ -148,21 +121,13 @@ public class WalletFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 TokenTransferDialog dialog = new TokenTransferDialog(getContext(), tokenItemList.get(position));
-                dialog.setOnReceiveClickListener(new TokenTransferDialog.OnReceiveClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ReceiveQrCodeActivity.class);
-                        startActivity(intent);
-                        dialog.dismiss();
-                    }
+                dialog.setOnReceiveClickListener(v -> {
+                    startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class));
+                    dialog.dismiss();
                 });
-                dialog.setOnTransferClickListener(new TokenTransferDialog.OnTransferClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), TransferActivity.class);
-                        startActivity(intent);
-                        dialog.dismiss();
-                    }
+                dialog.setOnTransferClickListener(v -> {
+                    startActivity(new Intent(getActivity(), TransferActivity.class));
+                    dialog.dismiss();
                 });
                 dialog.show();
             }
@@ -170,29 +135,19 @@ public class WalletFragment extends Fragment {
     }
 
     private void initTitleBarListener() {
-        titleBar.setOnRightClickListener(new TitleBar.OnRightClickListener() {
-            @Override
-            public void onRightClick() {
-                startActivity(new Intent(getActivity(), AddWalletActivity.class));
-            }
-        });
+        titleBar.setOnRightClickListener(() -> startActivity(new Intent(getActivity(), AddWalletActivity.class)));
 
-        titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
-            @Override
-            public void onLeftClick() {
-                DialogUtil.showListDialog(getContext(), "切换当前钱包", walletNameList, new DialogUtil.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int which) {
-                        walletItem = DBUtil.getWallet(getContext(), walletNameList.get(which));
-                        initView();
-                    }
-                });
-            }
-        });
+        titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(), "切换当前钱包", walletNameList, which -> {
+            walletItem = DBWalletUtil.getWallet(getContext(), walletNameList.get(which));
+            initView();
+        }));
     }
 
 
-    class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> {
+    class TokenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public static final int VIEW_TYPE_ITEM = 1;
+        public static final int VIEW_TYPE_EMPTY = 0;
 
         public OnItemClickListener onItemClickListener;
 
@@ -201,7 +156,11 @@ public class WalletFragment extends Fragment {
         }
 
         @Override
-        public TokenViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+            if (viewType == VIEW_TYPE_EMPTY) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
+                return new RecyclerView.ViewHolder(view){};
+            }
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(
                     getActivity()).inflate(R.layout.item_token_list, parent,
                     false));
@@ -209,16 +168,30 @@ public class WalletFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
-            holder.tokenImage.setImageResource(R.drawable.ethereum);
-            holder.tokenName.setText(tokenItemList.get(position).symbol);
-            holder.tokenAmount.setText("" + tokenItemList.get(position).balance);
-            holder.itemView.setTag(position);
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof TokenViewHolder) {
+                TokenViewHolder viewHolder = (TokenViewHolder)holder;
+                viewHolder.tokenImage.setImageResource(R.drawable.ethereum);
+                viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
+                viewHolder.tokenAmount.setText(String.valueOf(tokenItemList.get(position).balance));
+                viewHolder.itemView.setTag(position);
+            }
         }
 
         @Override
         public int getItemCount() {
+            if (tokenItemList.size() == 0) {
+                return 1;
+            }
             return tokenItemList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (tokenItemList.size() == 0) {
+                return VIEW_TYPE_EMPTY;
+            }
+            return VIEW_TYPE_ITEM;
         }
 
         class  TokenViewHolder extends RecyclerView.ViewHolder {

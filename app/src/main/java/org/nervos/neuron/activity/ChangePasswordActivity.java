@@ -9,9 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBUtil;
+import org.nervos.neuron.util.DBWalletUtil;
 
 public class ChangePasswordActivity extends BaseActivity {
 
@@ -27,7 +26,7 @@ public class ChangePasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
-        walletItem = DBUtil.getCurrentWallet(this);
+        walletItem = DBWalletUtil.getCurrentWallet(this);
 
         initView();
     }
@@ -56,7 +55,7 @@ public class ChangePasswordActivity extends BaseActivity {
                         walletItem.password)) {
                     Toast.makeText(ChangePasswordActivity.this, "原密码不正确", Toast.LENGTH_SHORT).show();
                 } else {
-                    DBUtil.updateWalletPassword(ChangePasswordActivity.this, walletItem.name, newPasswordEdit.getText().toString());
+                    DBWalletUtil.updateWalletPassword(ChangePasswordActivity.this, walletItem.name, newPasswordEdit.getText().toString());
                     Toast.makeText(ChangePasswordActivity.this, "密码修改成功", Toast.LENGTH_SHORT).show();
                     finish();
                 }

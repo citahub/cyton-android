@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
@@ -11,6 +12,7 @@ import org.nervos.neuron.custom.TitleBar;
 public class TokenManageActivity extends AppCompatActivity {
 
     private TitleBar titleBar;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -18,6 +20,7 @@ public class TokenManageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_token_manage);
 
         initView();
+        initRecycler();
     }
 
     private void initView() {
@@ -29,5 +32,9 @@ public class TokenManageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void initRecycler() {
+        recyclerView = findViewById(R.id.token_recycler);
     }
 }

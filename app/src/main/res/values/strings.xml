@@ -26,6 +26,8 @@
     <string name="next_action">下一步</string>
     <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
+    <string name="quick_backup_button">一键备份</string>
+    <string name="quick_backup_restore">一键恢复</string>
     <string name="change_password">修改密码</string>
     <string name="delete_wallet">删除钱包</string>
     <string name="add_chain">添加链</string>
@@ -37,6 +39,7 @@
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
     <string name="import_wallet_content">将备份好的keystore文件内容拷贝到输入框，或扫描二维码，导入密钥数据</string>
+    <string name="quick_backup_content">本软件不会在云端保存您的任何信息，包括私钥、应用列表以及区块链配置。因此，您的数字资产完全依赖于您自己的保管，请妥善对您的本地数据进行保存</string>
     <string name="change_password_warning">再次提示密码不能找回</string>
     <string name="import_mnemonic_warning">请输入钱包助记词并选择助记词模式</string>
     <string name="import_private_key_warning">请将私钥粘贴至输入框，或通过二维码输入</string>
@@ -54,4 +57,5 @@
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
     <string name="input_password">输入密码</string>
     <string name="confirm_action">确认</string>
+    <string name="input_app_website_hint">请输入应用网址</string>
 </resources>

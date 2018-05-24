@@ -1,17 +1,20 @@
 package org.nervos.neuron.service;
 
-import android.util.Log;
 
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.web3j.protocol.Web3j;
+import org.nervos.web3j.protocol.account.Account;
+import org.nervos.web3j.protocol.account.CompiledContract;
+import org.nervos.web3j.protocol.core.DefaultBlockParameter;
+import org.nervos.web3j.protocol.core.methods.response.AbiDefinition;
+import org.nervos.web3j.protocol.core.methods.response.EthGetBalance;
+import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
+import org.nervos.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.nervos.web3j.protocol.http.HttpService;
 
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.account.Account;
-import org.web3j.protocol.account.CompiledContract;
-import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.http.HttpService;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -19,7 +22,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class CITAJsonRpcService {
+public class CitaRpcService {
 
     private static final String NODE_IP = "http://47.75.129.215:1337";
 
@@ -31,9 +34,15 @@ public class CITAJsonRpcService {
     private static BigInteger quota = BigInteger.valueOf(1000000);
     private static int version = 0;
     private static int chainId = 0;
+    private static long chainValue = 0;
 
     public static void init() {
         service = Web3j.build(new HttpService(NODE_IP));
+        account = new Account(WalletConfig.PRIVKEY, service);
+    }
+
+    public static void init(String httpProvider) {
+        service = Web3j.build(new HttpService(httpProvider));
         account = new Account(WalletConfig.PRIVKEY, service);
     }
 
@@ -51,14 +60,18 @@ public class CITAJsonRpcService {
             TokenItem tokenItem = new TokenItem();
 
             AbiDefinition symbol = mContract.getFunctionAbi("symbol", 0);
-            tokenItem.symbol = account.callContract(contractAddress, symbol, randomNonce(), quota, version, chainId).toString();
+            tokenItem.symbol = account.callContract(contractAddress, symbol, randomNonce(), quota, version, chainId, chainValue).toString();
 
             AbiDefinition decimals = mContract.getFunctionAbi("decimals", 0);
-            String decimal = account.callContract(contractAddress, decimals, randomNonce(), quota, version, chainId).toString();
+            String decimal = account.callContract(contractAddress, decimals, randomNonce(), quota, version, chainId, chainValue).toString();
             tokenItem.decimals = Integer.parseInt(decimal);
 
             AbiDefinition nameAbi = mContract.getFunctionAbi("name", 0);
-            tokenItem.name = account.callContract(contractAddress, nameAbi, randomNonce(), quota, version, chainId).toString();
+            tokenItem.name = account.callContract(contractAddress, nameAbi, randomNonce(), quota, version, chainId, chainValue).toString();
+
+            AbiDefinition balanceOfAbi = mContract.getFunctionAbi("balanceOf", 1);
+            String balance = account.callContract(contractAddress, balanceOfAbi, randomNonce(), quota, version, chainId, chainValue).toString();
+            tokenItem.balance = Float.valueOf(balance);
 
             return tokenItem;
 
@@ -66,6 +79,25 @@ public class CITAJsonRpcService {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static EthMetaData getMetaData() {
+        try {
+            return service.ethMetaData(DefaultBlockParameter.valueOf("latest")).send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static EthGetBalance getBalance(String address) {
+        try {
+            return service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -77,7 +109,7 @@ public class CITAJsonRpcService {
 
             AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
             EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(contractAddress,
-                    transfer, randomNonce(), quota, version, chainId, address, BigInteger.valueOf(value));
+                    transfer, randomNonce(), quota, version, chainId, chainValue, address, BigInteger.valueOf(value));
             Thread.sleep(6000);
             service.ethGetTransactionReceipt(ethSendTransaction.getSendTransactionResult().getHash())
                     .observable()
@@ -112,6 +144,7 @@ public class CITAJsonRpcService {
             e.printStackTrace();
         }
     }
+
 
 
     public interface OnTransferResultListener{
