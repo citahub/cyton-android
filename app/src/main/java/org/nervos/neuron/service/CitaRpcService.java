@@ -42,6 +42,7 @@ public class CitaRpcService {
     }
 
     public static void init(String httpProvider) {
+        HttpService.setDebug(true);
         service = Web3j.build(new HttpService(httpProvider));
         account = new Account(WalletConfig.PRIVKEY, service);
     }

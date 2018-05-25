@@ -91,6 +91,8 @@ public class WebActivity extends BaseActivity {
 
     private void initCollectView() {
         collectText.setText(WebUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
+        findViewById(R.id.menu_layout).setVisibility(View.GONE);
+        findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
 
 

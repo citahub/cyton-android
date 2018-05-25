@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -16,7 +18,6 @@ import org.jsoup.select.Elements;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.CitaRpcService;
-import org.nervos.neuron.service.response.ManifestResponse;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
@@ -26,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,6 +53,7 @@ public class WebUtil {
                     Elements elements = doc.getElementsByTag("link");
                     for(Element element: elements) {
                         if ("manifest".equals(element.attr("ref"))) {
+                            Log.d("http", "href------: " + element.attr("ref"));
                             getHttpManifest(context, url, element.attr("href"));
                         }
                     }
@@ -85,11 +86,11 @@ public class WebUtil {
             @Override
             public void onResponse(Call call, Response response) {
                 try {
-                    ManifestResponse manifestResponse =
-                            new Gson().fromJson(response.body().string(), ManifestResponse.class);
-                    if (!TextUtils.isEmpty(manifestResponse.chainId)
-                            && !TextUtils.isEmpty(manifestResponse.httpProvider)) {
-                        getMetaData(context, manifestResponse.httpProvider);
+                    String result = response.body().string();
+                    chainItem = new Gson().fromJson(result, ChainItem.class);
+                    if (!TextUtils.isEmpty(chainItem.chainId)
+                            && !TextUtils.isEmpty(chainItem.httpProvider)) {
+                        getMetaData(context, chainItem.httpProvider);
                     }
 
                 } catch (IOException e) {
@@ -107,10 +108,9 @@ public class WebUtil {
      */
     private static void getMetaData(Context context, String httpProvider) {
         CitaRpcService.init(httpProvider);
-        EthMetaData ethMetaData = CitaRpcService.getMetaData();
-        if (ethMetaData != null) {
-            chainItem = new ChainItem(String.valueOf(ethMetaData.chainId),
-                    ethMetaData.chainName, httpProvider);
+        EthMetaData.EthMetaDataResult ethMetaData = CitaRpcService.getMetaData().getEthMetaDataResult();
+        if (ethMetaData != null &&
+                ethMetaData.chainId == Integer.parseInt(chainItem.chainId)) {
             DBChainUtil.saveChain(context, chainItem);
         }
     }
@@ -123,14 +123,18 @@ public class WebUtil {
     }
 
     public static void collectApp(Context context) {
-        AppItem appItem = new AppItem(chainItem.entry,
-                chainItem.icon, chainItem.name, chainItem.provider);
-        DBAppUtil.saveDbApp(context, appItem);
+        if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
+            AppItem appItem = new AppItem(chainItem.entry,
+                    chainItem.icon, chainItem.name, chainItem.provider);
+            DBAppUtil.saveDbApp(context, appItem);
+            Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static void cancelCollectApp(Context context) {
         if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
             DBAppUtil.deleteApp(context, chainItem.entry);
+            Toast.makeText(context, "取消收藏", Toast.LENGTH_SHORT).show();
         }
     }
 
