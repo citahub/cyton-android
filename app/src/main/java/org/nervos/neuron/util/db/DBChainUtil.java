@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,9 +12,8 @@ import org.nervos.neuron.item.ChainItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBChainUtil {
+public class DBChainUtil extends DBUtil {
 
-    private static final String DB_CHAIN_PREFIX = "neuron-";
     private static final String DB_CHAIN = "db_chain";
     public static final String ETHEREUM_ID = "-1";
     private static final String ETHEREUM_NAME = "以太坊mainnet";
@@ -24,11 +23,10 @@ public class DBChainUtil {
         List<ChainItem> chainItemList = new ArrayList<>();
         try {
             DB db = DBFactory.open(context, DB_CHAIN);
-            String[] keys = db.findKeys(DB_CHAIN_PREFIX);
-            Log.d("keys", "keys: " + keys[0]);
+            String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 ChainItem chainItem = db.getObject(key, ChainItem.class);
-                chainItem.chainId = getDbChainId(key);
+                chainItem.chainId = getDbOrigin(key);
                 chainItemList.add(chainItem);
             }
             db.close();
@@ -36,6 +34,18 @@ public class DBChainUtil {
             e.printStackTrace();
         }
         return chainItemList;
+    }
+
+    public static ChainItem getChain(Context context, String chainId) {
+        try {
+            DB db = DBFactory.open(context, DB_CHAIN);
+            ChainItem chainItem = db.getObject(getDbKey(chainId), ChainItem.class);
+            db.close();
+            return chainItem;
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -53,7 +63,7 @@ public class DBChainUtil {
     public static void saveChain(Context context, ChainItem chainItem){
         try {
             DB db = DBFactory.open(context, DB_CHAIN);
-            db.put(getDbChainKey(chainItem.chainId), chainItem);
+            db.put(getDbKey(chainItem.chainId), chainItem);
             db.close();
         } catch (SnappydbException e) {
             e.printStackTrace();
@@ -62,15 +72,6 @@ public class DBChainUtil {
 
     public static void initChainData(Context context) {
         saveChain(context, new ChainItem(ETHEREUM_ID, ETHEREUM_NAME));
-    }
-
-
-    private static String getDbChainKey(String chainId) {
-        return DB_CHAIN_PREFIX + chainId;
-    }
-
-    private static String getDbChainId(String key) {
-        return key.substring(DB_CHAIN_PREFIX.length());
     }
 
 }

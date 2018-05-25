@@ -15,8 +15,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBWalletUtil;
-import org.nervos.neuron.util.SharePrefUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 import java.util.concurrent.ExecutorService;

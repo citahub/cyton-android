@@ -19,8 +19,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.ExportDialog;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBWalletUtil;
-import org.nervos.neuron.util.SharePrefUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 public class WalletManageActivity extends AppCompatActivity {

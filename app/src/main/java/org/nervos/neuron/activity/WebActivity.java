@@ -1,41 +1,22 @@
 package org.nervos.neuron.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
-import org.nervos.neuron.service.response.ManifestResponse;
 import org.nervos.neuron.util.WebUtil;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class WebActivity extends BaseActivity {
 
@@ -44,26 +25,78 @@ public class WebActivity extends BaseActivity {
     private static final String MANIFEST_URL = "http://47.97.171.140:8095/contracts/new";
     private static final String PROVIDER = "http://39.104.94.244:1301";
     private WebView webView;
-    private TitleBar titleBar;
     private Boolean mIsJsInjected;
     private String mLastUrl;
+    private TextView titleText;
+    private TextView collectText;
+    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
 
-        webView = findViewById(R.id.webview);
-        titleBar = findViewById(R.id.title);
+        url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
 
-        WebUtil.initWebSettings(webView.getSettings());
+        initTitleView();
         initWebView();
-        webView.loadUrl(MANIFEST_URL);
+        webView.loadUrl(TextUtils.isEmpty(url)? MANIFEST_URL:url);
         WebUtil.getHtmlManifest(this, MANIFEST_URL);
 
     }
 
+    private void initTitleView() {
+        titleText = findViewById(R.id.title_bar_center);
+        titleText.setText("浏览器");
+        collectText = findViewById(R.id.menu_collect);
+        initCollectView();
+        findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
+        findViewById(R.id.title_bar_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initMenuView();
+            }
+        });
+    }
+
+    private void initMenuView() {
+        findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
+        findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
+        findViewById(R.id.menu_background).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.menu_layout).setVisibility(View.GONE);
+                findViewById(R.id.menu_background).setVisibility(View.GONE);
+            }
+        });
+        findViewById(R.id.menu_collect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (WebUtil.isCollectApp(mActivity)) {
+                    WebUtil.cancelCollectApp(mActivity);
+                } else {
+                    WebUtil.collectApp(mActivity);
+                }
+                initCollectView();
+            }
+        });
+        findViewById(R.id.menu_reload).setOnClickListener(v1 -> webView.reload());
+        findViewById(R.id.menu_dapp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mActivity, "dapp详情", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initCollectView() {
+        collectText.setText(WebUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
+    }
+
+
     private void initWebView() {
+        webView = findViewById(R.id.webview);
+        WebUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new JSObject(this), "jsObject");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -79,7 +112,7 @@ public class WebActivity extends BaseActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                titleBar.setTitle(title);
+                titleText.setText(title);
             }
         });
         webView.setWebViewClient(new WebViewClient(){
@@ -113,6 +146,20 @@ public class WebActivity extends BaseActivity {
         public void showTransaction(String payload) {
             Toast.makeText(context, "show transaction " + payload, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (webView.canGoBack()) {
+                webView.goBack();
+                return true;
+            } else {
+                finish();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

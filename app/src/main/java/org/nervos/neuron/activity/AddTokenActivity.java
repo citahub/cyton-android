@@ -18,8 +18,8 @@ import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.util.DBChainUtil;
-import org.nervos.neuron.util.DBWalletUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;

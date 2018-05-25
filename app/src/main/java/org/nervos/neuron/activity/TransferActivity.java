@@ -22,7 +22,7 @@ import org.nervos.neuron.R;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
-import org.nervos.neuron.util.DBWalletUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 
 import java.util.concurrent.ExecutorService;

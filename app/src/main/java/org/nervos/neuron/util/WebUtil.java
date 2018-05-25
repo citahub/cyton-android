@@ -13,15 +13,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.service.response.ManifestResponse;
+import org.nervos.neuron.util.db.DBAppUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,6 +35,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class WebUtil {
+
+    private static ChainItem chainItem;
 
     /**
      * get manifest path from html link tag
@@ -102,12 +109,30 @@ public class WebUtil {
         CitaRpcService.init(httpProvider);
         EthMetaData ethMetaData = CitaRpcService.getMetaData();
         if (ethMetaData != null) {
-            ChainItem chainItem = new ChainItem(String.valueOf(ethMetaData.chainId),
+            chainItem = new ChainItem(String.valueOf(ethMetaData.chainId),
                     ethMetaData.chainName, httpProvider);
             DBChainUtil.saveChain(context, chainItem);
         }
     }
 
+    public static boolean isCollectApp(Context context) {
+        if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
+            return DBAppUtil.findApp(context, chainItem.entry);
+        }
+        return false;
+    }
+
+    public static void collectApp(Context context) {
+        AppItem appItem = new AppItem(chainItem.entry,
+                chainItem.icon, chainItem.name, chainItem.provider);
+        DBAppUtil.saveDbApp(context, appItem);
+    }
+
+    public static void cancelCollectApp(Context context) {
+        if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
+            DBAppUtil.deleteApp(context, chainItem.entry);
+        }
+    }
 
     /**
      * read String content of rejected JavaScript file from assets
@@ -161,6 +186,30 @@ public class WebUtil {
         webSettings.setBuiltInZoomControls(false);
 
         WebView.setWebContentsDebuggingEnabled(true);
+    }
+
+
+    public static boolean isHttpUrl(String urlString) {
+        URI uri = null;
+        try {
+            uri = new URI(urlString);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if(uri.getHost() == null){
+            return false;
+        }
+        if(uri.getScheme().equalsIgnoreCase("http")
+                || uri.getScheme().equalsIgnoreCase("https")){
+            return true;
+        }
+        return false;
+    }
+
+    public interface OnMetaDataListener {
+        void getMetaData();
     }
 
 }

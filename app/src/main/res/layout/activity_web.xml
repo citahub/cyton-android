@@ -1,20 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.nervos.neuron.custom.TitleBar
-        android:id="@+id/title"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimary"
-        app:isShowLeft="true"/>
+        android:background="@color/colorPrimary">
 
-    <WebView
-        android:id="@+id/webview"
+        <ImageView
+            android:id="@+id/title_left_close"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/title_close"
+            android:scaleType="centerInside"/>
+
+        <ImageView
+            android:id="@+id/title_bar_right"
+            android:layout_width="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_height="match_parent"
+            android:src="@drawable/title_more"
+            android:scaleType="centerInside"/>
+
+        <TextView
+            android:id="@+id/title_bar_center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/title_left_close"
+            android:layout_toStartOf="@id/title_bar_right"
+            android:textSize="16sp"
+            android:textColor="@color/default_title_text_color"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+    
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/menu_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="#33000000"/>
+
+        <LinearLayout
+            android:id="@+id/menu_layout"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:background="@drawable/menu_window">
+
+            <TextView
+                android:id="@+id/menu_collect"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/default_black"
+                android:text="取消收藏"/>
+
+            <View style="@style/separateLineLong"/>
+
+            <TextView
+                android:id="@+id/menu_reload"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/default_black"
+                android:text="重新加载"/>
+
+            <View style="@style/separateLineLong"/>
+
+            <TextView
+                android:id="@+id/menu_dapp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/default_black"
+                android:text="DAPP详情"/>
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

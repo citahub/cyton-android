@@ -2,8 +2,8 @@ package org.nervos.neuron;
 
 import android.app.Application;
 
-import org.nervos.neuron.util.DBChainUtil;
-import org.nervos.neuron.util.SharePrefUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;

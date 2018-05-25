@@ -6,8 +6,12 @@ import android.os.Parcelable;
 public class ChainItem implements Parcelable{
 
     public String chainId;
-    public String name;
     public String httpProvider;
+    public String blockViewer;
+    public String name;
+    public String icon;
+    public String entry;
+    public String provider;
 
     public ChainItem(){}
 
@@ -23,6 +27,7 @@ public class ChainItem implements Parcelable{
         this.httpProvider = httpProvider;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -31,14 +36,22 @@ public class ChainItem implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.chainId);
-        dest.writeString(this.name);
         dest.writeString(this.httpProvider);
+        dest.writeString(this.blockViewer);
+        dest.writeString(this.name);
+        dest.writeString(this.icon);
+        dest.writeString(this.entry);
+        dest.writeString(this.provider);
     }
 
     protected ChainItem(Parcel in) {
         this.chainId = in.readString();
-        this.name = in.readString();
         this.httpProvider = in.readString();
+        this.blockViewer = in.readString();
+        this.name = in.readString();
+        this.icon = in.readString();
+        this.entry = in.readString();
+        this.provider = in.readString();
     }
 
     public static final Creator<ChainItem> CREATOR = new Creator<ChainItem>() {

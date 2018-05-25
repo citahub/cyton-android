@@ -23,8 +23,8 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBWalletUtil;
-import org.nervos.neuron.util.SharePrefUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 

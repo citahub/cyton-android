@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.content.SharedPreferences;

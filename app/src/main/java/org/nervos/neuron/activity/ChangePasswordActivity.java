@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.DBWalletUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class ChangePasswordActivity extends BaseActivity {
 
