@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
-import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,27 +17,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.WebUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class WebActivity extends BaseActivity {
 
-//    private static final String URL = "http://172.20.10.10:8080/";
-//    private static final String URL = "http://192.168.2.84:8080/";
     private static final String MANIFEST_URL = "http://47.97.171.140:8095/contracts/new";
-    private static final String PROVIDER = "http://39.104.94.244:1301";
+    public static final String EXTRA_PAYLOAD = "extra_payload";
+
     private WebView webView;
-    private Boolean mIsJsInjected;
-    private String mLastUrl;
     private TextView titleText;
     private TextView collectText;
-    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
 
-        url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
+        String url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
 
         initTitleView();
         initWebView();
@@ -80,17 +79,25 @@ public class WebActivity extends BaseActivity {
                 initCollectView();
             }
         });
-        findViewById(R.id.menu_reload).setOnClickListener(v1 -> webView.reload());
+        findViewById(R.id.menu_reload).setOnClickListener(v1 -> {
+            webView.reload();
+            closeMenuWindow();
+        } );
         findViewById(R.id.menu_dapp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mActivity, "dapp详情", Toast.LENGTH_SHORT).show();
+                closeMenuWindow();
             }
         });
     }
 
     private void initCollectView() {
         collectText.setText(WebUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
+        closeMenuWindow();
+    }
+
+    private void closeMenuWindow() {
         findViewById(R.id.menu_layout).setVisibility(View.GONE);
         findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
@@ -99,16 +106,13 @@ public class WebActivity extends BaseActivity {
     private void initWebView() {
         webView = findViewById(R.id.webview);
         WebUtil.initWebSettings(webView.getSettings());
-        webView.addJavascriptInterface(new JSObject(this), "jsObject");
+        webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
                 if (newProgress <= 25) {
-                    mIsJsInjected = false;
-                } else if (!mIsJsInjected && !TextUtils.equals(mLastUrl, webview.getUrl())) {
                     injectJs();
                 }
-                if (newProgress > 75 && !mIsJsInjected) injectJs();
                 Log.d("Web", "progress: " + newProgress);
             }
             @Override
@@ -122,6 +126,12 @@ public class WebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return false;
             }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                injectJs();
+            }
         });
     }
 
@@ -130,23 +140,24 @@ public class WebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        mIsJsInjected = true;
-        mLastUrl = webView.getUrl();
         webView.evaluateJavascript(WebUtil.getWeb3Js(this), null);
-//        webView.evaluateJavascript(WebUtil.getHttpProviderJs(this), null);
         webView.evaluateJavascript(WebUtil.getInjectJs(), null);
     }
 
 
-    private class JSObject {
-        private Context context;
-        public JSObject(Context context) {
-            this.context = context;
-        }
+    private class AppHybrid {
 
         @JavascriptInterface
         public void showTransaction(String payload) {
-            Toast.makeText(context, "show transaction " + payload, Toast.LENGTH_SHORT).show();
+            WalletItem walletItem = DBWalletUtil.getCurrentWallet(mActivity);
+            if (walletItem == null) {
+                Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mActivity, AddWalletActivity.class));
+            } else {
+                Intent intent = new Intent(mActivity, PayTokenActivity.class);
+                intent.putExtra(EXTRA_PAYLOAD, payload);
+                startActivity(intent);
+            }
         }
     }
 

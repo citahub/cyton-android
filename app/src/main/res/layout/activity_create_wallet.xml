@@ -39,16 +39,16 @@
             android:layout_marginStart="@dimen/default_margin"
             android:text="钱包名称"
             android:textColor="@color/font_black"
-            android:textSize="14sp"/>
+            android:textSize="15sp"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_name"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginEnd="20dp"
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
             android:hint="请输入钱包名称"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
 
@@ -65,7 +65,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="0.5dp"
         android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
+        android:paddingEnd="20dp"
         android:gravity="center_vertical"
         android:background="@android:color/white"
         android:orientation="horizontal">
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:text="设定密码"
             android:textColor="@color/font_black"
-            android:textSize="14sp"/>
+            android:textSize="15sp"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_password"
@@ -83,7 +83,7 @@
             android:background="@android:color/white"
             android:hint="请输入密码"
             android:inputType="textPassword"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:gravity="end|center_vertical"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
@@ -101,7 +101,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="0.5dp"
         android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
+        android:paddingEnd="20dp"
         android:gravity="center_vertical"
         android:background="@android:color/white"
         android:orientation="horizontal">
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:text="重复密码"
             android:textColor="@color/font_black"
-            android:textSize="14sp"/>
+            android:textSize="15sp"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_password_repeat"
@@ -120,7 +120,7 @@
             android:gravity="end|center_vertical"
             android:hint="请再次输入密码"
             android:inputType="textPassword"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
 

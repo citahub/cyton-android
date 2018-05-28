@@ -78,6 +78,7 @@ dependencies {
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'org.web3j:core:3.3.1-android'
+    implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

@@ -122,7 +122,7 @@ public class AddTokenActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
-                    if (TextUtils.equals(chainItem.chainId, DBChainUtil.ETHEREUM_ID)) {
+                    if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
                         tokenItem = EthRpcService.getTokenInfo(s.toString());
                     } else {
                         tokenItem = CitaRpcService.getTokenInfo(s.toString());

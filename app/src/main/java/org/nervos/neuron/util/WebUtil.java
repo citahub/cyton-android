@@ -88,7 +88,7 @@ public class WebUtil {
                 try {
                     String result = response.body().string();
                     chainItem = new Gson().fromJson(result, ChainItem.class);
-                    if (!TextUtils.isEmpty(chainItem.chainId)
+                    if (chainItem.chainId >= 0
                             && !TextUtils.isEmpty(chainItem.httpProvider)) {
                         getMetaData(context, chainItem.httpProvider);
                     }
@@ -110,7 +110,7 @@ public class WebUtil {
         CitaRpcService.init(httpProvider);
         EthMetaData.EthMetaDataResult ethMetaData = CitaRpcService.getMetaData().getEthMetaDataResult();
         if (ethMetaData != null &&
-                ethMetaData.chainId == Integer.parseInt(chainItem.chainId)) {
+                ethMetaData.chainId == chainItem.chainId) {
             DBChainUtil.saveChain(context, chainItem);
         }
     }
@@ -138,6 +138,10 @@ public class WebUtil {
         }
     }
 
+    public static ChainItem getChainItem() {
+        return chainItem;
+    }
+
     /**
      * read String content of rejected JavaScript file from assets
      * @param fileName    the name of JavaScript file
@@ -162,11 +166,7 @@ public class WebUtil {
     }
 
     public static String getWeb3Js(Context context) {
-        return WebUtil.getInjectedJsFile(context, "web3.js");
-    }
-
-    public static String getHttpProviderJs(Context context) {
-        return WebUtil.getInjectedJsFile(context, "httpprovider.js");
+        return WebUtil.getInjectedJsFile(context, "web3.min.js");
     }
 
     public static String  getInjectJs() {

@@ -2,16 +2,11 @@ package org.nervos.neuron.item;
 
 public class TransactionItem {
 
-    public String id;
-    public String time;
-    public String amount;
+    public String from;
+    public String to;
+    public String value;
 
-    public TransactionItem(){}
-
-    public TransactionItem(String id, String time, String amount) {
-        this.id = id;
-        this.time = time;
-        this.amount = amount;
-    }
+    public String gas;
+    public String gasPrice;
 
 }

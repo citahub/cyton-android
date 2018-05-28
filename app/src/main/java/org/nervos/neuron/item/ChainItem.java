@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class ChainItem implements Parcelable{
 
-    public String chainId;
+    public int chainId = -1;
     public String httpProvider;
     public String blockViewer;
     public String name;
@@ -15,13 +15,13 @@ public class ChainItem implements Parcelable{
 
     public ChainItem(){}
 
-    public ChainItem(String chainId, String name) {
+    public ChainItem(int chainId, String name) {
         this.chainId = chainId;
         this.name = name;
 
     }
 
-    public ChainItem(String chainId, String name, String httpProvider) {
+    public ChainItem(int chainId, String name, String httpProvider) {
         this.chainId = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
@@ -35,7 +35,7 @@ public class ChainItem implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.chainId);
+        dest.writeInt(this.chainId);
         dest.writeString(this.httpProvider);
         dest.writeString(this.blockViewer);
         dest.writeString(this.name);
@@ -45,7 +45,7 @@ public class ChainItem implements Parcelable{
     }
 
     protected ChainItem(Parcel in) {
-        this.chainId = in.readString();
+        this.chainId = in.readInt();
         this.httpProvider = in.readString();
         this.blockViewer = in.readString();
         this.name = in.readString();

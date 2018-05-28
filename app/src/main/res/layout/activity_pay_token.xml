@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/pay_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <org.nervos.neuron.custom.TitleBar
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/colorPrimary"
+            app:title="确认支付"
+            app:isShowLeft="true"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="50dp"
+            android:elevation="10dp"
+            android:background="@drawable/rectangle_border_gray_corner">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/wallet_photo"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/default_margin"
+                android:src="@drawable/wallet_photo"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/default_gray_d5"/>
+
+            <TextView
+                android:id="@+id/wallet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/wallet_photo"
+                android:layout_toEndOf="@id/wallet_photo"
+                android:layout_marginStart="@dimen/default_margin"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:text="Watson"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/wallet_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/default_black"
+                android:lines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_alignStart="@id/wallet_name"
+                android:layout_below="@id/wallet_name"/>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/pay_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/pay_button_separate"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/pay_reject"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/pay_button_separate"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:text="拒绝"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="@drawable/button_blue_line_shape"/>
+
+        <TextView
+            android:id="@+id/pay_approve"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/pay_button_separate"
+            android:layout_marginStart="@dimen/default_margin"
+            android:text="接受"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="@drawable/button_corner_blue_shape"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_below="@id/pay_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请求人"
+                android:textColor="@color/default_black"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/pay_owner"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/default_margin"
+                android:textSize="13sp"
+                android:textColor="@color/default_black"
+                android:background="@drawable/rectangle_border_gray_corner"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="请求地址"
+                android:textColor="@color/default_black"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/pay_address"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:textSize="13sp"
+                android:textColor="@color/default_black"
+                android:background="@drawable/rectangle_border_gray_corner"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="转账金额"
+                android:textColor="@color/default_black"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/pay_amount"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:paddingStart="@dimen/default_margin"
+                android:textSize="13sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_black"
+                android:background="@drawable/rectangle_border_gray_corner"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="请求费用总结（含手续费）"
+                android:textColor="@color/default_black"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/pay_sum"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:paddingStart="@dimen/default_margin"
+                android:textSize="13sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_black"
+                android:background="@drawable/rectangle_border_gray_corner"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="包含数据"
+                android:textColor="@color/default_black"
+                android:textSize="13sp"/>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:orientation="vertical"
+                android:background="@drawable/rectangle_border_gray_corner">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rectangle_border_gray_corner">
+
+                    <View
+                        android:id="@+id/pay_separate"
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/default_gray_d5"
+                        android:layout_centerInParent="true"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toStartOf="@id/pay_separate"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="37dp"
+                            android:gravity="center"
+                            android:text="HEX"
+                            android:textColor="@color/default_black"
+                            android:textSize="13sp"/>
+                        
+                        <View
+                            android:id="@+id/pay_data_left_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:background="#FE8227"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toEndOf="@id/pay_separate"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="37dp"
+                            android:gravity="center"
+                            android:text="UTF8"
+                            android:textColor="@color/default_black"
+                            android:textSize="13sp"/>
+
+                        <View
+                            android:id="@+id/pay_data_right_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:visibility="gone"
+                            android:background="#FE8227"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/pay_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:padding="10dp"
+                    android:text="data"
+                    android:textSize="13sp"
+                    android:textColor="@color/default_black"/>
+
+            </LinearLayout>
+            
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

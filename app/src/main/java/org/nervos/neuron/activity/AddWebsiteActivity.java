@@ -15,9 +15,17 @@ import android.widget.Toast;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.runtime.PermissionRequest;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.PermissionUtil;
+import org.nervos.neuron.util.RuntimeRationale;
 import org.nervos.neuron.util.WebUtil;
+
+import java.util.List;
 
 public class AddWebsiteActivity extends BaseActivity {
 
@@ -40,8 +48,16 @@ public class AddWebsiteActivity extends BaseActivity {
         findViewById(R.id.title_scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity, CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                AndPermission.with(mActivity)
+                    .runtime().permission(Permission.Group.CAMERA)
+                    .rationale(new RuntimeRationale())
+                    .onGranted(permissions -> {
+                        Intent intent = new Intent(mActivity, CaptureActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    })
+                    .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
+                    .start();
+
             }
         });
 

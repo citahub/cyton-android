@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.WalletFragment;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.RecordItem;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -42,7 +41,7 @@ public class TransactionListActivity extends AppCompatActivity {
     private String tokenImage;
     private String tokenAmount;
 
-    private List<TransactionItem> transactionItemList= new ArrayList<>();
+    private List<RecordItem> recordItemList = new ArrayList<>();
 
 
     @Override
@@ -74,10 +73,10 @@ public class TransactionListActivity extends AppCompatActivity {
 
     private void initData() {
 
-        transactionItemList.add(new TransactionItem("0x987654321def", "2018.02.12", "450.5"));
-        transactionItemList.add(new TransactionItem("0x123456789abc", "2018.01.12", "10.5"));
-        transactionItemList.add(new TransactionItem("0x123456789def", "2018.03.12", "1.9"));
-        transactionItemList.add(new TransactionItem("0x987654321abc", "2018.03.25", "35.1"));
+        recordItemList.add(new RecordItem("0x987654321def", "2018.02.12", "450.5"));
+        recordItemList.add(new RecordItem("0x123456789abc", "2018.01.12", "10.5"));
+        recordItemList.add(new RecordItem("0x123456789def", "2018.03.12", "1.9"));
+        recordItemList.add(new RecordItem("0x987654321abc", "2018.03.25", "35.1"));
 
     }
 
@@ -148,15 +147,15 @@ public class TransactionListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
             holder.transactionImageView.setImageResource(R.drawable.input);
-            holder.transactionIdText.setText(transactionItemList.get(position).id);
-            holder.transactionTimeText.setText(transactionItemList.get(position).time);
-            holder.transactionAmountText.setText(transactionItemList.get(position).amount);
+            holder.transactionIdText.setText(recordItemList.get(position).id);
+            holder.transactionTimeText.setText(recordItemList.get(position).time);
+            holder.transactionAmountText.setText(recordItemList.get(position).amount);
             holder.itemView.setTag(position);
         }
 
         @Override
         public int getItemCount() {
-            return transactionItemList.size();
+            return recordItemList.size();
         }
 
         class  TransactionViewHolder extends RecyclerView.ViewHolder {

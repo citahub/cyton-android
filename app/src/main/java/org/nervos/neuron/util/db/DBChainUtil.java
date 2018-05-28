@@ -15,7 +15,7 @@ import java.util.List;
 public class DBChainUtil extends DBUtil {
 
     private static final String DB_CHAIN = "db_chain";
-    public static final String ETHEREUM_ID = "-1";
+    public static final int ETHEREUM_ID = -1;
     private static final String ETHEREUM_NAME = "以太坊mainnet";
 
 
@@ -26,7 +26,7 @@ public class DBChainUtil extends DBUtil {
             String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 ChainItem chainItem = db.getObject(key, ChainItem.class);
-                chainItem.chainId = getDbOrigin(key);
+                chainItem.chainId = Integer.parseInt(getDbOrigin(key));
                 chainItemList.add(chainItem);
             }
             db.close();
@@ -63,7 +63,7 @@ public class DBChainUtil extends DBUtil {
     public static void saveChain(Context context, ChainItem chainItem){
         try {
             DB db = DBFactory.open(context, DB_CHAIN);
-            db.put(getDbKey(chainItem.chainId), chainItem);
+            db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
             db.close();
         } catch (SnappydbException e) {
             e.printStackTrace();

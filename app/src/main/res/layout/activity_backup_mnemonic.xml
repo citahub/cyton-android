@@ -47,7 +47,7 @@
         android:background="@color/default_white_f4"
         android:padding="@dimen/default_margin"
         android:textColor="@color/default_black"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/backup_next_button"
@@ -57,7 +57,7 @@
         android:layout_marginEnd="20dp"
         android:background="@drawable/button_corner_blue_shape"
         android:layout_marginTop="30dp"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textColor="@color/white"
         android:text="@string/next_action"/>
 
