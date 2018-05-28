@@ -23,7 +23,6 @@ import org.nervos.neuron.util.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -99,7 +98,7 @@ public class AddTokenActivity extends BaseActivity {
                     .runtime().permission(Permission.Group.CAMERA)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
-                        Intent intent = new Intent(mActivity, CaptureActivity.class);
+                        Intent intent = new Intent(mActivity, QrCodeActivity.class);
                         startActivityForResult(intent, REQUEST_CODE);
                     })
                     .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
@@ -160,9 +159,7 @@ public class AddTokenActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE) {
             if (null != data) {
                 Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
+                if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     contractAddressEdit.setText(result);

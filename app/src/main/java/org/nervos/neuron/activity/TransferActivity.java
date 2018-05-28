@@ -19,7 +19,6 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
 
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -88,7 +87,7 @@ public class TransferActivity extends BaseActivity {
                 .runtime().permission(Permission.Group.CAMERA)
                 .rationale(new RuntimeRationale())
                 .onGranted(permissions -> {
-                    Intent intent = new Intent(mActivity, CaptureActivity.class);
+                    Intent intent = new Intent(mActivity, QrCodeActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
                 })
                 .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))

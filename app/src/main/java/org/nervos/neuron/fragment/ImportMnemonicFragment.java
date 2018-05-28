@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -124,7 +123,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                     .runtime().permission(Permission.Group.CAMERA)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
-                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                        Intent intent = new Intent(getActivity(), QrCodeActivity.class);
                         startActivityForResult(intent, REQUEST_CODE);
                     })
                     .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))

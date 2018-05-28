@@ -9,23 +9,17 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-import com.yanzhenjie.permission.runtime.PermissionRequest;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.PermissionUtil;
 import org.nervos.neuron.util.RuntimeRationale;
 import org.nervos.neuron.util.WebUtil;
-
-import java.util.List;
 
 public class AddWebsiteActivity extends BaseActivity {
 
@@ -52,7 +46,7 @@ public class AddWebsiteActivity extends BaseActivity {
                     .runtime().permission(Permission.Group.CAMERA)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
-                        Intent intent = new Intent(mActivity, CaptureActivity.class);
+                        Intent intent = new Intent(mActivity, QrCodeActivity.class);
                         startActivityForResult(intent, REQUEST_CODE);
                     })
                     .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
