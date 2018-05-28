@@ -17,9 +17,13 @@ import android.widget.Toast;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.PermissionUtil;
+import org.nervos.neuron.util.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -80,8 +84,15 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         scanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                AndPermission.with(getActivity())
+                    .runtime().permission(Permission.Group.CAMERA)
+                    .rationale(new RuntimeRationale())
+                    .onGranted(permissions -> {
+                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    })
+                    .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
+                    .start();
             }
         });
     }

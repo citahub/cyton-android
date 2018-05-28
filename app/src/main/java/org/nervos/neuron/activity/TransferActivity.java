@@ -21,7 +21,11 @@ import org.nervos.neuron.R;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
+import org.nervos.neuron.util.PermissionUtil;
+import org.nervos.neuron.util.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 
@@ -80,8 +84,15 @@ public class TransferActivity extends BaseActivity {
 
     private void initListener() {
         scanImage.setOnClickListener((view) -> {
-            Intent intent = new Intent(TransferActivity.this, CaptureActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
+            AndPermission.with(mActivity)
+                .runtime().permission(Permission.Group.CAMERA)
+                .rationale(new RuntimeRationale())
+                .onGranted(permissions -> {
+                    Intent intent = new Intent(mActivity, CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                })
+                .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
+                .start();
         });
 
         nextActionButton.setOnClickListener(v -> {
