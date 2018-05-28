@@ -20,6 +20,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.PermissionUtil;
 import org.nervos.neuron.util.RuntimeRationale;
