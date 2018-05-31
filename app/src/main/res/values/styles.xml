@@ -50,20 +50,24 @@
 
 
     <style name="InputDialog" parent="android:style/Theme.Dialog">
-        <!--背景颜色及和透明程度-->
         <item name="android:windowBackground">@null</item>
-
         <item name="android:background">@color/white</item>
-        <!--是否去除标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!--是否去除边框-->
         <item name="android:windowFrame">@null</item>
-        <!--是否浮现在activity之上-->
         <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
-
         <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+
+    <style name="TransferDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
     <style name="separateLineLong">

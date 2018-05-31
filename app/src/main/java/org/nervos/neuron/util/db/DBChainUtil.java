@@ -36,10 +36,10 @@ public class DBChainUtil extends DBUtil {
         return chainItemList;
     }
 
-    public static ChainItem getChain(Context context, String chainId) {
+    public static ChainItem getChain(Context context, int chainId) {
         try {
             DB db = DBFactory.open(context, DB_CHAIN);
-            ChainItem chainItem = db.getObject(getDbKey(chainId), ChainItem.class);
+            ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
             db.close();
             return chainItem;
         } catch (SnappydbException e) {

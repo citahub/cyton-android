@@ -23,15 +23,19 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.PermissionUtil;
-import org.nervos.neuron.util.RuntimeRationale;
+import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -99,6 +103,9 @@ public class ImportMnemonicFragment extends BaseFragment {
                         generateAndSaveWallet();
                         rePasswordEdit.post(() -> {
                             dismissProgressBar();
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+                            startActivity(intent);
                         });
                     });
                 }
@@ -141,6 +148,9 @@ public class ImportMnemonicFragment extends BaseFragment {
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
+            List<TokenItem> tokenItemList = new ArrayList<>();
+            tokenItemList.add(EthRpcService.getDefaultEth(walletItem.address));
+            walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
             SharePrefUtil.putWalletName(walletItem.name);
         } catch (CipherException e) {

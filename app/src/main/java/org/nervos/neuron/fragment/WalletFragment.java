@@ -1,6 +1,5 @@
 package org.nervos.neuron.fragment;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,8 @@ import org.nervos.neuron.dialog.DialogUtil;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -35,7 +37,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletFragment extends Fragment {
+public class WalletFragment extends BaseFragment {
 
     public static final String TAG = WalletFragment.class.getName();
     public static final String EXTRA_WALLET_ADDRESS = "EXTRA_WALLET_ADDRESS";
@@ -75,7 +77,6 @@ public class WalletFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initWalletData();
-        initView();
         initAdapter();
         initListener();
         initTitleBarListener();
@@ -90,18 +91,21 @@ public class WalletFragment extends Fragment {
     private void initWalletData() {
         if (!TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
             walletNameList = DBWalletUtil.getAllWalletName(getContext());
+            showProgressBar();
             walletItem = DBWalletUtil.getWallet(getContext(), SharePrefUtil.getWalletName());
-            if (walletItem != null && walletItem.tokenItems != null) {
-                tokenItemList.addAll(walletItem.tokenItems);
+            if (walletItem != null) {
+                walletNameText.setText(walletItem.name);
+                addressText.setText(walletItem.address);
             }
-        }
-    }
-
-    private void initView() {
-        if (walletItem != null) {
-            walletNameText.setText(walletItem.name);
-            addressText.setText(walletItem.address);
-            tokenAdapter.notifyDataSetChanged();
+            WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
+                    walletNameText.post(() -> {
+                    dismissProgressBar();
+                    if (walletItem != null && walletItem.tokenItems != null) {
+                        tokenItemList = walletItem.tokenItems;
+                        tokenAdapter.notifyDataSetChanged();
+                    }
+                })
+            );
         }
     }
 
@@ -126,7 +130,9 @@ public class WalletFragment extends Fragment {
                     dialog.dismiss();
                 });
                 dialog.setOnTransferClickListener(v -> {
-                    startActivity(new Intent(getActivity(), TransferActivity.class));
+                    Intent intent = new Intent(getActivity(), TransferActivity.class);
+                    intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItemList.get(position));
+                    startActivity(intent);
                     dialog.dismiss();
                 });
                 dialog.show();
@@ -138,8 +144,8 @@ public class WalletFragment extends Fragment {
         titleBar.setOnRightClickListener(() -> startActivity(new Intent(getActivity(), AddWalletActivity.class)));
 
         titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(), "切换当前钱包", walletNameList, which -> {
-            walletItem = DBWalletUtil.getWallet(getContext(), walletNameList.get(which));
-            initView();
+            SharePrefUtil.putWalletName(walletNameList.get(which));
+            initWalletData();
         }));
     }
 

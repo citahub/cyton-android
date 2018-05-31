@@ -210,16 +210,16 @@ public class WalletEntity {
      * @return 钱包文件
      * @throws CipherException
      */
-    public WalletFile exportWalletFile(String password) throws CipherException {
+    public static String exportKeyStore(WalletItem walletItem, String password){
+        Credentials credentials = Credentials.create(walletItem.privateKey);
         ECKeyPair ekp = credentials.getEcKeyPair();
-        WalletFile walletFile = Wallet.createStandard(password, ekp);
-        this.walletFile = walletFile;
-        this.walletPass = password;
-        return walletFile;
-    }
-
-    public static String exportKeyStore(WalletItem walletItem){
-        return walletFileJson(walletItem.walletFile);
+        WalletFile walletFile = null;
+        try {
+            walletFile = Wallet.createStandard(password, ekp);
+        } catch (CipherException e) {
+            e.printStackTrace();
+        }
+        return walletFileJson(walletFile);
     }
 
     /**

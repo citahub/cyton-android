@@ -95,7 +95,6 @@
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@id/wallet_address_text"
             android:layout_marginStart="30dp"
-            android:text="1234566677742343454534342323453454"
             android:maxEms="16"
             android:lines="1"
             android:ellipsize="end"

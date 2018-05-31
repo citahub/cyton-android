@@ -6,10 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import org.nervos.neuron.item.ChainItem;
@@ -18,8 +19,8 @@ import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.util.PermissionUtil;
-import org.nervos.neuron.util.RuntimeRationale;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
@@ -57,7 +58,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        CitaRpcService.init();
+        CitaRpcService.init(CitaRpcService.NODE_IP);
         EthRpcService.init();
     }
 
@@ -74,6 +75,13 @@ public class AddTokenActivity extends BaseActivity {
         chainItemList = DBChainUtil.getAllChain(this);
         chainNameList = DBChainUtil.getAllChainName(this);
         chainItem = chainItemList.get(0);
+
+        String[] chainNames = new String[chainNameList.size()];
+        chainNames = chainNameList.toArray(chainNames);
+        Log.d("wallet", "chain size: " + chainNameList.size());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                R.layout.spinner_item, chainNames);
+        blockChainSpinner.setAdapter(adapter);
     }
 
     private void initListener() {
@@ -84,6 +92,7 @@ public class AddTokenActivity extends BaseActivity {
                 if (tokenItem == null) {
                     Toast.makeText(mActivity, "请输入Token信息", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.d("wallet", "token symbol: " + tokenItem.symbol);
                     DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
                     finish();
                 }
@@ -133,9 +142,9 @@ public class AddTokenActivity extends BaseActivity {
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
-                        tokenItem = EthRpcService.getTokenInfo(s.toString());
+                        tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
-                        tokenItem = CitaRpcService.getTokenInfo(s.toString());
+                        tokenItem = CitaRpcService.getTokenInfo(s.toString(), walletItem.address);
                     }
                     if (chainItem != null && tokenItem != null) {
                         tokenItem.chainId = chainItem.chainId;

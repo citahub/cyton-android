@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,12 +13,16 @@ import org.nervos.neuron.R;
 
 public class SimpleDialog extends Dialog {
 
+    public static final int PASSWORD = 0;
+    public static final int TEXT = 1;
+
     private TextView okBtn;
     private TextView cancelBtn;
     private TextView titleText;
     private AppCompatEditText messageEdit;
     private String titleStr;
     private String hintStr;
+    private int type;
 
     private OnOkClickListener onOkClickListener;
     private OnCancelClickListener onCancelClickListener;
@@ -79,6 +84,9 @@ public class SimpleDialog extends Dialog {
         cancelBtn = findViewById(R.id.dialog_cancel);
         titleText = findViewById(R.id.dialog_title);
         messageEdit = findViewById(R.id.dialog_edit_message);
+        if (type == PASSWORD) {
+            messageEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
         if (!TextUtils.isEmpty(titleStr)) {
             titleText.setText(titleStr);
         }
@@ -97,6 +105,10 @@ public class SimpleDialog extends Dialog {
 
     public String getMessage() {
         return messageEdit.getText().toString().trim();
+    }
+
+    public void setEditInputType(int type) {
+        this.type = type;
     }
 
     public interface OnCancelClickListener {

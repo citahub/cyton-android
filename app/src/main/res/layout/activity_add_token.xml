@@ -52,8 +52,7 @@
                 android:layout_toStartOf="@id/triangle_spinner"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:entries="@array/chain_items"/>
+                android:layout_height="48dp"/>
 
         </RelativeLayout>
 

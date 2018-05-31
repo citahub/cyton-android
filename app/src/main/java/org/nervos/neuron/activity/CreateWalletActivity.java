@@ -14,11 +14,15 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,7 +38,7 @@ public class CreateWalletActivity extends BaseActivity {
     private AppCompatButton createWalletButton;
     private TitleBar titleBar;
 
-    private WalletEntity mWalletEntity;
+    private WalletEntity walletEntity;
 
 
     @Override
@@ -71,7 +75,7 @@ public class CreateWalletActivity extends BaseActivity {
                             dismissProgressBar();
                             Intent intent = new Intent(CreateWalletActivity.this,
                                     BackupMnemonicActivity.class);
-                            intent.putExtra(EXTRA_MNEMONIC, mWalletEntity.getMnemonic());
+                            intent.putExtra(EXTRA_MNEMONIC, walletEntity.getMnemonic());
                             startActivity(intent);
                         });
                     });
@@ -95,16 +99,25 @@ public class CreateWalletActivity extends BaseActivity {
     }
 
     /**
-     * 存储钱包信息至数据库
+     * save wallet information to database and add default eth token
      */
     private void saveWalletInfo(){
-        mWalletEntity = WalletEntity.createWithMnemonic(
+        walletEntity = WalletEntity.createWithMnemonic(
                 passwordEdit.getText().toString().trim(), MnemonicPath);
-        WalletItem walletItem = WalletItem.fromWalletEntity(mWalletEntity);
-        walletItem.name = walletNameEdit.getText().toString().trim();
-        walletItem.password = passwordEdit.getText().toString().trim();
-        DBWalletUtil.saveWallet(CreateWalletActivity.this, walletItem);
-        SharePrefUtil.putWalletName(walletItem.name);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
+                walletItem.name = walletNameEdit.getText().toString().trim();
+                walletItem.password = passwordEdit.getText().toString().trim();
+                List<TokenItem> tokenItemList = new ArrayList<>();
+                tokenItemList.add(EthRpcService.getDefaultEth(walletItem.address));
+                walletItem.tokenItems = tokenItemList;
+                DBWalletUtil.saveWallet(mActivity, walletItem);
+                SharePrefUtil.putWalletName(walletItem.name);
+            }
+        }.start();
     }
 
 

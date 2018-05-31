@@ -5,9 +5,9 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WalletItem implements Parcelable{
@@ -57,13 +57,13 @@ public class WalletItem implements Parcelable{
     /**
      * 钱包中含有的Token
      */
-    public List<TokenItem> tokenItems;
+    public List<TokenItem> tokenItems = new ArrayList<>();
 
     public boolean currentSelected = false;
 
     public static WalletItem fromWalletEntity(WalletEntity walletEntity) {
         WalletItem walletItem = new WalletItem();
-        walletItem.address = walletEntity.getCredentials().getAddress();
+        walletItem.address = walletEntity.getAddress();
         walletItem.privateKey = walletEntity.getPrivateKey();
         walletItem.mnemonic = walletEntity.getMnemonic();
         walletItem.passphrase = walletEntity.getPassphrase();
@@ -109,6 +109,7 @@ public class WalletItem implements Parcelable{
         this.address = in.readString();
         this.privateKey = in.readString();
         this.walletPass = in.readString();
+        this.walletFile = in.readParcelable(WalletFile.class.getClassLoader());
         this.mnemonic = in.readString();
         this.passphrase = in.readString();
         this.path = in.readString();

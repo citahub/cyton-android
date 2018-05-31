@@ -18,12 +18,11 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.WebUtil;
+import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class WebActivity extends BaseActivity {
 
-    private static final String MANIFEST_URL = "http://47.97.171.140:8095/contracts/new";
     public static final String EXTRA_PAYLOAD = "extra_payload";
 
     private WebView webView;
@@ -39,8 +38,8 @@ public class WebActivity extends BaseActivity {
 
         initTitleView();
         initWebView();
-        webView.loadUrl(TextUtils.isEmpty(url)? MANIFEST_URL:url);
-        WebUtil.getHtmlManifest(this, MANIFEST_URL);
+        webView.loadUrl(url);
+        WebUtil.getHtmlManifest(this, url);
 
     }
 

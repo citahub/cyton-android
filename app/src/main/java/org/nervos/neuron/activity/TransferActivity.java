@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
@@ -23,8 +24,8 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import org.nervos.neuron.util.PermissionUtil;
-import org.nervos.neuron.util.RuntimeRationale;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 
@@ -34,7 +35,7 @@ import java.util.concurrent.Executors;
 public class TransferActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
-    private static final String CONTRACT_ADDRESS = "0x73552bc4e960a1d53013b40074569ea05b950b4d";
+    public static final String EXTRA_TOKEN = "extra_token";
     private static final int DEFAULT_FEE = 20;
     private static final int MAX_FEE = 100;
 
@@ -48,6 +49,8 @@ public class TransferActivity extends BaseActivity {
     private AppCompatSeekBar feeSeekBar;
 
     private WalletItem walletItem;
+    private TokenItem tokenItem;
+    private BottomSheetDialog sheetDialog;
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
@@ -57,8 +60,9 @@ public class TransferActivity extends BaseActivity {
         setContentView(R.layout.activity_transfer);
 
         walletItem = DBWalletUtil.getCurrentWallet(this);
+        tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
 
-        CitaRpcService.init();
+        CitaRpcService.init(walletItem.privateKey, CitaRpcService.NODE_IP);
         initView();
         initListener();
 
@@ -100,7 +104,7 @@ public class TransferActivity extends BaseActivity {
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(TransferActivity.this, "转账金额不能为空", Toast.LENGTH_SHORT).show();
             } else {
-                BottomSheetDialog sheetDialog = new BottomSheetDialog(TransferActivity.this);
+                sheetDialog = new BottomSheetDialog(TransferActivity.this);
                 sheetDialog.setCancelable(false);
                 sheetDialog.setContentView(getConfirmTransferView(sheetDialog));
                 sheetDialog.show();
@@ -155,7 +159,7 @@ public class TransferActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         cachedThreadPool.execute(() -> {
             String value = transferValueEdit.getText().toString().trim();
-            CitaRpcService.transfer(CONTRACT_ADDRESS,
+            CitaRpcService.transfer(tokenItem.contractAddress,
                     receiveAddressEdit.getText().toString().trim(),
                     Long.parseLong(value),
                     new CitaRpcService.OnTransferResultListener() {
@@ -164,12 +168,14 @@ public class TransferActivity extends BaseActivity {
                             Toast.makeText(TransferActivity.this,
                                     "转账成功", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
+                            sheetDialog.dismiss();
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             e.printStackTrace();
                             progressBar.setVisibility(View.GONE);
+                            sheetDialog.dismiss();
                         }
                     });
         });

@@ -8,7 +8,8 @@
     
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="250dp"
+        android:background="@color/white">
         <org.nervos.neuron.custom.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -19,13 +20,15 @@
             app:left_img="@drawable/list"
             app:isShowRight="true"
             app:right_img="@drawable/add"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="190dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="50dp"
-            android:elevation="10dp"
+            android:elevation="5dp"
+            android:translationZ="5dp"
             android:background="@drawable/rectangle_border_gray_corner">
 
             <ImageView
@@ -64,10 +67,10 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/default_black"
-                android:lines="1"
-                android:ellipsize="end"
-                android:maxEms="12"
-                android:text="0x12ab3987de32323244343423223"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginTop="5dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/wallet_name"/>
@@ -134,9 +137,7 @@
         android:id="@+id/token_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"/>
+        android:layout_marginLeft="@dimen/default_margin"/>
 
 </LinearLayout>

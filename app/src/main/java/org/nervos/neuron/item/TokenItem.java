@@ -13,7 +13,7 @@ public class TokenItem implements Parcelable{
     public String amount;
     public int chainId;
     public String chainName;
-    public float balance;
+    public double balance;
 
     public TokenItem(){}
 
@@ -21,6 +21,13 @@ public class TokenItem implements Parcelable{
         this.symbol = symbol;
         this.image = image;
         this.balance = balance;
+    }
+
+    public TokenItem(String symbol, int image, double balance, int chainId) {
+        this.symbol = symbol;
+        this.image = image;
+        this.balance = balance;
+        this.chainId = chainId;
     }
 
 
@@ -39,7 +46,7 @@ public class TokenItem implements Parcelable{
         dest.writeString(this.amount);
         dest.writeInt(this.chainId);
         dest.writeString(this.chainName);
-        dest.writeFloat(this.balance);
+        dest.writeDouble(this.balance);
     }
 
     protected TokenItem(Parcel in) {

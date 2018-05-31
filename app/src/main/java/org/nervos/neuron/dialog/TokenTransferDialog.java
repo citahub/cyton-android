@@ -26,7 +26,7 @@ public class TokenTransferDialog extends Dialog {
 
 
     public TokenTransferDialog(Context context, TokenItem tokenItem) {
-        super(context, R.style.InputDialog);
+        super(context, R.style.TransferDialog);
         this.tokenItem = tokenItem;
     }
 
@@ -48,7 +48,7 @@ public class TokenTransferDialog extends Dialog {
 
         tokenNameText.setText(tokenItem.symbol);
         tokenImage.setImageResource(tokenItem.image);
-        tokenBalanceText.setText("" + tokenItem.balance);
+        tokenBalanceText.setText(String.valueOf(tokenItem.balance));
     }
 
     private void initListener() {

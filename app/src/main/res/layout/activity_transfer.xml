@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@color/default_black"
-        android:lines="1"
-        android:ellipsize="end"
-        android:maxEms="12"
-        android:text="0x12ab3987de32323244343423223"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginTop="5dp"
         android:layout_gravity="center_horizontal"/>
 

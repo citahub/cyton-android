@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.permission;
 
 import android.content.Context;
 import android.content.DialogInterface;

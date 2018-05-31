@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.web;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

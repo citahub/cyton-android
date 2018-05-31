@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.WebUtil;
+import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class PayTokenActivity extends BaseActivity {

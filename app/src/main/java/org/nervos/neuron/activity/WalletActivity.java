@@ -179,7 +179,7 @@ public class WalletActivity extends AppCompatActivity {
 //                public void getReceipt(EthGetTransactionReceipt receipt) {
 //                    Toast.makeText(mainActivity, "Transfer success", Toast.LENGTH_SHORT).show();
 //                    valueEdit.setText("");
-//                    getBalance();
+//                    getEthBalance();
 //                }
 //                @Override
 //                public void onError(Throwable e) {

@@ -2,6 +2,7 @@ package org.nervos.neuron;
 
 import android.app.Application;
 
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -18,5 +19,6 @@ public class NeuronApplication extends Application {
         WalletEntity.initWalletMnemonic(this);
         SharePrefUtil.init(this);
         DBChainUtil.initChainData(this);
+        EthRpcService.init();
     }
 }

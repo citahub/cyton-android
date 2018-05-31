@@ -1,6 +1,9 @@
 package org.nervos.neuron.service;
 
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.account.Account;
@@ -24,7 +27,7 @@ import rx.schedulers.Schedulers;
 
 public class CitaRpcService {
 
-    private static final String NODE_IP = "http://47.75.129.215:1337";
+    public static final String NODE_IP = "http://47.75.129.215:1337";
 
     private static Web3j service;
     private static Account account;
@@ -33,16 +36,15 @@ public class CitaRpcService {
     private static Random random;
     private static BigInteger quota = BigInteger.valueOf(1000000);
     private static int version = 0;
-    private static int chainId = 0;
+    private static int chainId = 1;
     private static long chainValue = 0;
 
-    public static void init() {
-        service = Web3j.build(new HttpService(NODE_IP));
-        account = new Account(WalletConfig.PRIVKEY, service);
+    public static void init(String privateKey, String httpProvider) {
+        service = Web3j.build(new HttpService(httpProvider));
+        account = new Account(privateKey, service);
     }
 
     public static void init(String httpProvider) {
-        HttpService.setDebug(true);
         service = Web3j.build(new HttpService(httpProvider));
         account = new Account(WalletConfig.PRIVKEY, service);
     }
@@ -53,26 +55,33 @@ public class CitaRpcService {
     }
 
 
-    public static TokenItem getTokenInfo(String contractAddress) {
+    public static TokenItem getTokenInfo(String contractAddress, String address) {
         try {
             String abi = account.getAbi(contractAddress);
             mContract = new CompiledContract(abi);
 
             TokenItem tokenItem = new TokenItem();
+            tokenItem.contractAddress = contractAddress;
 
             AbiDefinition symbol = mContract.getFunctionAbi("symbol", 0);
-            tokenItem.symbol = account.callContract(contractAddress, symbol, randomNonce(), quota, version, chainId, chainValue).toString();
+            tokenItem.symbol = account.callContract(contractAddress, symbol, randomNonce(),
+                    quota, version, chainId, chainValue).toString();
 
             AbiDefinition decimals = mContract.getFunctionAbi("decimals", 0);
-            String decimal = account.callContract(contractAddress, decimals, randomNonce(), quota, version, chainId, chainValue).toString();
+            String decimal = account.callContract(contractAddress, decimals, randomNonce(),
+                    quota, version, chainId, chainValue).toString();
             tokenItem.decimals = Integer.parseInt(decimal);
 
             AbiDefinition nameAbi = mContract.getFunctionAbi("name", 0);
-            tokenItem.name = account.callContract(contractAddress, nameAbi, randomNonce(), quota, version, chainId, chainValue).toString();
+            tokenItem.name = account.callContract(contractAddress, nameAbi, randomNonce(),
+                    quota, version, chainId, chainValue).toString();
 
             AbiDefinition balanceOfAbi = mContract.getFunctionAbi("balanceOf", 1);
-            String balance = account.callContract(contractAddress, balanceOfAbi, randomNonce(), quota, version, chainId, chainValue).toString();
+            String balance = account.callContract(contractAddress, balanceOfAbi, randomNonce(),
+                    quota, version, chainId, chainValue, address).toString();
             tokenItem.balance = Float.valueOf(balance);
+
+            Log.d("wallet", "cita erc20 balance: " + tokenItem.balance);
 
             return tokenItem;
 
@@ -106,6 +115,7 @@ public class CitaRpcService {
     public static void transfer(String contractAddress, String address, long value, OnTransferResultListener listener) {
         try {
             String abi = account.getAbi(contractAddress);
+
             mContract = new CompiledContract(abi);
 
             AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
@@ -130,7 +140,8 @@ public class CitaRpcService {
                         }
                         @Override
                         public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                            if(ethGetTransactionReceipt.getTransactionReceipt() != null) {
+                            if(ethGetTransactionReceipt.getTransactionReceipt() != null
+                                    && ethGetTransactionReceipt.getTransactionReceipt().getErrorMessage() == null) {
                                 if (listener != null) {
                                     listener.onSuccess(ethGetTransactionReceipt);
                                 }

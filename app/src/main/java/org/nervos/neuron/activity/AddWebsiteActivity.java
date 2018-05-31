@@ -17,9 +17,9 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.PermissionUtil;
-import org.nervos.neuron.util.RuntimeRationale;
-import org.nervos.neuron.util.WebUtil;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.web.WebUtil;
 
 public class AddWebsiteActivity extends BaseActivity {
 
