@@ -17,6 +17,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private View rootView;
     private View mProgressView;
+    private View mProgressCircleView;
 
     protected Activity mActivity;
 
@@ -30,6 +31,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         rootView = null;
         mProgressView = null;
+        mProgressCircleView = null;
     }
 
     /**
@@ -60,6 +62,33 @@ public class BaseActivity extends AppCompatActivity {
             ((ViewGroup)rootView).removeView(mProgressView);
         }
         mProgressView = null;
+        rootView = null;
+    }
+
+
+    /**
+     * show Progress circle
+     */
+
+    protected void showProgressCircle() {
+        if (mProgressCircleView == null) {
+            mProgressCircleView = LayoutInflater.from(this).inflate(R.layout.progressbar_circle, null);
+            rootView = getWindow().getDecorView();
+            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            fl.gravity = Gravity.CENTER;
+
+            ((ViewGroup)rootView).addView(mProgressCircleView, 1, fl);
+        }
+    }
+
+    /**
+     * hide Progress circle
+     */
+    protected void dismissProgressCircle() {
+        if (rootView != null && mProgressCircleView != null) {
+            ((ViewGroup)rootView).removeView(mProgressCircleView);
+        }
+        mProgressCircleView = null;
         rootView = null;
     }
 

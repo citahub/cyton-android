@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,20 +25,25 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import rx.Subscriber;
 
 public class TransferActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
-    private static final int DEFAULT_FEE = 20;
     private static final int MAX_FEE = 100;
+    private static final int DEFAULT_FEE = 20;    // default seek progress is 20
 
     private TextView walletAddressText;
     private TextView walletNameText;
@@ -54,6 +60,9 @@ public class TransferActivity extends BaseActivity {
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
+    private double unitGas = 0.0;
+    private String tokenUnit = "eth";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +71,12 @@ public class TransferActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
 
+        tokenUnit = tokenItem.chainId < 0? "eth":"";
+
         CitaRpcService.init(walletItem.privateKey, CitaRpcService.NODE_IP);
         initView();
         initListener();
+        initGasInfo();
 
     }
 
@@ -83,6 +95,27 @@ public class TransferActivity extends BaseActivity {
 
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
+    }
+
+    private void initGasInfo() {
+        showProgressCircle();
+        EthNativeRpcService.getEthGas().subscribe(new Subscriber<Double>() {
+            @Override
+            public void onCompleted() {
+
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNext(Double gas) {
+                unitGas = gas * DEFAULT_FEE / MAX_FEE;
+                feeText.setText(NumberUtil.getDecimal_6(gas) + tokenUnit);
+                dismissProgressCircle();
+            }
+        });
     }
 
     private void initListener() {
@@ -113,7 +146,7 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                feeText.setText(String.valueOf(progress/100.0));
+                feeText.setText(NumberUtil.getDecimal_6(progress * unitGas));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -149,36 +182,88 @@ public class TransferActivity extends BaseActivity {
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transfer(progressBar);
+                String value = transferValueEdit.getText().toString().trim();
+                if (tokenItem.chainId < 0) {
+                    if (EthNativeRpcService.ETH.equals(tokenItem.symbol)) {
+                        transferEth(value, progressBar);
+                    }
+                } else {
+                    transferCitaErc20(value, progressBar);
+                }
             }
         });
         return view;
     }
 
-    private void transfer(ProgressBar progressBar) {
+
+    /**
+     * transfer erc20 token of cita
+     * @param value  transfer value
+     * @param progressBar
+     */
+    private void transferCitaErc20(String value, ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
         cachedThreadPool.execute(() -> {
-            String value = transferValueEdit.getText().toString().trim();
             CitaRpcService.transfer(tokenItem.contractAddress,
-                    receiveAddressEdit.getText().toString().trim(),
-                    Long.parseLong(value),
-                    new CitaRpcService.OnTransferResultListener() {
-                        @Override
-                        public void onSuccess(EthGetTransactionReceipt receipt) {
-                            Toast.makeText(TransferActivity.this,
-                                    "转账成功", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                            sheetDialog.dismiss();
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
-                            sheetDialog.dismiss();
-                        }
-                    });
+                receiveAddressEdit.getText().toString().trim(),
+                Long.parseLong(value),
+                new CitaRpcService.OnTransferResultListener() {
+                    @Override
+                    public void onSuccess(EthGetTransactionReceipt receipt) {
+                        Toast.makeText(TransferActivity.this,
+                                "转账成功", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
+                    }
+                });
         });
+    }
+
+
+    /**
+     * transfer origin token of ethereum
+     * @param value
+     * @param progressBar
+     */
+    private void transferEth(String value, ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
+        EthNativeRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),Double.valueOf(value))
+            .subscribe(new Subscriber<EthSendTransaction>() {
+                @Override
+                public void onCompleted() {
+
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(TransferActivity.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+                }
+                @Override
+                public void onNext(EthSendTransaction ethSendTransaction) {
+                    Toast.makeText(TransferActivity.this,
+                            "转账成功", Toast.LENGTH_SHORT).show();
+                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getTransactionHash());
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+//                    finish();
+                    try {
+                        Thread.sleep(12000);
+                        EthNativeRpcService.getTransactionReceipt(ethSendTransaction.getTransactionHash());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
     }
 
 
@@ -186,12 +271,9 @@ public class TransferActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
             if (null != data) {
                 Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
+                if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     receiveAddressEdit.setText(result);

@@ -27,7 +27,6 @@ import org.nervos.neuron.dialog.DialogUtil;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;

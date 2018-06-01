@@ -27,7 +27,7 @@ import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -149,7 +149,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
             List<TokenItem> tokenItemList = new ArrayList<>();
-            tokenItemList.add(EthRpcService.getDefaultEth(walletItem.address));
+            tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
             walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
             SharePrefUtil.putWalletName(walletItem.name);

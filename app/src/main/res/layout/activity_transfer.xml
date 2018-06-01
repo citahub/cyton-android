@@ -161,7 +161,6 @@
             android:id="@+id/fee_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.12eth"
             android:textColor="@color/default_gray_6"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"/>
@@ -183,7 +182,7 @@
         android:layout_marginEnd="@dimen/default_margin"
         android:background="@drawable/button_corner_blue_shape"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:textSize="15sp"
         android:textColor="@color/white"
         android:text="@string/next_action"/>

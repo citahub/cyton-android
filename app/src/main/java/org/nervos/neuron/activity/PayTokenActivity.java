@@ -58,7 +58,7 @@ public class PayTokenActivity extends BaseActivity {
         findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                finish();
             }
         });
         findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {

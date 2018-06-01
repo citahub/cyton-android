@@ -74,6 +74,7 @@ public class WebUtil {
     private static void getHttpManifest(Context context, String url, String path) {
         URI uri = URI.create(url);
         String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
+        Log.d("wallet", "manifestUrl: " + manifestUrl);
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url(manifestUrl)
                 .method("GET",null).build();
@@ -87,6 +88,7 @@ public class WebUtil {
             public void onResponse(Call call, Response response) {
                 try {
                     String result = response.body().string();
+                    Log.d("wallet", "manifest result: " + result);
                     chainItem = new Gson().fromJson(result, ChainItem.class);
                     if (chainItem.chainId >= 0
                             && !TextUtils.isEmpty(chainItem.httpProvider)) {

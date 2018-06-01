@@ -16,7 +16,7 @@ import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -112,7 +112,7 @@ public class CreateWalletActivity extends BaseActivity {
                 walletItem.name = walletNameEdit.getText().toString().trim();
                 walletItem.password = passwordEdit.getText().toString().trim();
                 List<TokenItem> tokenItemList = new ArrayList<>();
-                tokenItemList.add(EthRpcService.getDefaultEth(walletItem.address));
+                tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
                 walletItem.tokenItems = tokenItemList;
                 DBWalletUtil.saveWallet(mActivity, walletItem);
                 SharePrefUtil.putWalletName(walletItem.name);

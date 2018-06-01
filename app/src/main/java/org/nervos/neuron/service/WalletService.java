@@ -31,10 +31,10 @@ public class WalletService {
                 Log.d("wallet", "symbol: " + tokenItem.symbol);
                 if (tokenItem.chainId < 0) {
                     if (ETH.equals(tokenItem.symbol)) {
-                        tokenItem = EthRpcService.getDefaultEth(walletItem.address);
+                        tokenItem = EthNativeRpcService.getDefaultEth(walletItem.address);
                         tokenItemList.add(i, tokenItem);
                     } else {
-                        double balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
+                        double balance = EthErc20RpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                         tokenItem.balance = balance;
                         tokenItemList.add(i, tokenItem);
                     }

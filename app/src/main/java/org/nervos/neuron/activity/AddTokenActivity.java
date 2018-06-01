@@ -18,7 +18,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.EthErc20RpcService;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -59,7 +59,6 @@ public class AddTokenActivity extends BaseActivity {
         initData();
         initListener();
         CitaRpcService.init(CitaRpcService.NODE_IP);
-        EthRpcService.init();
     }
 
     private void initView() {
@@ -142,7 +141,7 @@ public class AddTokenActivity extends BaseActivity {
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
-                        tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
+                        tokenItem = EthErc20RpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
                         tokenItem = CitaRpcService.getTokenInfo(s.toString(), walletItem.address);
                     }

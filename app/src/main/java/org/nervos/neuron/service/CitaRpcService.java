@@ -1,9 +1,6 @@
 package org.nervos.neuron.service;
 
-
-import android.text.TextUtils;
 import android.util.Log;
-
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.account.Account;
@@ -27,7 +24,7 @@ import rx.schedulers.Schedulers;
 
 public class CitaRpcService {
 
-    public static final String NODE_IP = "http://47.75.129.215:1337";
+    public static final String NODE_IP = "http://47.94.105.230:1337";
 
     private static Web3j service;
     private static Account account;
@@ -45,6 +42,7 @@ public class CitaRpcService {
     }
 
     public static void init(String httpProvider) {
+        HttpService.setDebug(true);
         service = Web3j.build(new HttpService(httpProvider));
         account = new Account(WalletConfig.PRIVKEY, service);
     }
@@ -118,7 +116,7 @@ public class CitaRpcService {
 
             mContract = new CompiledContract(abi);
 
-            AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
+            AbiDefinition transfer = mContract.getFunctionAbi("transferEth", 2);
             EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(contractAddress,
                     transfer, randomNonce(), quota, version, chainId, chainValue, address, BigInteger.valueOf(value));
             Thread.sleep(6000);
