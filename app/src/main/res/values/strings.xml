@@ -20,7 +20,7 @@
     <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>
     <string name="confirm_mnemonic">确认助记词</string>
-    <string name="title_transaction_list">交易记录</string>
+    <string name="title_transaction_detail">交易详情</string>
     <string name="title_transfer">转账</string>
     <string name="title_create_wallet">创建钱包</string>
     <string name="title_import_wallet">导入钱包</string>

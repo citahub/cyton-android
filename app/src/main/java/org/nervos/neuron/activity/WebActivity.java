@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,11 +14,15 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
@@ -29,12 +34,15 @@ public class WebActivity extends BaseActivity {
     private TextView titleText;
     private TextView collectText;
 
+    private WalletItem walletItem;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
 
         String url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
+        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         initTitleView();
         initWebView();
@@ -148,7 +156,6 @@ public class WebActivity extends BaseActivity {
 
         @JavascriptInterface
         public void showTransaction(String payload) {
-            WalletItem walletItem = DBWalletUtil.getCurrentWallet(mActivity);
             if (walletItem == null) {
                 Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
@@ -159,6 +166,47 @@ public class WebActivity extends BaseActivity {
             }
         }
     }
+
+
+    private void showSignMessageDialog() {
+        BottomSheetDialog sheetDialog = new BottomSheetDialog(mActivity);
+        sheetDialog.setCancelable(false);
+        sheetDialog.setContentView(getSignMessageView(sheetDialog));
+        sheetDialog.show();
+    }
+
+    private View getSignMessageView(BottomSheetDialog sheetDialog) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_sign_message, null);
+        TextView walletNameText = view.findViewById(R.id.wallet_name);
+        TextView walletAddressText = view.findViewById(R.id.wallet_address);
+        TextView payOwnerText = view.findViewById(R.id.pay_owner);
+        TextView payDataText = view.findViewById(R.id.pay_data);
+        ProgressBar progressBar = view.findViewById(R.id.sign_progress);
+
+        walletNameText.setText(walletItem.name);
+        walletAddressText.setText(walletItem.address);
+        ChainItem chainItem = WebUtil.getChainItem();
+        if (chainItem != null) {
+            payOwnerText.setText(chainItem.provider);
+            payDataText.setText("");
+        }
+
+        view.findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sheetDialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        return view;
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

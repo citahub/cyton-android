@@ -21,7 +21,7 @@ public class WalletItem implements Parcelable{
     public int image;
 
     /**
-     * 钱包密码
+     * 钱包密码/助记词密码
      */
     public String password;
     /**
@@ -46,10 +46,6 @@ public class WalletItem implements Parcelable{
      */
     public String mnemonic;
     /**
-     * 助记词密码
-     */
-    public String passphrase;
-    /**
      * 路径
      */
     public String path;
@@ -66,7 +62,6 @@ public class WalletItem implements Parcelable{
         walletItem.address = walletEntity.getAddress();
         walletItem.privateKey = walletEntity.getPrivateKey();
         walletItem.mnemonic = walletEntity.getMnemonic();
-        walletItem.passphrase = walletEntity.getPassphrase();
         walletItem.path = walletEntity.getPath();
         walletItem.walletFile = walletEntity.getWalletFile();
         walletItem.walletPass = walletEntity.getWalletPass();
@@ -96,7 +91,6 @@ public class WalletItem implements Parcelable{
         dest.writeString(this.privateKey);
         dest.writeString(this.walletPass);
         dest.writeString(this.mnemonic);
-        dest.writeString(this.passphrase);
         dest.writeString(this.path);
         dest.writeTypedList(this.tokenItems);
         dest.writeByte(this.currentSelected ? (byte) 1 : (byte) 0);
@@ -111,7 +105,6 @@ public class WalletItem implements Parcelable{
         this.walletPass = in.readString();
         this.walletFile = in.readParcelable(WalletFile.class.getClassLoader());
         this.mnemonic = in.readString();
-        this.passphrase = in.readString();
         this.path = in.readString();
         this.tokenItems = in.createTypedArrayList(TokenItem.CREATOR);
         this.currentSelected = in.readByte() != 0;

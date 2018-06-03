@@ -22,7 +22,7 @@ public class SimpleDialog extends Dialog {
     private AppCompatEditText messageEdit;
     private String titleStr;
     private String hintStr;
-    private int type;
+    private int type = TEXT;
 
     private OnOkClickListener onOkClickListener;
     private OnCancelClickListener onCancelClickListener;

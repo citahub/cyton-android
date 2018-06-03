@@ -117,6 +117,7 @@ public class WebUtil {
         }
     }
 
+
     public static boolean isCollectApp(Context context) {
         if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
             return DBAppUtil.findApp(context, chainItem.entry);

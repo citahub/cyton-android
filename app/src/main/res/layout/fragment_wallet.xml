@@ -33,12 +33,12 @@
 
             <ImageView
                 android:id="@+id/wallet_setting"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/tab_settings_default"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:scaleType="centerInside"
+                android:src="@drawable/tab_settings_default"
+                android:layout_gravity="center"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
@@ -133,11 +133,16 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/token_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/default_margin"/>
+        android:layout_marginLeft="@dimen/default_margin">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/token_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -106,7 +106,6 @@ public class ImportKeystoreFragment extends BaseFragment {
             tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
             walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
-            SharePrefUtil.putWalletName(walletItem.name);
         } catch (CipherException e) {
             e.printStackTrace();
             passwordEdit.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());

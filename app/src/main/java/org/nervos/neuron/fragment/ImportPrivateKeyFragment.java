@@ -117,7 +117,6 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
             walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
-            SharePrefUtil.putWalletName(walletItem.name);
         } catch (CipherException e) {
             e.printStackTrace();
         }

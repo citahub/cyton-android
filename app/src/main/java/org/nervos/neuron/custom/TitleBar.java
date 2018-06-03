@@ -1,5 +1,6 @@
 package org.nervos.neuron.custom;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -326,10 +327,8 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
      * 返回
      */
     private void goBack() {
-        try {
-            Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (mContext instanceof Activity) {
+            ((Activity) mContext).finish();
         }
     }
 

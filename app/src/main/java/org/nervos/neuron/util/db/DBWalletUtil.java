@@ -1,6 +1,7 @@
 package org.nervos.neuron.util.db;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
@@ -18,6 +19,7 @@ public class DBWalletUtil extends DBUtil {
     private static final String DB_WALLET = "db_wallet";
 
     public static WalletItem getWallet(Context context, String walletName) {
+        if (TextUtils.isEmpty(walletName)) return null;
         try {
             DB db = DBFactory.open(context, DB_WALLET);
             WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
@@ -25,12 +27,12 @@ public class DBWalletUtil extends DBUtil {
             return walletItem;
         } catch (SnappydbException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static WalletItem getCurrentWallet(Context context) {
-        return getWallet(context, SharePrefUtil.getWalletName());
+        return getWallet(context, SharePrefUtil.getCurrentWalletName());
     }
 
     public static List<String> getAllWalletName(Context context) {
@@ -53,6 +55,7 @@ public class DBWalletUtil extends DBUtil {
             DB db = DBFactory.open(context, DB_WALLET);
             db.put(getDbKey(walletItem.name), walletItem);
             db.close();
+            SharePrefUtil.putCurrentWalletName(walletItem.name);
         } catch (SnappydbException e) {
             e.printStackTrace();
         }

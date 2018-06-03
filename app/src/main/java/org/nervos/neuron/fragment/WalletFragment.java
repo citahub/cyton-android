@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,15 +34,12 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WalletFragment extends BaseFragment {
 
     public static final String TAG = WalletFragment.class.getName();
-    public static final String EXTRA_WALLET_ADDRESS = "EXTRA_WALLET_ADDRESS";
-    public static final String EXTRA_TOKEN_NAME = "EXTRA_TOKEN_NAME";
-    public static final String EXTRA_TOKEN_IMAGE = "EXTRA_TOKEN_IMAGE";
-    public static final String EXTRA_TOKEN_AMOUNT = "EXTRA_TOKEN_AMOUNT";
 
     private TextView walletNameText;
     private TextView addressText;
@@ -51,6 +48,7 @@ public class WalletFragment extends BaseFragment {
     private TitleBar titleBar;
     private ImageView settingImage;
     private RecyclerView tokenRecycler;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TokenAdapter tokenAdapter = new TokenAdapter();
 
     private List<TokenItem> tokenItemList = new ArrayList<>();
@@ -69,42 +67,38 @@ public class WalletFragment extends BaseFragment {
         tokenManageLayout = view.findViewById(R.id.wallet_token_management_layout);
         titleBar = view.findViewById(R.id.title);
         settingImage = view.findViewById(R.id.wallet_setting);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initWalletData();
+        initWalletData(true);
         initAdapter();
         initListener();
         initTitleBarListener();
+        initRefresh();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initWalletData();
-    }
-
-    private void initWalletData() {
-        if (!TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
+    private void initWalletData(boolean showProgress) {
+        if ((walletItem = DBWalletUtil.getCurrentWallet(getContext())) != null) {
+            if (showProgress) showProgressBar();
             walletNameList = DBWalletUtil.getAllWalletName(getContext());
-            showProgressBar();
-            walletItem = DBWalletUtil.getWallet(getContext(), SharePrefUtil.getWalletName());
-            if (walletItem != null) {
-                walletNameText.setText(walletItem.name);
-                addressText.setText(walletItem.address);
-            }
+            walletNameText.setText(walletItem.name);
+            addressText.setText(walletItem.address);
             WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
-                    walletNameText.post(() -> {
-                    dismissProgressBar();
-                    if (walletItem != null && walletItem.tokenItems != null) {
+                walletNameText.post(() -> {
+                    if (showProgress) dismissProgressBar();
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (walletItem.tokenItems != null) {
                         tokenItemList = walletItem.tokenItems;
                         tokenAdapter.notifyDataSetChanged();
                     }
                 })
             );
+        } else {
+            startActivity(new Intent(getActivity(), AddWalletActivity.class));
         }
     }
 
@@ -112,6 +106,15 @@ public class WalletFragment extends BaseFragment {
         receiveLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class)));
         tokenManageLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), TokenManageActivity.class)));
         settingImage.setOnClickListener(v -> startActivity(new Intent(getActivity(), WalletManageActivity.class)));
+    }
+
+    private void initRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initWalletData(false);
+            }
+        });
     }
 
 
@@ -143,8 +146,8 @@ public class WalletFragment extends BaseFragment {
         titleBar.setOnRightClickListener(() -> startActivity(new Intent(getActivity(), AddWalletActivity.class)));
 
         titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(), "切换当前钱包", walletNameList, which -> {
-            SharePrefUtil.putWalletName(walletNameList.get(which));
-            initWalletData();
+            SharePrefUtil.putCurrentWalletName(walletNameList.get(which));
+            initWalletData(true);
         }));
     }
 

@@ -49,7 +49,7 @@ public class PayTokenActivity extends BaseActivity {
         } else {
             payAddressText.setText(transactionItem.to);
             payAmountText.setText(transactionItem.value);
-            paySumText.setText(transactionItem.gas);
+//            paySumText.setText(transactionItem.gas);
         }
 
     }

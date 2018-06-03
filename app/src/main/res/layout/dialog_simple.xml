@@ -16,7 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:text="title"
             android:textColor="@color/default_black"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:layout_marginTop="@dimen/default_margin"/>
         
         <android.support.v7.widget.AppCompatEditText

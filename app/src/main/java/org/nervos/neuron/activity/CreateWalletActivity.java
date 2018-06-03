@@ -36,7 +36,6 @@ public class CreateWalletActivity extends BaseActivity {
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
     private AppCompatButton createWalletButton;
-    private TitleBar titleBar;
 
     private WalletEntity walletEntity;
 
@@ -56,7 +55,6 @@ public class CreateWalletActivity extends BaseActivity {
         passwordEdit = findViewById(R.id.edit_wallet_password);
         rePasswordEdit = findViewById(R.id.edit_wallet_password_repeat);
         createWalletButton = findViewById(R.id.create_wallet_button);
-        titleBar = findViewById(R.id.title);
     }
 
     private void initListener() {
@@ -82,20 +80,6 @@ public class CreateWalletActivity extends BaseActivity {
                 }
             }
         });
-
-        titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
-            @Override
-            public void onLeftClick() {
-                if (TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
-                    Intent intent = new Intent(CreateWalletActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
-                    startActivity(intent);
-                } else {
-                    finish();
-                }
-            }
-        });
-
     }
 
     /**
@@ -115,7 +99,6 @@ public class CreateWalletActivity extends BaseActivity {
                 tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
                 walletItem.tokenItems = tokenItemList;
                 DBWalletUtil.saveWallet(mActivity, walletItem);
-                SharePrefUtil.putWalletName(walletItem.name);
             }
         }.start();
     }

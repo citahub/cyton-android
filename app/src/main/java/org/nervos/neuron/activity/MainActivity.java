@@ -16,9 +16,10 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
 
@@ -47,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(getIntent() != null) {
+            setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
+        }
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setNavigationItem(intent.getStringExtra(EXTRA_TAG));
@@ -66,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.navigation_wallet:
-                    if (TextUtils.isEmpty(SharePrefUtil.getWalletName())) {
+                    if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
                         startActivity(new Intent(MainActivity.this, AddWalletActivity.class));
                     } else {
                         if(walletFragment == null){
@@ -115,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
      * @param tag Fragment标签值
      */
     public void setNavigationItem(String tag) {
+        if (TextUtils.isEmpty(tag)) return;
         if (TextUtils.equals(tag, AppFragment.TAG)) {
             navigation.check(R.id.navigation_application);
         } else if (TextUtils.equals(tag, WalletFragment.TAG)) {
@@ -152,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (fMgr.findFragmentByTag(WalletFragment.TAG) != null && !fMgr.findFragmentByTag(WalletFragment.TAG).isVisible()) {
+            if (fMgr.findFragmentByTag(AppFragment.TAG) != null && !fMgr.findFragmentByTag(AppFragment.TAG).isVisible()) {
                 FragmentTransaction fragmentTransaction = fMgr.beginTransaction();
                 hideFragments(fragmentTransaction);
-                setNavigationItem(WalletFragment.TAG);
+                setNavigationItem(AppFragment.TAG);
                 return true;
             } else if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次返回键退出", Toast.LENGTH_SHORT).show();

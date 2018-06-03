@@ -18,15 +18,19 @@ public class SharePrefUtil {
     }
 
     public static String getString(String key) {
-        return sharedPreferences.getString(key, "");
+        return sharedPreferences.getString(key, null);
     }
 
-    public static void putWalletName(String name){
+    public static void putCurrentWalletName(String name){
         putString(WALLET_NAME, name);
     }
 
-    public static String getWalletName() {
+    public static String getCurrentWalletName() {
         return getString(WALLET_NAME);
+    }
+
+    public static void deleteWalletName() {
+        putCurrentWalletName(null);
     }
 
 
