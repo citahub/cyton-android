@@ -26,6 +26,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -36,6 +37,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
 
 public class TransferActivity extends BaseActivity {
@@ -53,6 +55,7 @@ public class TransferActivity extends BaseActivity {
     private AppCompatEditText transferValueEdit;
     private AppCompatButton nextActionButton;
     private AppCompatSeekBar feeSeekBar;
+    private CircleImageView photoImage;
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
@@ -89,12 +92,14 @@ public class TransferActivity extends BaseActivity {
         receiveAddressEdit = findViewById(R.id.transfer_address);
         transferValueEdit = findViewById(R.id.transfer_value);
         feeSeekBar = findViewById(R.id.fee_seek_bar);
+        photoImage = findViewById(R.id.wallet_photo);
 
         feeSeekBar.setMax(MAX_FEE);
         feeSeekBar.setProgress(DEFAULT_FEE);
 
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
+        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
     }
 
     private void initGasInfo() {

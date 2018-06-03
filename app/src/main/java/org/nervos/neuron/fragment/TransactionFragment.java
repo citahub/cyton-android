@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.snappydb.DB;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
@@ -23,15 +24,21 @@ import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TransactionFragment extends Fragment {
 
     public static final String TAG = TransactionFragment.class.getName();
 
     private List<TransactionItem> transactionItemList = new ArrayList<>();
+    private WalletItem walletItem;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,6 +56,7 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        walletItem = DBWalletUtil.getCurrentWallet(getContext());
         initData();
         initAdapter();
         initRefreshData();
@@ -120,7 +128,7 @@ public class TransactionFragment extends Fragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
                 TransactionViewHolder viewHolder = (TransactionViewHolder)holder;
-                viewHolder.walletImage.setImageResource(R.drawable.wallet_photo);
+                viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));;
                 viewHolder.transactionIdText.setText(transactionItemList.get(position).id);
                 viewHolder.transactionAmountText.setText(transactionItemList.get(position).value);
                 viewHolder.transactionChainNameText.setText(transactionItemList.get(position).chainName);
@@ -146,7 +154,7 @@ public class TransactionFragment extends Fragment {
         }
 
         class  TransactionViewHolder extends RecyclerView.ViewHolder {
-            SimpleDraweeView walletImage;
+            CircleImageView walletImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
@@ -154,12 +162,9 @@ public class TransactionFragment extends Fragment {
 
             public TransactionViewHolder (View view) {
                 super(view);
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(v, (int)v.getTag());
-                        }
+                view.setOnClickListener(v -> {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(v, (int)v.getTag());
                     }
                 });
                 walletImage = view.findViewById(R.id.wallet_photo);

@@ -22,9 +22,12 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WebActivity extends BaseActivity {
 
@@ -181,10 +184,12 @@ public class WebActivity extends BaseActivity {
         TextView walletAddressText = view.findViewById(R.id.wallet_address);
         TextView payOwnerText = view.findViewById(R.id.pay_owner);
         TextView payDataText = view.findViewById(R.id.pay_data);
+        CircleImageView photoImage = view.findViewById(R.id.wallet_photo);
         ProgressBar progressBar = view.findViewById(R.id.sign_progress);
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
+        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         ChainItem chainItem = WebUtil.getChainItem();
         if (chainItem != null) {
             payOwnerText.setText(chainItem.provider);

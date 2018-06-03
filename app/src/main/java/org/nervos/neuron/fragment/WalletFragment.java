@@ -28,6 +28,7 @@ import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -36,6 +37,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WalletFragment extends BaseFragment {
 
@@ -48,6 +51,7 @@ public class WalletFragment extends BaseFragment {
     private TitleBar titleBar;
     private ImageView settingImage;
     private RecyclerView tokenRecycler;
+    private CircleImageView photoImage;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TokenAdapter tokenAdapter = new TokenAdapter();
 
@@ -68,6 +72,7 @@ public class WalletFragment extends BaseFragment {
         titleBar = view.findViewById(R.id.title);
         settingImage = view.findViewById(R.id.wallet_setting);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        photoImage = view.findViewById(R.id.wallet_photo);
         return view;
     }
 
@@ -87,6 +92,7 @@ public class WalletFragment extends BaseFragment {
             walletNameList = DBWalletUtil.getAllWalletName(getContext());
             walletNameText.setText(walletItem.name);
             addressText.setText(walletItem.address);
+            photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
             WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
                 walletNameText.post(() -> {
                     if (showProgress) dismissProgressBar();

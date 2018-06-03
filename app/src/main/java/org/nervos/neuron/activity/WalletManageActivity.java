@@ -13,11 +13,14 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static org.nervos.neuron.activity.MainActivity.EXTRA_TAG;
 
@@ -26,6 +29,7 @@ public class WalletManageActivity extends BaseActivity {
     private RelativeLayout walletNameLayout;
     private TextView walletNameText;
     private TextView walletAddressText;
+    private CircleImageView photoImage;
     private WalletItem walletItem;
 
     @Override
@@ -43,9 +47,11 @@ public class WalletManageActivity extends BaseActivity {
         walletNameLayout = findViewById(R.id.wallet_name_layout);
         walletNameText = findViewById(R.id.wallet_name_text);
         walletAddressText = findViewById(R.id.wallet_address);
+        photoImage = findViewById(R.id.wallet_photo);
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
+        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
     }
 
 

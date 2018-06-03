@@ -10,8 +10,11 @@ import com.google.gson.Gson;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PayTokenActivity extends BaseActivity {
 
@@ -38,9 +41,11 @@ public class PayTokenActivity extends BaseActivity {
         TextView payAddressText = findViewById(R.id.pay_address);
         TextView payAmountText = findViewById(R.id.pay_amount);
         TextView paySumText = findViewById(R.id.pay_sum);
+        CircleImageView photoImage = findViewById(R.id.wallet_photo);
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
+        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         payNameText.setText(WebUtil.getChainItem().entry);
         if (WebUtil.getChainItem().chainId >= 0) {
             payAddressText.setText(transactionItem.to);

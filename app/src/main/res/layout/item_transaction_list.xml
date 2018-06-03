@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:gravity="center_vertical">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wallet_photo"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/wallet_photo"/>
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/default_gray_d5"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
