@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.ChainManageActivity;
-import org.nervos.neuron.activity.QuickBackupActivity;
-import org.nervos.neuron.activity.QuickRestoreActivity;
-import org.nervos.neuron.activity.WalletManageActivity;
-import org.nervos.neuron.activity.WebActivity;
+import org.nervos.neuron.activity.AboutUsActivity;
+import org.nervos.neuron.activity.AppWebActivity;
 
 public class SettingsFragment extends Fragment {
 
@@ -41,6 +38,6 @@ public class SettingsFragment extends Fragment {
 
     private void initListener() {
 
-        aboutText.setOnClickListener(v -> startActivity(new Intent(getActivity(), WebActivity.class)));
+        aboutText.setOnClickListener(v -> startActivity(new Intent(getActivity(), AboutUsActivity.class)));
     }
 }

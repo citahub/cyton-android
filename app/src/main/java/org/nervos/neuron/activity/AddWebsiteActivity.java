@@ -76,7 +76,7 @@ public class AddWebsiteActivity extends BaseActivity {
             Toast.makeText(mActivity, "请输入正确的网页地址", Toast.LENGTH_SHORT).show();
         } else {
             websiteEdit.setText(url);
-            Intent intent = new Intent(mActivity, WebActivity.class);
+            Intent intent = new Intent(mActivity, AppWebActivity.class);
             intent.putExtra(EXTRA_URL, url);
             startActivity(intent);
         }

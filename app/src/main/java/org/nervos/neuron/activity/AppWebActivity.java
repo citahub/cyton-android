@@ -26,7 +26,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class WebActivity extends BaseActivity {
+public class AppWebActivity extends BaseActivity {
 
     public static final String EXTRA_PAYLOAD = "extra_payload";
 
@@ -39,7 +39,7 @@ public class WebActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
+        setContentView(R.layout.activity_app_web);
 
         String url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);

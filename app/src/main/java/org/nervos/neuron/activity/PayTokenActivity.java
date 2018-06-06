@@ -26,7 +26,7 @@ public class PayTokenActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_token);
 
-        String payload = getIntent().getStringExtra(WebActivity.EXTRA_PAYLOAD);
+        String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         transactionItem = new Gson().fromJson(payload, TransactionItem.class);
         walletItem = DBWalletUtil.getCurrentWallet(this);
 
