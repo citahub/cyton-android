@@ -53,7 +53,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class TransactionFragment extends Fragment {
+import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
+
+public class TransactionFragment extends BaseFragment {
 
     public static final String TAG = TransactionFragment.class.getName();
 
@@ -93,6 +95,7 @@ public class TransactionFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
+                intent.putExtra(EXTRA_TRANSACTION, transactionItemList.get(position));
                 startActivity(intent);
             }
         });
@@ -116,6 +119,7 @@ public class TransactionFragment extends Fragment {
 
 
     private void getTransactionList() {
+        showProgressBar();
         OkHttpClient mOkHttpClient = new OkHttpClient();
         final Request request = new Request.Builder().url(TRANSACTION_URL).build();
         Call call = mOkHttpClient.newCall(request);
@@ -134,11 +138,12 @@ public class TransactionFragment extends Fragment {
         .subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
-
+                dismissProgressBar();
             }
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                dismissProgressBar();
             }
             @Override
             public void onNext(String res) {

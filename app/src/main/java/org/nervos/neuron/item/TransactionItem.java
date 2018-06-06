@@ -35,6 +35,7 @@ public class TransactionItem implements Parcelable{
         return ft.format(date);
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -46,7 +47,10 @@ public class TransactionItem implements Parcelable{
         dest.writeString(this.from);
         dest.writeString(this.to);
         dest.writeString(this.value);
+        dest.writeLong(this.timestamp);
         dest.writeString(this.chainName);
+        dest.writeString(this.gasUsed);
+        dest.writeString(this.blockNumber);
     }
 
     protected TransactionItem(Parcel in) {
@@ -54,7 +58,10 @@ public class TransactionItem implements Parcelable{
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
+        this.timestamp = in.readLong();
         this.chainName = in.readString();
+        this.gasUsed = in.readString();
+        this.blockNumber = in.readString();
     }
 
     public static final Creator<TransactionItem> CREATOR = new Creator<TransactionItem>() {

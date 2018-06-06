@@ -3,17 +3,22 @@ package org.nervos.neuron.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.utils.Numeric;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TransactionDetailActivity extends BaseActivity {
 
+    public static final String EXTRA_TRANSACTION = "extra_transaction";
     private WalletItem walletItem;
+    private TransactionItem transactionItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,21 +26,35 @@ public class TransactionDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_transaction_detail);
 
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
+        transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
 
-        initData();
         initView();
     }
 
     private void initView() {
         CircleImageView photoImage = findViewById(R.id.wallet_photo);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+
+        TextView walletNameText = findViewById(R.id.wallet_name);
+        TextView walletAddressText = findViewById(R.id.wallet_address);
+        TextView transactionHashText = findViewById(R.id.transaction_hash);
+        TextView transactionValueText = findViewById(R.id.transaction_amount);
+        TextView transactionFromText = findViewById(R.id.transaction_from_address);
+        TextView transactionToText = findViewById(R.id.transaction_to_address);
+        TextView transactionBlockNumberText = findViewById(R.id.transaction_block_number);
+        TextView transactionBlockTimeText = findViewById(R.id.transaction_block_time);
+
+
+        walletNameText.setText(walletItem.name);
+        walletAddressText.setText(walletItem.address);
+        transactionHashText.setText(transactionItem.id);
+        transactionValueText.setText(transactionItem.value);
+        transactionFromText.setText(transactionItem.from);
+        transactionToText.setText(transactionItem.to);
+        int blockNumber = Integer.parseInt(
+                Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
+        transactionBlockNumberText.setText(String.valueOf(blockNumber));
+        transactionBlockTimeText.setText(transactionItem.getDate());
     }
-
-    private void initData() {
-
-
-    }
-
-
 
 }

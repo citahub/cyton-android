@@ -63,6 +63,7 @@
                 android:layout_below="@id/wallet_name"/>
 
             <TextView
+                android:id="@+id/transaction_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin"
@@ -111,6 +112,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/chain_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ethereum Mainnet"
@@ -131,6 +133,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_to_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0x2343445465565677"
@@ -152,6 +155,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_from_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0x2343445465565677"
@@ -173,6 +177,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_gas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0.05eth"
@@ -192,6 +197,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_gas_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0.005eth"
@@ -211,6 +217,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_hash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0x2343445465565677"
@@ -232,6 +239,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_block_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12007"
@@ -251,6 +259,7 @@
                     android:drawablePadding="10dp"/>
 
                 <TextView
+                    android:id="@+id/transaction_block_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2018-3-23 12:20"
