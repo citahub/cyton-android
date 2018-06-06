@@ -3,6 +3,7 @@ package org.nervos.neuron.activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -46,7 +47,12 @@ public class ExportKeystoreActivity extends BaseActivity {
         findViewById(R.id.export_share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_keystore));
+                intent.putExtra(Intent.EXTRA_TEXT, keystore);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, getString(R.string.share_keystore)));
             }
         });
     }

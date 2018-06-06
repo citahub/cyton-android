@@ -66,4 +66,5 @@
     <string name="resume">恢复</string>
     <string name="message_permission_rationale">申请下列权限以保证应用可以正常运行:\n\n%1$s</string>
     <string name="scan_qrcode">扫描二维码</string>
+    <string name="share_keystore">分享Keystore</string>
 </resources>
