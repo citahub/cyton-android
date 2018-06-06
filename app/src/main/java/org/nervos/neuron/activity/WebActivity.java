@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,9 +20,7 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 

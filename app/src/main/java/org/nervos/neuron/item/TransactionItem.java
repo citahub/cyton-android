@@ -3,24 +3,37 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class TransactionItem implements Parcelable{
 
+    @SerializedName("hash")
     public String id;
     public String from;
     public String to;
     public String value;
-    public String date;
+    private long timestamp;
     public String chainName;
+    public String gasUsed;
+    public String blockNumber;
 
-    public TransactionItem(String id, String from, String to, String value, String date, String chainName) {
+    public TransactionItem(String id, String from, String to, String value, String chainName) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.value = value;
-        this.date = date;
         this.chainName = chainName;
     }
 
+    public String getDate() {
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd hh:mm:ss", Locale.CHINA);
+        Date date = new Date(timestamp);
+        return ft.format(date);
+    }
 
     @Override
     public int describeContents() {
@@ -33,7 +46,6 @@ public class TransactionItem implements Parcelable{
         dest.writeString(this.from);
         dest.writeString(this.to);
         dest.writeString(this.value);
-        dest.writeString(this.date);
         dest.writeString(this.chainName);
     }
 
@@ -42,7 +54,6 @@ public class TransactionItem implements Parcelable{
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
-        this.date = in.readString();
         this.chainName = in.readString();
     }
 

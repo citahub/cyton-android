@@ -29,9 +29,12 @@
                 android:id="@+id/transaction_id_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxEms="15"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textSize="14sp"
                 android:textColor="@color/font_black"
-                android:text="0x23456"/>
+                android:text="3232222"/>
 
             <TextView
                 android:id="@+id/transaction_time_text"
