@@ -25,6 +25,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.nervos.neuron.service.EthErc20RpcService;
 import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
@@ -191,6 +192,9 @@ public class TransferActivity extends BaseActivity {
                 if (tokenItem.chainId < 0) {
                     if (EthNativeRpcService.ETH.equals(tokenItem.symbol)) {
                         transferEth(value, progressBar);
+                    } else {
+                        Log.d("wallet", "erc20 token: " + tokenItem.symbol);
+                        transferEthErc20(value, progressBar);
                     }
                 } else {
                     transferCitaErc20(value, progressBar);
@@ -260,17 +264,42 @@ public class TransferActivity extends BaseActivity {
                     progressBar.setVisibility(View.GONE);
                     sheetDialog.dismiss();
 //                    finish();
-                    try {
-                        Thread.sleep(12000);
-                        EthNativeRpcService.getTransactionReceipt(ethSendTransaction.getTransactionHash());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                 }
             });
     }
 
+
+    /**
+     * transfer origin token of ethereum
+     * @param value
+     * @param progressBar
+     */
+    private void transferEthErc20(String value, ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
+        EthErc20RpcService.transferErc20(tokenItem, receiveAddressEdit.getText().toString().trim(),Double.valueOf(value))
+                .subscribe(new Subscriber<EthSendTransaction>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Toast.makeText(TransferActivity.this,
+                                e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onNext(EthSendTransaction ethSendTransaction) {
+                        Toast.makeText(TransferActivity.this,
+                                "转账成功", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
+//                    finish();
+                    }
+                });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

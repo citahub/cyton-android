@@ -117,9 +117,9 @@ public class AppWebActivity extends BaseActivity {
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
-                if (newProgress <= 25) {
-                    injectJs();
-                }
+//                if (newProgress <= 25) {
+//                    injectJs();
+//                }
                 Log.d("Web", "progress: " + newProgress);
             }
             @Override
@@ -135,8 +135,8 @@ public class AppWebActivity extends BaseActivity {
             }
 
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
                 injectJs();
             }
         });
@@ -147,15 +147,15 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        webView.evaluateJavascript(WebUtil.getWeb3Js(this), null);
-        webView.evaluateJavascript(WebUtil.getInjectJs(), null);
+        webView.loadUrl(WebUtil.getWeb3Js(this));
+        webView.loadUrl(WebUtil.getInjectJs());
     }
 
 
     private class AppHybrid {
 
         @JavascriptInterface
-        public void showTransaction(String payload) {
+        public void showTransaction(String method, String payload) {
             if (walletItem == null) {
                 Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));

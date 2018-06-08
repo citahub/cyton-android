@@ -3,12 +3,15 @@ package org.nervos.neuron.service;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.ethereum.geth.Geth;
+import org.ethereum.geth.KeyStore;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
@@ -18,6 +21,7 @@ import org.web3j.utils.Numeric;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -66,47 +70,36 @@ public class EthNativeRpcService extends EthRpcService{
         .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static BigInteger nonceValue;
     public static Observable<EthSendTransaction> transferEth(String address, double value) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
                 EthGetTransactionCount ethGetTransactionCount = service
-                        .ethGetTransactionCount(address, DefaultBlockParameterName.LATEST).send();
+                        .ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
                 return ethGetTransactionCount.getTransactionCount();
-            }
-        }).flatMap(new Func1<BigInteger, Observable<BigInteger>>() {
-            @Override
-            public Observable<BigInteger> call(BigInteger nonce) {
-                nonceValue = nonce;
-                try {
-                    return Observable.just(service.ethGasPrice().send().getGasPrice());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
             }
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
-            public Observable<String> call(BigInteger gasPrice) {
-                gasPrice = Numeric.toBigInt("0x4E3B29200");
+            public Observable<String> call(BigInteger nonce) {
+                Log.d("wallet", "nonce: " + nonce.toString());
+                BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
                 Credentials credentials = Credentials.create(walletItem.privateKey);
                 BigInteger transferValue = ETHDecimal
                         .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-                RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonceValue,
+                RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
                         gasPrice, GAS_LIMIT, address, transferValue);
                 byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-
                 return Observable.just(Numeric.toHexString(signedMessage));
             }
         }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
             @Override
             public Observable<EthSendTransaction> call(String hexValue){
                 try {
-                    EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).send();
+                    EthSendTransaction ethSendTransaction =
+                            service.ethSendRawTransaction(hexValue).sendAsync().get();
                     Log.d("wallet", "EthSendTransaction: " + ethSendTransaction.getTransactionHash());
                     return Observable.just(ethSendTransaction);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);

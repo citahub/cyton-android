@@ -169,7 +169,7 @@ public class WebUtil {
     }
 
     public static String getWeb3Js(Context context) {
-        return WebUtil.getInjectedJsFile(context, "web3.js");
+        return WebUtil.getInjectedJsFile(context, "web3.min.js");
     }
 
     public static String  getInjectJs() {

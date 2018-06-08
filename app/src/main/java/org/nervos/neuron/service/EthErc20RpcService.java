@@ -1,14 +1,42 @@
 package org.nervos.neuron.service;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.nervos.neuron.item.TokenItem;
+import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Int64;
+import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class EthErc20RpcService extends EthRpcService{
 
@@ -77,5 +105,94 @@ public class EthErc20RpcService extends EthRpcService{
     }
 
 
+    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value) {
+        StringBuilder sb = new StringBuilder("1");
+        for(int i = 0; i < tokenItem.decimals; i++) {
+            sb.append("0");
+        }
+        BigInteger ERC20Decimal = new BigInteger(sb.toString());
+        BigInteger transferValue = ERC20Decimal
+                .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+        String data = createTokenTransferData(address, transferValue);
+        return Observable.fromCallable(new Callable<BigInteger>() {
+            @Override
+            public BigInteger call() throws Exception {
+                EthGetTransactionCount ethGetTransactionCount = service
+                        .ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
+                return ethGetTransactionCount.getTransactionCount();
+            }
+        }).flatMap(new Func1<BigInteger, Observable<String>>() {
+            @Override
+            public Observable<String> call(BigInteger nonce) {
+                Log.d("wallet", "nonce: " + nonce.toString());
+                BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
+                Credentials credentials = Credentials.create(walletItem.privateKey);
+
+                RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
+                        gasPrice, Numeric.toBigInt("0x23280"), tokenItem.contractAddress, data);
+                byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+                return Observable.just(Numeric.toHexString(signedMessage));
+            }
+        }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
+            @Override
+            public Observable<EthSendTransaction> call(String hexValue){
+                try {
+                    EthSendTransaction ethSendTransaction =
+                            service.ethSendRawTransaction(hexValue).sendAsync().get();
+                    Log.d("wallet", "EthSendTransaction: " + ethSendTransaction.getTransactionHash());
+                    return Observable.just(ethSendTransaction);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).filter(ethSendTransaction -> ethSendTransaction != null
+                && !TextUtils.isEmpty(ethSendTransaction.getTransactionHash()))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static void getTransactionReceipt(String hash) {
+        Observable.fromCallable(new Callable<EthGetTransactionReceipt>() {
+            @Override
+            public EthGetTransactionReceipt call() {
+                try {
+                    return service.ethGetTransactionReceipt(hash).send();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<EthGetTransactionReceipt>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
+                        Log.d("wallet", "transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
+                    }
+                });
+    }
+
+
+    private static String createTokenTransferData(String to, BigInteger tokenAmount) {
+        List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
+
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+        });
+
+        Function function = new Function("transfer", params, returnTypes);
+        String encodedFunction = FunctionEncoder.encode(function);
+//        byte[] bytes = Numeric.hexStringToByteArray(Numeric.cleanHexPrefix(encodedFunction));
+        return encodedFunction;
+    }
 
 }

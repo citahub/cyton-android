@@ -33,6 +33,7 @@ public class EthRpcService {
     static final String SYMBOL_HASH = "95d89b41";
     static final String DECIMALS_HASH = "313ce567";
     static final String BALANCEOF_HASH = "70a08231";        // function balanceOf
+    static final String TRANSFER_HASH = "a9059cbb";
 
     protected static Web3j service;
     protected static WalletItem walletItem;
