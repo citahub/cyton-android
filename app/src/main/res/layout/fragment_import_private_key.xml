@@ -66,6 +66,7 @@
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
             android:hint="请输入钱包名称"
+            android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
@@ -102,6 +103,7 @@
             android:background="@android:color/white"
             android:hint="请输入密码"
             android:inputType="textPassword"
+            android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
             android:gravity="end|center_vertical"
             android:layout_width="match_parent"
@@ -140,6 +142,7 @@
             android:background="@android:color/white"
             android:hint="请重新输入密码"
             android:inputType="textPassword"
+            android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
             android:gravity="end|center_vertical"
             android:layout_width="match_parent"

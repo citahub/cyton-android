@@ -10,7 +10,7 @@
         android:background="@color/colorPrimary">
         <RelativeLayout
             android:id="@+id/title_bar_left"
-            android:layout_width="40dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true">
 
@@ -51,12 +51,12 @@
 
             <ImageView
                 android:id="@+id/title_scan"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
                 android:src="@drawable/scan"
+                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="8dp"/>
+                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
     </RelativeLayout>

@@ -63,8 +63,9 @@ public class CreateWalletActivity extends BaseActivity {
             public void onClick(View view) {
                 if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(CreateWalletActivity.this, "两次输入的密码不一致",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+                } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())){
+                    Toast.makeText(mActivity, "该钱包名称已存在", Toast.LENGTH_SHORT).show();
                 } else {
                     showProgressBar("钱包创建中...");
                     cachedThreadPool.execute(() -> {

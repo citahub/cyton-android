@@ -23,7 +23,7 @@ public class EthRpcService {
     static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
 
     private static final String MAIN_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-    private static final String RINKEBY_NODE_IP = "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    private static final String RINKEBY_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
     static final BigInteger ETHDecimal = new BigInteger("1000000000000000000");
     static final BigInteger ETH_GAS_Decimal = new BigInteger("100000000");

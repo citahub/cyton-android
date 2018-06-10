@@ -215,7 +215,7 @@ public class WalletEntity {
         ECKeyPair ekp = credentials.getEcKeyPair();
         WalletFile walletFile = null;
         try {
-            walletFile = Wallet.createStandard(password, ekp);
+            walletFile = Wallet.create(password, ekp, 1024, 1);
         } catch (CipherException e) {
             e.printStackTrace();
         }

@@ -1,9 +1,14 @@
 package org.nervos.neuron.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TransactionItem;
@@ -55,6 +60,19 @@ public class TransactionDetailActivity extends BaseActivity {
                 Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
         transactionBlockNumberText.setText(String.valueOf(blockNumber));
         transactionBlockTimeText.setText(transactionItem.getDate());
+
+        transactionToText.setOnClickListener(v -> copyText(transactionItem.to));
+        transactionFromText.setOnClickListener(v -> copyText(transactionItem.from));
+        transactionHashText.setOnClickListener(v -> copyText(transactionItem.id));
+    }
+
+    private void copyText(String value) {
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData mClipData = ClipData.newPlainText("value", value);
+        if (cm != null) {
+            cm.setPrimaryClip(mClipData);
+            Toast.makeText(mActivity, "复制成功", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

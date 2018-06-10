@@ -76,16 +76,22 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
+                Toast.makeText(getContext(), "该钱包名称已存在", Toast.LENGTH_SHORT).show();
             } else {
                 showProgressBar("钱包导入中...");
                 cachedThreadPool.execute(() -> {
-                    generateAndSaveWallet();
-                    passwordEdit.post(() -> {
-                        dismissProgressBar();
+                    if (generateAndSaveWallet()) {
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
                         startActivity(intent);
-                    });
+                        passwordEdit.post(() -> dismissProgressBar());
+                    } else {
+                        passwordEdit.post(() -> {
+                            Toast.makeText(getContext(), "该钱包地址已存在", Toast.LENGTH_SHORT).show();
+                            dismissProgressBar();
+                        });
+                    }
                 });
             }
         });
@@ -106,10 +112,13 @@ public class ImportPrivateKeyFragment extends BaseFragment {
     }
 
 
-    private void generateAndSaveWallet() {
+    private boolean generateAndSaveWallet() {
         try {
             String privkey = privateKeyEdit.getText().toString().trim();
             WalletEntity walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privkey));
+            if (DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
+                return false;
+            }
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
@@ -117,8 +126,11 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
             walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
+            return true;
         } catch (CipherException e) {
             e.printStackTrace();
+            passwordEdit.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+            return false;
         }
     }
 

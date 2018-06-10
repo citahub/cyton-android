@@ -69,13 +69,23 @@ public class ImportKeystoreFragment extends BaseFragment {
 
     private void initListener() {
         importButton.setOnClickListener(view -> {
+            if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
+                Toast.makeText(getContext(), "该钱包名称已存在", Toast.LENGTH_SHORT).show();
+                return;
+            }
             showProgressBar("钱包导入中...");
             cachedThreadPool.execute(() -> {
-                generateAndSaveWallet();
-                passwordEdit.post(this::dismissProgressBar);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
-                startActivity(intent);
+                if (generateAndSaveWallet()) {
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+                    startActivity(intent);
+                    passwordEdit.post(() -> dismissProgressBar());
+                } else {
+                    passwordEdit.post(() -> {
+                        Toast.makeText(getContext(), "该钱包地址已存在", Toast.LENGTH_SHORT).show();
+                        dismissProgressBar();
+                    });
+                }
             });
         });
         scanImage.setOnClickListener(new View.OnClickListener() {
@@ -95,10 +105,13 @@ public class ImportKeystoreFragment extends BaseFragment {
     }
 
 
-    private void generateAndSaveWallet() {
+    private boolean generateAndSaveWallet() {
         try {
             WalletEntity walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(),
                     keystoreEdit.getText().toString().trim());
+            if (DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
+                return false;
+            }
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
@@ -106,9 +119,11 @@ public class ImportKeystoreFragment extends BaseFragment {
             tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
             walletItem.tokenItems = tokenItemList;
             DBWalletUtil.saveWallet(getContext(), walletItem);
+            return true;
         } catch (CipherException e) {
             e.printStackTrace();
             passwordEdit.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+            return false;
         }
     }
 

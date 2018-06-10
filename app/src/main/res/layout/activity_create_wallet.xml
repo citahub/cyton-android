@@ -49,6 +49,7 @@
             android:gravity="end|center_vertical"
             android:hint="请输入钱包名称"
             android:textSize="14sp"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
 
@@ -83,6 +84,7 @@
             android:background="@android:color/white"
             android:hint="请输入密码"
             android:inputType="textPassword"
+            android:singleLine="true"
             android:textSize="14sp"
             android:gravity="end|center_vertical"
             android:layout_width="match_parent"
@@ -120,6 +122,7 @@
             android:gravity="end|center_vertical"
             android:hint="请再次输入密码"
             android:inputType="textPassword"
+            android:singleLine="true"
             android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="48dp" />

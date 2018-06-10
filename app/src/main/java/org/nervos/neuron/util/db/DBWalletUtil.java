@@ -86,6 +86,35 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
+    public static boolean checkWalletName(Context context, String name) {
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            boolean isKeyExist = db.exists(getDbKey(name));
+            db.close();
+            return isKeyExist;
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean checkWalletAddress(Context context, String address) {
+        boolean isKeyExist = false;
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            List<String> names = getAllWalletName(context);
+            for(String name: names) {
+                WalletItem walletItem = getWallet(context, name);
+                isKeyExist = (walletItem != null && walletItem.address.equals(address));
+            }
+            db.close();
+            return isKeyExist;
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+        return isKeyExist;
+    }
+
     public static void deleteWallet(Context context, String name) {
         try {
             DB db = DBFactory.open(context, DB_WALLET);

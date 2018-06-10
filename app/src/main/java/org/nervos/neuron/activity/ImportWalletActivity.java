@@ -16,7 +16,7 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImportWalletActivity extends AppCompatActivity {
+public class ImportWalletActivity extends BaseActivity {
 
     private ViewPager viewPager;
     private ImportMnemonicFragment importMnemonicFragment;

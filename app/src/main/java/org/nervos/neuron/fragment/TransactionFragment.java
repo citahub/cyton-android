@@ -26,10 +26,7 @@ import com.snappydb.DB;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
-import org.nervos.neuron.activity.TransferActivity;
-import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
@@ -43,14 +40,11 @@ import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
@@ -191,7 +185,9 @@ public class TransactionFragment extends BaseFragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
                 TransactionViewHolder viewHolder = (TransactionViewHolder)holder;
-                viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));;
+                if (walletItem != null) {
+                    viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+                }
                 viewHolder.transactionIdText.setText(transactionItemList.get(position).id);
                 viewHolder.transactionAmountText.setText(transactionItemList.get(position).value);
                 viewHolder.transactionChainNameText.setText(transactionItemList.get(position).chainName);

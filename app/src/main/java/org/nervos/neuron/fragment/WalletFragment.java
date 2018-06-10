@@ -1,5 +1,8 @@
 package org.nervos.neuron.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
@@ -111,7 +115,23 @@ public class WalletFragment extends BaseFragment {
     private void initListener() {
         receiveLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class)));
         tokenManageLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), TokenManageActivity.class)));
-        settingImage.setOnClickListener(v -> startActivity(new Intent(getActivity(), WalletManageActivity.class)));
+        settingImage.setOnClickListener(v -> gotoWalletManagePage());
+        photoImage.setOnClickListener(v -> gotoWalletManagePage());
+        addressText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
+                if (cm != null) {
+                    cm.setPrimaryClip(mClipData);
+                    Toast.makeText(getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void gotoWalletManagePage() {
+        startActivity(new Intent(getActivity(), WalletManageActivity.class));
     }
 
     private void initRefresh() {
