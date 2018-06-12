@@ -77,7 +77,7 @@ public class TransferActivity extends BaseActivity {
 
         tokenUnit = tokenItem.chainId < 0? "eth":"";
 
-        CitaRpcService.init(walletItem.privateKey, CitaRpcService.NODE_IP);
+        CitaRpcService.init(mActivity, CitaRpcService.NODE_IP);
         initView();
         initListener();
         initGasInfo();
@@ -197,7 +197,15 @@ public class TransferActivity extends BaseActivity {
                         transferEthErc20(value, progressBar);
                     }
                 } else {
-                    transferCitaErc20(value, progressBar);
+                    try {
+                        if (TextUtils.isEmpty(tokenItem.contractAddress)) {
+                            transferCitaToken(Double.valueOf(value), progressBar);
+                        } else {
+                            transferCitaErc20(Double.valueOf(value), progressBar);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -206,32 +214,67 @@ public class TransferActivity extends BaseActivity {
 
 
     /**
+     * transfer origin token of cita
+     * @param value  transfer value
+     * @param progressBar
+     */
+        private void transferCitaToken(double value, ProgressBar progressBar) throws Exception {
+        CitaRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value)
+            .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                @Override
+                public void onCompleted() {
+
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(TransferActivity.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+                }
+                @Override
+                public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+//                    finish();
+                }
+            });
+    }
+
+
+    /**
      * transfer erc20 token of cita
      * @param value  transfer value
      * @param progressBar
      */
-    private void transferCitaErc20(String value, ProgressBar progressBar) {
-        progressBar.setVisibility(View.VISIBLE);
-        cachedThreadPool.execute(() -> {
-            CitaRpcService.transfer(tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(),
-                Long.parseLong(value),
-                new CitaRpcService.OnTransferResultListener() {
-                    @Override
-                    public void onSuccess(EthGetTransactionReceipt receipt) {
-                        Toast.makeText(TransferActivity.this,
-                                "转账成功", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        progressBar.setVisibility(View.GONE);
-                        sheetDialog.dismiss();
-                    }
-                });
-        });
+    private void transferCitaErc20(double value, ProgressBar progressBar) throws Exception {
+        CitaRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+                receiveAddressEdit.getText().toString().trim(), value)
+            .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                @Override
+                public void onCompleted() {
+
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(TransferActivity.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+                }
+                @Override
+                public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+//                    finish();
+                }
+            });
     }
 
 
@@ -277,28 +320,28 @@ public class TransferActivity extends BaseActivity {
     private void transferEthErc20(String value, ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
         EthErc20RpcService.transferErc20(tokenItem, receiveAddressEdit.getText().toString().trim(),Double.valueOf(value))
-                .subscribe(new Subscriber<EthSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
+            .subscribe(new Subscriber<EthSendTransaction>() {
+                @Override
+                public void onCompleted() {
 
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        Toast.makeText(TransferActivity.this,
-                                e.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onNext(EthSendTransaction ethSendTransaction) {
-                        Toast.makeText(TransferActivity.this,
-                                "转账成功", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        sheetDialog.dismiss();
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(TransferActivity.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
+                }
+                @Override
+                public void onNext(EthSendTransaction ethSendTransaction) {
+                    Toast.makeText(TransferActivity.this,
+                            "转账成功", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
 //                    finish();
-                    }
-                });
+                }
+            });
     }
 
     @Override

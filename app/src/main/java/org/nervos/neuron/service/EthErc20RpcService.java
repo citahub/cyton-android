@@ -124,10 +124,8 @@ public class EthErc20RpcService extends EthRpcService{
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
             public Observable<String> call(BigInteger nonce) {
-                Log.d("wallet", "nonce: " + nonce.toString());
                 BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
                 Credentials credentials = Credentials.create(walletItem.privateKey);
-
                 RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
                         gasPrice, Numeric.toBigInt("0x23280"), tokenItem.contractAddress, data);
                 byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
@@ -139,7 +137,6 @@ public class EthErc20RpcService extends EthRpcService{
                 try {
                     EthSendTransaction ethSendTransaction =
                             service.ethSendRawTransaction(hexValue).sendAsync().get();
-                    Log.d("wallet", "EthSendTransaction: " + ethSendTransaction.getTransactionHash());
                     return Observable.just(ethSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -190,9 +187,7 @@ public class EthErc20RpcService extends EthRpcService{
         });
 
         Function function = new Function("transfer", params, returnTypes);
-        String encodedFunction = FunctionEncoder.encode(function);
-//        byte[] bytes = Numeric.hexStringToByteArray(Numeric.cleanHexPrefix(encodedFunction));
-        return encodedFunction;
+        return FunctionEncoder.encode(function);
     }
 
 }

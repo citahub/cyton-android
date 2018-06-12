@@ -160,16 +160,18 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim());
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
+                        && passwordEdit.getText().toString().trim().length() >= 8;
                 setCreateButtonStatus(isWalletValid());
             }
         });
 
-        passwordEdit.addTextChangedListener(new WalletTextWatcher(){
+        rePasswordEdit.addTextChangedListener(new WalletTextWatcher(){
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim());
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
+                        && rePasswordEdit.getText().toString().trim().length() >= 8;
                 setCreateButtonStatus(isWalletValid());
             }
         });

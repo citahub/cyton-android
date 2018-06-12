@@ -26,42 +26,22 @@
         android:largeHeap="true"
         android:name=".NeuronApplication"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.SplashActivity"
+            android:noHistory="true"
+            android:theme="@style/Theme.SPLASH"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="*"/>
-                <data android:scheme="file" />
-                <data android:scheme="smb" />
-                <data android:scheme="content" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:mimeType="*/*" />
-                <data android:mimeType="application/ckb"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="*"/>
-                <data android:scheme="file" />
-                <data android:scheme="smb" />
-                <data android:scheme="content" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:mimeType="*/*" />
-                <data android:pathPattern=".*\\.ckb" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".activity.AddTokenActivity"

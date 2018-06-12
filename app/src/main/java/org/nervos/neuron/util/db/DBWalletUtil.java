@@ -136,6 +136,28 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
+    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem){
+        WalletItem walletItem = getCurrentWallet(context);
+        addTokenToWallet(context, walletItem.name, tokenItem);
+    }
+
+    public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem){
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.tokenItems == null) {
+                walletItem.tokenItems = new ArrayList<>();
+            }
+            walletItem.tokenItems.remove(tokenItem);
+            saveWallet(context, walletItem);
+        }
+    }
+
+    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem){
+        WalletItem walletItem = getCurrentWallet(context);
+        deleteTokenFromWallet(context, walletItem.name, tokenItem);
+    }
+
+
     public static List<TokenItem> getAllTokenFromWallet(Context context, String walletName) {
         return Objects.requireNonNull(getWallet(context, walletName)).tokenItems;
     }

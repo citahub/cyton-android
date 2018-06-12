@@ -7,6 +7,7 @@ public class TokenItem implements Parcelable{
 
     public String name;
     public int image;
+    public String avatar;
     public String contractAddress;
     public String symbol;
     public int decimals;
@@ -30,6 +31,13 @@ public class TokenItem implements Parcelable{
         this.chainId = chainId;
     }
 
+    public TokenItem(String name, String symbol, int decimals, String avatar) {
+        this.name = name;
+        this.symbol = symbol;
+        this.decimals = decimals;
+        this.avatar = avatar;
+    }
+
 
     @Override
     public int describeContents() {
@@ -40,6 +48,7 @@ public class TokenItem implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeInt(this.image);
+        dest.writeString(this.avatar);
         dest.writeString(this.contractAddress);
         dest.writeString(this.symbol);
         dest.writeInt(this.decimals);
@@ -52,13 +61,14 @@ public class TokenItem implements Parcelable{
     protected TokenItem(Parcel in) {
         this.name = in.readString();
         this.image = in.readInt();
+        this.avatar = in.readString();
         this.contractAddress = in.readString();
         this.symbol = in.readString();
         this.decimals = in.readInt();
         this.amount = in.readString();
         this.chainId = in.readInt();
         this.chainName = in.readString();
-        this.balance = in.readFloat();
+        this.balance = in.readDouble();
     }
 
     public static final Creator<TokenItem> CREATOR = new Creator<TokenItem>() {

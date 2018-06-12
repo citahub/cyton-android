@@ -194,6 +194,16 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@color/default_gray_c"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:text="@string/password_suggestion"
+            android:textSize="12sp"
+            android:textColor="#FF0000"/>
+
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/import_mnemonic_button"

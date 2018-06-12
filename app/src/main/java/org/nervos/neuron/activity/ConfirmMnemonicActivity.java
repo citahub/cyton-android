@@ -13,7 +13,9 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import com.zhy.view.flowlayout.TagView;
 
 
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
+import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.WalletFragment;
 
 import java.util.ArrayList;
@@ -111,6 +113,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (confirmList.equals(originList)) {
+                    EventBus.getDefault().post(new WalletSaveEvent());
                     Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
                     intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);

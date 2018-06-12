@@ -173,6 +173,7 @@ public class TransactionFragment extends BaseFragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
+                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
                 return new RecyclerView.ViewHolder(view){};
             }
             TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(

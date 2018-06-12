@@ -4,11 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="您还没有Token数据"
         android:textSize="18sp"
         android:textColor="@color/default_black"/>
 

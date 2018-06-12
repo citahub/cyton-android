@@ -58,7 +58,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        CitaRpcService.init(CitaRpcService.NODE_IP);
+        CitaRpcService.init(this, CitaRpcService.NODE_IP);
     }
 
     private void initView() {

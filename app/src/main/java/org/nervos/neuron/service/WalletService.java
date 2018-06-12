@@ -1,6 +1,7 @@
 package org.nervos.neuron.service;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.nervos.neuron.item.ChainItem;
@@ -18,33 +19,34 @@ public class WalletService {
     private static ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     private static final String ETH = "ETH";
-    private static final String CITA = "CITA";
 
     public static void getWalletTokenBalance(Context context, WalletItem walletItem,
                                                    OnGetWalletTokenListener listener) {
         if (walletItem == null || walletItem.tokenItems.size() == 0) return;
         List<TokenItem> tokenItemList = new ArrayList<>();
-        Log.d("wallet", "len: " + walletItem.tokenItems.size());
         executorService.execute(() -> {
             for (int i = 0; i < walletItem.tokenItems.size(); i++) {
                 TokenItem tokenItem = walletItem.tokenItems.get(i);
-                Log.d("wallet", "symbol: " + tokenItem.symbol);
                 if (tokenItem.chainId < 0) {
                     if (ETH.equals(tokenItem.symbol)) {
                         tokenItem = EthNativeRpcService.getDefaultEth(walletItem.address);
                         tokenItemList.add(i, tokenItem);
                     } else {
-                        double balance = EthErc20RpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
-                        tokenItem.balance = balance;
+                        tokenItem.balance = EthErc20RpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);;
                         tokenItemList.add(i, tokenItem);
                     }
                 } else {
                     ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                     if (chainItem != null) {
                         String httpProvider = chainItem.httpProvider;
-                        CitaRpcService.init(httpProvider);
-                        tokenItem = CitaRpcService.getTokenInfo(tokenItem.contractAddress, walletItem.address);
-                        tokenItemList.add(i, tokenItem);
+                        CitaRpcService.init(context, httpProvider);
+                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {    // nervos erc20 token
+                            tokenItem = CitaRpcService.getTokenInfo(tokenItem.contractAddress, walletItem.address);
+                            tokenItemList.add(i, tokenItem);
+                        } else {
+                            tokenItem.balance = CitaRpcService.getBalance(walletItem.address).getBalance().doubleValue();
+                            tokenItemList.add(i, tokenItem);
+                        }
                     }
                 }
             }

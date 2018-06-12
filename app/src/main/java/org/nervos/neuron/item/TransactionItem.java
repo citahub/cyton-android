@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,9 +31,8 @@ public class TransactionItem implements Parcelable{
     }
 
     public String getDate() {
-        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd hh:mm:ss", Locale.CHINA);
-        Date date = new Date(timestamp);
-        return ft.format(date);
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
+        return ft.format(timestamp * 1000);
     }
 
 

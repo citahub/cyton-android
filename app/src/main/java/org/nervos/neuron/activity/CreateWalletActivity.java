@@ -8,17 +8,20 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
-import org.nervos.neuron.fragment.AppFragment;
+import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 import java.util.ArrayList;
@@ -36,8 +39,10 @@ public class CreateWalletActivity extends BaseActivity {
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
     private AppCompatButton createWalletButton;
+    private TitleBar titleBar;
 
     private WalletEntity walletEntity;
+    private WalletItem walletItem;
 
 
     @Override
@@ -50,11 +55,28 @@ public class CreateWalletActivity extends BaseActivity {
         initListener();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void initView() {
         walletNameEdit = findViewById(R.id.edit_wallet_name);
         passwordEdit = findViewById(R.id.edit_wallet_password);
         rePasswordEdit = findViewById(R.id.edit_wallet_password_repeat);
         createWalletButton = findViewById(R.id.create_wallet_button);
+        titleBar = findViewById(R.id.title);
+        if (getIntent() != null &&
+                getIntent().getBooleanExtra(SplashActivity.EXTRA_FIRST, false)) {
+            titleBar.hideLeft();
+        }
     }
 
     private void initListener() {
@@ -74,6 +96,7 @@ public class CreateWalletActivity extends BaseActivity {
                             dismissProgressBar();
                             Intent intent = new Intent(CreateWalletActivity.this,
                                     BackupMnemonicActivity.class);
+
                             intent.putExtra(EXTRA_MNEMONIC, walletEntity.getMnemonic());
                             startActivity(intent);
                         });
@@ -93,17 +116,23 @@ public class CreateWalletActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
+                walletItem = WalletItem.fromWalletEntity(walletEntity);
                 walletItem.name = walletNameEdit.getText().toString().trim();
                 walletItem.password = passwordEdit.getText().toString().trim();
                 List<TokenItem> tokenItemList = new ArrayList<>();
                 tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
                 walletItem.tokenItems = tokenItemList;
-                DBWalletUtil.saveWallet(mActivity, walletItem);
             }
         }.start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWalletSaveEvent(WalletSaveEvent event) {
+        if (walletItem != null) {
+            Log.d("wallet", "save wallet event");
+            DBWalletUtil.saveWallet(mActivity, walletItem);
+        }
+    }
 
 
     private boolean isWalletValid() {
@@ -131,7 +160,8 @@ public class CreateWalletActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim());
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
+                        && passwordEdit.getText().toString().trim().length() >= 8;
                 setCreateButtonStatus(isWalletValid());
             }
         });
@@ -139,7 +169,8 @@ public class CreateWalletActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim());
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
+                        && rePasswordEdit.getText().toString().trim().length() >= 8;
                 setCreateButtonStatus(isWalletValid());
             }
         });

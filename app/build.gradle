@@ -77,6 +77,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     //    implementation 'org.web3j:core:3.3.1-android'
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'

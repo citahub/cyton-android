@@ -1,14 +1,18 @@
 package org.nervos.neuron.service;
 
+import android.content.Context;
 import android.util.Log;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.account.Account;
 import org.nervos.web3j.protocol.account.CompiledContract;
 import org.nervos.web3j.protocol.core.DefaultBlockParameter;
+import org.nervos.web3j.protocol.core.methods.request.Transaction;
 import org.nervos.web3j.protocol.core.methods.response.AbiDefinition;
+import org.nervos.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.nervos.web3j.protocol.core.methods.response.EthGetBalance;
-import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 import org.nervos.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.nervos.web3j.protocol.http.HttpService;
@@ -18,12 +22,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
-import rx.Subscriber;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class CitaRpcService {
 
+    static final BigInteger NervosDecimal = new BigInteger("1000000000000000000");
     public static final String NODE_IP = "http://47.94.105.230:1337";
 
     private static Web3j service;
@@ -35,16 +40,13 @@ public class CitaRpcService {
     private static int version = 0;
     private static int chainId = 1;
     private static long chainValue = 0;
+    private static WalletItem walletItem;
 
-    public static void init(String privateKey, String httpProvider) {
-        service = Web3j.build(new HttpService(httpProvider));
-        account = new Account(privateKey, service);
-    }
-
-    public static void init(String httpProvider) {
+    public static void init(Context context, String httpProvider) {
         HttpService.setDebug(true);
         service = Web3j.build(new HttpService(httpProvider));
-        account = new Account(WalletConfig.PRIVKEY, service);
+        walletItem = DBWalletUtil.getCurrentWallet(context);
+        account = new Account(walletItem.privateKey, service);
     }
 
     private static BigInteger randomNonce() {
@@ -110,59 +112,47 @@ public class CitaRpcService {
     }
 
 
-    public static void transfer(String contractAddress, String address, long value, OnTransferResultListener listener) {
+    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem,
+                           String contractAddress, String address, double value) throws Exception {
+        String abi = account.getAbi(contractAddress);
+        mContract = new CompiledContract(abi);
+        AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
+        return Observable.just((EthSendTransaction)account.callContract(contractAddress,
+                transfer, randomNonce(), quota, version, chainId, chainValue, address,
+                getTransferValue(tokenItem, value)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) throws Exception {
+        BigInteger transferValue = NervosDecimal
+                .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+        Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
+                getValidUntilBlock().longValue(), version, chainId, transferValue.intValue(), "");
+        String rawTx = transaction.sign(walletItem.privateKey);
+        return Observable.just(service.ethSendRawTransaction(rawTx).send())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private static BigInteger getValidUntilBlock() {
         try {
-            String abi = account.getAbi(contractAddress);
-
-            mContract = new CompiledContract(abi);
-
-            AbiDefinition transfer = mContract.getFunctionAbi("transferEth", 2);
-            EthSendTransaction ethSendTransaction = (EthSendTransaction)account.callContract(contractAddress,
-                    transfer, randomNonce(), quota, version, chainId, chainValue, address, BigInteger.valueOf(value));
-            Thread.sleep(6000);
-            service.ethGetTransactionReceipt(ethSendTransaction.getSendTransactionResult().getHash())
-                    .observable()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<EthGetTransactionReceipt>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                            if( listener != null) {
-                                listener.onError(e);
-                            }
-                        }
-                        @Override
-                        public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                            if(ethGetTransactionReceipt.getTransactionReceipt() != null
-                                    && ethGetTransactionReceipt.getTransactionReceipt().getErrorMessage() == null) {
-                                if (listener != null) {
-                                    listener.onSuccess(ethGetTransactionReceipt);
-                                }
-                            } else {
-                                if (listener != null) {
-                                    listener.onError(new Throwable("receipt is null"));
-                                }
-                            }
-                        }
-                    });
-        } catch (Exception e) {
+            return BigInteger.valueOf((service.ethBlockNumber().send()).getBlockNumber().longValue() + 80L);
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        return BigInteger.ZERO;
     }
 
-
-
-    public interface OnTransferResultListener{
-        void onSuccess(EthGetTransactionReceipt receipt);
-        void onError(Throwable e);
+    private static BigInteger getTransferValue(TokenItem tokenItem, double value) {
+        StringBuilder sb = new StringBuilder("1");
+        for(int i = 0; i < tokenItem.decimals; i++) {
+            sb.append("0");
+        }
+        BigInteger ERC20Decimal = new BigInteger(sb.toString());
+        return ERC20Decimal.multiply(BigInteger.valueOf((long)(10000*value)))
+                .divide(BigInteger.valueOf(10000));
     }
-
-
-
 
 }

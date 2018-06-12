@@ -17,9 +17,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.CitaRpcService;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,7 @@ import okhttp3.Response;
 
 public class WebUtil {
 
+    private static int NERVOS_DECIMAL = 18;
     private static ChainItem chainItem;
 
     /**
@@ -90,8 +93,7 @@ public class WebUtil {
                     String result = response.body().string();
                     Log.d("wallet", "manifest result: " + result);
                     chainItem = new Gson().fromJson(result, ChainItem.class);
-                    if (chainItem.chainId >= 0
-                            && !TextUtils.isEmpty(chainItem.httpProvider)) {
+                    if (chainItem.chainId >= 0 && !TextUtils.isEmpty(chainItem.httpProvider)) {
                         getMetaData(context, chainItem.httpProvider);
                     }
 
@@ -109,11 +111,12 @@ public class WebUtil {
      * @param httpProvider
      */
     private static void getMetaData(Context context, String httpProvider) {
-        CitaRpcService.init(httpProvider);
+        CitaRpcService.init(context, httpProvider);
         EthMetaData.EthMetaDataResult ethMetaData = CitaRpcService.getMetaData().getEthMetaDataResult();
-        if (ethMetaData != null &&
-                ethMetaData.chainId == chainItem.chainId) {
-            DBChainUtil.saveChain(context, chainItem);
+        if (ethMetaData != null && ethMetaData.chainId == chainItem.chainId) {
+            chainItem.tokenName = ethMetaData.tokenName;
+            chainItem.tokenSymbol = ethMetaData.tokenSymbol;
+            chainItem.tokenAvatar = ethMetaData.tokenAvatar;
         }
     }
 
@@ -130,6 +133,13 @@ public class WebUtil {
             AppItem appItem = new AppItem(chainItem.entry,
                     chainItem.icon, chainItem.name, chainItem.provider);
             DBAppUtil.saveDbApp(context, appItem);
+            DBChainUtil.saveChain(context, chainItem);
+            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                TokenItem tokenItem = new TokenItem(chainItem.tokenName, chainItem.tokenSymbol,
+                        NERVOS_DECIMAL, chainItem.tokenAvatar);
+                tokenItem.chainId = chainItem.chainId;
+                DBWalletUtil.addTokenToCurrentWallet(context, tokenItem);
+            }
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }
     }
@@ -137,6 +147,12 @@ public class WebUtil {
     public static void cancelCollectApp(Context context) {
         if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
             DBAppUtil.deleteApp(context, chainItem.entry);
+            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                TokenItem tokenItem = new TokenItem(chainItem.tokenName, chainItem.tokenSymbol,
+                        NERVOS_DECIMAL, chainItem.tokenAvatar);
+                tokenItem.chainId = chainItem.chainId;
+                DBWalletUtil.deleteTokenFromCurrentWallet(context, tokenItem);
+            }
             Toast.makeText(context, "取消收藏", Toast.LENGTH_SHORT).show();
         }
     }

@@ -193,6 +193,7 @@ public class WalletFragment extends BaseFragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
+                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
                 return new RecyclerView.ViewHolder(view){};
             }
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(
