@@ -47,26 +47,24 @@ public class EthNativeRpcService extends EthRpcService{
         return null;
     }
 
-    public static Observable<Double> getEthGas() {
-        return Observable.fromCallable(new Callable<Double>() {
+    public static Observable<BigInteger> getEthGasPrice() {
+        return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
-            public Double call() {
+            public BigInteger call() {
                 BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
                 try {
                     gasPrice = service.ethGasPrice().send().getGasPrice();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                double gas = gasPrice.multiply(GAS_LIMIT).multiply(BigInteger.valueOf(1000000))
-                        .divide(ETHDecimal).doubleValue()/1000000.0;
-                Log.d("wallet", "gasPrice: " + gas);
-                return gas;
+                Log.d("wallet", "gasPrice: " + gasPrice.toString());
+                return gasPrice;
             }
         }).subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<EthSendTransaction> transferEth(String address, double value) {
+    public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
@@ -77,8 +75,6 @@ public class EthNativeRpcService extends EthRpcService{
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
             public Observable<String> call(BigInteger nonce) {
-                Log.d("wallet", "nonce: " + nonce.toString());
-                BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
                 Credentials credentials = Credentials.create(walletItem.privateKey);
                 BigInteger transferValue = ETHDecimal
                         .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));

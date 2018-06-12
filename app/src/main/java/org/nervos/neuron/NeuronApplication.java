@@ -17,8 +17,9 @@ public class NeuronApplication extends Application {
         super.onCreate();
         ZXingLibrary.initDisplayOpinion(this);
         Fresco.initialize(this);
-//        WalletEntity.initWalletMnemonic(this);
-//        DBChainUtil.initChainData(this);
-//        SharePrefUtil.init(this);
+        WalletEntity.initWalletMnemonic(this);
+        DBChainUtil.initChainData(this);
+        SharePrefUtil.init(this);
+        EthRpcService.init(this);
     }
 }

@@ -116,7 +116,7 @@
             android:id="@+id/transfer_value"
             android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/white"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textSize="14sp"
             android:gravity="end|center_vertical"
             android:layout_width="match_parent"

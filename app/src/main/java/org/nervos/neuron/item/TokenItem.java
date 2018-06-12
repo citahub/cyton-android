@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 public class TokenItem implements Parcelable{
 
+    private static int NERVOS_DECIMAL = 18;
+
     public String name;
     public int image;
     public String avatar;
@@ -31,13 +33,22 @@ public class TokenItem implements Parcelable{
         this.chainId = chainId;
     }
 
-    public TokenItem(String name, String symbol, int decimals, String avatar) {
+    public TokenItem(String name, String symbol, int decimals, String avatar, int chainId) {
         this.name = name;
         this.symbol = symbol;
         this.decimals = decimals;
         this.avatar = avatar;
+        this.chainId = chainId;
     }
 
+
+    public TokenItem(ChainItem chainItem) {
+        this.name = chainItem.tokenName;
+        this.symbol = chainItem.tokenSymbol;
+        this.decimals = NERVOS_DECIMAL;
+        this.avatar = chainItem.tokenAvatar;
+        this.chainId = chainItem.chainId;
+    }
 
     @Override
     public int describeContents() {

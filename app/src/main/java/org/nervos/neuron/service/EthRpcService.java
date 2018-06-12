@@ -20,7 +20,7 @@ import java.util.List;
 public class EthRpcService {
 
     public static final String ETH = "ETH";
-    static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
+    public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
 
     private static final String MAIN_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
     private static final String RINKEBY_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
@@ -63,6 +63,16 @@ public class EthRpcService {
                 return Utf8String.class;
             }
         });
+    }
+
+    public static BigInteger getBigFromDouble(double gasPrice) {
+        return BigInteger.valueOf((int)(gasPrice * 1000000))
+                .divide(BigInteger.valueOf(1000000)).multiply(ETHDecimal);
+    }
+
+    public static double getDoubleFromBig(BigInteger gasPrice) {
+        return gasPrice.multiply(BigInteger.valueOf(1000000))
+                .divide(ETHDecimal).doubleValue()/1000000.0;
     }
 
 }

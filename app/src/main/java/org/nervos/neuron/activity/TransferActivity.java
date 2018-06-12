@@ -27,14 +27,15 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthErc20RpcService;
 import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
+import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,8 +65,9 @@ public class TransferActivity extends BaseActivity {
 
     private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
-    private double unitGas = 0.0;
     private String tokenUnit = "eth";
+    private BigInteger mGasPrice;
+    private double mGas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,8 +76,6 @@ public class TransferActivity extends BaseActivity {
 
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
-
-        tokenUnit = tokenItem.chainId < 0? "eth":"";
 
         CitaRpcService.init(mActivity, CitaRpcService.NODE_IP);
         initView();
@@ -95,6 +95,7 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar = findViewById(R.id.fee_seek_bar);
         photoImage = findViewById(R.id.wallet_photo);
 
+        feeSeekBar.setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
         feeSeekBar.setMax(MAX_FEE);
         feeSeekBar.setProgress(DEFAULT_FEE);
 
@@ -105,7 +106,7 @@ public class TransferActivity extends BaseActivity {
 
     private void initGasInfo() {
         showProgressCircle();
-        EthNativeRpcService.getEthGas().subscribe(new Subscriber<Double>() {
+        EthNativeRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
             @Override
             public void onCompleted() {
 
@@ -116,9 +117,10 @@ public class TransferActivity extends BaseActivity {
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             @Override
-            public void onNext(Double gas) {
-                unitGas = gas * DEFAULT_FEE / MAX_FEE;
-                feeText.setText(NumberUtil.getDecimal_6(gas) + tokenUnit);
+            public void onNext(BigInteger gasPrice) {
+                mGasPrice = gasPrice;
+                mGas = EthRpcService.getDoubleFromBig(gasPrice.multiply(EthRpcService.GAS_LIMIT));
+                feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }
         });
@@ -152,7 +154,10 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                feeText.setText(NumberUtil.getDecimal_6(progress * unitGas));
+                Log.d("wallet", "progress: " + progress);
+                feeText.setText(NumberUtil.getDecimal_6(progress*mGas/DEFAULT_FEE) + tokenUnit);
+                mGasPrice = mGasPrice.multiply(BigInteger.valueOf(progress))
+                        .divide(BigInteger.valueOf(DEFAULT_FEE));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -285,7 +290,8 @@ public class TransferActivity extends BaseActivity {
      */
     private void transferEth(String value, ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
-        EthNativeRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),Double.valueOf(value))
+        EthNativeRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
+                Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
@@ -319,7 +325,8 @@ public class TransferActivity extends BaseActivity {
      */
     private void transferEthErc20(String value, ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
-        EthErc20RpcService.transferErc20(tokenItem, receiveAddressEdit.getText().toString().trim(),Double.valueOf(value))
+        EthErc20RpcService.transferErc20(tokenItem,
+                receiveAddressEdit.getText().toString().trim(), Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {

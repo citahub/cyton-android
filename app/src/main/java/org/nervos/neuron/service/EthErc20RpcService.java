@@ -105,14 +105,9 @@ public class EthErc20RpcService extends EthRpcService{
     }
 
 
-    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value) {
-        StringBuilder sb = new StringBuilder("1");
-        for(int i = 0; i < tokenItem.decimals; i++) {
-            sb.append("0");
-        }
-        BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        BigInteger transferValue = ERC20Decimal
-                .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
+                                                               double value, BigInteger gasPrice) {
+        BigInteger transferValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, transferValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
@@ -124,7 +119,6 @@ public class EthErc20RpcService extends EthRpcService{
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
             public Observable<String> call(BigInteger nonce) {
-                BigInteger gasPrice = Numeric.toBigInt("0x4E3B29200");
                 Credentials credentials = Credentials.create(walletItem.privateKey);
                 RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
                         gasPrice, Numeric.toBigInt("0x23280"), tokenItem.contractAddress, data);
@@ -149,6 +143,16 @@ public class EthErc20RpcService extends EthRpcService{
         .observeOn(AndroidSchedulers.mainThread());
     }
 
+
+    private static BigInteger getTransferValue(TokenItem tokenItem, double value) {
+        StringBuilder sb = new StringBuilder("1");
+        for(int i = 0; i < tokenItem.decimals; i++) {
+            sb.append("0");
+        }
+        BigInteger ERC20Decimal = new BigInteger(sb.toString());
+        return ERC20Decimal.multiply(BigInteger.valueOf((long)(10000*value)))
+                .divide(BigInteger.valueOf(10000));
+    }
 
     public static void getTransactionReceipt(String hash) {
         Observable.fromCallable(new Callable<EthGetTransactionReceipt>() {

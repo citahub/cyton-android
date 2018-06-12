@@ -21,9 +21,13 @@ import org.nervos.web3j.protocol.http.HttpService;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.concurrent.Callable;
+
+import javax.security.auth.callback.Callback;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class CitaRpcService {
@@ -102,13 +106,16 @@ public class CitaRpcService {
     }
 
 
-    public static EthGetBalance getBalance(String address) {
+    public static double getBalance(String address) {
         try {
-            return service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
+            EthGetBalance ethGetBalance =
+                    service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
+            return ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
+                    .divide(NervosDecimal).doubleValue()/10000.0;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return 0.0;
     }
 
 
@@ -125,15 +132,29 @@ public class CitaRpcService {
 
     }
 
-    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) throws Exception {
+    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) {
         BigInteger transferValue = NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-        Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
-                getValidUntilBlock().longValue(), version, chainId, transferValue.intValue(), "");
-        String rawTx = transaction.sign(walletItem.privateKey);
-        return Observable.just(service.ethSendRawTransaction(rawTx).send())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return Observable.fromCallable(new Callable<BigInteger>() {
+            @Override
+            public BigInteger call() {
+                return getValidUntilBlock();
+            }
+        }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
+            @Override
+            public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
+                Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
+                        validUntilBlock.longValue(), version, chainId, transferValue.intValue(), "");
+                String rawTx = transaction.sign(walletItem.privateKey);
+                try {
+                    return Observable.just(service.ethSendRawTransaction(rawTx).send());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static BigInteger getValidUntilBlock() {

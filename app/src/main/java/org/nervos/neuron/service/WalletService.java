@@ -27,6 +27,7 @@ public class WalletService {
         executorService.execute(() -> {
             for (int i = 0; i < walletItem.tokenItems.size(); i++) {
                 TokenItem tokenItem = walletItem.tokenItems.get(i);
+                Log.d("wallet", "token symbol: " + tokenItem.symbol);
                 if (tokenItem.chainId < 0) {
                     if (ETH.equals(tokenItem.symbol)) {
                         tokenItem = EthNativeRpcService.getDefaultEth(walletItem.address);
@@ -44,7 +45,7 @@ public class WalletService {
                             tokenItem = CitaRpcService.getTokenInfo(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         } else {
-                            tokenItem.balance = CitaRpcService.getBalance(walletItem.address).getBalance().doubleValue();
+                            tokenItem.balance = CitaRpcService.getBalance(walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         }
                     }

@@ -129,7 +129,6 @@ public class CreateWalletActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(WalletSaveEvent event) {
         if (walletItem != null) {
-            Log.d("wallet", "save wallet event");
             DBWalletUtil.saveWallet(mActivity, walletItem);
         }
     }

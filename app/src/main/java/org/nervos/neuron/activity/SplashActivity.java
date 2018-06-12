@@ -28,12 +28,7 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 super.run();
                 try {
-                    long time = System.currentTimeMillis();
                     sleep(1000);
-                    WalletEntity.initWalletMnemonic(mActivity);
-                    DBChainUtil.initChainData(mActivity);
-                    SharePrefUtil.init(mActivity);
-                    EthRpcService.init(mActivity);
                     if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
                         startActivity(new Intent(mActivity, MainActivity.class));
                     } else {
@@ -42,7 +37,6 @@ public class SplashActivity extends BaseActivity {
                         startActivity(intent);
                     }
                     finish();
-                    Log.d("wallet", "time: " + (System.currentTimeMillis() - time));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

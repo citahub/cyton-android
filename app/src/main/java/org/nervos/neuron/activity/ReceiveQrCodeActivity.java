@@ -16,13 +16,17 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReceiveQrCodeActivity extends AppCompatActivity {
 
     private ImageView qrCodeImage;
     private TextView walletNameText;
     private TextView walletAddressText;
+    private CircleImageView walletPhotoImage;
 
     private ReceiveQrCodeActivity activity;
 
@@ -38,6 +42,8 @@ public class ReceiveQrCodeActivity extends AppCompatActivity {
         qrCodeImage = findViewById(R.id.receive_qrcode_image);
         walletNameText = findViewById(R.id.qrcode_wallet_name);
         walletAddressText = findViewById(R.id.qrcode_wallet_address);
+        walletPhotoImage = findViewById(R.id.wallet_photo);
+        walletPhotoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         findViewById(R.id.button_copy_receive_qrcode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,11 +2,13 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 
@@ -52,6 +54,13 @@ public class DBWalletUtil extends DBUtil {
 
     public static void saveWallet(Context context, WalletItem walletItem){
         try {
+            List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);
+            for (ChainItem chainItem : chainItemList) {
+                Log.d("wallet", "chain name: " + chainItem.name);
+                if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                    walletItem.tokenItems.add(new TokenItem(chainItem));
+                }
+            }
             DB db = DBFactory.open(context, DB_WALLET);
             db.put(getDbKey(walletItem.name), walletItem);
             db.close();
@@ -133,6 +142,13 @@ public class DBWalletUtil extends DBUtil {
             }
             walletItem.tokenItems.add(tokenItem);
             saveWallet(context, walletItem);
+        }
+    }
+
+    public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
+        List<String> walletNames = getAllWalletName(context);
+        for (String walletName: walletNames) {
+            addTokenToWallet(context, walletName, tokenItem);
         }
     }
 

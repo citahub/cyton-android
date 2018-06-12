@@ -38,7 +38,6 @@ import okhttp3.Response;
 
 public class WebUtil {
 
-    private static int NERVOS_DECIMAL = 18;
     private static ChainItem chainItem;
 
     /**
@@ -135,10 +134,8 @@ public class WebUtil {
             DBAppUtil.saveDbApp(context, appItem);
             DBChainUtil.saveChain(context, chainItem);
             if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                TokenItem tokenItem = new TokenItem(chainItem.tokenName, chainItem.tokenSymbol,
-                        NERVOS_DECIMAL, chainItem.tokenAvatar);
-                tokenItem.chainId = chainItem.chainId;
-                DBWalletUtil.addTokenToCurrentWallet(context, tokenItem);
+                TokenItem tokenItem = new TokenItem(chainItem);
+                DBWalletUtil.addTokenToAllWallet(context, tokenItem);
             }
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }
@@ -147,12 +144,6 @@ public class WebUtil {
     public static void cancelCollectApp(Context context) {
         if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
             DBAppUtil.deleteApp(context, chainItem.entry);
-            if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                TokenItem tokenItem = new TokenItem(chainItem.tokenName, chainItem.tokenSymbol,
-                        NERVOS_DECIMAL, chainItem.tokenAvatar);
-                tokenItem.chainId = chainItem.chainId;
-                DBWalletUtil.deleteTokenFromCurrentWallet(context, tokenItem);
-            }
             Toast.makeText(context, "取消收藏", Toast.LENGTH_SHORT).show();
         }
     }
