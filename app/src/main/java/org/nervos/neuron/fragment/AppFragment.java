@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +16,33 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
+import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.event.WalletSaveEvent;
+import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.web.WebUtil;
 
 public class AppFragment extends Fragment {
 
-    private static final String DISCOVER_URL = "http://47.97.171.140:8866/";
+    private static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
 
     public static final String TAG = AppFragment.class.getName();
 
     private WebView webView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         webView = view.findViewById(R.id.webview);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         return view;
     }
 
@@ -43,15 +56,23 @@ public class AppFragment extends Fragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        WebUtil.initWebSettings(webView.getSettings());
     }
 
     private void initWebView() {
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                webView.reload();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return true;
+                return false;
             }
         });
 
@@ -67,5 +88,35 @@ public class AppFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAppCollectEvent(AppCollectEvent event) {
+        if (event.isCollect) {
+            String app = new Gson().toJson(event.appItem);
+            webView.loadUrl("javascript:__mydapp.add("+ app + ")");
+        } else {
+            webView.loadUrl("javascript:__mydapp.remove('" + event.appItem.entry + "')");
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public boolean canGoBack() {
+        return webView.canGoBack();
+    }
+
+
+    public void goBack() {
+        webView.goBack();
+    }
 
 }

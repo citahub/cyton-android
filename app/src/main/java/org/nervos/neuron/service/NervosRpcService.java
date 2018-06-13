@@ -30,9 +30,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class CitaRpcService {
+public class NervosRpcService {
 
-    static final BigInteger NervosDecimal = new BigInteger("1000000000000000000");
+    static final BigInteger NervosDecimal = new BigInteger("100000000000000000");
     public static final String NODE_IP = "http://47.94.105.230:1337";
 
     private static Web3j service;
@@ -59,7 +59,7 @@ public class CitaRpcService {
     }
 
 
-    public static TokenItem getTokenInfo(String contractAddress, String address) {
+    public static TokenItem getErc20TokenInfo(String contractAddress, String address) {
         try {
             String abi = account.getAbi(contractAddress);
             mContract = new CompiledContract(abi);
@@ -80,13 +80,6 @@ public class CitaRpcService {
             tokenItem.name = account.callContract(contractAddress, nameAbi, randomNonce(),
                     quota, version, chainId, chainValue).toString();
 
-            AbiDefinition balanceOfAbi = mContract.getFunctionAbi("balanceOf", 1);
-            String balance = account.callContract(contractAddress, balanceOfAbi, randomNonce(),
-                    quota, version, chainId, chainValue, address).toString();
-            tokenItem.balance = Float.valueOf(balance);
-
-            Log.d("wallet", "cita erc20 balance: " + tokenItem.balance);
-
             return tokenItem;
 
         } catch (Exception e) {
@@ -95,6 +88,34 @@ public class CitaRpcService {
 
         return null;
     }
+
+
+    public static double getErc20Balance(TokenItem tokenItem, String address) {
+        try {
+            String abi = account.getAbi(tokenItem.contractAddress);
+            mContract = new CompiledContract(abi);
+
+            StringBuilder sb = new StringBuilder("1");
+            for(int i = 0; i < tokenItem.decimals; i++) {
+                sb.append("0");
+            }
+            BigInteger ERC20Decimal = new BigInteger(sb.toString());
+
+            AbiDefinition balanceOfAbi = mContract.getFunctionAbi("balanceOf", 1);
+            String balance = account.callContract(tokenItem.contractAddress, balanceOfAbi, randomNonce(),
+                    quota, version, chainId, chainValue, address).toString();
+            BigInteger balanceBig = new BigInteger(balance);
+
+            return balanceBig.multiply(BigInteger.valueOf(10000))
+                    .divide(ERC20Decimal).doubleValue()/10000.0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+
 
     public static EthMetaData getMetaData() {
         try {
@@ -106,7 +127,7 @@ public class CitaRpcService {
     }
 
 
-    public static double getBalance(String address) {
+    public static double getBalance(TokenItem tokenItem, String address) {
         try {
             EthGetBalance ethGetBalance =
                     service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
@@ -121,20 +142,48 @@ public class CitaRpcService {
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem,
                            String contractAddress, String address, double value) throws Exception {
-        String abi = account.getAbi(contractAddress);
-        mContract = new CompiledContract(abi);
-        AbiDefinition transfer = mContract.getFunctionAbi("transfer", 2);
-        return Observable.just((EthSendTransaction)account.callContract(contractAddress,
-                transfer, randomNonce(), quota, version, chainId, chainValue, address,
-                getTransferValue(tokenItem, value)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return Observable.fromCallable(new Callable<String>() {
+            @Override
+            public String call() {
+                try {
+                    return account.getAbi(contractAddress);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }).flatMap(new Func1<String, Observable<AbiDefinition>>() {
+            @Override
+            public Observable<AbiDefinition> call(String abi) {
+                try {
+                    mContract = new CompiledContract(abi);
+                    return Observable.just(mContract.getFunctionAbi("transfer", 2));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).flatMap(new Func1<AbiDefinition, Observable<EthSendTransaction>>() {
+            @Override
+            public Observable<EthSendTransaction> call(AbiDefinition transfer) {
+                try {
+                    return Observable.just((EthSendTransaction)account.callContract(contractAddress,
+                            transfer, randomNonce(), quota, version, chainId, chainValue, address,
+                            getTransferValue(tokenItem, value)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread());
 
     }
 
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) {
         BigInteger transferValue = NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+        Log.d("wallet", "transfer value: " + transferValue.toString());
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {

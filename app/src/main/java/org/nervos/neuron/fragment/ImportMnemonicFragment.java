@@ -158,9 +158,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
-            List<TokenItem> tokenItemList = new ArrayList<>();
-            tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
-            walletItem.tokenItems = tokenItemList;
+            walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
             DBWalletUtil.saveWallet(getContext(), walletItem);
             return true;
         } catch (CipherException e) {

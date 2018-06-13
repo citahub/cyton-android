@@ -12,7 +12,7 @@
     tools:showIn="@layout/activity_wallet">
 
     <TextView
-        android:id="@+id/cita_account"
+        android:id="@+id/nervos_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"

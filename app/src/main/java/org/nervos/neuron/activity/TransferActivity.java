@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.CitaRpcService;
+import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -77,7 +77,7 @@ public class TransferActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
 
-        CitaRpcService.init(mActivity, CitaRpcService.NODE_IP);
+        NervosRpcService.init(mActivity, NervosRpcService.NODE_IP);
         initView();
         initListener();
         initGasInfo();
@@ -204,9 +204,9 @@ public class TransferActivity extends BaseActivity {
                 } else {
                     try {
                         if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            transferCitaToken(Double.valueOf(value), progressBar);
+                            transferNervosToken(Double.valueOf(value), progressBar);
                         } else {
-                            transferCitaErc20(Double.valueOf(value), progressBar);
+                            transferNervosErc20(Double.valueOf(value), progressBar);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -223,30 +223,30 @@ public class TransferActivity extends BaseActivity {
      * @param value  transfer value
      * @param progressBar
      */
-        private void transferCitaToken(double value, ProgressBar progressBar) throws Exception {
-        CitaRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value)
-            .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
-                @Override
-                public void onCompleted() {
+    private void transferNervosToken(double value, ProgressBar progressBar){
+    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value)
+        .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+            @Override
+            public void onCompleted() {
 
-                }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                    Toast.makeText(TransferActivity.this,
-                            e.getMessage(), Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
-                }
-                @Override
-                public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
-                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                Toast.makeText(TransferActivity.this,
+                        e.getMessage(), Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
+                progressBar.setVisibility(View.GONE);
+                sheetDialog.dismiss();
 //                    finish();
-                }
-            });
+            }
+        });
     }
 
 
@@ -255,8 +255,8 @@ public class TransferActivity extends BaseActivity {
      * @param value  transfer value
      * @param progressBar
      */
-    private void transferCitaErc20(double value, ProgressBar progressBar) throws Exception {
-        CitaRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+    private void transferNervosErc20(double value, ProgressBar progressBar) throws Exception {
+        NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override

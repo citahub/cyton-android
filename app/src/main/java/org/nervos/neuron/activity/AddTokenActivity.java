@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.CitaRpcService;
+import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.EthErc20RpcService;
@@ -58,7 +58,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        CitaRpcService.init(this, CitaRpcService.NODE_IP);
+        NervosRpcService.init(this, NervosRpcService.NODE_IP);
     }
 
     private void initView() {
@@ -77,7 +77,6 @@ public class AddTokenActivity extends BaseActivity {
 
         String[] chainNames = new String[chainNameList.size()];
         chainNames = chainNameList.toArray(chainNames);
-        Log.d("wallet", "chain size: " + chainNameList.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.spinner_item, chainNames);
         blockChainSpinner.setAdapter(adapter);
@@ -143,7 +142,7 @@ public class AddTokenActivity extends BaseActivity {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
                         tokenItem = EthErc20RpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
-                        tokenItem = CitaRpcService.getTokenInfo(s.toString(), walletItem.address);
+                        tokenItem = NervosRpcService.getErc20TokenInfo(s.toString(), walletItem.address);
                     }
                     if (chainItem != null && tokenItem != null) {
                         tokenItem.chainId = chainItem.chainId;

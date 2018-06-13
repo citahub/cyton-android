@@ -8,9 +8,11 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthNativeRpcService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Objects;
 public class DBWalletUtil extends DBUtil {
 
     private static final String DB_WALLET = "db_wallet";
+    private static final String ETH = "ETH";
 
     public static WalletItem getWallet(Context context, String walletName) {
         if (TextUtils.isEmpty(walletName)) return null;
@@ -54,13 +57,6 @@ public class DBWalletUtil extends DBUtil {
 
     public static void saveWallet(Context context, WalletItem walletItem){
         try {
-            List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);
-            for (ChainItem chainItem : chainItemList) {
-                Log.d("wallet", "chain name: " + chainItem.name);
-                if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                    walletItem.tokenItems.add(new TokenItem(chainItem));
-                }
-            }
             DB db = DBFactory.open(context, DB_WALLET);
             db.put(getDbKey(walletItem.name), walletItem);
             db.close();
@@ -140,9 +136,20 @@ public class DBWalletUtil extends DBUtil {
             if (walletItem.tokenItems == null) {
                 walletItem.tokenItems = new ArrayList<>();
             }
-            walletItem.tokenItems.add(tokenItem);
+            if (!checkTokenInWallet(walletItem, tokenItem)) {
+                walletItem.tokenItems.add(tokenItem);
+            }
             saveWallet(context, walletItem);
         }
+    }
+
+    private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
+        for (TokenItem token : walletItem.tokenItems) {
+            if (token.symbol.equals(tokenItem.symbol)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
@@ -176,6 +183,27 @@ public class DBWalletUtil extends DBUtil {
 
     public static List<TokenItem> getAllTokenFromWallet(Context context, String walletName) {
         return Objects.requireNonNull(getWallet(context, walletName)).tokenItems;
+    }
+
+
+    /**
+     * add origin token of ethereum and cita to wallet
+     * @param context
+     * @param walletItem
+     * @return
+     */
+    public static WalletItem addOriginTokenToWallet(Context context, WalletItem walletItem) {
+        List<TokenItem> tokenItemList = new ArrayList<>();
+        tokenItemList.add(new TokenItem(ETH, R.drawable.ethereum, 0, -1));
+        walletItem.tokenItems = tokenItemList;
+
+        List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);
+        for (ChainItem chainItem : chainItemList) {
+            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                walletItem.tokenItems.add(new TokenItem(chainItem));
+            }
+        }
+        return walletItem;
     }
 
 }

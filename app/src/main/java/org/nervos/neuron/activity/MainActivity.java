@@ -167,6 +167,9 @@ public class MainActivity extends BaseActivity {
                 hideFragments(fragmentTransaction);
                 setNavigationItem(AppFragment.TAG);
                 return true;
+            } else if (appFragment != null && appFragment.canGoBack()) {
+                appFragment.goBack();
+                return true;
             } else if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次返回键退出", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();

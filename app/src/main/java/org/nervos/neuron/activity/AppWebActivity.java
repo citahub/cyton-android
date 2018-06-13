@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.web.WebUtil;
@@ -33,6 +34,7 @@ public class AppWebActivity extends BaseActivity {
     private WebView webView;
     private TextView titleText;
     private TextView collectText;
+    private ProgressBar progressBar;
 
     private WalletItem walletItem;
 
@@ -111,15 +113,19 @@ public class AppWebActivity extends BaseActivity {
 
 
     private void initWebView() {
+        progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
         WebUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
-//                if (newProgress <= 25) {
-//                    injectJs();
-//                }
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);
+                }
                 Log.d("Web", "progress: " + newProgress);
             }
             @Override
@@ -147,7 +153,7 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        webView.loadUrl(WebUtil.getWeb3Js(this));
+        webView.loadUrl(WebUtil.getInjectWeb3());
         webView.loadUrl(WebUtil.getInjectJs());
     }
 
@@ -155,13 +161,14 @@ public class AppWebActivity extends BaseActivity {
     private class AppHybrid {
 
         @JavascriptInterface
-        public void showTransaction(String method, String payload) {
+        public void showTransaction(String tx) {
+            Log.d("wallet", "tx: " + tx);
             if (walletItem == null) {
                 Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
-                intent.putExtra(EXTRA_PAYLOAD, payload);
+                intent.putExtra(EXTRA_PAYLOAD, tx);
                 startActivity(intent);
             }
         }

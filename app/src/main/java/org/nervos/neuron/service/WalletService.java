@@ -40,12 +40,12 @@ public class WalletService {
                     ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                     if (chainItem != null) {
                         String httpProvider = chainItem.httpProvider;
-                        CitaRpcService.init(context, httpProvider);
+                        NervosRpcService.init(context, httpProvider);
                         if (!TextUtils.isEmpty(tokenItem.contractAddress)) {    // nervos erc20 token
-                            tokenItem = CitaRpcService.getTokenInfo(tokenItem.contractAddress, walletItem.address);
+                            tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         } else {
-                            tokenItem.balance = CitaRpcService.getBalance(walletItem.address);
+                            tokenItem.balance = NervosRpcService.getBalance(tokenItem, walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         }
                     }

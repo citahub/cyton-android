@@ -11,14 +11,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.CitaRpcService;
+import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -37,6 +39,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class WebUtil {
+
+
 
     private static ChainItem chainItem;
 
@@ -110,8 +114,8 @@ public class WebUtil {
      * @param httpProvider
      */
     private static void getMetaData(Context context, String httpProvider) {
-        CitaRpcService.init(context, httpProvider);
-        EthMetaData.EthMetaDataResult ethMetaData = CitaRpcService.getMetaData().getEthMetaDataResult();
+        NervosRpcService.init(context, httpProvider);
+        EthMetaData.EthMetaDataResult ethMetaData = NervosRpcService.getMetaData().getEthMetaDataResult();
         if (ethMetaData != null && ethMetaData.chainId == chainItem.chainId) {
             chainItem.tokenName = ethMetaData.tokenName;
             chainItem.tokenSymbol = ethMetaData.tokenSymbol;
@@ -137,6 +141,7 @@ public class WebUtil {
                 TokenItem tokenItem = new TokenItem(chainItem);
                 DBWalletUtil.addTokenToAllWallet(context, tokenItem);
             }
+            EventBus.getDefault().post(new AppCollectEvent(true, appItem));
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }
     }
@@ -144,6 +149,9 @@ public class WebUtil {
     public static void cancelCollectApp(Context context) {
         if (chainItem != null && !TextUtils.isEmpty(chainItem.entry)) {
             DBAppUtil.deleteApp(context, chainItem.entry);
+            AppItem appItem = new AppItem(chainItem.entry,
+                    chainItem.icon, chainItem.name, chainItem.provider);
+            EventBus.getDefault().post(new AppCollectEvent(false, appItem));
             Toast.makeText(context, "取消收藏", Toast.LENGTH_SHORT).show();
         }
     }
@@ -175,14 +183,13 @@ public class WebUtil {
         return null;
     }
 
-    public static String getWeb3Js(Context context) {
-        return WebUtil.getInjectedJsFile(context, "web3.min.js");
+    public static String getInjectWeb3() {
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3(server) }";
     }
 
     public static String  getInjectJs() {
-        return "javascript: var web3 = new Web3(); web3.initWeb3(); ";
+        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.showTransaction(JSON.stringify(tx));console.log(JSON.stringify(tx));}";
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     public static void initWebSettings(WebSettings webSettings) {
@@ -220,10 +227,6 @@ public class WebUtil {
             return true;
         }
         return false;
-    }
-
-    public interface OnMetaDataListener {
-        void getMetaData();
     }
 
 }

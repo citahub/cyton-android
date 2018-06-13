@@ -38,6 +38,13 @@
             android:layout_centerInParent="true" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
+        android:visibility="gone" />
     
     <FrameLayout
         android:layout_width="match_parent"

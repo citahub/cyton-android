@@ -78,7 +78,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"/>
 
-        <TextView
+        <Button
             android:id="@+id/pay_reject"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,7 +90,7 @@
             android:gravity="center"
             android:background="@drawable/button_blue_line_shape"/>
 
-        <TextView
+        <Button
             android:id="@+id/pay_approve"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -106,6 +106,7 @@
 
     <ScrollView
         android:layout_below="@id/pay_title_layout"
+        android:layout_above="@id/pay_button_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -136,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="请求地址"
+                android:text="接收地址"
                 android:textColor="@color/default_black"
                 android:textSize="13sp"/>
 

@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,16 +48,10 @@ public class CreateWalletActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wallet);
-
+        EventBus.getDefault().register(this);
         initView();
         checkWalletStatus();
         initListener();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -119,9 +112,6 @@ public class CreateWalletActivity extends BaseActivity {
                 walletItem = WalletItem.fromWalletEntity(walletEntity);
                 walletItem.name = walletNameEdit.getText().toString().trim();
                 walletItem.password = passwordEdit.getText().toString().trim();
-                List<TokenItem> tokenItemList = new ArrayList<>();
-                tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
-                walletItem.tokenItems = tokenItemList;
             }
         }.start();
     }
@@ -129,6 +119,7 @@ public class CreateWalletActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(WalletSaveEvent event) {
         if (walletItem != null) {
+            walletItem = DBWalletUtil.addOriginTokenToWallet(mActivity, walletItem);
             DBWalletUtil.saveWallet(mActivity, walletItem);
         }
     }

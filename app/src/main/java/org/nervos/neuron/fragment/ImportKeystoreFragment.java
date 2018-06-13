@@ -28,7 +28,6 @@ import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 
@@ -115,9 +114,7 @@ public class ImportKeystoreFragment extends BaseFragment {
             WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
             walletItem.name = walletNameEdit.getText().toString().trim();
             walletItem.password = passwordEdit.getText().toString().trim();
-            List<TokenItem> tokenItemList = new ArrayList<>();
-            tokenItemList.add(EthNativeRpcService.getDefaultEth(walletItem.address));
-            walletItem.tokenItems = tokenItemList;
+            walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
             DBWalletUtil.saveWallet(getContext(), walletItem);
             return true;
         } catch (CipherException e) {

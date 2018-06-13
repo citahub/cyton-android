@@ -9,4 +9,9 @@ public class NumberUtil {
         return fmt.format(value);
     }
 
+    public static String getDecimal_4(Double value) {
+        DecimalFormat fmt = new DecimalFormat("##0.0000000");
+        return fmt.format(value);
+    }
+
 }
