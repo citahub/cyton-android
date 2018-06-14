@@ -127,7 +127,7 @@ public class NervosRpcService {
     }
 
 
-    public static double getBalance(TokenItem tokenItem, String address) {
+    public static double getBalance(String address) {
         try {
             EthGetBalance ethGetBalance =
                     service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();

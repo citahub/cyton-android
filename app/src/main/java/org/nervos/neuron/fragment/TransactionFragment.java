@@ -72,6 +72,7 @@ public class TransactionFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         walletItem = DBWalletUtil.getCurrentWallet(getContext());
         initAdapter();
+        showProgressBar();
         getTransactionList();
         initRefreshData();
     }
@@ -96,22 +97,16 @@ public class TransactionFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-
-                    }
-                },500);
+                getTransactionList();
             }
         });
     }
 
 
     private void getTransactionList() {
-        showProgressBar();
         OkHttpClient mOkHttpClient = new OkHttpClient();
-        final Request request = new Request.Builder().url(TRANSACTION_URL).build();
+        String url = TRANSACTION_URL + "?account=" + walletItem.address;
+        final Request request = new Request.Builder().url(url).build();
         Call call = mOkHttpClient.newCall(request);
         Observable.fromCallable(new Callable<String>() {
             @Override
@@ -129,11 +124,13 @@ public class TransactionFragment extends BaseFragment {
             @Override
             public void onCompleted() {
                 dismissProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
             }
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 dismissProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
             }
             @Override
             public void onNext(String res) {

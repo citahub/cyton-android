@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -18,12 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Sign;
+import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -154,7 +157,8 @@ public class AppWebActivity extends BaseActivity {
      */
     private void injectJs() {
         webView.loadUrl(WebUtil.getInjectWeb3());
-        webView.loadUrl(WebUtil.getInjectJs());
+        webView.loadUrl(WebUtil.getInjectTransactionJs());
+        webView.loadUrl(WebUtil.getInjectSignJs());
     }
 
 
@@ -162,7 +166,6 @@ public class AppWebActivity extends BaseActivity {
 
         @JavascriptInterface
         public void showTransaction(String tx) {
-            Log.d("wallet", "tx: " + tx);
             if (walletItem == null) {
                 Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
@@ -172,17 +175,27 @@ public class AppWebActivity extends BaseActivity {
                 startActivity(intent);
             }
         }
+
+        @JavascriptInterface
+        public void signTransaction(String tx) {
+            if (walletItem == null) {
+                Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mActivity, AddWalletActivity.class));
+            } else {
+                showSignMessageDialog(tx);
+            }
+        }
     }
 
 
-    private void showSignMessageDialog() {
+    private void showSignMessageDialog(String tx) {
         BottomSheetDialog sheetDialog = new BottomSheetDialog(mActivity);
         sheetDialog.setCancelable(false);
-        sheetDialog.setContentView(getSignMessageView(sheetDialog));
+        sheetDialog.setContentView(getSignMessageView(sheetDialog, tx));
         sheetDialog.show();
     }
 
-    private View getSignMessageView(BottomSheetDialog sheetDialog) {
+    private View getSignMessageView(BottomSheetDialog sheetDialog, String tx) {
         View view = getLayoutInflater().inflate(R.layout.dialog_sign_message, null);
         TextView walletNameText = view.findViewById(R.id.wallet_name);
         TextView walletAddressText = view.findViewById(R.id.wallet_address);
@@ -193,12 +206,33 @@ public class AppWebActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
+        payOwnerText.setText(WebUtil.getChainItem().entry);
+        payDataText.setText(tx);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        ChainItem chainItem = WebUtil.getChainItem();
-        if (chainItem != null) {
-            payOwnerText.setText(chainItem.provider);
-            payDataText.setText("");
+        if (WebUtil.getChainItem() != null) {
+            payOwnerText.setText(WebUtil.getChainItem().provider);
+            payDataText.setText(tx);
         }
+
+        view.findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.pay_data_left_line).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.pay_data_right_line).setVisibility(View.GONE);
+                payDataText.setText(tx);
+            }
+        });
+
+        view.findViewById(R.id.sign_utf8_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
+                view.findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
+                if (Numeric.containsHexPrefix(tx)) {
+                    payDataText.setText(NumberUtil.hexToUtf8(tx));
+                }
+            }
+        });
 
         view.findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +244,8 @@ public class AppWebActivity extends BaseActivity {
         view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Sign.SignatureData signatureData = Sign.signMessage(tx.getBytes(),
+                        ECKeyPair.create(new BigInteger(walletItem.privateKey)), false);
             }
         });
         return view;

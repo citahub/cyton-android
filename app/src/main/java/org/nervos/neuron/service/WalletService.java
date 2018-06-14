@@ -45,7 +45,7 @@ public class WalletService {
                             tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         } else {
-                            tokenItem.balance = NervosRpcService.getBalance(tokenItem, walletItem.address);
+                            tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
                             tokenItemList.add(i, tokenItem);
                         }
                     }

@@ -22,6 +22,7 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
@@ -45,7 +46,6 @@ public class PayTokenActivity extends BaseActivity {
 
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
-        Log.d("wallet", "request quota: " + transactionRequest.getQuota() + " gasPrice: " + transactionRequest.getGasPrice());
         walletItem = DBWalletUtil.getCurrentWallet(this);
 
         initView();
@@ -66,7 +66,6 @@ public class PayTokenActivity extends BaseActivity {
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         payNameText.setText(WebUtil.getChainItem().entry);
-        Log.d("wallet", "is: " + transactionRequest.isEthereum() + "  gasPrice: " + transactionRequest.getGasPrice());
         if (transactionRequest.isEthereum()) {
             payAddressText.setText(transactionRequest.to);
             payAmountText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()));
@@ -78,6 +77,26 @@ public class PayTokenActivity extends BaseActivity {
             paySumText.setText(NumberUtil.getDecimal_4(transactionRequest.getQuota()));
             payDataText.setText(transactionRequest.data);
         }
+
+        findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.pay_data_left_line).setVisibility(View.VISIBLE);
+                findViewById(R.id.pay_data_right_line).setVisibility(View.GONE);
+                payDataText.setText(transactionRequest.data);
+            }
+        });
+
+        findViewById(R.id.sign_utf8_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
+                findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
+                if (Numeric.containsHexPrefix(transactionRequest.data)) {
+                    payDataText.setText(NumberUtil.hexToUtf8(transactionRequest.data));
+                }
+            }
+        });
 
     }
 

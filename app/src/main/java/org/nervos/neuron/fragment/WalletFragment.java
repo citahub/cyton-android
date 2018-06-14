@@ -207,8 +207,10 @@ public class WalletFragment extends BaseFragment {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder)holder;
                 viewHolder.tokenImage.setImageResource(R.drawable.ethereum);
-                viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
-                viewHolder.tokenAmount.setText(String.valueOf(tokenItemList.get(position).balance));
+                if (tokenItemList.get(position) != null) {
+                    viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
+                    viewHolder.tokenAmount.setText(String.valueOf(tokenItemList.get(position).balance));
+                }
                 viewHolder.itemView.setTag(position);
             }
         }

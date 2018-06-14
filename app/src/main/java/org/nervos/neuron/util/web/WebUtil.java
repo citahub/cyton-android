@@ -187,8 +187,12 @@ public class WebUtil {
         return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3(server) }";
     }
 
-    public static String  getInjectJs() {
+    public static String getInjectTransactionJs() {
         return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.showTransaction(JSON.stringify(tx));console.log(JSON.stringify(tx));}";
+    }
+
+    public static String getInjectSignJs() {
+        return "javascript: web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx));console.log(JSON.stringify(tx));}";
     }
 
     @SuppressLint("SetJavaScriptEnabled")

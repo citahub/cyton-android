@@ -95,7 +95,7 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar = findViewById(R.id.fee_seek_bar);
         photoImage = findViewById(R.id.wallet_photo);
 
-        feeSeekBar.setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
+        findViewById(R.id.fee_layout).setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
         feeSeekBar.setMax(MAX_FEE);
         feeSeekBar.setProgress(DEFAULT_FEE);
 
@@ -154,7 +154,6 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.d("wallet", "progress: " + progress);
                 feeText.setText(NumberUtil.getDecimal_6(progress*mGas/DEFAULT_FEE) + tokenUnit);
                 mGasPrice = mGasPrice.multiply(BigInteger.valueOf(progress))
                         .divide(BigInteger.valueOf(DEFAULT_FEE));

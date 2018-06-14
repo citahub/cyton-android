@@ -79,7 +79,7 @@
             android:background="@android:color/white"
             android:layout_centerVertical="true"
             android:hint="请输入收款人地址"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/default_margin"
             android:layout_toStartOf="@id/transfer_address_scan"
             android:layout_toEndOf="@id/transfer_address_text"
             android:textSize="14sp"
@@ -131,49 +131,54 @@
         android:layout_marginEnd="@dimen/default_margin"
         android:background="@color/default_gray_c"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:text="交易费用"
-        android:textColor="@color/font_black"
-        android:textSize="14sp"/>
-
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/fee_seek_bar"
+    <LinearLayout
+        android:id="@+id/fee_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:text="交易费用"
+            android:textColor="@color/font_black"
+            android:textSize="14sp"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin">
-        <TextView
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/fee_seek_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="慢"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_6" />
-        <TextView
-            android:id="@+id/fee_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_gray_6"
-            android:textSize="12sp"
-            android:layout_centerHorizontal="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="快"
-            android:textSize="12sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/default_gray_6" />
-    </RelativeLayout>
+            android:layout_marginTop="10dp"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="慢"
+                android:textSize="12sp"
+                android:textColor="@color/default_gray_6" />
+            <TextView
+                android:id="@+id/fee_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_gray_6"
+                android:textSize="12sp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/default_gray_6" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/next_action_button"

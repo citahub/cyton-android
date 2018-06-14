@@ -32,7 +32,7 @@ public class TransactionItem implements Parcelable{
 
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
-        return ft.format(timestamp * 1000);
+        return ft.format(timestamp);
     }
 
 
