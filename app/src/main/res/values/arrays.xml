@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="blockchains">
-        <item>Cita</item>
-        <item>Bitcore </item>
-        <item>Ethereum</item>
-        <item>EOS</item>
-        <item>Fabric</item>
-    </string-array>
-
-    <string-array name="chain_items">
-        <item>以太坊Mainnet</item>
-        <item>宇宙链【001】</item>
-    </string-array>
 
     <string-array name="mnemonic_format">
         <item>m/44\'/60\'/0\'/0/0 Jaxx, Metamask(ETH)</item>

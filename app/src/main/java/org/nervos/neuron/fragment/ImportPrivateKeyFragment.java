@@ -134,7 +134,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
 
 
     private boolean isWalletValid() {
-        return check1 && check2 && check3;
+        return check1 && check2 && check3 && check4;
     }
 
     private void setCreateButtonStatus(boolean status) {
@@ -144,7 +144,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
     }
 
 
-    private boolean check1 = false, check2 = false, check3 = false;
+    private boolean check1 = false, check2 = false, check3 = false, check4 = false;
     private void checkWalletStatus() {
         walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
             @Override
@@ -170,6 +170,14 @@ public class ImportPrivateKeyFragment extends BaseFragment {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
                         && rePasswordEdit.getText().toString().trim().length() >= 8;
+                setCreateButtonStatus(isWalletValid());
+            }
+        });
+        privateKeyEdit.addTextChangedListener(new WalletTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                super.onTextChanged(charSequence, i, i1, i2);
+                check4 = !TextUtils.isEmpty(privateKeyEdit.getText().toString().trim());
                 setCreateButtonStatus(isWalletValid());
             }
         });

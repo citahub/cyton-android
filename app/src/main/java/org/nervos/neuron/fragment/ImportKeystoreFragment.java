@@ -126,7 +126,7 @@ public class ImportKeystoreFragment extends BaseFragment {
 
 
     private boolean isWalletValid() {
-        return check1 && check2;
+        return check1 && check2 && check3;
     }
 
     private void setCreateButtonStatus(boolean status) {
@@ -136,7 +136,7 @@ public class ImportKeystoreFragment extends BaseFragment {
     }
 
 
-    private boolean check1 = false, check2 = false;
+    private boolean check1 = false, check2 = false, check3 = false;
     private void checkWalletStatus() {
         walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
             @Override
@@ -151,6 +151,14 @@ public class ImportKeystoreFragment extends BaseFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim());
+                setCreateButtonStatus(isWalletValid());
+            }
+        });
+        keystoreEdit.addTextChangedListener(new WalletTextWatcher(){
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                super.onTextChanged(charSequence, i, i1, i2);
+                check3 = !TextUtils.isEmpty(keystoreEdit.getText().toString().trim());
                 setCreateButtonStatus(isWalletValid());
             }
         });

@@ -2,7 +2,6 @@ package org.nervos.neuron.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +24,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
@@ -38,6 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -104,10 +105,10 @@ public class TransactionFragment extends BaseFragment {
 
 
     private void getTransactionList() {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
+        walletItem = DBWalletUtil.getCurrentWallet(getContext());
         String url = TRANSACTION_URL + "?account=" + walletItem.address;
         final Request request = new Request.Builder().url(url).build();
-        Call call = mOkHttpClient.newCall(request);
+        Call call = NervosHttpService.getHttpClient().newCall(request);
         Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() {

@@ -142,7 +142,7 @@ public class AddTokenActivity extends BaseActivity {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
                         tokenItem = EthErc20RpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
-                        tokenItem = NervosRpcService.getErc20TokenInfo(s.toString(), walletItem.address);
+                        tokenItem = NervosRpcService.getErc20TokenInfo(s.toString());
                     }
                     if (chainItem != null && tokenItem != null) {
                         tokenItem.chainId = chainItem.chainId;

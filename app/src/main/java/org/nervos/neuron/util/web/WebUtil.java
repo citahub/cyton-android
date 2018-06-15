@@ -20,6 +20,7 @@ import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -80,11 +81,8 @@ public class WebUtil {
     private static void getHttpManifest(Context context, String url, String path) {
         URI uri = URI.create(url);
         String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
-        Log.d("wallet", "manifestUrl: " + manifestUrl);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(manifestUrl)
-                .method("GET",null).build();
-        Call call = okHttpClient.newCall(request);
+        Request request = new Request.Builder().url(manifestUrl).build();
+        Call call = NervosHttpService.getHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -99,7 +97,6 @@ public class WebUtil {
                     if (chainItem.chainId >= 0 && !TextUtils.isEmpty(chainItem.httpProvider)) {
                         getMetaData(context, chainItem.httpProvider);
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

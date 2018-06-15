@@ -33,7 +33,7 @@ import rx.schedulers.Schedulers;
 public class NervosRpcService {
 
     static final BigInteger NervosDecimal = new BigInteger("100000000000000000");
-    public static final String NODE_IP = "http://47.94.105.230:1337";
+    public static final String NODE_IP = "http://47.75.129.215:1337";
 
     private static Web3j service;
     private static Account account;
@@ -59,7 +59,7 @@ public class NervosRpcService {
     }
 
 
-    public static TokenItem getErc20TokenInfo(String contractAddress, String address) {
+    public static TokenItem getErc20TokenInfo(String contractAddress) {
         try {
             String abi = account.getAbi(contractAddress);
             mContract = new CompiledContract(abi);

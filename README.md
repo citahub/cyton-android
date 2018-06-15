@@ -1,2 +1,2 @@
-# CitaWallet-Android
-The CITA wallet app on Android operation system
+# Neuron-Android
+The Nervos wallet app on Android operation system
