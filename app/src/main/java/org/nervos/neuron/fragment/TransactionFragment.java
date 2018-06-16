@@ -31,6 +31,8 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -122,6 +124,13 @@ public class TransactionFragment extends BaseFragment {
                 public void onNext(List<TransactionItem> list) {
                     transactionItemList.removeAll(list);
                     transactionItemList.addAll(list);
+                    Collections.sort(transactionItemList, new Comparator<TransactionItem>() {
+                        @Override
+                        public int compare(TransactionItem item1, TransactionItem item2) {
+                            return item2.getDate().compareTo(item1.getDate());
+                        }
+                    });
+
                     if (transactionItemList == null) {
                         Toast.makeText(getContext(), "网络请求错误", Toast.LENGTH_SHORT).show();
                         return;

@@ -182,15 +182,11 @@ public class WebUtil {
         return null;
     }
 
-//    public static boolean checkWeb3() {
-//
-//    }
-
     public static String getInjectEthWeb3(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return "javascript: web3.setProvider(new Web3.providers.HttpProvider('"
-                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.accounts[0] = '"
-                + walletItem.address + "'";
+                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.getAccounts = function() {return ['"
+                + walletItem.address + "']}";
     }
 
     private static String getInjectNervosWeb3() {

@@ -28,6 +28,9 @@ import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -154,13 +157,7 @@ public class AppWebActivity extends BaseActivity {
                         super.run();
                         try {
                             sleep(500);
-                            titleText.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    LogUtil.d("inject");
-                                    injectJs();
-                                }
-                            });
+                            titleText.post(() -> injectJs());
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -176,8 +173,8 @@ public class AppWebActivity extends BaseActivity {
      */
     private void injectJs() {
         webView.loadUrl(WebUtil.getInjectEthWeb3(mActivity));
-//        webView.loadUrl(WebUtil.getInjectTransactionJs());
-//        webView.loadUrl(WebUtil.getInjectSignJs());
+        webView.loadUrl(WebUtil.getInjectTransactionJs());
+        webView.loadUrl(WebUtil.getInjectSignJs());
     }
 
 
