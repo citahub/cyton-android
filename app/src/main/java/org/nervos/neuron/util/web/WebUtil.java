@@ -20,8 +20,11 @@ import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -41,16 +44,14 @@ import okhttp3.Response;
 
 public class WebUtil {
 
-
-
     private static ChainItem chainItem;
 
     /**
      * get manifest path from html link tag
-     * @param context
+     * @param webView
      * @param url    the web url from the third part
      */
-    public static void getHtmlManifest(Context context, String url) {
+    public static void getHtmlManifest(WebView webView, String url) {
         new Thread(){
             @Override
             public void run() {
@@ -60,8 +61,7 @@ public class WebUtil {
                     Elements elements = doc.getElementsByTag("link");
                     for(Element element: elements) {
                         if ("manifest".equals(element.attr("ref"))) {
-                            Log.d("http", "href------: " + element.attr("ref"));
-                            getHttpManifest(context, url, element.attr("href"));
+                            getHttpManifest(webView, url, element.attr("href"));
                         }
                     }
                 } catch (IOException e) {
@@ -74,11 +74,11 @@ public class WebUtil {
 
     /**
      * get manifest.json from manifest path which contains host and path
-     * @param context
+     * @param webView
      * @param url           the web url from the third part
      * @param path          manifest path
      */
-    private static void getHttpManifest(Context context, String url, String path) {
+    private static void getHttpManifest(WebView webView, String url, String path) {
         URI uri = URI.create(url);
         String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
         Request request = new Request.Builder().url(manifestUrl).build();
@@ -92,10 +92,12 @@ public class WebUtil {
             public void onResponse(Call call, Response response) {
                 try {
                     String result = response.body().string();
-                    Log.d("wallet", "manifest result: " + result);
+                    LogUtil.d("manifest result: " + result);
                     chainItem = new Gson().fromJson(result, ChainItem.class);
                     if (chainItem.chainId >= 0 && !TextUtils.isEmpty(chainItem.httpProvider)) {
-                        getMetaData(context, chainItem.httpProvider);
+                        webView.loadUrl(getInjectNervosWeb3());
+                        getMetaData(webView.getContext(), chainItem.httpProvider);
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -117,6 +119,11 @@ public class WebUtil {
             chainItem.tokenName = ethMetaData.tokenName;
             chainItem.tokenSymbol = ethMetaData.tokenSymbol;
             chainItem.tokenAvatar = ethMetaData.tokenAvatar;
+            DBChainUtil.saveChain(context, chainItem);
+            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                TokenItem tokenItem = new TokenItem(chainItem);
+                DBWalletUtil.addTokenToAllWallet(context, tokenItem);
+            }
         }
     }
 
@@ -133,11 +140,6 @@ public class WebUtil {
             AppItem appItem = new AppItem(chainItem.entry,
                     chainItem.icon, chainItem.name, chainItem.provider);
             DBAppUtil.saveDbApp(context, appItem);
-            DBChainUtil.saveChain(context, chainItem);
-            if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                TokenItem tokenItem = new TokenItem(chainItem);
-                DBWalletUtil.addTokenToAllWallet(context, tokenItem);
-            }
             EventBus.getDefault().post(new AppCollectEvent(true, appItem));
             Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
         }
@@ -180,8 +182,19 @@ public class WebUtil {
         return null;
     }
 
-    public static String getInjectWeb3() {
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3(server) }";
+//    public static boolean checkWeb3() {
+//
+//    }
+
+    public static String getInjectEthWeb3(Context context) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        return "javascript: web3.setProvider(new Web3.providers.HttpProvider('"
+                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.accounts[0] = '"
+                + walletItem.address + "'";
+    }
+
+    private static String getInjectNervosWeb3() {
+        return "javascript: web3.setProvider('" + chainItem.httpProvider + "'); web3.currentProvider.isMetaMask = true;";
     }
 
     public static String getInjectTransactionJs() {

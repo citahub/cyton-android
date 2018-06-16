@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.service.EthRpcService;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -25,6 +26,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
+
     }
 
     public void onDestroy() {

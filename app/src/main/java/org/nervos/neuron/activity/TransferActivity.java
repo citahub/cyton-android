@@ -29,6 +29,7 @@ import org.nervos.neuron.service.EthErc20RpcService;
 import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -59,6 +60,7 @@ public class TransferActivity extends BaseActivity {
     private AppCompatSeekBar feeSeekBar;
     private CircleImageView photoImage;
 
+
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BottomSheetDialog sheetDialog;
@@ -74,6 +76,7 @@ public class TransferActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
+        EthRpcService.init(this);
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
 
@@ -197,7 +200,7 @@ public class TransferActivity extends BaseActivity {
                     if (EthNativeRpcService.ETH.equals(tokenItem.symbol)) {
                         transferEth(value, progressBar);
                     } else {
-                        Log.d("wallet", "erc20 token: " + tokenItem.symbol);
+                        LogUtil.d("erc20 token: " + tokenItem.symbol);
                         transferEthErc20(value, progressBar);
                     }
                 } else {
@@ -227,7 +230,8 @@ public class TransferActivity extends BaseActivity {
         .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
             @Override
             public void onCompleted() {
-
+                progressBar.setVisibility(View.GONE);
+                sheetDialog.dismiss();
             }
             @Override
             public void onError(Throwable e) {
@@ -239,11 +243,16 @@ public class TransferActivity extends BaseActivity {
             }
             @Override
             public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
-                Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
-                progressBar.setVisibility(View.GONE);
-                sheetDialog.dismiss();
-//                    finish();
+                if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else if (ethSendTransaction.getError() != null &&
+                        !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                    Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -260,7 +269,8 @@ public class TransferActivity extends BaseActivity {
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -272,11 +282,16 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
-                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getSendTransactionResult().getHash());
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
-//                    finish();
+                    if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
     }
@@ -294,7 +309,8 @@ public class TransferActivity extends BaseActivity {
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -306,12 +322,17 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
-                    Toast.makeText(TransferActivity.this,
-                            "转账成功", Toast.LENGTH_SHORT).show();
-                    Log.d("wallet", "transaction hash: " + ethSendTransaction.getTransactionHash());
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
-//                    finish();
+                    if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        LogUtil.d(ethSendTransaction.getError().getMessage());
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
     }
@@ -329,7 +350,8 @@ public class TransferActivity extends BaseActivity {
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -341,11 +363,16 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
-                    Toast.makeText(TransferActivity.this,
-                            "转账成功", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
-//                    finish();
+                    if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
     }

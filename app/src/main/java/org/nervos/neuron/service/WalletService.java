@@ -7,6 +7,7 @@ import android.util.Log;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class WalletService {
         executorService.execute(() -> {
             for (int i = 0; i < walletItem.tokenItems.size(); i++) {
                 TokenItem tokenItem = walletItem.tokenItems.get(i);
-                Log.d("wallet", "token symbol: " + tokenItem.symbol);
+                LogUtil.d("token symbol: " + tokenItem.symbol);
                 if (tokenItem.chainId < 0) {
                     if (ETH.equals(tokenItem.symbol)) {
                         tokenItem = EthNativeRpcService.getDefaultEth(walletItem.address);

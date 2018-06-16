@@ -5,6 +5,8 @@ import android.util.Log;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
@@ -41,7 +43,7 @@ public class EthNativeRpcService extends EthRpcService{
         if (ethGetBalance != null) {
             double balance = ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
                     .divide(ETHDecimal).doubleValue()/10000.0;
-            Log.d("wallet", "eth balanceOf: " + balance);
+            LogUtil.d("eth balanceOf: " + balance);
             return new TokenItem(ETH, R.drawable.ethereum, balance, -1);
         }
         return null;
@@ -57,7 +59,7 @@ public class EthNativeRpcService extends EthRpcService{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Log.d("wallet", "gasPrice: " + gasPrice.toString());
+                LogUtil.d("gasPrice: " + gasPrice.toString());
                 return gasPrice;
             }
         }).subscribeOn(Schedulers.io())
@@ -89,15 +91,13 @@ public class EthNativeRpcService extends EthRpcService{
                 try {
                     EthSendTransaction ethSendTransaction =
                             service.ethSendRawTransaction(hexValue).sendAsync().get();
-                    Log.d("wallet", "EthSendTransaction: " + ethSendTransaction.getTransactionHash());
                     return Observable.just(ethSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
             }
-        }).filter(ethSendTransaction -> ethSendTransaction != null
-                && !TextUtils.isEmpty(ethSendTransaction.getTransactionHash()))
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
     }
@@ -127,7 +127,7 @@ public class EthNativeRpcService extends EthRpcService{
             }
             @Override
             public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                Log.d("wallet", "transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
+                LogUtil.d("transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
             }
         });
     }

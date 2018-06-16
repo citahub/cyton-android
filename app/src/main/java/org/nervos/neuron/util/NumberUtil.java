@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 public class NumberUtil {
 
@@ -44,6 +45,28 @@ public class NumberUtil {
             sb.append(Integer.toHexString(x & 0xFF));
         }
         return sb.toString();
+    }
+
+    public static boolean isPasswordOk(String password) {
+        int len = password.length();
+        if (len < 8) return false;
+        int flag = 0;
+        for (int i = 0; i < len; i++) {
+            char c = password.charAt(i);
+            if (c >= 'a' & c <= 'z') {
+                flag |= 0b0001;
+            } else if (c >= 'A' & c <= 'Z') {
+                flag |= 0b0010;
+            } else if (c >= '0' & c <= '9') {
+                flag |= 0b0100;
+            } else if ((c >= '!' & c <= '/') || (c >= ':' & c <= '@')
+                    || (c >= '[' & c <= '`') || (c >= '{' & c <= '~')) {
+                flag |= 0b1000;
+            } else {
+                return false;
+            }
+        }
+        return Integer.bitCount(flag) >= 3;
     }
 
 }

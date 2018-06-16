@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -33,6 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AppWebActivity extends BaseActivity {
 
     public static final String EXTRA_PAYLOAD = "extra_payload";
+    public static final String EXTRA_CHAIN = "extra_chain";
 
     private WebView webView;
     private TextView titleText;
@@ -52,7 +54,7 @@ public class AppWebActivity extends BaseActivity {
         initTitleView();
         initWebView();
         webView.loadUrl(url);
-        WebUtil.getHtmlManifest(this, url);
+        WebUtil.getHtmlManifest(webView, url);
 
     }
 
@@ -129,7 +131,7 @@ public class AppWebActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(newProgress);
                 }
-                Log.d("Web", "progress: " + newProgress);
+                LogUtil.d("web progress: " + newProgress);
             }
             @Override
             public void onReceivedTitle(WebView view, String title) {
@@ -146,7 +148,24 @@ public class AppWebActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                injectJs();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            sleep(500);
+                            titleText.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LogUtil.d("inject");
+                                    injectJs();
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
             }
         });
     }
@@ -156,9 +175,9 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        webView.loadUrl(WebUtil.getInjectWeb3());
-        webView.loadUrl(WebUtil.getInjectTransactionJs());
-        webView.loadUrl(WebUtil.getInjectSignJs());
+        webView.loadUrl(WebUtil.getInjectEthWeb3(mActivity));
+//        webView.loadUrl(WebUtil.getInjectTransactionJs());
+//        webView.loadUrl(WebUtil.getInjectSignJs());
     }
 
 
@@ -172,6 +191,7 @@ public class AppWebActivity extends BaseActivity {
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, tx);
+                intent.putExtra(EXTRA_CHAIN, WebUtil.getChainItem());
                 startActivity(intent);
             }
         }

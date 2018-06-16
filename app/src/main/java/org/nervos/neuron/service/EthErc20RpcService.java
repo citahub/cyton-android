@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.LogUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
@@ -79,7 +80,7 @@ public class EthErc20RpcService extends EthRpcService{
         try {
             Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, DECIMALS_HASH);
             String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
-            Log.d("wallet", "erc20 decimals: " + decimals);
+            LogUtil.d("erc20 decimals: " + decimals);
             long decimal = 0;
             if (!TextUtils.isEmpty(decimals) && !"0x".equals(decimals)) {
                 initIntTypes();
@@ -90,7 +91,7 @@ public class EthErc20RpcService extends EthRpcService{
             Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
                     BALANCEOF_HASH + ZERO_16 + Numeric.cleanHexPrefix(address));
             String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-            Log.d("wallet", "erc20 balanceOf: " + balanceOf);
+            LogUtil.d("erc20 balanceOf: " + balanceOf);
             if (!TextUtils.isEmpty(balanceOf) && !"0x".equals(balanceOf)) {
                 initIntTypes();
                 Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
@@ -178,7 +179,7 @@ public class EthErc20RpcService extends EthRpcService{
                     }
                     @Override
                     public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                        Log.d("wallet", "transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
+                        LogUtil.d("transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
                     }
                 });
     }

@@ -13,12 +13,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TransactionRequest;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -38,18 +41,27 @@ public class PayTokenActivity extends BaseActivity {
     private TransactionRequest transactionRequest;
     private WalletItem walletItem;
     private BottomSheetDialog sheetDialog;
+    private ChainItem chainItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_token);
 
+        EthRpcService.init(this);
+
+        initData();
+        initView();
+        initListener();
+    }
+
+    private void initData() {
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
         walletItem = DBWalletUtil.getCurrentWallet(this);
 
-        initView();
-        initListener();
+        chainItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
+
     }
 
     private void initView() {
@@ -175,19 +187,26 @@ public class PayTokenActivity extends BaseActivity {
                 public void onError(Throwable e) {
                     e.printStackTrace();
                     progressBar.setVisibility(View.GONE);
+                    Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         sheetDialog.dismiss();
                         Toast.makeText(mActivity, "转账成功", Toast.LENGTH_SHORT).show();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        sheetDialog.dismiss();
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
     }
 
     private void transferNervos(ProgressBar progressBar) {
-        Log.d("wallet", "transfer value: " + transactionRequest.getValue());
         NervosRpcService.transferNervos(transactionRequest.to, transactionRequest.getValue())
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
@@ -203,7 +222,15 @@ public class PayTokenActivity extends BaseActivity {
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                         sheetDialog.dismiss();
+                        DBChainUtil.saveChain(mActivity, chainItem);
                         Toast.makeText(mActivity, "转账成功", Toast.LENGTH_SHORT).show();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        sheetDialog.dismiss();
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

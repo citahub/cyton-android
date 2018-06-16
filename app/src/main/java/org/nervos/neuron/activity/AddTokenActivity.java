@@ -19,6 +19,7 @@ import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.EthErc20RpcService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -90,7 +91,7 @@ public class AddTokenActivity extends BaseActivity {
                 if (tokenItem == null) {
                     Toast.makeText(mActivity, "请输入Token信息", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("wallet", "token symbol: " + tokenItem.symbol);
+                    LogUtil.d("token symbol: " + tokenItem.symbol);
                     DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
                     finish();
                 }

@@ -20,6 +20,7 @@ import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
@@ -76,7 +77,9 @@ public class CreateWalletActivity extends BaseActivity {
         createWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
+                if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
+                    Toast.makeText(mActivity, "您的密码太弱，请重新输入", Toast.LENGTH_SHORT).show();
+                } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
                     Toast.makeText(mActivity, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
                 } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())){

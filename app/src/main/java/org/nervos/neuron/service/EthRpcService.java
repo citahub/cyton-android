@@ -22,8 +22,8 @@ public class EthRpcService {
     public static final String ETH = "ETH";
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
 
-    private static final String MAIN_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-    private static final String RINKEBY_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+//    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
     static final BigInteger ETHDecimal = new BigInteger("1000000000000000000");
     static final BigInteger ETH_GAS_Decimal = new BigInteger("100000000");
@@ -39,8 +39,12 @@ public class EthRpcService {
     protected static WalletItem walletItem;
 
     public static void init(Context context) {
-        service = Web3jFactory.build(new InfuraHttpService(RINKEBY_NODE_IP));
-        walletItem = DBWalletUtil.getCurrentWallet(context);
+        if (service == null) {
+            service = Web3jFactory.build(new InfuraHttpService(ETH_NODE_IP));
+        }
+        if (walletItem == null) {
+            walletItem = DBWalletUtil.getCurrentWallet(context);
+        }
     }
 
     static List<TypeReference<Type>> intTypes = new ArrayList<>();

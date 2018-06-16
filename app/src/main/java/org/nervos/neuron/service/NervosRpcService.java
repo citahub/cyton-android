@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.account.Account;
@@ -183,7 +184,7 @@ public class NervosRpcService {
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) {
         BigInteger transferValue = NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-        Log.d("wallet", "transfer value: " + transferValue.toString());
+        LogUtil.d("transfer value: " + transferValue.toString());
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {

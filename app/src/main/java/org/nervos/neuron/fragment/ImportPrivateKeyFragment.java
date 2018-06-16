@@ -25,6 +25,7 @@ import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -73,7 +74,9 @@ public class ImportPrivateKeyFragment extends BaseFragment {
 
     private void initListener() {
         importButton.setOnClickListener(view -> {
-            if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
+            if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
+                Toast.makeText(getContext(), "您的密码太弱，请重新输入", Toast.LENGTH_SHORT).show();
+            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
             } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
