@@ -3,6 +3,7 @@ package org.nervos.neuron.service;
 import android.content.Context;
 
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Type;
@@ -25,7 +26,6 @@ public class EthRpcService {
     public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
 //    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
-    public static final BigInteger ETHDecimal = new BigInteger("1000000000000000000");
     static final BigInteger ETH_GAS_Decimal = new BigInteger("100000000");
     static final String ZERO_16 = "000000000000000000000000";
 
@@ -67,14 +67,5 @@ public class EthRpcService {
         });
     }
 
-    public static BigInteger getBigFromDouble(double gasPrice) {
-        return BigInteger.valueOf((int)(gasPrice * 1000000))
-                .divide(BigInteger.valueOf(1000000)).multiply(ETHDecimal);
-    }
-
-    public static double getDoubleFromBig(BigInteger gasPrice) {
-        return gasPrice.multiply(BigInteger.valueOf(1000000))
-                .divide(ETHDecimal).doubleValue()/1000000.0;
-    }
 
 }

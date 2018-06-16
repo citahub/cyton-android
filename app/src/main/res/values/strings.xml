@@ -70,4 +70,5 @@
     <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度在8到50之间</string>
     <string name="empty_no_token_data">您还没有Token数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
+    <string name="ethereum_main_net">Ethereum Mainnet</string>
 </resources>

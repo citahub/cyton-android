@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,8 +15,11 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,6 +52,9 @@ public class TransactionDetailActivity extends BaseActivity {
         TextView transactionToText = findViewById(R.id.transaction_to_address);
         TextView transactionBlockNumberText = findViewById(R.id.transaction_block_number);
         TextView transactionBlockTimeText = findViewById(R.id.transaction_block_time);
+        TextView transactionGas = findViewById(R.id.transaction_gas);
+        TextView transactionGasPrice = findViewById(R.id.transaction_gas_price);
+        TextView transactionChainName = findViewById(R.id.chain_name);
 
 
         walletNameText.setText(walletItem.name);
@@ -56,6 +63,14 @@ public class TransactionDetailActivity extends BaseActivity {
         transactionValueText.setText(transactionItem.getValue());
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);
+        if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
+            transactionChainName.setText(R.string.ethereum_main_net);
+            BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
+            BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
+            transactionGas.setText(NumberUtil.getDecimal_6(
+                    NumberUtil.getDoubleFromBig(gasPriceBig.multiply(gasUsedBig))) + "eth");
+            transactionGasPrice.setText(gasPriceBig.divide(BigInteger.valueOf(1000000000)).intValue() + " Gwei");
+        }
         int blockNumber = Integer.parseInt(
                 Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
         transactionBlockNumberText.setText(String.valueOf(blockNumber));

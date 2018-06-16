@@ -121,7 +121,7 @@ public class TransferActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 mGasPrice = gasPrice;
-                mGas = EthRpcService.getDoubleFromBig(gasPrice.multiply(EthRpcService.GAS_LIMIT));
+                mGas = NumberUtil.getDoubleFromBig(gasPrice.multiply(EthRpcService.GAS_LIMIT));
                 feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }

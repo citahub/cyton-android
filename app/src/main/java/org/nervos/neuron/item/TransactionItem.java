@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
+
 public class TransactionItem implements Parcelable{
 
     public String hash;
@@ -44,7 +46,7 @@ public class TransactionItem implements Parcelable{
         if (TextUtils.isEmpty(value)) return "0" + (TextUtils.isEmpty(content)? "eth":"");
         BigInteger bigValue = new BigInteger(value);
         double value = bigValue.multiply(BigInteger.valueOf(10000))
-                .divide(EthRpcService.ETHDecimal).doubleValue()/10000.0;
+                .divide(ETHDecimal).doubleValue()/10000.0;
         return NumberUtil.getDecimal_2(value) + (TextUtils.isEmpty(content)? "eth":"");
     }
 
@@ -61,7 +63,9 @@ public class TransactionItem implements Parcelable{
         dest.writeString(this.to);
         dest.writeString(this.value);
         dest.writeLong(this.timestamp);
+        dest.writeLong(this.timeStamp);
         dest.writeString(this.chainName);
+        dest.writeString(this.content);
         dest.writeString(this.gasUsed);
         dest.writeString(this.gas);
         dest.writeString(this.gasPrice);
@@ -77,7 +81,9 @@ public class TransactionItem implements Parcelable{
         this.to = in.readString();
         this.value = in.readString();
         this.timestamp = in.readLong();
+        this.timeStamp = in.readLong();
         this.chainName = in.readString();
+        this.content = in.readString();
         this.gasUsed = in.readString();
         this.gas = in.readString();
         this.gasPrice = in.readString();

@@ -1,12 +1,9 @@
 package org.nervos.neuron.service;
 
-import android.text.TextUtils;
-import android.util.Log;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.LogUtil;
-import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
@@ -26,6 +23,8 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
 
 public class EthNativeRpcService extends EthRpcService{
 

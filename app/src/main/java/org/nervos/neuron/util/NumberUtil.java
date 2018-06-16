@@ -1,8 +1,10 @@
 package org.nervos.neuron.util;
 
+import org.nervos.neuron.service.EthRpcService;
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -50,6 +52,17 @@ public class NumberUtil {
             sb.append(Integer.toHexString(x & 0xFF));
         }
         return sb.toString();
+    }
+
+
+    public static BigInteger getBigFromDouble(double gasPrice) {
+        return BigInteger.valueOf((int)(gasPrice * 1000000))
+                .divide(BigInteger.valueOf(1000000)).multiply(ConstantUtil.ETHDecimal);
+    }
+
+    public static double getDoubleFromBig(BigInteger gasPrice) {
+        return gasPrice.multiply(BigInteger.valueOf(1000000))
+                .divide(ConstantUtil.ETHDecimal).doubleValue()/1000000.0;
     }
 
     public static boolean isPasswordOk(String password) {
