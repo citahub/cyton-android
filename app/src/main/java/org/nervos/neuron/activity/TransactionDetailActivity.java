@@ -52,8 +52,8 @@ public class TransactionDetailActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
-        transactionHashText.setText(transactionItem.id);
-        transactionValueText.setText(transactionItem.value);
+        transactionHashText.setText(transactionItem.hash);
+        transactionValueText.setText(transactionItem.getValue());
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);
         int blockNumber = Integer.parseInt(
@@ -63,7 +63,7 @@ public class TransactionDetailActivity extends BaseActivity {
 
         transactionToText.setOnClickListener(v -> copyText(transactionItem.to));
         transactionFromText.setOnClickListener(v -> copyText(transactionItem.from));
-        transactionHashText.setOnClickListener(v -> copyText(transactionItem.id));
+        transactionHashText.setOnClickListener(v -> copyText(transactionItem.hash));
     }
 
     private void copyText(String value) {

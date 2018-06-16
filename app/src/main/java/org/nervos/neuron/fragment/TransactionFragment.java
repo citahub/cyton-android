@@ -50,8 +50,6 @@ public class TransactionFragment extends BaseFragment {
 
     public static final String TAG = TransactionFragment.class.getName();
 
-    private static final String TRANSACTION_URL = "http://47.97.171.140:4000/api/transactions";
-
     private List<TransactionItem> transactionItemList = new ArrayList<>();
     private WalletItem walletItem;
 
@@ -98,6 +96,7 @@ public class TransactionFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                transactionItemList.clear();
                 getTransactionList();
             }
         });
@@ -105,50 +104,31 @@ public class TransactionFragment extends BaseFragment {
 
 
     private void getTransactionList() {
-        walletItem = DBWalletUtil.getCurrentWallet(getContext());
-        String url = TRANSACTION_URL + "?account=" + walletItem.address;
-        final Request request = new Request.Builder().url(url).build();
-        Call call = NervosHttpService.getHttpClient().newCall(request);
-        Observable.fromCallable(new Callable<String>() {
-            @Override
-            public String call() {
-                try {
-                    return call.execute().body().string();
-                } catch (IOException e) {
+
+        NervosHttpService.getTransactionList(getContext())
+            .subscribe(new Subscriber<List<TransactionItem>>() {
+                @Override
+                public void onCompleted() {
+                    dismissProgressBar();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                @Override
+                public void onError(Throwable e) {
                     e.printStackTrace();
+                    dismissProgressBar();
+                    swipeRefreshLayout.setRefreshing(false);
                 }
-                return null;
-            }
-        }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                dismissProgressBar();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                dismissProgressBar();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            @Override
-            public void onNext(String res) {
-                if (TextUtils.isEmpty(res)) {
-                    Toast.makeText(getContext(), "网络请求错误", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                try {
-                    JSONObject result = new JSONObject(res);
-                    Type type = new TypeToken<ArrayList<TransactionItem>>() {}.getType();
-                    transactionItemList = new Gson().fromJson(result.getString("result"), type);
+                @Override
+                public void onNext(List<TransactionItem> list) {
+                    transactionItemList.removeAll(list);
+                    transactionItemList.addAll(list);
+                    if (transactionItemList == null) {
+                        Toast.makeText(getContext(), "网络请求错误", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     adapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
     }
 
 
@@ -183,8 +163,8 @@ public class TransactionFragment extends BaseFragment {
                 if (walletItem != null) {
                     viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 }
-                viewHolder.transactionIdText.setText(transactionItemList.get(position).id);
-                viewHolder.transactionAmountText.setText(transactionItemList.get(position).value);
+                viewHolder.transactionIdText.setText(transactionItemList.get(position).hash);
+                viewHolder.transactionAmountText.setText(transactionItemList.get(position).getValue());
                 viewHolder.transactionChainNameText.setText(transactionItemList.get(position).chainName);
                 viewHolder.transactionTimeText.setText(transactionItemList.get(position).getDate());
                 viewHolder.itemView.setTag(position);

@@ -12,12 +12,17 @@ import java.util.regex.Pattern;
 public class NumberUtil {
 
     public static String getDecimal_6(Double value) {
-        DecimalFormat fmt = new DecimalFormat("##0.0000000");
+        DecimalFormat fmt = new DecimalFormat("##0.000000");
         return fmt.format(value);
     }
 
     public static String getDecimal_4(Double value) {
-        DecimalFormat fmt = new DecimalFormat("##0.0000000");
+        DecimalFormat fmt = new DecimalFormat("##0.0000");
+        return fmt.format(value);
+    }
+
+    public static String getDecimal_2(Double value) {
+        DecimalFormat fmt = new DecimalFormat("##0.00");
         return fmt.format(value);
     }
 

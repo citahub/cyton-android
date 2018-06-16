@@ -2,9 +2,14 @@ package org.nervos.neuron.item;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.util.NumberUtil;
+
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,27 +17,35 @@ import java.util.Locale;
 
 public class TransactionItem implements Parcelable{
 
-    @SerializedName("hash")
-    public String id;
+    public String hash;
     public String from;
     public String to;
-    public String value;
+    private String value;
     private long timestamp;
+    private long timeStamp;
     public String chainName;
+    public String content;
     public String gasUsed;
+    public String gas;
+    public String gasPrice;
     public String blockNumber;
 
-    public TransactionItem(String id, String from, String to, String value, String chainName) {
-        this.id = id;
-        this.from = from;
-        this.to = to;
-        this.value = value;
-        this.chainName = chainName;
-    }
 
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
-        return ft.format(timestamp);
+        if (timeStamp > 0) {
+            return ft.format(timeStamp * 1000);
+        } else {
+            return ft.format(timestamp);
+        }
+    }
+
+    public String getValue() {
+        if (TextUtils.isEmpty(value)) return "0" + (TextUtils.isEmpty(content)? "eth":"");
+        BigInteger bigValue = new BigInteger(value);
+        double value = bigValue.multiply(BigInteger.valueOf(10000))
+                .divide(EthRpcService.ETHDecimal).doubleValue()/10000.0;
+        return NumberUtil.getDecimal_2(value) + (TextUtils.isEmpty(content)? "eth":"");
     }
 
 
@@ -43,24 +56,31 @@ public class TransactionItem implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
+        dest.writeString(this.hash);
         dest.writeString(this.from);
         dest.writeString(this.to);
         dest.writeString(this.value);
         dest.writeLong(this.timestamp);
         dest.writeString(this.chainName);
         dest.writeString(this.gasUsed);
+        dest.writeString(this.gas);
+        dest.writeString(this.gasPrice);
         dest.writeString(this.blockNumber);
     }
 
+    public TransactionItem() {
+    }
+
     protected TransactionItem(Parcel in) {
-        this.id = in.readString();
+        this.hash = in.readString();
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
         this.timestamp = in.readLong();
         this.chainName = in.readString();
         this.gasUsed = in.readString();
+        this.gas = in.readString();
+        this.gasPrice = in.readString();
         this.blockNumber = in.readString();
     }
 

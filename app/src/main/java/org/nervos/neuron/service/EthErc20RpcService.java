@@ -1,8 +1,6 @@
 package org.nervos.neuron.service;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.LogUtil;

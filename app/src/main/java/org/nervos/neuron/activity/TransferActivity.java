@@ -76,10 +76,9 @@ public class TransferActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
-        EthRpcService.init(this);
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
-
+        EthRpcService.init(mActivity);
         NervosRpcService.init(mActivity, NervosRpcService.NODE_IP);
         initView();
         initListener();
