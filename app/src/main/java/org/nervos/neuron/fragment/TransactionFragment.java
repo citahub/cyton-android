@@ -106,7 +106,6 @@ public class TransactionFragment extends BaseFragment {
 
 
     private void getTransactionList() {
-
         NervosHttpService.getTransactionList(getContext())
             .subscribe(new Subscriber<List<TransactionItem>>() {
                 @Override

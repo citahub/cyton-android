@@ -72,6 +72,11 @@ public class WebAppUtil {
                 }
                 return "";
             }
+        }).filter(new Func1<String, Boolean>() {
+            @Override
+            public Boolean call(String path) {
+                return !TextUtils.isEmpty(path);
+            }
         }).flatMap(new Func1<String, Observable<ChainItem>>() {
             @Override
             public Observable<ChainItem> call(String path) {
@@ -178,8 +183,8 @@ public class WebAppUtil {
     public static String getInjectEthWeb3(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return "javascript: web3.setProvider(new Web3.providers.HttpProvider('"
-                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.getAccounts = function() {return ['"
-                + walletItem.address + "']}";
+                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.defaultAccount = '"
+                + walletItem.address + "'";
     }
 
     private static String getInjectNervosWeb3() {

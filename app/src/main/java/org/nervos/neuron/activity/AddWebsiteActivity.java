@@ -2,30 +2,49 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Lists;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.TransactionFragment;
+import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.web.WebAppUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
 
 public class AddWebsiteActivity extends BaseActivity {
 
     public static final String EXTRA_URL = "extra_url";
     private static final int REQUEST_CODE = 0x01;
     private RecyclerView recyclerView;
+    private WebAppAdapter adapter = new WebAppAdapter();
+    private List<String> webAppList = new ArrayList<>();
     private AppCompatEditText websiteEdit;
 
     @Override
@@ -33,7 +52,16 @@ public class AddWebsiteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_website);
 
+        webAppList = Lists.reverse(DBHistoryUtil.getAllHistory(mActivity));
         initView();
+        initRecycler();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webAppList = Lists.reverse(DBHistoryUtil.getAllHistory(mActivity));
+        adapter.notifyDataSetChanged();
     }
 
     private void initView() {
@@ -55,8 +83,6 @@ public class AddWebsiteActivity extends BaseActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.scan_history);
-
         websiteEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -71,11 +97,28 @@ public class AddWebsiteActivity extends BaseActivity {
         });
     }
 
+
+    private void initRecycler() {
+        recyclerView = findViewById(R.id.scan_history);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        recyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                gotoWebViewWithUrl(webAppList.get(position));
+            }
+        });
+
+    }
+
+
     private void gotoWebViewWithUrl(String url) {
         if (TextUtils.isEmpty(url) || !WebAppUtil.isHttpUrl(url)) {
             Toast.makeText(mActivity, "请输入正确的网页地址", Toast.LENGTH_SHORT).show();
         } else {
             websiteEdit.setText(url);
+            DBHistoryUtil.saveHistory(mActivity, url);
             Intent intent = new Intent(mActivity, AppWebActivity.class);
             intent.putExtra(EXTRA_URL, url);
             startActivity(intent);
@@ -95,6 +138,70 @@ public class AddWebsiteActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+
+    class WebAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public static final int VIEW_TYPE_ITEM = 1;
+        public static final int VIEW_TYPE_EMPTY = 0;
+
+        public OnItemClickListener onItemClickListener;
+
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+            if (viewType == VIEW_TYPE_EMPTY) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
+                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_history_data);
+                return new RecyclerView.ViewHolder(view){};
+            }
+            WebAppViewHolder holder = new WebAppViewHolder(LayoutInflater.from(mActivity)
+                    .inflate(R.layout.item_web_app, parent, false));
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof WebAppViewHolder) {
+                WebAppViewHolder viewHolder = (WebAppViewHolder)holder;
+                viewHolder.appNameText.setText(webAppList.get(position));
+                viewHolder.itemView.setTag(position);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (webAppList.size() == 0) return 1;
+            return webAppList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (webAppList.size() == 0) return VIEW_TYPE_EMPTY;
+            return VIEW_TYPE_ITEM;
+        }
+
+        class  WebAppViewHolder extends RecyclerView.ViewHolder {
+            TextView appNameText;
+            public WebAppViewHolder (View view) {
+                super(view);
+                view.setOnClickListener(v -> {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(v, (int)v.getTag());
+                    }
+                });
+                appNameText = view.findViewById(R.id.app_name);
+            }
+        }
+    }
+
+
+    private interface OnItemClickListener{
+        void onItemClick(View view, int position);
     }
 
 }

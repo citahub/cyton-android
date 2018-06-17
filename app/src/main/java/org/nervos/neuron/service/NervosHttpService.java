@@ -49,8 +49,7 @@ public class NervosHttpService {
     public static Observable<List<TransactionItem>> getTransactionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
 
-        String nervosUrl = NERVOS_TRANSACTION_URL ;
-//                + "?account=" + walletItem.address;
+        String nervosUrl = NERVOS_TRANSACTION_URL + "?account=" + walletItem.address;
         final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
         Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
         Observable<List<TransactionItem>> nervosObservable =
@@ -64,8 +63,7 @@ public class NervosHttpService {
         }).subscribeOn(Schedulers.io());
 
 
-        String ethUrl = ETH_TRANSACTION_URL + "0xbeef281b81d383336aca8b2b067a526227638087";
-//                walletItem.address;
+        String ethUrl = ETH_TRANSACTION_URL + walletItem.address;
         final Request ethRequest = new Request.Builder().url(ethUrl).build();
         Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
         Observable<List<TransactionItem>> ethObservable = Observable.fromCallable(new Callable<List<TransactionItem>>() {
