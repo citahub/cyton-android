@@ -6,13 +6,11 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -24,9 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.event.AppCollectEvent;
-import org.nervos.neuron.event.WalletSaveEvent;
-import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.web.WebUtil;
+import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
 
@@ -56,7 +52,7 @@ public class AppFragment extends Fragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
-        WebUtil.initWebSettings(webView.getSettings());
+        WebAppUtil.initWebSettings(webView.getSettings());
     }
 
     private void initWebView() {

@@ -94,7 +94,6 @@ public class WalletManageActivity extends BaseActivity {
         findViewById(R.id.export_keystore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 SimpleDialog simpleDialog = new SimpleDialog(mActivity);
                 simpleDialog.setTitle("请输入密码");
                 simpleDialog.setMessageHint("password");

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TransactionRequest;
 import org.nervos.neuron.item.WalletItem;
@@ -22,7 +22,6 @@ import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.web.WebUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
@@ -77,7 +76,7 @@ public class PayTokenActivity extends BaseActivity {
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        payNameText.setText(WebUtil.getChainItem().entry);
+        payNameText.setText(chainItem.entry);
         if (transactionRequest.isEthereum()) {
             payAddressText.setText(transactionRequest.to);
             payAmountText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()));
@@ -147,26 +146,42 @@ public class PayTokenActivity extends BaseActivity {
             feeConfirmText.setText(NumberUtil.getDecimal_4(transactionRequest.getQuota()));
         }
 
-        view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sheetDialog.dismiss();
-            }
-        });
+        view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
+        view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
+                showPasswordConfirmView(progressBar));
+        return view;
+    }
 
-        view.findViewById(R.id.transfer_confirm_button).setOnClickListener(new View.OnClickListener() {
+
+    private void showPasswordConfirmView(ProgressBar progressBar) {
+        SimpleDialog simpleDialog = new SimpleDialog(mActivity);
+        simpleDialog.setTitle("请输入密码");
+        simpleDialog.setMessageHint("password");
+        simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
+        simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onOkClick() {
+                if (TextUtils.isEmpty(simpleDialog.getMessage())) {
+                    Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
+                    Toast.makeText(mActivity, "密码错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                simpleDialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
                 if (transactionRequest.isEthereum()) {
                     transferEth(progressBar);
                 } else {
                     transferNervos(progressBar);
                 }
+
             }
         });
-        return view;
+        simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
+        simpleDialog.show();
     }
+
 
     private void transferEth(ProgressBar progressBar) {
         EthNativeRpcService.getEthGasPrice()

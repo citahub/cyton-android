@@ -3,6 +3,8 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class ChainItem implements Parcelable{
 
     public int chainId = -1;
@@ -12,9 +14,16 @@ public class ChainItem implements Parcelable{
     public String icon;
     public String entry;
     public String provider;
+    public List<ChainSet> chainset;
     public String tokenName;
     public String tokenSymbol;
     public String tokenAvatar;
+
+    public static class ChainSet {
+        public int chainId;
+        public String networkId;
+        public String httpProvider;
+    }
 
     public ChainItem(){}
 

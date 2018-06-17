@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
@@ -171,6 +172,12 @@ public class TransferActivity extends BaseActivity {
         });
     }
 
+
+    /**
+     * struct confirm transfer view
+     * @param sheetDialog
+     * @return
+     */
     private View getConfirmTransferView(BottomSheetDialog sheetDialog) {
         View view = getLayoutInflater().inflate(R.layout.dialog_confirm_transfer, null);
         TextView toAddress = view.findViewById(R.id.to_address);
@@ -190,16 +197,38 @@ public class TransferActivity extends BaseActivity {
                 sheetDialog.dismiss();
             }
         });
-
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String value = transferValueEdit.getText().toString().trim();
+                showPasswordConfirmView(value, progressBar);
+            }
+        });
+        return view;
+    }
+
+
+    private void showPasswordConfirmView(String value, ProgressBar progressBar) {
+        SimpleDialog simpleDialog = new SimpleDialog(mActivity);
+        simpleDialog.setTitle("请输入密码");
+        simpleDialog.setMessageHint("password");
+        simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
+        simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
+            @Override
+            public void onOkClick() {
+                if (TextUtils.isEmpty(simpleDialog.getMessage())) {
+                    Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
+                    Toast.makeText(mActivity, "密码错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                simpleDialog.dismiss();
+                progressBar.setVisibility(View.VISIBLE);
                 if (tokenItem.chainId < 0) {
                     if (EthNativeRpcService.ETH.equals(tokenItem.symbol)) {
                         transferEth(value, progressBar);
                     } else {
-                        LogUtil.d("erc20 token: " + tokenItem.symbol);
                         transferEthErc20(value, progressBar);
                     }
                 } else {
@@ -215,12 +244,13 @@ public class TransferActivity extends BaseActivity {
                 }
             }
         });
-        return view;
+        simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
+        simpleDialog.show();
     }
 
 
     /**
-     * transfer origin token of cita
+     * transfer origin token of nervos
      * @param value  transfer value
      * @param progressBar
      */
@@ -258,7 +288,7 @@ public class TransferActivity extends BaseActivity {
 
 
     /**
-     * transfer erc20 token of cita
+     * transfer erc20 token of nervos
      * @param value  transfer value
      * @param progressBar
      */
@@ -302,7 +332,6 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferEth(String value, ProgressBar progressBar) {
-        progressBar.setVisibility(View.VISIBLE);
         EthNativeRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
                 Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {
@@ -343,7 +372,6 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferEthErc20(String value, ProgressBar progressBar) {
-        progressBar.setVisibility(View.VISIBLE);
         EthErc20RpcService.transferErc20(tokenItem,
                 receiveAddressEdit.getText().toString().trim(), Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {

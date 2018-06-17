@@ -19,7 +19,7 @@ import com.yanzhenjie.permission.Permission;
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
-import org.nervos.neuron.util.web.WebUtil;
+import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AddWebsiteActivity extends BaseActivity {
 
@@ -72,7 +72,7 @@ public class AddWebsiteActivity extends BaseActivity {
     }
 
     private void gotoWebViewWithUrl(String url) {
-        if (TextUtils.isEmpty(url) || !WebUtil.isHttpUrl(url)) {
+        if (TextUtils.isEmpty(url) || !WebAppUtil.isHttpUrl(url)) {
             Toast.makeText(mActivity, "请输入正确的网页地址", Toast.LENGTH_SHORT).show();
         } else {
             websiteEdit.setText(url);

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -21,16 +20,13 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.web.WebUtil;
+import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,7 +53,7 @@ public class AppWebActivity extends BaseActivity {
         initTitleView();
         initWebView();
         webView.loadUrl(url);
-        WebUtil.getHtmlManifest(webView, url);
+        WebAppUtil.getHttpManifest(webView, url);
 
     }
 
@@ -88,10 +84,10 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_collect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (WebUtil.isCollectApp(mActivity)) {
-                    WebUtil.cancelCollectApp(mActivity);
+                if (WebAppUtil.isCollectApp(mActivity)) {
+                    WebAppUtil.cancelCollectApp(mActivity);
                 } else {
-                    WebUtil.collectApp(mActivity);
+                    WebAppUtil.collectApp(mActivity);
                 }
                 initCollectView();
             }
@@ -110,7 +106,7 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initCollectView() {
-        collectText.setText(WebUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
+        collectText.setText(WebAppUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
         closeMenuWindow();
     }
 
@@ -123,7 +119,7 @@ public class AppWebActivity extends BaseActivity {
     private void initWebView() {
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
-        WebUtil.initWebSettings(webView.getSettings());
+        WebAppUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -172,9 +168,9 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        webView.loadUrl(WebUtil.getInjectEthWeb3(mActivity));
-        webView.loadUrl(WebUtil.getInjectTransactionJs());
-        webView.loadUrl(WebUtil.getInjectSignJs());
+        webView.loadUrl(WebAppUtil.getInjectEthWeb3(mActivity));
+        webView.loadUrl(WebAppUtil.getInjectTransactionJs());
+        webView.loadUrl(WebAppUtil.getInjectSignJs());
     }
 
 
@@ -188,7 +184,7 @@ public class AppWebActivity extends BaseActivity {
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, tx);
-                intent.putExtra(EXTRA_CHAIN, WebUtil.getChainItem());
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getChainItem());
                 startActivity(intent);
             }
         }
@@ -223,11 +219,11 @@ public class AppWebActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
-        payOwnerText.setText(WebUtil.getChainItem().entry);
+        payOwnerText.setText(WebAppUtil.getChainItem().entry);
         payDataText.setText(tx);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        if (WebUtil.getChainItem() != null) {
-            payOwnerText.setText(WebUtil.getChainItem().provider);
+        if (WebAppUtil.getChainItem() != null) {
+            payOwnerText.setText(WebAppUtil.getChainItem().provider);
             payDataText.setText(tx);
         }
 

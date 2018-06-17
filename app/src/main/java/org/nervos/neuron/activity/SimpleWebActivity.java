@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
-import org.nervos.neuron.util.web.WebUtil;
+import org.nervos.neuron.util.web.WebAppUtil;
 
 
 public class SimpleWebActivity extends BaseActivity {
@@ -31,7 +31,7 @@ public class SimpleWebActivity extends BaseActivity {
     private void initWebView() {
         webView = findViewById(R.id.webview);
         titleBar = findViewById(R.id.title);
-        WebUtil.initWebSettings(webView.getSettings());
+        WebAppUtil.initWebSettings(webView.getSettings());
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
