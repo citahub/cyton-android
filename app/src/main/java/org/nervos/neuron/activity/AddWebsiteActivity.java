@@ -52,7 +52,7 @@ public class AddWebsiteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_website);
 
-        webAppList = Lists.reverse(DBHistoryUtil.getAllHistory(mActivity));
+        webAppList = DBHistoryUtil.getAllHistory(mActivity);
         initView();
         initRecycler();
     }
@@ -60,7 +60,7 @@ public class AddWebsiteActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        webAppList = Lists.reverse(DBHistoryUtil.getAllHistory(mActivity));
+        webAppList = DBHistoryUtil.getAllHistory(mActivity);
         adapter.notifyDataSetChanged();
     }
 
@@ -155,8 +155,7 @@ public class AddWebsiteActivity extends BaseActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
-                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_history_data);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_history_view, parent, false);
                 return new RecyclerView.ViewHolder(view){};
             }
             WebAppViewHolder holder = new WebAppViewHolder(LayoutInflater.from(mActivity)

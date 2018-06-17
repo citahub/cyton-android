@@ -127,14 +127,17 @@ public class WebAppUtil {
 
 
     public static boolean isCollectApp(Context context) {
+        LogUtil.d("isCollectApp");
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
             return DBAppUtil.findApp(context, mChainItem.entry);
         }
+        LogUtil.d("no isCollectApp");
         return false;
     }
 
     public static void collectApp(Context context) {
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
+            LogUtil.d("CollectApp");
             AppItem appItem = new AppItem(mChainItem.entry,
                     mChainItem.icon, mChainItem.name, mChainItem.provider);
             DBAppUtil.saveDbApp(context, appItem);

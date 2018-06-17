@@ -53,6 +53,7 @@ public class AppWebActivity extends BaseActivity {
         initTitleView();
         initWebView();
         webView.loadUrl(url);
+
         WebAppUtil.getHttpManifest(webView, url);
 
     }
