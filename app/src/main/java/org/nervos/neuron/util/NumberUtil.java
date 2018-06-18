@@ -1,6 +1,5 @@
 package org.nervos.neuron.util;
 
-import org.nervos.neuron.service.EthRpcService;
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
@@ -9,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
-import java.util.regex.Pattern;
 
 public class NumberUtil {
 

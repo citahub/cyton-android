@@ -2,7 +2,6 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
@@ -12,7 +11,6 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthNativeRpcService;
 
 import java.util.ArrayList;
 import java.util.List;

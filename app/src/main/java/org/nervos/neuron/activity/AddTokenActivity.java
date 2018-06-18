@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,10 +14,10 @@ import android.widget.Toast;
 
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.EthErc20RpcService;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -59,7 +58,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        NervosRpcService.init(this, NervosRpcService.NODE_IP);
+        NervosRpcService.init(this, NervosRpcService.NERVOS_NODE_IP);
     }
 
     private void initView() {
@@ -141,7 +140,7 @@ public class AddTokenActivity extends BaseActivity {
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
-                        tokenItem = EthErc20RpcService.getTokenInfo(s.toString(), walletItem.address);
+                        tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
                         tokenItem = NervosRpcService.getErc20TokenInfo(s.toString());
                     }

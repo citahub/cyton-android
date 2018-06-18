@@ -12,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.EthRpcService;
 
 public class BaseActivity extends AppCompatActivity {
 

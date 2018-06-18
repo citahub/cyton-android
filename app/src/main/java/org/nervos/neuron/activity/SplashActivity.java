@@ -4,15 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class SplashActivity extends BaseActivity {

@@ -2,7 +2,7 @@ package org.nervos.neuron;
 
 import android.app.Application;
 
-import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;

@@ -2,7 +2,6 @@ package org.nervos.neuron.service;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
@@ -31,10 +30,10 @@ public class WalletService {
                 LogUtil.d("token symbol: " + tokenItem.symbol);
                 if (tokenItem.chainId < 0) {
                     if (ETH.equals(tokenItem.symbol)) {
-                        tokenItem = EthNativeRpcService.getDefaultEth(walletItem.address);
+                        tokenItem = EthRpcService.getDefaultEth(walletItem.address);
                         tokenItemList.add(i, tokenItem);
                     } else {
-                        tokenItem.balance = EthErc20RpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);;
+                        tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);;
                         tokenItemList.add(i, tokenItem);
                     }
                 } else {

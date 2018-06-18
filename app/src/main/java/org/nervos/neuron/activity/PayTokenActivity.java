@@ -16,9 +16,9 @@ import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TransactionRequest;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.service.EthNativeRpcService;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -184,11 +184,11 @@ public class PayTokenActivity extends BaseActivity {
 
 
     private void transferEth(ProgressBar progressBar) {
-        EthNativeRpcService.getEthGasPrice()
+        EthRpcService.getEthGasPrice()
             .flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                    return EthNativeRpcService.transferEth(transactionRequest.to,
+                    return EthRpcService.transferEth(transactionRequest.to,
                             transactionRequest.getValue(), gasPrice);
                 }
             }).subscribeOn(Schedulers.io())

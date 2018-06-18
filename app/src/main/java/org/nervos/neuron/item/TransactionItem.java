@@ -4,15 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.google.gson.annotations.SerializedName;
-
-import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.NumberUtil;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;

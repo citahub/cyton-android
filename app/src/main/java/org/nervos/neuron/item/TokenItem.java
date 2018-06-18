@@ -20,10 +20,11 @@ public class TokenItem implements Parcelable{
 
     public TokenItem(){}
 
-    public TokenItem(String symbol, int image, float balance) {
+    public TokenItem(String name, String symbol, int decimals, String contractAddress) {
         this.symbol = symbol;
-        this.image = image;
-        this.balance = balance;
+        this.name = name;
+        this.decimals = decimals;
+        this.contractAddress = contractAddress;
     }
 
     public TokenItem(String symbol, int image, double balance, int chainId) {

@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,9 +25,8 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import org.nervos.neuron.service.EthErc20RpcService;
-import org.nervos.neuron.service.EthNativeRpcService;
 import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -80,7 +78,7 @@ public class TransferActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
         EthRpcService.init(mActivity);
-        NervosRpcService.init(mActivity, NervosRpcService.NODE_IP);
+        NervosRpcService.init(mActivity, NervosRpcService.NERVOS_NODE_IP);
         initView();
         initListener();
         initGasInfo();
@@ -109,7 +107,7 @@ public class TransferActivity extends BaseActivity {
 
     private void initGasInfo() {
         showProgressCircle();
-        EthNativeRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
+        EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
             @Override
             public void onCompleted() {
 
@@ -122,7 +120,7 @@ public class TransferActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 mGasPrice = gasPrice;
-                mGas = NumberUtil.getDoubleFromBig(gasPrice.multiply(EthRpcService.GAS_LIMIT));
+                mGas = NumberUtil.getDoubleFromBig(gasPrice.multiply(BaseRpcService.GAS_LIMIT));
                 feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }
@@ -144,11 +142,11 @@ public class TransferActivity extends BaseActivity {
 
         nextActionButton.setOnClickListener(v -> {
             if (TextUtils.isEmpty(receiveAddressEdit.getText().toString().trim())) {
-                Toast.makeText(TransferActivity.this, "转账地址不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "转账地址不能为空", Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
-                Toast.makeText(TransferActivity.this, "转账金额不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "转账金额不能为空", Toast.LENGTH_SHORT).show();
             } else {
-                sheetDialog = new BottomSheetDialog(TransferActivity.this);
+                sheetDialog = new BottomSheetDialog(mActivity);
                 sheetDialog.setCancelable(false);
                 sheetDialog.setContentView(getConfirmTransferView(sheetDialog));
                 sheetDialog.show();
@@ -226,7 +224,7 @@ public class TransferActivity extends BaseActivity {
                 simpleDialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
                 if (tokenItem.chainId < 0) {
-                    if (EthNativeRpcService.ETH.equals(tokenItem.symbol)) {
+                    if (EthRpcService.ETH.equals(tokenItem.symbol)) {
                         transferEth(value, progressBar);
                     } else {
                         transferEthErc20(value, progressBar);
@@ -259,8 +257,6 @@ public class TransferActivity extends BaseActivity {
         .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
             @Override
             public void onCompleted() {
-                progressBar.setVisibility(View.GONE);
-                sheetDialog.dismiss();
             }
             @Override
             public void onError(Throwable e) {
@@ -274,6 +270,8 @@ public class TransferActivity extends BaseActivity {
             public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                 if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                     Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    sheetDialog.dismiss();
                     finish();
                 } else if (ethSendTransaction.getError() != null &&
                         !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
@@ -298,8 +296,6 @@ public class TransferActivity extends BaseActivity {
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -313,6 +309,8 @@ public class TransferActivity extends BaseActivity {
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                         Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
@@ -332,13 +330,11 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferEth(String value, ProgressBar progressBar) {
-        EthNativeRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
+        EthRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
                 Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -352,6 +348,8 @@ public class TransferActivity extends BaseActivity {
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
@@ -372,13 +370,11 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferEthErc20(String value, ProgressBar progressBar) {
-        EthErc20RpcService.transferErc20(tokenItem,
+        EthRpcService.transferErc20(tokenItem,
                 receiveAddressEdit.getText().toString().trim(), Double.valueOf(value), mGasPrice)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
-                    progressBar.setVisibility(View.GONE);
-                    sheetDialog.dismiss();
                 }
                 @Override
                 public void onError(Throwable e) {
@@ -392,6 +388,8 @@ public class TransferActivity extends BaseActivity {
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
@@ -402,6 +400,14 @@ public class TransferActivity extends BaseActivity {
                     }
                 }
             });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (sheetDialog != null) {
+            sheetDialog.dismiss();
+        }
     }
 
     @Override

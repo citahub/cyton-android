@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -21,10 +20,9 @@ import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -36,14 +34,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -180,10 +173,20 @@ public class WebAppUtil {
         return null;
     }
 
+    public static String getInjectTruct(Context context) {
+        StringBuffer sb = new StringBuffer(getInjectedJsFile(context, "trust-min.js"));
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        String js = "javascript: const addressHex = " + walletItem.address + ";" +
+                "const rpcURL = " + BaseRpcService.ETH_NODE_IP;
+        sb.append(js);
+        sb.append(getInjectedJsFile(context, "test.js"));
+        return sb.toString();
+    }
+
     public static String getInjectEthWeb3(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return "javascript: web3.setProvider(new Web3.providers.HttpProvider('"
-                + EthRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.defaultAccount = '"
+                + BaseRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.defaultAccount = '"
                 + walletItem.address + "'";
     }
 
