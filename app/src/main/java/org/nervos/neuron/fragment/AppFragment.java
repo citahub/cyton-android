@@ -53,6 +53,7 @@ public class AppFragment extends Fragment {
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
         WebAppUtil.initWebSettings(webView.getSettings());
+        WebAppUtil.initWebViewCache(getContext(), webView.getSettings());
     }
 
     private void initWebView() {

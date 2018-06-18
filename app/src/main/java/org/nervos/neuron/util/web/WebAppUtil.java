@@ -127,17 +127,14 @@ public class WebAppUtil {
 
 
     public static boolean isCollectApp(Context context) {
-        LogUtil.d("isCollectApp");
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
             return DBAppUtil.findApp(context, mChainItem.entry);
         }
-        LogUtil.d("no isCollectApp");
         return false;
     }
 
     public static void collectApp(Context context) {
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            LogUtil.d("CollectApp");
             AppItem appItem = new AppItem(mChainItem.entry,
                     mChainItem.icon, mChainItem.name, mChainItem.provider);
             DBAppUtil.saveDbApp(context, appItem);
@@ -205,7 +202,6 @@ public class WebAppUtil {
     @SuppressLint("SetJavaScriptEnabled")
     public static void initWebSettings(WebSettings webSettings) {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setAppCacheEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setLoadsImagesAutomatically(true);
@@ -218,6 +214,12 @@ public class WebAppUtil {
         webSettings.setBuiltInZoomControls(false);
 
         WebView.setWebContentsDebuggingEnabled(true);
+    }
+
+    public static void initWebViewCache(Context context, WebSettings webSettings) {
+        String cacheDirPath = context.getFilesDir().getAbsolutePath()+"cache/";
+        webSettings.setAppCachePath(cacheDirPath);
+        webSettings.setAppCacheEnabled(true);
     }
 
 
