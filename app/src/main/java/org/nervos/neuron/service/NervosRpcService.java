@@ -127,8 +127,6 @@ public class NervosRpcService extends BaseRpcService {
                            String contractAddress, String address, double value) throws Exception {
         BigInteger ercValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, ercValue);
-        BigInteger transferValue = NervosDecimal
-                .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
@@ -139,7 +137,7 @@ public class NervosRpcService extends BaseRpcService {
             public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(contractAddress,
                         randomNonce(), quota.longValue(), validUntilBlock.longValue(),
-                        version, chainId, transferValue.toString(), data);
+                        version, chainId, BigInteger.ZERO, data);
                 String rawTx = transaction.sign(walletItem.privateKey);
                 try {
                     return Observable.just(service.ethSendRawTransaction(rawTx).send());
@@ -156,6 +154,7 @@ public class NervosRpcService extends BaseRpcService {
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) {
         BigInteger transferValue = NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+        LogUtil.d("transfer value: " + transferValue.toString());
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
@@ -165,8 +164,8 @@ public class NervosRpcService extends BaseRpcService {
             @Override
             public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
-                        validUntilBlock.longValue(), version, chainId, transferValue.toString(), "");
-                String rawTx = "0x" + transaction.sign(walletItem.privateKey);
+                        validUntilBlock.longValue(), version, chainId, transferValue, "");
+                String rawTx = transaction.sign(walletItem.privateKey);
                 try {
                     return Observable.just(service.ethSendRawTransaction(rawTx).send());
                 } catch (IOException e) {

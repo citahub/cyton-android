@@ -107,7 +107,6 @@ public class WebAppUtil {
                         mChainItem.tokenName = ethMetaData.tokenName;
                         mChainItem.tokenSymbol = ethMetaData.tokenSymbol;
                         mChainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                        webView.loadUrl(getInjectNervosWeb3());
                         DBChainUtil.saveChain(webView.getContext(), mChainItem);
                         if (!TextUtils.isEmpty(mChainItem.tokenName)) {
                             TokenItem tokenItem = new TokenItem(mChainItem);
@@ -190,8 +189,8 @@ public class WebAppUtil {
                 + walletItem.address + "'";
     }
 
-    private static String getInjectNervosWeb3() {
-        return "javascript: web3.setProvider('" + mChainItem.httpProvider + "'); web3.currentProvider.isMetaMask = true;";
+    private static String getInjectWeb3() {
+        return "javascript: var web3 = new Web3(); web3.initWeb3();";
     }
 
     public static String getInjectTransactionJs() {

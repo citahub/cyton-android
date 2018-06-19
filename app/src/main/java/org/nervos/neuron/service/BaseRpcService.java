@@ -16,7 +16,7 @@ import java.util.List;
 public class BaseRpcService {
 
     static final BigInteger NervosDecimal = new BigInteger("100000000000000000");
-    public static final String NERVOS_NODE_IP = "http://192.168.2.101:1337";
+    public static final String NERVOS_NODE_IP = "http://47.94.105.230:1337";
 
     public static final String ETH = "ETH";
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
