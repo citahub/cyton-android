@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
@@ -29,6 +32,8 @@ import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.DialogUtil;
 import org.nervos.neuron.dialog.TokenTransferDialog;
+import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
@@ -83,6 +88,7 @@ public class WalletFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         initWalletData(true);
         initAdapter();
         initListener();
@@ -110,6 +116,17 @@ public class WalletFragment extends BaseFragment {
         } else {
             startActivity(new Intent(getActivity(), AddWalletActivity.class));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWalletSaveEvent(TokenRefreshEvent event) {
+        initWalletData(true);
     }
 
     private void initListener() {

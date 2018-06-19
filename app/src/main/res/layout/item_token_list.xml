@@ -24,8 +24,7 @@
             android:layout_marginStart="10dp"
             android:layout_centerVertical="true"
             android:textSize="17sp"
-            android:textColor="@color/font_black"
-            android:text="比特币"/>
+            android:textColor="@color/font_black"/>
 
         <TextView
             android:id="@+id/token_amount"

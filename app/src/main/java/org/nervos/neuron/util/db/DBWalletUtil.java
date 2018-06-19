@@ -13,6 +13,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -150,6 +151,16 @@ public class DBWalletUtil extends DBUtil {
         return false;
     }
 
+    public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
+        WalletItem walletItem = getCurrentWallet(context);
+        for (TokenItem token : walletItem.tokenItems) {
+            if (token.symbol.equals(symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
         List<String> walletNames = getAllWalletName(context);
         for (String walletName: walletNames) {
@@ -168,7 +179,13 @@ public class DBWalletUtil extends DBUtil {
             if (walletItem.tokenItems == null) {
                 walletItem.tokenItems = new ArrayList<>();
             }
-            walletItem.tokenItems.remove(tokenItem);
+            Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
+            while(iterator.hasNext()){
+                TokenItem item = iterator.next();
+                if(tokenItem.symbol.equals(item.symbol)){
+                    iterator.remove();
+                }
+            }
             saveWallet(context, walletItem);
         }
     }

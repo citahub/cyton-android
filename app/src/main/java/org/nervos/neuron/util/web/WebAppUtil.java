@@ -155,7 +155,7 @@ public class WebAppUtil {
      * @param fileName    the name of JavaScript file
      * @return  the content of JavaScript file
      */
-    private static String getInjectedJsFile(Context context, String fileName) {
+    public static String getFileFromAsset(Context context, String fileName) {
         AssetManager am = context.getAssets();
         try {
             InputStream in = am.open(fileName);
@@ -173,13 +173,13 @@ public class WebAppUtil {
         return null;
     }
 
-    public static String getInjectTruct(Context context) {
-        StringBuffer sb = new StringBuffer(getInjectedJsFile(context, "trust-min.js"));
+    public static String getInjectTrust(Context context) {
+        StringBuffer sb = new StringBuffer(getFileFromAsset(context, "trust-min.js"));
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         String js = "javascript: const addressHex = " + walletItem.address + ";" +
                 "const rpcURL = " + BaseRpcService.ETH_NODE_IP;
         sb.append(js);
-        sb.append(getInjectedJsFile(context, "test.js"));
+        sb.append(getFileFromAsset(context, "test.js"));
         return sb.toString();
     }
 

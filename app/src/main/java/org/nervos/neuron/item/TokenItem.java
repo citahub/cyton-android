@@ -51,6 +51,15 @@ public class TokenItem implements Parcelable{
         this.chainId = chainItem.chainId;
     }
 
+    public TokenItem(TokenEntity tokenEntity) {
+        this.name = tokenEntity.name;
+        this.symbol = tokenEntity.symbol;
+        this.contractAddress = tokenEntity.address;
+        this.avatar = tokenEntity.logo.src;
+        this.decimals = tokenEntity.decimals;
+        this.chainId = -1;
+    }
+
     @Override
     public int describeContents() {
         return 0;
