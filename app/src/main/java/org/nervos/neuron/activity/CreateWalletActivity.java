@@ -21,6 +21,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,6 +121,7 @@ public class CreateWalletActivity extends BaseActivity {
         if (walletItem != null) {
             walletItem = DBWalletUtil.addOriginTokenToWallet(mActivity, walletItem);
             DBWalletUtil.saveWallet(mActivity, walletItem);
+            SharePrefUtil.putCurrentWalletName(walletItem.name);
         }
     }
 

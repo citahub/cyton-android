@@ -67,6 +67,8 @@ public class WalletManageActivity extends BaseActivity {
                     public void onOkClick() {
                         if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
                             Toast.makeText(mActivity, "钱包名称不能为空", Toast.LENGTH_SHORT).show();
+                        } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
+                            Toast.makeText(mActivity, "钱包名称已存在", Toast.LENGTH_SHORT).show();
                         } else {
                             walletNameText.setText(simpleDialog.getMessage());
                             DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage());

@@ -3,6 +3,8 @@ package org.nervos.neuron.util.db;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.nervos.neuron.util.LogUtil;
+
 public class SharePrefUtil {
 
     private static final String FILE_NAME = "shared_name";

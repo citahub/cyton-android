@@ -21,23 +21,19 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ReceiveQrCodeActivity extends AppCompatActivity {
+public class ReceiveQrCodeActivity extends BaseActivity {
 
     private ImageView qrCodeImage;
     private TextView walletNameText;
     private TextView walletAddressText;
     private CircleImageView walletPhotoImage;
 
-    private ReceiveQrCodeActivity activity;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive_qrcode);
 
-        activity = this;
-
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(this);
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         qrCodeImage = findViewById(R.id.receive_qrcode_image);
         walletNameText = findViewById(R.id.qrcode_wallet_name);
@@ -47,11 +43,11 @@ public class ReceiveQrCodeActivity extends AppCompatActivity {
         findViewById(R.id.button_copy_receive_qrcode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
                 if (cm != null) {
                     cm.setPrimaryClip(mClipData);
-                    Toast.makeText(activity, "复制成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "复制成功", Toast.LENGTH_SHORT).show();
                 }
             }
         });

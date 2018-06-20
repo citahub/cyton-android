@@ -20,6 +20,7 @@ import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -57,10 +58,8 @@ public class PayTokenActivity extends BaseActivity {
     private void initData() {
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
-        walletItem = DBWalletUtil.getCurrentWallet(this);
-
+        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         chainItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
-
     }
 
     private void initView() {

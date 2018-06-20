@@ -3,6 +3,7 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.KeyEvent;
 
 import org.nervos.neuron.R;
@@ -17,8 +18,9 @@ public class AddWalletActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wallet);
 
-        findViewById(R.id.create_wallet_button).setOnClickListener(v ->
-                startActivity(new Intent(mActivity, CreateWalletActivity.class)));
+        findViewById(R.id.create_wallet_button).setOnClickListener(v -> {
+            startActivity(new Intent(mActivity, CreateWalletActivity.class));
+        });
 
         findViewById(R.id.import_wallet_button).setOnClickListener(v ->
                 startActivity(new Intent(mActivity, ImportWalletActivity.class)));

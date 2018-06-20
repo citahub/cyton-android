@@ -58,7 +58,6 @@ public class WalletFragment extends BaseFragment {
     private FrameLayout receiveLayout;
     private FrameLayout tokenManageLayout;
     private TitleBar titleBar;
-    private ImageView settingImage;
     private RecyclerView tokenRecycler;
     private CircleImageView photoImage;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -79,7 +78,6 @@ public class WalletFragment extends BaseFragment {
         receiveLayout = view.findViewById(R.id.wallet_receive_layout);
         tokenManageLayout = view.findViewById(R.id.wallet_token_management_layout);
         titleBar = view.findViewById(R.id.title);
-        settingImage = view.findViewById(R.id.wallet_setting);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         photoImage = view.findViewById(R.id.wallet_photo);
         return view;
@@ -132,7 +130,6 @@ public class WalletFragment extends BaseFragment {
     private void initListener() {
         receiveLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class)));
         tokenManageLayout.setOnClickListener(v -> startActivity(new Intent(getActivity(), TokenManageActivity.class)));
-        settingImage.setOnClickListener(v -> gotoWalletManagePage());
         photoImage.setOnClickListener(v -> gotoWalletManagePage());
         addressText.setOnClickListener(new View.OnClickListener() {
             @Override

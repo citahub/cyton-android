@@ -11,6 +11,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,7 +60,6 @@ public class DBWalletUtil extends DBUtil {
             DB db = DBFactory.open(context, DB_WALLET);
             db.put(getDbKey(walletItem.name), walletItem);
             db.close();
-            SharePrefUtil.putCurrentWalletName(walletItem.name);
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
@@ -130,6 +130,7 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem){
+        LogUtil.d("addTokenToWallet: " + walletName);
         WalletItem walletItem = getWallet(context, walletName);
         if (walletItem != null) {
             if (walletItem.tokenItems == null) {
@@ -162,6 +163,7 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
+        LogUtil.d("addTokenToAllWallet");
         List<String> walletNames = getAllWalletName(context);
         for (String walletName: walletNames) {
             addTokenToWallet(context, walletName, tokenItem);
