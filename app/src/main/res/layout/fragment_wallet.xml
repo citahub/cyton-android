@@ -31,15 +31,6 @@
             android:translationZ="5dp"
             android:background="@drawable/rectangle_border_gray_corner">
 
-            <ImageView
-                android:id="@+id/wallet_setting"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentEnd="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/tab_settings_default"
-                android:layout_gravity="center"/>
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
                 android:layout_width="60dp"

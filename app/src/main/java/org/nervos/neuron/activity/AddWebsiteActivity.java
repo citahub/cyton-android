@@ -40,7 +40,6 @@ import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSAC
 
 public class AddWebsiteActivity extends BaseActivity {
 
-    public static final String EXTRA_URL = "extra_url";
     private static final int REQUEST_CODE = 0x01;
     private RecyclerView recyclerView;
     private WebAppAdapter adapter = new WebAppAdapter();
@@ -114,13 +113,13 @@ public class AddWebsiteActivity extends BaseActivity {
 
 
     private void gotoWebViewWithUrl(String url) {
-        if (TextUtils.isEmpty(url) || !WebAppUtil.isHttpUrl(url)) {
+        if (TextUtils.isEmpty(url)) {
             Toast.makeText(mActivity, "请输入正确的网页地址", Toast.LENGTH_SHORT).show();
         } else {
             websiteEdit.setText(url);
             DBHistoryUtil.saveHistory(mActivity, url);
             Intent intent = new Intent(mActivity, AppWebActivity.class);
-            intent.putExtra(EXTRA_URL, url);
+            intent.putExtra(AppWebActivity.EXTRA_URL, url);
             startActivity(intent);
         }
     }

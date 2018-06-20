@@ -62,7 +62,6 @@ public class TokenManageActivity extends BaseActivity {
         String tokens = WebAppUtil.getFileFromAsset(mActivity, "tokens-eth.json");
         Type type = new TypeToken<List<TokenEntity>>() {}.getType();
         tokenList = new Gson().fromJson(tokens, type);
-        tokenList = tokenList.subList(0, 50);
         adapter.notifyDataSetChanged();
     }
 
@@ -71,7 +70,7 @@ public class TokenManageActivity extends BaseActivity {
         titleBar.setOnRightClickListener(new TitleBar.OnRightClickListener() {
             @Override
             public void onRightClick() {
-                startActivity(new Intent(TokenManageActivity.this, AddTokenActivity.class));
+                startActivity(new Intent(mActivity, AddTokenActivity.class));
             }
         });
         titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {

@@ -23,6 +23,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -188,6 +189,7 @@ public class ImportKeystoreFragment extends BaseFragment {
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    LogUtil.d("qrcode: " + result);
                     keystoreEdit.setText(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_LONG).show();

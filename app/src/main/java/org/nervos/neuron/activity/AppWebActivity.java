@@ -34,6 +34,7 @@ public class AppWebActivity extends BaseActivity {
 
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
+    public static final String EXTRA_URL = "extra_url";
 
     private WebView webView;
     private TextView titleText;
@@ -47,7 +48,7 @@ public class AppWebActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_web);
 
-        String url = getIntent().getStringExtra(AddWebsiteActivity.EXTRA_URL);
+        String url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         initTitleView();
@@ -125,6 +126,9 @@ public class AppWebActivity extends BaseActivity {
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
+                if (newProgress > 20 && newProgress < 80) {
+                    injectJs();
+                }
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
                 } else {
@@ -146,20 +150,14 @@ public class AppWebActivity extends BaseActivity {
             }
 
             @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+//                injectJs();
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            sleep(500);
-                            titleText.post(() -> injectJs());
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
             }
         });
     }
@@ -169,16 +167,19 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-        webView.loadUrl(WebAppUtil.getInjectEthWeb3(mActivity));
-        webView.loadUrl(WebAppUtil.getInjectTransactionJs());
-        webView.loadUrl(WebAppUtil.getInjectSignJs());
+//        webView.loadUrl(WebAppUtil.getInjectJs(mActivity));
+//        webView.evaluateJavascript(WebAppUtil.getInjectTrust(mActivity), null);
+
+        webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(), null);
+        webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
+//        webView.evaluateJavascript(WebAppUtil.getInjectSignJs(), null);
     }
 
 
     private class AppHybrid {
 
         @JavascriptInterface
-        public void showTransaction(String tx) {
+        public void sendTransaction(String tx) {
             if (walletItem == null) {
                 Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));

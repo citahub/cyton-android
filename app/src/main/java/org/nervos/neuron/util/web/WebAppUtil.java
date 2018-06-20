@@ -32,7 +32,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.Callable;
 
 import okhttp3.Call;
@@ -173,32 +172,23 @@ public class WebAppUtil {
     }
 
     public static String getInjectTrust(Context context) {
-        StringBuffer sb = new StringBuffer(getFileFromAsset(context, "trust-min.js"));
+        StringBuffer sb = new StringBuffer(getFileFromAsset(context, "trust.js"));
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        String js = "javascript: const addressHex = " + walletItem.address + ";" +
-                "const rpcURL = " + BaseRpcService.ETH_NODE_IP;
+        String js = "javascript: ; const addressHex = '" + walletItem.address
+                + "'; const rpcURL = '"
+                + BaseRpcService.ETH_NODE_IP + "'; const wssURL = '"
+                + BaseRpcService.ETH_NODE_IP + "'; const chainID = 1; console.log('Injected finish')";
         sb.append(js);
-        sb.append(getFileFromAsset(context, "test.js"));
+        sb.append(getFileFromAsset(context, "trust-init.js"));
         return sb.toString();
     }
 
-    public static String getInjectEthWeb3(Context context) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return "javascript: web3.setProvider(new Web3.providers.HttpProvider('"
-                + BaseRpcService.ETH_NODE_IP + "')); web3.currentProvider.isMetaMask = true; web3.eth.defaultAccount = '"
-                + walletItem.address + "'";
-    }
-
-    private static String getInjectWeb3() {
-        return "javascript: var web3 = new Web3(); web3.initWeb3();";
+    public static String getInjectNervosWeb3() {
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3('" + BaseRpcService.ETH_NODE_IP + "')}";
     }
 
     public static String getInjectTransactionJs() {
-        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.showTransaction(JSON.stringify(tx));console.log(JSON.stringify(tx));}";
-    }
-
-    public static String getInjectSignJs() {
-        return "javascript: web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx));console.log(JSON.stringify(tx));}";
+        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx))};";
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -225,23 +215,11 @@ public class WebAppUtil {
     }
 
 
-    public static boolean isHttpUrl(String urlString) {
-        URI uri = null;
-        try {
-            uri = new URI(urlString);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        if(uri.getHost() == null){
-            return false;
-        }
-        if(uri.getScheme().equalsIgnoreCase("http")
-                || uri.getScheme().equalsIgnoreCase("https")){
-            return true;
-        }
-        return false;
-    }
+//    public static boolean isHttpUrl(String urlString) {
+//        if (urlString.indexOf("http://") != 0 && urlString.indexOf("https://") != 0) {
+//            urlString = "http://" + urlString;
+//        }
+////        URLUtil.isValidUrl()
+//    }
 
 }

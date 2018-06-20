@@ -21,7 +21,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
+import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
@@ -32,6 +34,8 @@ public class AppFragment extends Fragment {
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final String INNER_URL = "http://47.97.171.140:8866/";
 
     @Nullable
     @Override
@@ -69,7 +73,15 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false;
+                if (request.getUrl().toString().contains(INNER_URL)) {
+                    return false;
+                } else {
+                    LogUtil.d(request.getUrl().toString());
+                    Intent intent = new Intent(getContext(), AppWebActivity.class);
+                    intent.putExtra(AppWebActivity.EXTRA_URL, request.getUrl().toString());
+                    startActivity(intent);
+                    return true;
+                }
             }
         });
 
