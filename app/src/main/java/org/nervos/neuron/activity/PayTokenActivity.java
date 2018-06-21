@@ -154,7 +154,7 @@ public class PayTokenActivity extends BaseActivity {
 
     private void showPasswordConfirmView(ProgressBar progressBar) {
         SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-        simpleDialog.setTitle("请输入密码");
+        simpleDialog.setTitle(R.string.input_password_hint);
         simpleDialog.setMessageHint("password");
         simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
@@ -164,7 +164,7 @@ public class PayTokenActivity extends BaseActivity {
                     Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
-                    Toast.makeText(mActivity, "密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 simpleDialog.dismiss();
@@ -207,7 +207,7 @@ public class PayTokenActivity extends BaseActivity {
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         sheetDialog.dismiss();
-                        Toast.makeText(mActivity, "转账成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
                         sheetDialog.dismiss();

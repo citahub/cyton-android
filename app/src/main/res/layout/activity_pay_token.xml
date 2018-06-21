@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorPrimary"
-            app:title="确认支付"
+            app:title="@string/confirm_pay"
             app:isShowLeft="true"/>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/pay_button_separate"
             android:layout_marginEnd="@dimen/default_margin"
-            android:text="拒绝"
+            android:text="@string/reject"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:gravity="center"
@@ -96,7 +96,7 @@
             android:layout_height="match_parent"
             android:layout_toEndOf="@id/pay_button_separate"
             android:layout_marginStart="@dimen/default_margin"
-            android:text="接受"
+            android:text="@string/approve"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:gravity="center"
@@ -118,7 +118,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="请求人"
+                android:text="@string/requester"
                 android:textColor="@color/default_black"
                 android:textSize="13sp"/>
 
@@ -137,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="接收地址"
+                android:text="@string/receive_address"
                 android:textColor="@color/default_black"
                 android:textSize="13sp"/>
 
@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="转账金额"
+                android:text="@string/transfer_amount"
                 android:textColor="@color/default_black"
                 android:textSize="13sp"/>
 
@@ -178,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="请求费用总和（含手续费）"
+                android:text="@string/transfer_sum"
                 android:textColor="@color/default_black"
                 android:textSize="13sp"/>
 

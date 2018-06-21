@@ -97,7 +97,7 @@ public class WalletManageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-                simpleDialog.setTitle("请输入密码");
+                simpleDialog.setTitle(R.string.input_password_hint);
                 simpleDialog.setMessageHint("password");
                 simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
                 simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
@@ -120,15 +120,15 @@ public class WalletManageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 SimpleDialog deleteDialog = new SimpleDialog(mActivity);
-                deleteDialog.setTitle("确认删除钱包吗？");
-                deleteDialog.setMessageHint("密码");
+                deleteDialog.setTitle(getString(R.string.ask_confirm_delete_wallet));
+                deleteDialog.setMessageHint(getString(R.string.password));
                 deleteDialog.setEditInputType(SimpleDialog.PASSWORD);
                 deleteDialog.setOnCancelClickListener(() -> deleteDialog.dismiss());
                 deleteDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick() {
                         if (!walletItem.password.equals(deleteDialog.getMessage())) {
-                            Toast.makeText(mActivity, "钱包密码错误", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.wallet_passworrd_error, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         List<String> names = DBWalletUtil.getAllWalletName(mActivity);

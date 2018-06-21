@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="交易"
+        app:title="@string/title_transaction"
         app:isShowLeft="false"/>
 
     <android.support.v4.widget.SwipeRefreshLayout

@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="支付详情"
+                android:text="@string/pay_detail"
                 android:textSize="18sp"
                 android:textColor="@color/default_black"
                 android:layout_centerInParent="true"/>
@@ -58,7 +58,7 @@
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="转入地址"
+                android:text="@string/transfer_to_address"
                 android:textSize="14sp"
                 android:textColor="@color/default_gray_6"/>
 
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:text="付款钱包"
+                android:text="@string/pay_wallet"
                 android:textSize="14sp"
                 android:textColor="@color/default_gray_6"/>
 
@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:text="交易费用"
+                android:text="@string/transfer_fee"
                 android:textSize="14sp"
                 android:textColor="@color/default_gray_6"/>
 

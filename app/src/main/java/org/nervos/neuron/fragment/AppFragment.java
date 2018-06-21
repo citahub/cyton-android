@@ -28,14 +28,12 @@ import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
 
-    private static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
-
     public static final String TAG = AppFragment.class.getName();
+    private static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
+    private static final String INNER_URL = "http://47.97.171.140:8866/";
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private static final String INNER_URL = "http://47.97.171.140:8866/";
 
     @Nullable
     @Override

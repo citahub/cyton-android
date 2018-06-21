@@ -39,7 +39,7 @@ public class BaseActivity extends AppCompatActivity {
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        showProgressBar("正在加载");
+        showProgressBar(getString(R.string.loading));
     }
 
     protected void showProgressBar(String message) {

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorPrimary"
-            app:title="钱包"
+            app:title="@string/wallet_title"
             app:isShowLeft="true"
             app:left_img="@drawable/list"
             app:isShowRight="true"
@@ -85,7 +85,7 @@
                         android:drawableStart="@drawable/receive_token"
                         android:drawablePadding="10dp"
                         android:layout_gravity="center"
-                        android:text="收款"
+                        android:text="@string/receive_token"
                         android:textColor="@color/default_black"
                         android:textSize="14sp"/>
                 </FrameLayout>
@@ -108,7 +108,7 @@
                         android:drawableStart="@drawable/token_manage"
                         android:drawablePadding="10dp"
                         android:layout_gravity="center"
-                        android:text="资产管理"
+                        android:text="@string/token_manage"
                         android:textColor="@color/default_black"
                         android:textSize="14sp"/>
                 </FrameLayout>

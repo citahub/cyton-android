@@ -26,9 +26,13 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
-import java.math.BigInteger;
+import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class AppWebActivity extends BaseActivity {
 
@@ -40,6 +44,7 @@ public class AppWebActivity extends BaseActivity {
     private TextView titleText;
     private TextView collectText;
     private ProgressBar progressBar;
+    private BottomSheetDialog sheetDialog;
 
     private WalletItem walletItem;
 
@@ -158,6 +163,7 @@ public class AppWebActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                injectJs();
             }
         });
     }
@@ -172,7 +178,6 @@ public class AppWebActivity extends BaseActivity {
 
         webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(), null);
         webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
-//        webView.evaluateJavascript(WebAppUtil.getInjectSignJs(), null);
     }
 
 
@@ -202,15 +207,22 @@ public class AppWebActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        if (sheetDialog != null && sheetDialog.isShowing()) {
+            sheetDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 
     private void showSignMessageDialog(String tx) {
-        BottomSheetDialog sheetDialog = new BottomSheetDialog(mActivity);
-        sheetDialog.setCancelable(false);
-        sheetDialog.setContentView(getSignMessageView(sheetDialog, tx));
+        sheetDialog = new BottomSheetDialog(mActivity);
+        sheetDialog.setCanceledOnTouchOutside(true);
+        sheetDialog.setContentView(getSignMessageView(tx));
         sheetDialog.show();
     }
 
-    private View getSignMessageView(BottomSheetDialog sheetDialog, String tx) {
+    private View getSignMessageView(String tx) {
         View view = getLayoutInflater().inflate(R.layout.dialog_sign_message, null);
         TextView walletNameText = view.findViewById(R.id.wallet_name);
         TextView walletAddressText = view.findViewById(R.id.wallet_address);
@@ -228,7 +240,6 @@ public class AppWebActivity extends BaseActivity {
             payOwnerText.setText(WebAppUtil.getChainItem().provider);
             payDataText.setText(tx);
         }
-
         view.findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,22 +259,76 @@ public class AppWebActivity extends BaseActivity {
                 }
             }
         });
-
         view.findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sheetDialog.dismiss();
             }
         });
+        initSignNervosAction(view, tx);
+        return view;
+    }
 
+    private void initSignEthAction(View view, String tx) {
         view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Sign.SignatureData signatureData = Sign.signMessage(tx.getBytes(),
-                        ECKeyPair.create(new BigInteger(walletItem.privateKey)), false);
+                Observable.fromCallable(new Callable<Sign.SignatureData>() {
+                    @Override
+                    public Sign.SignatureData call() {
+                        return Sign.signMessage(tx.getBytes(),
+                                ECKeyPair.create(Numeric.toBigInt(walletItem.privateKey)));
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Sign.SignatureData>() {
+                    @Override
+                    public void onCompleted() {
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onNext(Sign.SignatureData signatureData) {
+                        LogUtil.d("signatureData: " + new String(signatureData.getR()));
+                    }
+                });
             }
         });
-        return view;
+    }
+
+    private void initSignNervosAction(View view, String tx) {
+        view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Observable.fromCallable(new Callable<org.nervos.web3j.crypto.Sign.SignatureData>() {
+                    @Override
+                    public org.nervos.web3j.crypto.Sign.SignatureData call() {
+                        return org.nervos.web3j.crypto.Sign.signMessage(tx.getBytes(),
+                                org.nervos.web3j.crypto.ECKeyPair.create(Numeric.toBigInt(walletItem.privateKey)));
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<org.nervos.web3j.crypto.Sign.SignatureData>() {
+                    @Override
+                    public void onCompleted() {
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        sheetDialog.dismiss();
+                    }
+                    @Override
+                    public void onNext(org.nervos.web3j.crypto.Sign.SignatureData signatureData) {
+                        LogUtil.d("signatureData: " + new String(signatureData.get_signature()));
+                    }
+                });
+            }
+        });
     }
 
 

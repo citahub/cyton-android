@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
 import org.nervos.neuron.util.crypto.WalletEntity;
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletFile;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 public class WalletItem implements Parcelable{
 
     /**
-     * 钱包名称
+     * wallet name
      */
     public String name;
 
@@ -21,32 +22,33 @@ public class WalletItem implements Parcelable{
     public int image;
 
     /**
-     * 钱包密码/助记词密码
+     * the password of wallet and mnemonic
      */
     public String password;
     /**
-     * 钱包地址
+     * wallet address
      */
     public String address;
 
     /**
-     * 钱包私钥
+     * wallet private key
      */
     public String privateKey;
+
     /**
-     * 钱包文件密码
+     * the password of wallet file
      */
     public String walletPass;
     /**
-     * 钱包文件
+     * wallet file
      */
     public WalletFile walletFile;
     /**
-     * 助记词
+     * mnemonic
      */
     public String mnemonic;
     /**
-     * 路径
+     * wallet file path
      */
     public String path;
 

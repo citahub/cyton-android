@@ -44,7 +44,7 @@
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:background="@drawable/button_corner_blue_shape"
-            android:text="复制"/>
+            android:text="@string/copy"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_ok"

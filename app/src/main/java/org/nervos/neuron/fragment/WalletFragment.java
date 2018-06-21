@@ -38,10 +38,14 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.web3j.protobuf.ConvertStrByte;
+import org.nervos.web3j.utils.Numeric;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.protobuf.ByteString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -206,8 +210,8 @@ public class WalletFragment extends BaseFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_empty_view, parent, false);
-                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_history_view, parent, false);
+                ((TextView)view.findViewById(R.id.no_history_text)).setText(R.string.empty_no_token_data);
                 return new RecyclerView.ViewHolder(view){};
             }
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(

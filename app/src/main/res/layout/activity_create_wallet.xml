@@ -22,7 +22,7 @@
         android:background="#FFFEED"
         android:drawableStart="@drawable/warning"
         android:drawablePadding="5dp"
-        android:text="此密码将被用于保护私钥和交易授权"
+        android:text="@string/password_use_protect_private_key"
         android:textColor="#F97C00"
         android:textSize="12sp"/>
 
@@ -82,7 +82,7 @@
             android:id="@+id/edit_wallet_password"
             android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/white"
-            android:hint="请输入密码"
+            android:hint="@string/input_password"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textSize="14sp"

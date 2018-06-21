@@ -47,7 +47,7 @@ public class ReceiveQrCodeActivity extends BaseActivity {
                 ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
                 if (cm != null) {
                     cm.setPrimaryClip(mClipData);
-                    Toast.makeText(mActivity, "复制成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
                 }
             }
         });

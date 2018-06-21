@@ -59,7 +59,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:layout_toStartOf="@id/separate"
-                    android:text="复制"
+                    android:text="@string/copy"
                     android:textColor="@color/button_blue"
                     android:textSize="14sp"
                     />
@@ -70,7 +70,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:layout_toEndOf="@id/separate"
-                    android:text="分享"
+                    android:text="@string/share"
                     android:textColor="@color/button_blue"
                     android:textSize="14sp"
                     />
