@@ -421,7 +421,7 @@ public class TransferActivity extends BaseActivity {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     receiveAddressEdit.setText(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(TransferActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TransferActivity.this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }
         }

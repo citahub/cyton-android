@@ -1,6 +1,7 @@
 package org.nervos.neuron.fragment;
 
 import android.app.Activity;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,7 +27,11 @@ public class BaseFragment extends Fragment {
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        showProgressBar("正在加载");
+        showProgressBar(getString(R.string.loading));
+    }
+
+    protected void showProgressBar(@StringRes int message) {
+        showProgressBar(getString(message));
     }
 
     protected void showProgressBar(String message) {

@@ -248,7 +248,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     mnemonicEdit.setText(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }
         }

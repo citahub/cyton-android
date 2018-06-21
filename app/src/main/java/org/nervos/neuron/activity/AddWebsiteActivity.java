@@ -133,7 +133,7 @@ public class AddWebsiteActivity extends BaseActivity {
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     gotoWebViewWithUrl(bundle.getString(CodeUtils.RESULT_STRING));
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(mActivity, "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }
         }

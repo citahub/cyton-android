@@ -60,15 +60,15 @@ public class WalletManageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-                simpleDialog.setTitle("修改钱包名称");
-                simpleDialog.setMessageHint("输入钱包名称");
+                simpleDialog.setTitle(getString(R.string.update_wallet_name));
+                simpleDialog.setMessageHint(getString(R.string.input_wallet_name_hint));
                 simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick() {
                         if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, "钱包名称不能为空", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show();
                         } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, "钱包名称已存在", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                         } else {
                             walletNameText.setText(simpleDialog.getMessage());
                             DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage());
@@ -98,7 +98,7 @@ public class WalletManageActivity extends BaseActivity {
             public void onClick(View v) {
                 SimpleDialog simpleDialog = new SimpleDialog(mActivity);
                 simpleDialog.setTitle(R.string.input_password_hint);
-                simpleDialog.setMessageHint("password");
+                simpleDialog.setMessageHint(R.string.input_password_hint);
                 simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
                 simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                     @Override
@@ -139,7 +139,7 @@ public class WalletManageActivity extends BaseActivity {
                         }
                         DBWalletUtil.deleteWallet(mActivity, walletItem.name);
                         deleteDialog.dismiss();
-                        Toast.makeText(mActivity, "删除成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(mActivity, MainActivity.class);
                         intent.putExtra(EXTRA_TAG, AppFragment.TAG);
                         startActivity(intent);
@@ -153,7 +153,7 @@ public class WalletManageActivity extends BaseActivity {
     }
 
     private void generateKeystore(String password) {
-        showProgressBar("正在生成...");
+        showProgressBar(R.string.generating);
         new Thread(){
             @Override
             public void run() {

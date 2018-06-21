@@ -67,10 +67,10 @@ public class ImportKeystoreFragment extends BaseFragment {
     private void initListener() {
         importButton.setOnClickListener(view -> {
             if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
-                Toast.makeText(getContext(), "该钱包名称已存在", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 return;
             }
-            showProgressBar("钱包导入中...");
+            showProgressBar(R.string.wallet_importing);
             cachedThreadPool.execute(() -> {
                 if (generateAndSaveWallet()) {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -79,7 +79,7 @@ public class ImportKeystoreFragment extends BaseFragment {
                     passwordEdit.post(() -> dismissProgressBar());
                 } else {
                     passwordEdit.post(() -> {
-                        Toast.makeText(getContext(), "该钱包地址已存在", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                         dismissProgressBar();
                     });
                 }
@@ -183,18 +183,14 @@ public class ImportKeystoreFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
             if (null != data) {
                 Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
+                if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    LogUtil.d("qrcode: " + result);
                     keystoreEdit.setText(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }
         }

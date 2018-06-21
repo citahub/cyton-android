@@ -3,6 +3,7 @@ package org.nervos.neuron.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
@@ -16,6 +17,7 @@ public class SimpleDialog extends Dialog {
     public static final int PASSWORD = 0;
     public static final int TEXT = 1;
 
+    private Context context;
     private TextView okBtn;
     private TextView cancelBtn;
     private TextView titleText;
@@ -47,6 +49,7 @@ public class SimpleDialog extends Dialog {
 
     public SimpleDialog(Context context) {
         super(context, R.style.DefaultDialog);
+        this.context = context;
     }
 
     @Override
@@ -101,6 +104,10 @@ public class SimpleDialog extends Dialog {
 
     public void setMessageHint(String hint) {
         hintStr = hint;
+    }
+
+    public void setMessageHint(@StringRes int hint) {
+        hintStr = context.getString(hint);
     }
 
     public String getMessage() {

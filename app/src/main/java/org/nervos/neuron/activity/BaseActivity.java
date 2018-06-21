@@ -3,6 +3,7 @@ package org.nervos.neuron.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,6 +41,10 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void showProgressBar() {
         showProgressBar(getString(R.string.loading));
+    }
+
+    protected void showProgressBar(@StringRes int message) {
+        showProgressBar(getString(message));
     }
 
     protected void showProgressBar(String message) {
