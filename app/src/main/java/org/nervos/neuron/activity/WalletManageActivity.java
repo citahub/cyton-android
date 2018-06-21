@@ -104,7 +104,7 @@ public class WalletManageActivity extends BaseActivity {
                     @Override
                     public void onOkClick() {
                         if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                         } else {
                             generateKeystore(simpleDialog.getMessage());
                             simpleDialog.dismiss();

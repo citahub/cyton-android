@@ -38,23 +38,20 @@ public class WalletEntity {
     }
 
     /**
-     * 身份凭证
+     * Credentials
      */
     private Credentials credentials;
     /**
-     * 钱包文件密码
+     * wallet password
      */
     private String walletPass;
     /**
-     * Ethereum KeyStore file
+     *  KeyStore file
      */
     private WalletFile walletFile;
-    /**
-     * 助记词
-     */
     private String mnemonic;
     /**
-     * 助记词密码
+     * mnemonic password
      */
     private String passphrase;
     /**
@@ -76,19 +73,11 @@ public class WalletEntity {
         }.start();
     }
 
-    /**
-     * 构造(根据私钥构建)
-     *
-     * @param privateKey 私钥
-     */
-    public WalletEntity(String privateKey) {
-        credentials = Credentials.create(privateKey);
-    }
 
     /**
-     * 创建一个新的钱包(没有助记词的官方钱包)
+     * create a new wallet without mnemonic
      *
-     * @param password wallet file的密码
+     * @param password wallet file password
      * @return
      * @throws Exception
      */
@@ -102,11 +91,10 @@ public class WalletEntity {
     }
 
     /**
-     * 创建新钱包（生成助记词）
+     * create a wallet with mnemonic
      *
-     * @param password 助记词密码，也作为即将生成的wallet file的密码；如果助记词密码为空则不再生成wallet file
-     *                 imtoken助记词密码为null
-     * @param path     路径
+     * @param password mnemonic password and imToken password is null
+     * @param path
      * @return
      * @throws CipherException
      */
@@ -135,11 +123,11 @@ public class WalletEntity {
 
 
     /**
-     * 根据助记词导入一个钱包(imtoken助记词密码为null)
+     * import mnemonic to generate a wallet
      *
-     * @param mnemonic 助记词
-     * @param path     路径 m/44'/60'/0'／0／0   m/purpse'/coin_type'/account'/change/address_index
-     * @return 钱包
+     * @param mnemonic
+     * @param path      m/44'/60'/0'／0／0   m/purpse'/coin_type'/account'/change/address_index
+     * @return wallet
      * @throws CipherException
      */
     public static WalletEntity fromMnemonic(String mnemonic, String path) throws CipherException {
@@ -157,10 +145,10 @@ public class WalletEntity {
 
 
     /**
-     * 根据私钥导入钱包
+     * import private key to generate a wallet
      *
-     * @param privateKey 私钥
-     * @return 钱包
+     * @param privateKey
+     * @return wallet
      * @throws CipherException
      */
     public static WalletEntity fromPrivateKey(BigInteger privateKey) throws CipherException {
@@ -173,10 +161,10 @@ public class WalletEntity {
 
 
     /**
-     * 根据keystore导入钱包
+     * import keystore to generate a wallet
      *
-     * @param keystore 钱包信息
-     * @return 钱包
+     * @param keystore
+     * @return wallet
      * @throws CipherException
      */
     public static WalletEntity fromKeyStore(String password, String keystore) throws CipherException {
@@ -190,9 +178,9 @@ public class WalletEntity {
      * m/purpse'/coin_type'/account'/change/address_index
      * m/44'/60'/0'／0／0
      *
-     * @param seed 种子
-     * @param path 路径 m/44'/60'/0'／0／0
-     * @return key 秘钥
+     * @param seed
+     * @param path  m/44'/60'/0'／0／0
+     * @return key
      */
     private static ECKeyPair createBip44NodeFromSeed(byte[] seed, String path) {
         HdKeyPath p = HdKeyPath.valueOf(path);
@@ -204,11 +192,10 @@ public class WalletEntity {
     }
 
     /**
-     * 导出一个新的wallet file，并记录下当前的wallet file信息
+     * export a new wallet file
      *
-     * @param password 设定一个钱包文件密码
-     * @return 钱包文件
-     * @throws CipherException
+     * @param password wallet file password
+     * @return wallet file
      */
     public static String exportKeyStore(WalletItem walletItem, String password){
         Credentials credentials = Credentials.create(walletItem.privateKey);
@@ -223,10 +210,10 @@ public class WalletEntity {
     }
 
     /**
-     * wallet file的json内容
+     * json content of wallet file
      *
-     * @param wf
-     * @return json格式的内容
+     * @param wf  wallet file
+     * @return json content
      */
     public static String walletFileJson(WalletFile wf) {
         try {
@@ -237,7 +224,7 @@ public class WalletEntity {
     }
 
     /**
-     * 是否合法
+     * check wallet file valid
      *
      * @return
      */
@@ -251,10 +238,10 @@ public class WalletEntity {
     }
 
     /**
-     * 反序列化一个钱包
+     * get a wallet file from byte content
      *
      * @param content
-     * @return 钱包文件
+     * @return wallet file
      */
     public static WalletFile createWalletFile(byte[] content) {
         try {
@@ -268,10 +255,10 @@ public class WalletEntity {
     }
 
     /**
-     * 反序列化钱包
+     * get a wallet file from string content
      *
      * @param content
-     * @return 钱包文件
+     * @return wallet file
      */
     public static WalletFile createWalletFile(String content) {
         try {
@@ -285,10 +272,10 @@ public class WalletEntity {
     }
 
     /**
-     * 反序列化一个钱包
+     * get a wallet file from file
      *
      * @param file
-     * @return 钱包文件
+     * @return wallet file
      */
     public static WalletFile createWalletFile(File file) {
         try {
@@ -302,20 +289,20 @@ public class WalletEntity {
     }
 
     /**
-     * 地址转换
+     * get address from public key
      *
-     * @param number 公钥
-     * @return 地址
+     * @param publicKey
+     * @return address
      */
-    public static String address(BigInteger number) {
-        return Keys.toChecksumAddress(Keys.getAddress(number));
+    public static String address(BigInteger publicKey) {
+        return Keys.toChecksumAddress(Keys.getAddress(publicKey));
     }
 
     /**
-     * 私钥转换
+     * get private key from BigInteger
      *
-     * @param prik 私钥
-     * @return 私钥的hex格式
+     * @param prik private key
+     * @return hex string of private key
      */
     public static String privateKey(BigInteger prik) {
         return Numeric.toHexStringWithPrefixZeroPadded(prik, Keys.PRIVATE_KEY_LENGTH_IN_HEX);

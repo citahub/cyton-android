@@ -161,7 +161,7 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onOkClick() {
                 if (TextUtils.isEmpty(simpleDialog.getMessage())) {
-                    Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
                     Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();

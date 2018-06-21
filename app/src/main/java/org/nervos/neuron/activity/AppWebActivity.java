@@ -66,7 +66,7 @@ public class AppWebActivity extends BaseActivity {
 
     private void initTitleView() {
         titleText = findViewById(R.id.title_bar_center);
-        titleText.setText("浏览器");
+        titleText.setText(R.string.dapp);
         collectText = findViewById(R.id.menu_collect);
         initCollectView();
         findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
@@ -103,17 +103,10 @@ public class AppWebActivity extends BaseActivity {
             webView.reload();
             closeMenuWindow();
         } );
-        findViewById(R.id.menu_dapp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mActivity, "dapp详情", Toast.LENGTH_SHORT).show();
-                closeMenuWindow();
-            }
-        });
     }
 
     private void initCollectView() {
-        collectText.setText(WebAppUtil.isCollectApp(mActivity)? "取消收藏":"收藏");
+        collectText.setText(WebAppUtil.isCollectApp(mActivity)? getString(R.string.cancel_collect):getString(R.string.collect));
         closeMenuWindow();
     }
 
@@ -153,13 +146,11 @@ public class AppWebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return false;
             }
-
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
 //                injectJs();
             }
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -186,7 +177,7 @@ public class AppWebActivity extends BaseActivity {
         @JavascriptInterface
         public void sendTransaction(String tx) {
             if (walletItem == null) {
-                Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
@@ -199,7 +190,7 @@ public class AppWebActivity extends BaseActivity {
         @JavascriptInterface
         public void signTransaction(String tx) {
             if (walletItem == null) {
-                Toast.makeText(mActivity, "您还没有钱包，请先创建或者导入钱包", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 showSignMessageDialog(tx);

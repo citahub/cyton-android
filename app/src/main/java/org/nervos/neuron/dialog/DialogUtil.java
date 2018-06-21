@@ -3,6 +3,8 @@ package org.nervos.neuron.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ public class DialogUtil {
 
     private static AlertDialog dialog;
 
-    public static void showListDialog(Context context, String title, List<String> list,
+    public static void showListDialog(Context context, @StringRes int title, List<String> list,
                                       OnItemClickListener onItemClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -107,4 +107,21 @@
     <string name="wallet_name_exist">该钱包名称已存在</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="password_use_protect_private_key">此密码将被用于保护私钥和交易授权</string>
+    <string name="no_wallet_suggestion">您还没有钱包，请先创建或者导入钱包</string>
+    <string name="dapp">DApp</string>
+    <string name="cancel_collect">取消收藏</string>
+    <string name="collect">收藏</string>
+    <string name="switch_current_wallet">切换当前钱包</string>
+    <string name="password_not_null">密码不能为空</string>
+    <string name="unlock_password">解锁密码</string>
+    <string name="password_again">重复密码</string>
+    <string name="set_password">设定密码</string>
+    <string name="no_find_password_content">没有「找回密码」!</string>
+    <string name="save_password_careful">您的钱包不会被保存在云端，无法提供找回服务，请您谨慎保管</string>
+    <string name="generate_wallet">生成钱包</string>
+    <string name="input_old_password_hint">输入原密码</string>
+    <string name="old_password_not_null">原密码不能为空</string>
+    <string name="new_password_not_null">新密码不能为空</string>
+    <string name="old_password_error">原密码不正确</string>
+    <string name="update_password_success">密码修改成功</string>
 </resources>

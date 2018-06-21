@@ -142,7 +142,7 @@ public class WalletFragment extends BaseFragment {
                 ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
                 if (cm != null) {
                     cm.setPrimaryClip(mClipData);
-                    Toast.makeText(getContext(), "复制成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.copy_success, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -189,7 +189,8 @@ public class WalletFragment extends BaseFragment {
     private void initTitleBarListener() {
         titleBar.setOnRightClickListener(() -> startActivity(new Intent(getActivity(), AddWalletActivity.class)));
 
-        titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(), "切换当前钱包", walletNameList, which -> {
+        titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(),
+                R.string.switch_current_wallet, walletNameList, which -> {
             SharePrefUtil.putCurrentWalletName(walletNameList.get(which));
             initWalletData(true);
         }));

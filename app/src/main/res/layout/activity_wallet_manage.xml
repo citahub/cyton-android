@@ -117,7 +117,7 @@
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
         android:background="@color/white"
-        android:text="修改密码"
+        android:text="@string/change_password"
         android:textSize="16sp"
         android:textColor="@color/font_black"/>
 

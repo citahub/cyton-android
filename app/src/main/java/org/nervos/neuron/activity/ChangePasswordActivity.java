@@ -43,20 +43,20 @@ public class ChangePasswordActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(oldPasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(ChangePasswordActivity.this, "原密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.old_password_not_null, Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(newPasswordEdit.getText().toString().trim())){
-                    Toast.makeText(ChangePasswordActivity.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.new_password_not_null, Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(newRePasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(ChangePasswordActivity.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.new_password_not_null, Toast.LENGTH_SHORT).show();
                 } else if (!TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                         newRePasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(ChangePasswordActivity.this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
                 } else if (!TextUtils.equals(oldPasswordEdit.getText().toString().trim(),
                         walletItem.password)) {
-                    Toast.makeText(ChangePasswordActivity.this, "原密码不正确", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.old_password_error, Toast.LENGTH_SHORT).show();
                 } else {
-                    DBWalletUtil.updateWalletPassword(ChangePasswordActivity.this, walletItem.name, newPasswordEdit.getText().toString());
-                    Toast.makeText(ChangePasswordActivity.this, "密码修改成功", Toast.LENGTH_SHORT).show();
+                    DBWalletUtil.updateWalletPassword(mActivity, walletItem.name, newPasswordEdit.getText().toString());
+                    Toast.makeText(mActivity, R.string.update_password_success, Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }

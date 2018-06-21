@@ -74,7 +74,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="设定密码"
+            android:text="@string/set_password"
             android:textColor="@color/font_black"
             android:textSize="15sp"/>
 
@@ -111,7 +111,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="重复密码"
+            android:text="@string/password_again"
             android:textColor="@color/font_black"
             android:textSize="15sp"/>
 
@@ -120,7 +120,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
-            android:hint="请再次输入密码"
+            android:hint="@string/input_new_password_again_hint"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textSize="14sp"

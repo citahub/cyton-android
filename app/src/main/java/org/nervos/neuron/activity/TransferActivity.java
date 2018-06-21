@@ -208,17 +208,17 @@ public class TransferActivity extends BaseActivity {
 
     private void showPasswordConfirmView(String value, ProgressBar progressBar) {
         SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-        simpleDialog.setTitle("请输入密码");
+        simpleDialog.setTitle(R.string.input_password);
         simpleDialog.setMessageHint("password");
         simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
             public void onOkClick() {
                 if (TextUtils.isEmpty(simpleDialog.getMessage())) {
-                    Toast.makeText(mActivity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
-                    Toast.makeText(mActivity, "密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 simpleDialog.dismiss();

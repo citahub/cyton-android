@@ -92,14 +92,6 @@
 
             <View style="@style/separateLineLong"/>
 
-            <TextView
-                android:id="@+id/menu_dapp"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:textColor="@color/default_black"
-                android:text="DAPP详情"/>
         </LinearLayout>
 
     </FrameLayout>

@@ -93,7 +93,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="解锁密码"
+            android:text="@string/unlock_password"
             android:textColor="@color/font_black"
             android:textSize="14sp"/>
 
@@ -101,7 +101,7 @@
             android:id="@+id/edit_wallet_password"
             android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/white"
-            android:hint="请输入密码"
+            android:hint="@string/input_password"
             android:inputType="textPassword"
             android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:text="重复密码"
+            android:text="@string/password_again"
             android:textColor="@color/font_black"
             android:textSize="14sp"/>
 
@@ -140,7 +140,7 @@
             android:id="@+id/edit_wallet_repassword"
             android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/white"
-            android:hint="请重新输入密码"
+            android:hint="@string/input_password"
             android:inputType="textPassword"
             android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
