@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
@@ -16,8 +15,8 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -167,11 +166,8 @@ public class MainActivity extends BaseActivity {
                 hideFragments(fragmentTransaction);
                 setNavigationItem(AppFragment.TAG);
                 return true;
-            } else if (appFragment != null && appFragment.canGoBack()) {
-                appFragment.goBack();
-                return true;
             } else if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.press_back_finish, Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
                 return false;
             } else {

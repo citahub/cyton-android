@@ -60,7 +60,9 @@ public class TransactionDetailActivity extends BaseActivity {
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
         transactionHashText.setText(transactionItem.hash);
-        transactionValueText.setText(transactionItem.getValue());
+        String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
+                "+" : "-") + transactionItem.getValue();
+        transactionValueText.setText(value);
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);
         if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
@@ -86,7 +88,7 @@ public class TransactionDetailActivity extends BaseActivity {
         ClipData mClipData = ClipData.newPlainText("value", value);
         if (cm != null) {
             cm.setPrimaryClip(mClipData);
-            Toast.makeText(mActivity, "复制成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -14,10 +14,6 @@
             android:layout_centerVertical="true"
             android:textColor="@color/default_black"
             android:textSize="18sp"/>
-        <View
-            android:id="@+id/dialog_separate"
-            style="@style/separateLineLong"
-            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 
 </FrameLayout>

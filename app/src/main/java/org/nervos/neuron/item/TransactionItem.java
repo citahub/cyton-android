@@ -42,7 +42,7 @@ public class TransactionItem implements Parcelable{
         BigInteger bigValue = new BigInteger(value);
         double value = bigValue.multiply(BigInteger.valueOf(10000))
                 .divide(ETHDecimal).doubleValue()/10000.0;
-        return NumberUtil.getDecimal_2(value) + (TextUtils.isEmpty(content)? "eth":"");
+        return NumberUtil.getDecimal_4(value) + (TextUtils.isEmpty(content)? "eth":"");
     }
 
 

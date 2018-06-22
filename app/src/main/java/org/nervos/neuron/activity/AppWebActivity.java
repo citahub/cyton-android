@@ -143,9 +143,10 @@ public class AppWebActivity extends BaseActivity {
         });
         webView.setWebViewClient(new WebViewClient(){
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
             }
+
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);

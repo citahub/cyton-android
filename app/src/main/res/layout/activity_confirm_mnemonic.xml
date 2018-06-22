@@ -29,7 +29,7 @@
     <com.zhy.view.flowlayout.TagFlowLayout
         android:id="@+id/mnemonic_text_layout"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="150dp"
         zhy:max_select="-1"
         android:layout_margin="@dimen/default_margin"
         android:background="@color/default_white_f4"

@@ -15,6 +15,7 @@ import com.zhy.view.flowlayout.TagView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
+import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.WalletFragment;
 
@@ -118,6 +119,8 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
                     intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
                     startActivity(intent);
+                    EventBus.getDefault().post(new CloseWalletInfoEvent());
+                    finish();
                 } else {
                     Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
                 }

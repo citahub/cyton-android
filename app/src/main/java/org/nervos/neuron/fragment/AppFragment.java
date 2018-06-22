@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -70,13 +71,13 @@ public class AppFragment extends Fragment {
 
         webView.setWebViewClient(new WebViewClient(){
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (request.getUrl().toString().contains(INNER_URL)) {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.contains(INNER_URL)) {
                     return false;
                 } else {
-                    LogUtil.d(request.getUrl().toString());
+                    LogUtil.d(url);
                     Intent intent = new Intent(getContext(), AppWebActivity.class);
-                    intent.putExtra(AppWebActivity.EXTRA_URL, request.getUrl().toString());
+                    intent.putExtra(AppWebActivity.EXTRA_URL, url);
                     startActivity(intent);
                     return true;
                 }
@@ -115,15 +116,6 @@ public class AppFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    public boolean canGoBack() {
-        return webView.canGoBack();
-    }
-
-
-    public void goBack() {
-        webView.goBack();
     }
 
 }

@@ -211,7 +211,7 @@ public class DBWalletUtil extends DBUtil {
      */
     public static WalletItem addOriginTokenToWallet(Context context, WalletItem walletItem) {
         List<TokenItem> tokenItemList = new ArrayList<>();
-        tokenItemList.add(new TokenItem(ETH, R.drawable.ethereum, 0, -1));
+        tokenItemList.add(new TokenItem(ETH, R.drawable.ether_big, 0, -1));
         walletItem.tokenItems = tokenItemList;
 
         List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);

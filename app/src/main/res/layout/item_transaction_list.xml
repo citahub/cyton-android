@@ -29,12 +29,11 @@
                 android:id="@+id/transaction_id_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxEms="15"
-                android:ellipsize="end"
+                android:maxEms="8"
+                android:ellipsize="middle"
                 android:singleLine="true"
                 android:textSize="14sp"
-                android:textColor="@color/font_black"
-                android:text="3232222"/>
+                android:textColor="@color/font_black"/>
 
             <TextView
                 android:id="@+id/transaction_time_text"
@@ -58,15 +57,18 @@
                 android:id="@+id/transaction_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/font_black"
-                android:text="+0.15eth"/>
+                android:text="+21.15eth"/>
 
             <TextView
                 android:id="@+id/transaction_chain_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_gravity="end"
                 android:textSize="14sp"
                 android:textColor="@color/default_gray_6"
                 android:text="Ethereum Mainnet"/>

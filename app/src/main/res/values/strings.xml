@@ -131,4 +131,14 @@
     <string name="input_wallet_name_hint">输入钱包名称</string>
     <string name="delete_success">删除成功</string>
     <string name="qrcode_handle_fail">解析二维码失败</string>
+    <string name="wallet_manage_title">钱包管理</string>
+    <string name="wallet_photo">钱包头像</string>
+    <string name="wallet_address">钱包地址</string>
+    <string name="export_keystore">导出KeyStore</string>
+    <string name="transaction_detail_title">交易详情</string>
+    <string name="ethereum_mainnet">Ethereum Mainnet</string>
+    <string name="source_code">源代码</string>
+    <string name="source_and_private">服务与隐私条款</string>
+    <string name="contact_us">联系我们</string>
+    <string name="press_back_finish">再按一次返回键退出</string>
 </resources>

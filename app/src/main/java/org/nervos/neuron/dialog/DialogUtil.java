@@ -3,11 +3,17 @@ package org.nervos.neuron.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -26,7 +32,7 @@ public class DialogUtil {
     private static AlertDialog dialog;
 
     public static void showListDialog(Context context, @StringRes int title, List<String> list,
-                                      OnItemClickListener onItemClickListener) {
+                                      String currentName, OnItemClickListener onItemClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View titleView = layoutInflater.inflate(R.layout.dialog_list_title_view, null);
@@ -37,7 +43,7 @@ public class DialogUtil {
         builder.setCustomTitle(titleView);
         String[] contents = new String[list.size()];
         list.toArray(contents);
-        DialogAdapter adapter = new DialogAdapter(context, list);
+        DialogAdapter adapter = new DialogAdapter(context, list, currentName);
         builder.setAdapter(adapter, (dialog, which) -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(which);
@@ -47,20 +53,34 @@ public class DialogUtil {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+        initDialogAttributes(context);
+    }
+
+    private static void initDialogAttributes(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int mScreenWidth = dm.widthPixels;
+        Window dialogWindow = dialog.getWindow();
+        WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
+        wmlp.gravity = Gravity.CENTER;
+        wmlp.width = (int) (mScreenWidth * 0.75);
+        dialogWindow.setAttributes(wmlp);
     }
 
     private static class DialogAdapter extends BaseAdapter {
 
         private List<String> list;
         private LayoutInflater layoutInflater;
+        private String currentName;
+        private Context context;
 
-        public DialogAdapter(Context context, List<String> list) {
+        public DialogAdapter(Context context, List<String> list, String currentName) {
             this.list = list;
             this.layoutInflater = LayoutInflater.from(context);
+            this.currentName = currentName;
+            this.context = context;
         }
         private class ViewHolder {
             TextView itemText;
-            View separateView;
         }
         @Override
         public int getCount() {
@@ -81,16 +101,15 @@ public class DialogUtil {
                 holder = new ViewHolder();
                 convertView = layoutInflater.inflate(R.layout.item_dialog_list, null);
                 holder.itemText = convertView.findViewById(R.id.dialog_item_text);
-                holder.separateView = convertView.findViewById(R.id.dialog_separate);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
             holder.itemText.setText(list.get(position));
-            if (position == list.size() -1) {
-                holder.separateView.setVisibility(View.GONE);
+            if (currentName.equals(list.get(position))) {
+                holder.itemText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
             } else {
-                holder.separateView.setVisibility(View.VISIBLE);
+                holder.itemText.setTextColor(ContextCompat.getColor(context, R.color.default_black));
             }
             return convertView;
         }

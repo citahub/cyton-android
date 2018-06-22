@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
@@ -123,6 +124,11 @@ public class CreateWalletActivity extends BaseActivity {
             DBWalletUtil.saveWallet(mActivity, walletItem);
             SharePrefUtil.putCurrentWalletName(walletItem.name);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCloseWalletEvent(CloseWalletInfoEvent event) {
+        finish();
     }
 
 

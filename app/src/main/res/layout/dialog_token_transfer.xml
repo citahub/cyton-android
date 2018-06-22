@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" 
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_width="280dp"
     android:layout_height="300dp">
@@ -15,12 +16,12 @@
         android:textColor="@color/default_black"
         android:textStyle="bold" />
     
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/dialog_token_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="@dimen/default_margin"
-        android:src="@drawable/ethereum" />
+        fresco:placeholderImage="@drawable/ether_big"/>
 
     <TextView
         android:id="@+id/dialog_token_balance"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,7 +81,9 @@ public class TransactionFragment extends BaseFragment {
 
     private void initAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.recycle_line));
+        recyclerView.addItemDecoration(decoration);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -154,8 +157,8 @@ public class TransactionFragment extends BaseFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_history_view, parent, false);
-                ((TextView)view.findViewById(R.id.no_history_text)).setText(R.string.empty_no_transaction_data);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
+                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
                 return new RecyclerView.ViewHolder(view){};
             }
             TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(
@@ -172,7 +175,9 @@ public class TransactionFragment extends BaseFragment {
                     viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 }
                 viewHolder.transactionIdText.setText(transactionItemList.get(position).hash);
-                viewHolder.transactionAmountText.setText(transactionItemList.get(position).getValue());
+                String value = (transactionItemList.get(position).from.equalsIgnoreCase(walletItem.address)?
+                        "+" : "-") + transactionItemList.get(position).getValue();
+                viewHolder.transactionAmountText.setText(value);
                 viewHolder.transactionChainNameText.setText(transactionItemList.get(position).chainName);
                 viewHolder.transactionTimeText.setText(transactionItemList.get(position).getDate());
                 viewHolder.itemView.setTag(position);

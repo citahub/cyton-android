@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.web3j.protobuf.ConvertStrByte;
@@ -52,6 +54,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscriber;
 
 public class WalletFragment extends BaseFragment {
 
@@ -120,6 +123,7 @@ public class WalletFragment extends BaseFragment {
         }
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -164,13 +168,21 @@ public class WalletFragment extends BaseFragment {
 
     private void initAdapter() {
         tokenRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        tokenRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.recycle_line));
+        tokenRecycler.addItemDecoration(decoration);
         tokenRecycler.setAdapter(tokenAdapter);
 
         tokenAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 TokenTransferDialog dialog = new TokenTransferDialog(getContext(), tokenItemList.get(position));
+                if (TextUtils.isEmpty(tokenItemList.get(position).avatar)) {
+                    dialog.setTokenImage(tokenItemList.get(position).chainId < 0?
+                            R.drawable.ether_small:R.mipmap.ic_launcher);
+                } else {
+                    dialog.setTokenImage(tokenItemList.get(position).avatar);
+                }
                 dialog.setOnReceiveClickListener(v -> {
                     startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class));
                     dialog.dismiss();
@@ -190,7 +202,7 @@ public class WalletFragment extends BaseFragment {
         titleBar.setOnRightClickListener(() -> startActivity(new Intent(getActivity(), AddWalletActivity.class)));
 
         titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(),
-                R.string.switch_current_wallet, walletNameList, which -> {
+                R.string.switch_current_wallet, walletNameList, walletItem.name, which -> {
             SharePrefUtil.putCurrentWalletName(walletNameList.get(which));
             initWalletData(true);
         }));
@@ -211,8 +223,8 @@ public class WalletFragment extends BaseFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             if (viewType == VIEW_TYPE_EMPTY) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_history_view, parent, false);
-                ((TextView)view.findViewById(R.id.no_history_text)).setText(R.string.empty_no_token_data);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
+                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
                 return new RecyclerView.ViewHolder(view){};
             }
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(
@@ -225,10 +237,16 @@ public class WalletFragment extends BaseFragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder)holder;
-                viewHolder.tokenImage.setImageResource(R.drawable.ethereum);
+                LogUtil.d("avatar: " + tokenItemList.get(position).avatar);
+                if (TextUtils.isEmpty(tokenItemList.get(position).avatar)) {
+                    viewHolder.tokenImage.setImageResource(tokenItemList.get(position).chainId < 0?
+                            R.drawable.ether_small : R.mipmap.ic_launcher);
+                } else {
+                    viewHolder.tokenImage.setImageURI(tokenItemList.get(position).avatar);
+                }
                 if (tokenItemList.get(position) != null) {
                     viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
-                    viewHolder.tokenAmount.setText(String.valueOf(tokenItemList.get(position).balance));
+                    viewHolder.tokenAmount.setText(NumberUtil.getDecimal_4(tokenItemList.get(position).balance));
                 }
                 viewHolder.itemView.setTag(position);
             }

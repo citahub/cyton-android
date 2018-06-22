@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorPrimary"
-            app:title="交易详情"
+            app:title="@string/transaction_detail_title"
             app:isShowLeft="true"/>
 
         <RelativeLayout
@@ -55,10 +55,10 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/default_black"
-                android:lines="1"
-                android:ellipsize="end"
-                android:maxEms="10"
-                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:maxEms="8"
+                android:layout_marginTop="10dp"
                 android:layout_alignStart="@id/wallet_name"
                 android:layout_below="@id/wallet_name"/>
 
@@ -69,7 +69,6 @@
                 android:layout_marginEnd="@dimen/default_margin"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="10.4eth"
                 android:textColor="@color/default_black"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -83,6 +82,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/default_margin"
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
@@ -115,7 +115,7 @@
                     android:id="@+id/chain_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ethereum Mainnet"
+                    android:text="@string/ethereum_mainnet"
                     android:layout_marginStart="@dimen/default_margin"
                     android:textColor="@color/default_black"
                     android:textSize="14sp"

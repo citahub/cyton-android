@@ -2,14 +2,16 @@ package org.nervos.neuron.item;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 
 public class TokenItem implements Parcelable{
 
     private static int NERVOS_DECIMAL = 18;
 
     public String name;
-    public int image;
-    public String avatar;
+    @DrawableRes
+    public int image;               // local resource
+    public String avatar;           // image uri
     public String contractAddress;
     public String symbol;
     public int decimals;

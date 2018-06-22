@@ -102,7 +102,7 @@ public class TokenManageActivity extends BaseActivity {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder)holder;
                 if (TextUtils.isEmpty(tokenList.get(position).logo.src)) {
-                    viewHolder.tokenImage.setImageResource(R.drawable.ethereum);
+                    viewHolder.tokenImage.setImageResource(R.drawable.ether_big);
                 } else {
                     viewHolder.tokenImage.setImageURI(Uri.parse(tokenList.get(position).logo.src));
                 }

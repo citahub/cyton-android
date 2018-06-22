@@ -7,14 +7,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
+import org.nervos.neuron.event.CloseWalletInfoEvent;
+import org.nervos.neuron.event.TokenRefreshEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BackupMnemonicActivity extends AppCompatActivity{
+public class BackupMnemonicActivity extends BaseActivity{
 
     private TextView mnemonicText;
 
@@ -22,6 +27,8 @@ public class BackupMnemonicActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup_mnemonic);
+
+        EventBus.getDefault().register(mActivity);
 
         mnemonicText = findViewById(R.id.mnemonic_text);
         String mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
@@ -37,5 +44,17 @@ public class BackupMnemonicActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCloseWalletEvent(CloseWalletInfoEvent event) {
+        finish();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(mActivity);
     }
 }

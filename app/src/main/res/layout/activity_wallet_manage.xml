@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="钱包管理"
+        app:title="@string/wallet_manage_title"
         app:isShowLeft="true"/>
 
     <RelativeLayout
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="钱包头像"
+            android:text="@string/wallet_photo"
             android:textSize="16sp"
             android:textColor="@color/font_black"/>
         <de.hdodenhof.circleimageview.CircleImageView
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:text="钱包名称"
+            android:text="@string/wallet_name"
             android:textSize="16sp"
             android:textColor="@color/font_black"/>
 
@@ -64,7 +64,7 @@
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:layout_alignParentEnd="true"
-            android:text="钱包名称"
+            android:text="@string/wallet_name"
             android:textSize="16sp"
             android:textColor="@color/default_gray_9"/>
     </RelativeLayout>
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:text="钱包地址"
+            android:text="@string/wallet_address"
             android:textSize="16sp"
             android:textColor="@color/font_black"/>
 
@@ -132,23 +132,23 @@
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
         android:background="@color/white"
-        android:text="导出KeyStore"
+        android:text="@string/export_keystore"
         android:textSize="16sp"
         android:textColor="@color/font_black"/>
 
     <View style="@style/separateLineLong"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <TextView
         android:id="@+id/delete_wallet_button"
-        android:layout_width="match_parent"
+        android:layout_width="120dp"
         android:layout_height="40dp"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
-        android:background="@drawable/button_corner_blue_shape"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
         android:textSize="15sp"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimary"
         android:text="@string/delete_wallet"/>
 
 </LinearLayout>

@@ -53,24 +53,18 @@ public class EthRpcService extends BaseRpcService {
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
-    public static EthGetBalance getEthBalance(String address) {
+    public static double getEthBalance(String address) {
         try {
-            return service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
+            EthGetBalance ethGetBalance = service.ethGetBalance(address,
+                    DefaultBlockParameterName.LATEST).send();
+            if (ethGetBalance != null) {
+                return ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
+                        .divide(ETHDecimal).doubleValue()/10000.0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    public static TokenItem getDefaultEth(String address) {
-        EthGetBalance ethGetBalance = EthRpcService.getEthBalance(address);
-        if (ethGetBalance != null) {
-            double balance = ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
-                    .divide(ETHDecimal).doubleValue()/10000.0;
-            LogUtil.d("eth balanceOf: " + balance);
-            return new TokenItem(ETH, R.drawable.ethereum, balance, -1);
-        }
-        return null;
+        return 0.0;
     }
 
     public static Observable<BigInteger> getEthGasPrice() {

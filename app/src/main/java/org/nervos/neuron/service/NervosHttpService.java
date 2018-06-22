@@ -7,10 +7,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.response.EthTransactionResponse;
 import org.nervos.neuron.response.NervosTransactionResponse;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.io.IOException;
@@ -71,6 +73,9 @@ public class NervosHttpService {
             public List<TransactionItem> call() throws Exception {
                 EthTransactionResponse response =
                         new Gson().fromJson(ethCall.execute().body().string(), EthTransactionResponse.class);
+                for(TransactionItem item : response.result) {
+                    item.chainName = ConstantUtil.ETH_MAIN_NET;
+                }
                 return response.result;
             }
         }).subscribeOn(Schedulers.io());

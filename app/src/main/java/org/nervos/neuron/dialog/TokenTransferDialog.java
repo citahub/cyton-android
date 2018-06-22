@@ -2,11 +2,16 @@ package org.nervos.neuron.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
@@ -15,11 +20,13 @@ public class TokenTransferDialog extends Dialog {
 
     private TextView tokenNameText;
     private TextView tokenBalanceText;
-    private ImageView tokenImage;
+    private SimpleDraweeView tokenImage;
     private AppCompatButton transferButton;
     private AppCompatButton receiveButton;
 
     private TokenItem tokenItem;
+    private int imageResId;
+    private String imageUri;
 
     private OnTransferClickListener onTransferClickListener;
     private OnReceiveClickListener onReceiveClickListener;
@@ -47,7 +54,12 @@ public class TokenTransferDialog extends Dialog {
         receiveButton = findViewById(R.id.dialog_button_token_receive);
 
         tokenNameText.setText(tokenItem.symbol);
-        tokenImage.setImageResource(tokenItem.image);
+        if (TextUtils.isEmpty(tokenItem.avatar)) {
+            tokenImage.setImageResource(tokenItem.chainId < 0?
+                    R.drawable.ether_big:R.mipmap.ic_launcher);
+        } else {
+            tokenImage.setImageURI(tokenItem.avatar);
+        }
         tokenBalanceText.setText(String.valueOf(tokenItem.balance));
     }
 
@@ -76,6 +88,14 @@ public class TokenTransferDialog extends Dialog {
 
     public void setOnTransferClickListener(OnTransferClickListener onTransferClickListener) {
         this.onTransferClickListener = onTransferClickListener;
+    }
+
+    public void setTokenImage(@DrawableRes int resId) {
+        this.imageResId = resId;
+    }
+
+    public void setTokenImage(String uriString) {
+        this.imageUri = uriString;
     }
 
     public interface OnTransferClickListener{
