@@ -12,17 +12,17 @@ import java.text.DecimalFormat;
 public class NumberUtil {
 
     public static String getDecimal_6(Double value) {
-        DecimalFormat fmt = new DecimalFormat("##0.000000");
+        DecimalFormat fmt = new DecimalFormat("0.######");
         return fmt.format(value);
     }
 
     public static String getDecimal_4(Double value) {
-        DecimalFormat fmt = new DecimalFormat("##0.0000");
+        DecimalFormat fmt = new DecimalFormat("0.####");
         return fmt.format(value);
     }
 
     public static String getDecimal_2(Double value) {
-        DecimalFormat fmt = new DecimalFormat("##0.00");
+        DecimalFormat fmt = new DecimalFormat("0.##");
         return fmt.format(value);
     }
 

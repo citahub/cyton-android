@@ -33,6 +33,7 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.crypto.Keys;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.math.BigInteger;
@@ -63,8 +64,6 @@ public class TransferActivity extends BaseActivity {
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BottomSheetDialog sheetDialog;
-
-    private ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     private String tokenUnit = "eth";
     private BigInteger mGasPrice;

@@ -64,9 +64,9 @@
         <LinearLayout
             android:id="@+id/menu_layout"
             android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:layout_gravity="end"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="vertical"
             android:background="@drawable/menu_window">
 

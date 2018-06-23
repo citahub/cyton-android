@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -88,7 +89,7 @@ public class SimpleDialog extends Dialog {
         titleText = findViewById(R.id.dialog_title);
         messageEdit = findViewById(R.id.dialog_edit_message);
         if (type == PASSWORD) {
-            messageEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            messageEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
         if (!TextUtils.isEmpty(titleStr)) {
             titleText.setText(titleStr);
