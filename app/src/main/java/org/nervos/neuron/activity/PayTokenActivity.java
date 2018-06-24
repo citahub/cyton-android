@@ -79,12 +79,14 @@ public class PayTokenActivity extends BaseActivity {
         if (transactionRequest.isEthereum()) {
             payAddressText.setText(transactionRequest.to);
             payAmountText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_4(transactionRequest.getGas()));
+            paySumText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()
+                    + transactionRequest.getGas()));
             payDataText.setText(transactionRequest.data);
         } else {
             payAddressText.setText(transactionRequest.to);
             payAmountText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_4(transactionRequest.getQuota()));
+            paySumText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()
+                    + transactionRequest.getQuota()));
             payDataText.setText(transactionRequest.data);
         }
 

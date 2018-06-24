@@ -5,7 +5,8 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/default_margin"
         android:background="@color/white"
         android:orientation="vertical">
         <RelativeLayout
@@ -119,6 +120,7 @@
             android:background="@color/default_gray_c"/>
 
         <RelativeLayout
+            android:id="@+id/confirm_fee_layout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingLeft="@dimen/default_margin"

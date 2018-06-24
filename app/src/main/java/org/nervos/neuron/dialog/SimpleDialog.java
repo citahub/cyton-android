@@ -24,6 +24,7 @@ public class SimpleDialog extends Dialog {
     private TextView titleText;
     private AppCompatEditText messageEdit;
     private String titleStr;
+    private int titleResId;
     private String hintStr;
     private int type = TEXT;
 
@@ -93,6 +94,8 @@ public class SimpleDialog extends Dialog {
         }
         if (!TextUtils.isEmpty(titleStr)) {
             titleText.setText(titleStr);
+        } else {
+            titleText.setText(titleResId);
         }
         if (!TextUtils.isEmpty(hintStr)) {
             messageEdit.setHint(hintStr);
@@ -101,6 +104,10 @@ public class SimpleDialog extends Dialog {
 
     public void setTitle(String title) {
         titleStr = title;
+    }
+
+    public void setTitle(@StringRes int titleResId) {
+        this.titleResId = titleResId;
     }
 
     public void setMessageHint(String hint) {

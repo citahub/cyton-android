@@ -141,9 +141,9 @@ public class TransferActivity extends BaseActivity {
 
         nextActionButton.setOnClickListener(v -> {
             if (TextUtils.isEmpty(receiveAddressEdit.getText().toString().trim())) {
-                Toast.makeText(mActivity, "转账地址不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.transfer_address_not_null, Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
-                Toast.makeText(mActivity, "转账金额不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
             } else {
                 sheetDialog = new BottomSheetDialog(mActivity);
                 sheetDialog.setCancelable(false);
@@ -187,6 +187,7 @@ public class TransferActivity extends BaseActivity {
         toAddress.setText(receiveAddressEdit.getText().toString());
         valueText.setText(transferValueEdit.getText().toString());
         feeConfirmText.setText(feeText.getText().toString());
+        view.findViewById(R.id.confirm_fee_layout).setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
 
         view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override

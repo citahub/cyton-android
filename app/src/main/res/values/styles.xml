@@ -33,7 +33,7 @@
 
     <style name="DefaultDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/dialog_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -44,7 +44,7 @@
 
     <style name="InputDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/dialog_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -55,7 +55,7 @@
 
     <style name="TransferDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/dialog_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>

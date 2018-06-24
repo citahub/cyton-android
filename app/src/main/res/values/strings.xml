@@ -142,4 +142,6 @@
     <string name="press_back_finish">再按一次返回键退出</string>
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
+    <string name="transfer_address_not_null">转账地址不能为空</string>
+    <string name="transfer_amount_not_null">转账金额不能为空</string>
 </resources>
