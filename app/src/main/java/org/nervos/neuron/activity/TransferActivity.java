@@ -268,7 +268,7 @@ public class TransferActivity extends BaseActivity {
             @Override
             public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                 if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
-                    Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     sheetDialog.dismiss();
                     finish();
@@ -277,7 +277,7 @@ public class TransferActivity extends BaseActivity {
                     Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -307,7 +307,7 @@ public class TransferActivity extends BaseActivity {
                 @Override
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
-                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
@@ -316,7 +316,7 @@ public class TransferActivity extends BaseActivity {
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -346,7 +346,7 @@ public class TransferActivity extends BaseActivity {
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
@@ -356,7 +356,7 @@ public class TransferActivity extends BaseActivity {
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -378,15 +378,14 @@ public class TransferActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable e) {
                     e.printStackTrace();
-                    Toast.makeText(TransferActivity.this,
-                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     sheetDialog.dismiss();
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-                        Toast.makeText(TransferActivity.this, "转账成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
@@ -395,7 +394,7 @@ public class TransferActivity extends BaseActivity {
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

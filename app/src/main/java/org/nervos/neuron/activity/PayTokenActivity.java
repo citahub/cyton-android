@@ -201,7 +201,7 @@ public class PayTokenActivity extends BaseActivity {
                 public void onError(Throwable e) {
                     e.printStackTrace();
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
@@ -214,7 +214,7 @@ public class PayTokenActivity extends BaseActivity {
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -237,14 +237,14 @@ public class PayTokenActivity extends BaseActivity {
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                         sheetDialog.dismiss();
                         DBChainUtil.saveChain(mActivity, chainItem);
-                        Toast.makeText(mActivity, "转账成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
                         sheetDialog.dismiss();
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(mActivity, "转账失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
