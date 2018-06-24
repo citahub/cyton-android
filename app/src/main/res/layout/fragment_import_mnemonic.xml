@@ -131,7 +131,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/unlock_password"
+                android:text="@string/set_password"
                 android:textColor="@color/font_black"
                 android:textSize="14sp"/>
 

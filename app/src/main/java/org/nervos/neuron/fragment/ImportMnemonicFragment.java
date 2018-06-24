@@ -100,20 +100,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
                     Toast.makeText(getContext(), "该钱包名称已存在", Toast.LENGTH_SHORT).show();
                 } else {
-                    showProgressBar("钱包导入中...");
-                    cachedThreadPool.execute(() -> {
-                        if (generateAndSaveWallet()) {
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
-                            startActivity(intent);
-                            passwordEdit.post(() -> dismissProgressBar());
-                        } else {
-                            passwordEdit.post(() -> {
-                                Toast.makeText(getContext(), "该钱包地址已存在", Toast.LENGTH_SHORT).show();
-                                dismissProgressBar();
-                            });
-                        }
-                    });
+                    cachedThreadPool.execute(() -> generateAndSaveWallet());
                 }
             }
         });
@@ -147,26 +134,40 @@ public class ImportMnemonicFragment extends BaseFragment {
 
     }
 
-
-    private boolean generateAndSaveWallet() {
+    private void generateAndSaveWallet() {
+        passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
+        WalletEntity walletEntity;
         try {
-            WalletEntity walletEntity = WalletEntity.fromMnemonic(
+            walletEntity = WalletEntity.fromMnemonic(
                     mnemonicEdit.getText().toString().trim(), currentPath);
-            if (DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
-                return false;
-            }
-            WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
-            walletItem.name = walletNameEdit.getText().toString().trim();
-            walletItem.password = passwordEdit.getText().toString().trim();
-            walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
-            DBWalletUtil.saveWallet(getContext(), walletItem);
-            SharePrefUtil.putCurrentWalletName(walletItem.name);
-            return true;
         } catch (CipherException e) {
             e.printStackTrace();
-            passwordEdit.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
-            return false;
+            passwordEdit.post(() -> {
+                dismissProgressBar();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+            return;
         }
+        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
+            passwordEdit.post(() -> {
+                dismissProgressBar();
+                Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+            });
+            return;
+        }
+        WalletItem walletItem = WalletItem.fromWalletEntity(
+                passwordEdit.getText().toString().trim(), walletEntity);
+        walletItem.name = walletNameEdit.getText().toString().trim();
+        walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
+        DBWalletUtil.saveWallet(getContext(), walletItem);
+        SharePrefUtil.putCurrentWalletName(walletItem.name);
+        passwordEdit.post(() -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+            startActivity(intent);
+            Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
+            dismissProgressBar();
+        });
     }
 
     private boolean isWalletValid() {

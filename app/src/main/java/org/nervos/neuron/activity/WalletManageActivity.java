@@ -14,10 +14,12 @@ import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -105,7 +107,9 @@ public class WalletManageActivity extends BaseActivity {
                     public void onOkClick() {
                         if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
                             Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
+                            Toast.makeText(mActivity, R.string.wallet_passworrd_error, Toast.LENGTH_SHORT).show();
+                        }else {
                             generateKeystore(simpleDialog.getMessage());
                             simpleDialog.dismiss();
                         }
@@ -127,7 +131,7 @@ public class WalletManageActivity extends BaseActivity {
                 deleteDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick() {
-                        if (!walletItem.password.equals(deleteDialog.getMessage())) {
+                        if (!AESCrypt.checkPassword(deleteDialog.getMessage(), walletItem)) {
                             Toast.makeText(mActivity, R.string.wallet_passworrd_error, Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -158,13 +162,19 @@ public class WalletManageActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                String keystore = WalletEntity.exportKeyStore(walletItem, password);
-                walletNameText.post(() -> {
-                    Intent intent = new Intent(mActivity, ExportKeystoreActivity.class);
-                    intent.putExtra(ExportKeystoreActivity.EXTRA_KEYSTORE, keystore);
-                    startActivity(intent);
-                    dismissProgressBar();
-                });
+                try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    String keystore = WalletEntity.exportKeyStore(password, privateKey);
+                    walletNameText.post(() -> {
+                        Intent intent = new Intent(mActivity, ExportKeystoreActivity.class);
+                        intent.putExtra(ExportKeystoreActivity.EXTRA_KEYSTORE, keystore);
+                        startActivity(intent);
+                        dismissProgressBar();
+                    });
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.generate_keystore_fail, Toast.LENGTH_SHORT).show();
+                }
             }
         }.start();
 

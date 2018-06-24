@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -16,16 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
+import java.security.GeneralSecurityException;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -252,68 +256,101 @@ public class AppWebActivity extends BaseActivity {
                 sheetDialog.dismiss();
             }
         });
-        initSignNervosAction(view, tx);
-        return view;
-    }
-
-    private void initSignEthAction(View view, String tx) {
         view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observable.fromCallable(new Callable<Sign.SignatureData>() {
-                    @Override
-                    public Sign.SignatureData call() {
-                        return Sign.signMessage(tx.getBytes(),
-                                ECKeyPair.create(Numeric.toBigInt(walletItem.privateKey)));
-                    }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Sign.SignatureData>() {
-                    @Override
-                    public void onCompleted() {
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onNext(Sign.SignatureData signatureData) {
-                        LogUtil.d("signatureData: " + new String(signatureData.getR()));
-                    }
-                });
+                showPasswordConfirmView(progressBar, tx);
+            }
+        });
+        return view;
+    }
+
+    private void showPasswordConfirmView(ProgressBar progressBar, String tx) {
+        SimpleDialog simpleDialog = new SimpleDialog(mActivity);
+        simpleDialog.setTitle(R.string.input_password_hint);
+        simpleDialog.setMessageHint("password");
+        simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
+        simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
+            @Override
+            public void onOkClick() {
+                String password = simpleDialog.getMessage();
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!AESCrypt.checkPassword(password, walletItem)) {
+                    Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                progressBar.setVisibility(View.VISIBLE);
+                actionSignNervos(password, tx);
+                simpleDialog.dismiss();
+
+            }
+        });
+        simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
+        simpleDialog.show();
+    }
+
+    private void actionSignEth(String password, String tx) {
+        Observable.fromCallable(new Callable<Sign.SignatureData>() {
+            @Override
+            public Sign.SignatureData call() {
+                try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    return Sign.signMessage(tx.getBytes(),
+                            ECKeyPair.create(Numeric.toBigInt(privateKey)));
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }).subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<Sign.SignatureData>() {
+            @Override
+            public void onCompleted() {
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onNext(Sign.SignatureData signatureData) {
+                LogUtil.d("signatureData: " + new String(signatureData.getR()));
             }
         });
     }
 
-    private void initSignNervosAction(View view, String tx) {
-        view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
+    private void actionSignNervos(String password, String tx) {
+        Observable.fromCallable(new Callable<org.nervos.web3j.crypto.Sign.SignatureData>() {
             @Override
-            public void onClick(View v) {
-                Observable.fromCallable(new Callable<org.nervos.web3j.crypto.Sign.SignatureData>() {
-                    @Override
-                    public org.nervos.web3j.crypto.Sign.SignatureData call() {
-                        return org.nervos.web3j.crypto.Sign.signMessage(tx.getBytes(),
-                                org.nervos.web3j.crypto.ECKeyPair.create(Numeric.toBigInt(walletItem.privateKey)));
-                    }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<org.nervos.web3j.crypto.Sign.SignatureData>() {
-                    @Override
-                    public void onCompleted() {
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        sheetDialog.dismiss();
-                    }
-                    @Override
-                    public void onNext(org.nervos.web3j.crypto.Sign.SignatureData signatureData) {
-                        LogUtil.d("signatureData: " + new String(signatureData.get_signature()));
-                    }
-                });
+            public org.nervos.web3j.crypto.Sign.SignatureData call() {
+                try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    return org.nervos.web3j.crypto.Sign.signMessage(tx.getBytes(),
+                            org.nervos.web3j.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }).subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<org.nervos.web3j.crypto.Sign.SignatureData>() {
+            @Override
+            public void onCompleted() {
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onNext(org.nervos.web3j.crypto.Sign.SignatureData signatureData) {
+                LogUtil.d("signatureData: " + new String(signatureData.get_signature()));
             }
         });
     }

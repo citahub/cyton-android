@@ -85,6 +85,7 @@
     <string name="transfer_fee">交易费用</string>
     <string name="update_password">修改密码</string>
     <string name="wallet_name">钱包名称</string>
+    <string name="input_wallet_name">请输入钱包名称</string>
     <string name="title_transaction">交易</string>
     <string name="input_password_hint">请输入密码</string>
     <string name="input_new_password_hint">输入新密码</string>
@@ -105,6 +106,7 @@
     <string name="password_weak">您的密码太弱，请重新输入</string>
     <string name="password_not_same">两次输入的密码不一致</string>
     <string name="wallet_name_exist">该钱包名称已存在</string>
+    <string name="wallet_export_success">钱包导入成功</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="wallet_importing">钱包导入中...</string>
     <string name="generating">正在生成</string>
@@ -117,7 +119,7 @@
     <string name="wallet_name_not_null">钱包名称不能为空</string>
     <string name="unlock_password">解锁密码</string>
     <string name="password_again">重复密码</string>
-    <string name="set_password">设定密码</string>
+    <string name="set_password">设置密码</string>
     <string name="no_find_password_content">没有「找回密码」!</string>
     <string name="save_password_careful">您的钱包不会被保存在云端，无法提供找回服务，请您谨慎保管</string>
     <string name="generate_wallet">生成钱包</string>
@@ -144,4 +146,5 @@
     <string name="cancel_collect">取消收藏</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
+    <string name="generate_keystore_fail">KeyStore生成失败</string>
 </resources>

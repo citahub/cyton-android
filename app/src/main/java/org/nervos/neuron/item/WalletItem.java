@@ -4,10 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletFile;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +24,6 @@ public class WalletItem implements Parcelable{
     public int image;
 
     /**
-     * the password of wallet and mnemonic
-     */
-    public String password;
-    /**
      * wallet address
      */
     public String address;
@@ -33,40 +31,25 @@ public class WalletItem implements Parcelable{
     /**
      * wallet private key
      */
-    public String privateKey;
+    public String cryptPrivateKey;
 
     /**
-     * the password of wallet file
-     */
-    public String walletPass;
-    /**
-     * wallet file
-     */
-    public WalletFile walletFile;
-    /**
-     * mnemonic
-     */
-    public String mnemonic;
-    /**
-     * wallet file path
-     */
-    public String path;
-
-    /**
-     * 钱包中含有的Token
+     * all tokens in wallet
      */
     public List<TokenItem> tokenItems = new ArrayList<>();
 
+    public long timestamp = System.currentTimeMillis();
+
     public boolean currentSelected = false;
 
-    public static WalletItem fromWalletEntity(WalletEntity walletEntity) {
+    public static WalletItem fromWalletEntity(String password, WalletEntity walletEntity) {
         WalletItem walletItem = new WalletItem();
         walletItem.address = walletEntity.getAddress();
-        walletItem.privateKey = walletEntity.getPrivateKey();
-        walletItem.mnemonic = walletEntity.getMnemonic();
-        walletItem.path = walletEntity.getPath();
-        walletItem.walletFile = walletEntity.getWalletFile();
-        walletItem.walletPass = walletEntity.getWalletPass();
+        try {
+            walletItem.cryptPrivateKey = AESCrypt.encrypt(password, walletEntity.getPrivateKey());
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
         return walletItem;
     }
 
@@ -88,27 +71,20 @@ public class WalletItem implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeInt(this.image);
-        dest.writeString(this.password);
         dest.writeString(this.address);
-        dest.writeString(this.privateKey);
-        dest.writeString(this.walletPass);
-        dest.writeString(this.mnemonic);
-        dest.writeString(this.path);
+        dest.writeString(this.cryptPrivateKey);
         dest.writeTypedList(this.tokenItems);
+        dest.writeLong(this.timestamp);
         dest.writeByte(this.currentSelected ? (byte) 1 : (byte) 0);
     }
 
     protected WalletItem(Parcel in) {
         this.name = in.readString();
         this.image = in.readInt();
-        this.password = in.readString();
         this.address = in.readString();
-        this.privateKey = in.readString();
-        this.walletPass = in.readString();
-        this.walletFile = in.readParcelable(WalletFile.class.getClassLoader());
-        this.mnemonic = in.readString();
-        this.path = in.readString();
+        this.cryptPrivateKey = in.readString();
         this.tokenItems = in.createTypedArrayList(TokenItem.CREATOR);
+        this.timestamp = in.readLong();
         this.currentSelected = in.readByte() != 0;
     }
 

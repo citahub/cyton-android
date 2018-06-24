@@ -22,6 +22,7 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -165,16 +166,16 @@ public class PayTokenActivity extends BaseActivity {
                 if (TextUtils.isEmpty(simpleDialog.getMessage())) {
                     Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
+                } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
                     Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 simpleDialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
                 if (transactionRequest.isEthereum()) {
-                    transferEth(progressBar);
+                    transferEth(simpleDialog.getMessage(), progressBar);
                 } else {
-                    transferNervos(progressBar);
+                    transferNervos(simpleDialog.getMessage(), progressBar);
                 }
 
             }
@@ -184,13 +185,13 @@ public class PayTokenActivity extends BaseActivity {
     }
 
 
-    private void transferEth(ProgressBar progressBar) {
+    private void transferEth(String password, ProgressBar progressBar) {
         EthRpcService.getEthGasPrice()
             .flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionRequest.to,
-                            transactionRequest.getValue(), gasPrice);
+                            transactionRequest.getValue(), gasPrice, password);
                 }
             }).subscribeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
@@ -222,8 +223,8 @@ public class PayTokenActivity extends BaseActivity {
             });
     }
 
-    private void transferNervos(ProgressBar progressBar) {
-        NervosRpcService.transferNervos(transactionRequest.to, transactionRequest.getValue())
+    private void transferNervos(String password, ProgressBar progressBar) {
+        NervosRpcService.transferNervos(transactionRequest.to, transactionRequest.getValue(), password)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
                 public void onCompleted() {

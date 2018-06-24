@@ -4,9 +4,11 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
+import org.bouncycastle.jcajce.provider.symmetric.AES;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -32,6 +34,7 @@ import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -84,7 +87,8 @@ public class EthRpcService extends BaseRpcService {
         .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice) {
+    public static Observable<EthSendTransaction> transferEth(String address, double value,
+                                                             BigInteger gasPrice, String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
@@ -95,13 +99,19 @@ public class EthRpcService extends BaseRpcService {
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
             public Observable<String> call(BigInteger nonce) {
-                Credentials credentials = Credentials.create(walletItem.privateKey);
-                BigInteger transferValue = ETHDecimal
-                        .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-                RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
-                        gasPrice, GAS_LIMIT, address, transferValue);
-                byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-                return Observable.just(Numeric.toHexString(signedMessage));
+                try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    Credentials credentials = Credentials.create(privateKey);
+                    BigInteger transferValue = ETHDecimal
+                            .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
+                    RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
+                            gasPrice, GAS_LIMIT, address, transferValue);
+                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+                    return Observable.just(Numeric.toHexString(signedMessage));
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
             }
         }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
             @Override
@@ -188,7 +198,7 @@ public class EthRpcService extends BaseRpcService {
 
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
-                                                               double value, BigInteger gasPrice) {
+                                           double value, BigInteger gasPrice, String password) {
         BigInteger transferValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, transferValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -201,11 +211,17 @@ public class EthRpcService extends BaseRpcService {
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
             @Override
             public Observable<String> call(BigInteger nonce) {
-                Credentials credentials = Credentials.create(walletItem.privateKey);
-                RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
-                        gasPrice, Numeric.toBigInt("0x23280"), tokenItem.contractAddress, data);
-                byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-                return Observable.just(Numeric.toHexString(signedMessage));
+                try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    Credentials credentials = Credentials.create(privateKey);
+                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
+                            gasPrice, Numeric.toBigInt("0x23280"), tokenItem.contractAddress, data);
+                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+                    return Observable.just(Numeric.toHexString(signedMessage));
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
             }
         }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
             @Override

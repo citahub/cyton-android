@@ -30,6 +30,7 @@ import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -214,10 +215,11 @@ public class TransferActivity extends BaseActivity {
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
             public void onOkClick() {
-                if (TextUtils.isEmpty(simpleDialog.getMessage())) {
+                String password = simpleDialog.getMessage();
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!walletItem.password.equals(simpleDialog.getMessage())) {
+                } else if (!AESCrypt.checkPassword(password, walletItem)) {
                     Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -225,16 +227,16 @@ public class TransferActivity extends BaseActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 if (tokenItem.chainId < 0) {
                     if (EthRpcService.ETH.equals(tokenItem.symbol)) {
-                        transferEth(value, progressBar);
+                        transferEth(password, value, progressBar);
                     } else {
-                        transferEthErc20(value, progressBar);
+                        transferEthErc20(password, value, progressBar);
                     }
                 } else {
                     try {
                         if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            transferNervosToken(Double.valueOf(value), progressBar);
+                            transferNervosToken(password, Double.valueOf(value), progressBar);
                         } else {
-                            transferNervosErc20(Double.valueOf(value), progressBar);
+                            transferNervosErc20(password, Double.valueOf(value), progressBar);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -252,8 +254,8 @@ public class TransferActivity extends BaseActivity {
      * @param value  transfer value
      * @param progressBar
      */
-    private void transferNervosToken(double value, ProgressBar progressBar){
-    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value)
+    private void transferNervosToken(String password, double value, ProgressBar progressBar){
+    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value, password)
         .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
             @Override
             public void onCompleted() {
@@ -290,9 +292,9 @@ public class TransferActivity extends BaseActivity {
      * @param value  transfer value
      * @param progressBar
      */
-    private void transferNervosErc20(double value, ProgressBar progressBar) throws Exception {
+    private void transferNervosErc20(String password, double value, ProgressBar progressBar) throws Exception {
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value)
+                receiveAddressEdit.getText().toString().trim(), value, password)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
@@ -329,9 +331,9 @@ public class TransferActivity extends BaseActivity {
      * @param value
      * @param progressBar
      */
-    private void transferEth(String value, ProgressBar progressBar) {
+    private void transferEth(String password, String value, ProgressBar progressBar) {
         EthRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
-                Double.valueOf(value), mGasPrice)
+                Double.valueOf(value), mGasPrice, password)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
@@ -369,9 +371,9 @@ public class TransferActivity extends BaseActivity {
      * @param value
      * @param progressBar
      */
-    private void transferEthErc20(String value, ProgressBar progressBar) {
+    private void transferEthErc20(String password, String value, ProgressBar progressBar) {
         EthRpcService.transferErc20(tokenItem,
-                receiveAddressEdit.getText().toString().trim(), Double.valueOf(value), mGasPrice)
+            receiveAddressEdit.getText().toString().trim(), Double.valueOf(value), mGasPrice, password)
             .subscribe(new Subscriber<EthSendTransaction>() {
                 @Override
                 public void onCompleted() {

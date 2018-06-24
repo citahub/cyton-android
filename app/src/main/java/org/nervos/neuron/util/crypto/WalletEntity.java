@@ -73,23 +73,6 @@ public class WalletEntity {
         }.start();
     }
 
-
-    /**
-     * create a new wallet without mnemonic
-     *
-     * @param password wallet file password
-     * @return
-     * @throws Exception
-     */
-    public static WalletEntity create(String password) throws Exception {
-        WalletEntity wa = new WalletEntity();
-        ECKeyPair ecKeyPair = Keys.createEcKeyPair();
-        wa.walletFile = Wallet.createStandard(password, ecKeyPair);
-        wa.credentials = Credentials.create(Wallet.decrypt(password, wa.walletFile));
-        wa.walletPass = password;
-        return wa;
-    }
-
     /**
      * create a wallet with mnemonic
      *
@@ -194,14 +177,14 @@ public class WalletEntity {
     /**
      * export a new wallet file
      *
-     * @param password wallet file password
+     * @param privateKey
      * @return wallet file
      */
-    public static String exportKeyStore(WalletItem walletItem, String password){
-        Credentials credentials = Credentials.create(walletItem.privateKey);
-        ECKeyPair ekp = credentials.getEcKeyPair();
+    public static String exportKeyStore(String password, String privateKey){
         WalletFile walletFile = null;
         try {
+            Credentials credentials = Credentials.create(privateKey);
+            ECKeyPair ekp = credentials.getEcKeyPair();
             walletFile = Wallet.create(password, ekp, 1024, 1);
         } catch (CipherException e) {
             e.printStackTrace();

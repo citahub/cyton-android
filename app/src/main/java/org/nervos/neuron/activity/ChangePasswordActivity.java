@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class ChangePasswordActivity extends BaseActivity {
@@ -51,11 +52,12 @@ public class ChangePasswordActivity extends BaseActivity {
                 } else if (!TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                         newRePasswordEdit.getText().toString().trim())) {
                     Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
-                } else if (!TextUtils.equals(oldPasswordEdit.getText().toString().trim(),
-                        walletItem.password)) {
+                } else if (!AESCrypt.checkPassword(oldPasswordEdit.getText().toString().trim(), walletItem)) {
                     Toast.makeText(mActivity, R.string.old_password_error, Toast.LENGTH_SHORT).show();
                 } else {
-                    DBWalletUtil.updateWalletPassword(mActivity, walletItem.name, newPasswordEdit.getText().toString());
+                    DBWalletUtil.updateWalletPassword(mActivity, walletItem.name,
+                            oldPasswordEdit.getText().toString().trim(),
+                            newPasswordEdit.getText().toString());
                     Toast.makeText(mActivity, R.string.update_password_success, Toast.LENGTH_SHORT).show();
                     finish();
                 }

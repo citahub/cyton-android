@@ -83,9 +83,10 @@ public class CreateWalletActivity extends BaseActivity {
                 } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())){
                     Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 } else {
+                    final String password = rePasswordEdit.getText().toString().trim();
                     showProgressBar(getString(R.string.wallet_creating));
                     cachedThreadPool.execute(() -> {
-                        saveWalletInfo();
+                        saveWalletInfo(password);
                         rePasswordEdit.post(() -> {
                             dismissProgressBar();
                             Intent intent = new Intent(CreateWalletActivity.this,
@@ -103,16 +104,15 @@ public class CreateWalletActivity extends BaseActivity {
     /**
      * save wallet information to database and add default eth token
      */
-    private void saveWalletInfo(){
+    private void saveWalletInfo(String password){
         walletEntity = WalletEntity.createWithMnemonic(
                 passwordEdit.getText().toString().trim(), MnemonicPath);
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                walletItem = WalletItem.fromWalletEntity(walletEntity);
+                walletItem = WalletItem.fromWalletEntity(password, walletEntity);
                 walletItem.name = walletNameEdit.getText().toString().trim();
-                walletItem.password = passwordEdit.getText().toString().trim();
             }
         }.start();
     }

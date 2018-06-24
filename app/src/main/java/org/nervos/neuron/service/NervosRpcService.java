@@ -6,6 +6,7 @@ import android.util.Log;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.account.Account;
@@ -34,6 +35,7 @@ import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -124,7 +126,7 @@ public class NervosRpcService extends BaseRpcService {
 
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem,
-                           String contractAddress, String address, double value) throws Exception {
+           String contractAddress, String address, double value, String password) throws Exception {
         BigInteger ercValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -138,10 +140,11 @@ public class NervosRpcService extends BaseRpcService {
                 Transaction transaction = Transaction.createFunctionCallTransaction(contractAddress,
                         randomNonce(), quota.longValue(), validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO, data);
-                String rawTx = transaction.sign(walletItem.privateKey);
                 try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    String rawTx = transaction.sign(privateKey);
                     return Observable.just(service.ethSendRawTransaction(rawTx).send());
-                } catch (IOException e) {
+                } catch (GeneralSecurityException | IOException e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
@@ -151,7 +154,7 @@ public class NervosRpcService extends BaseRpcService {
 
     }
 
-    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value) {
+    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value, String password) {
         BigInteger transferValue = NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
         LogUtil.d("transfer value: " + transferValue.toString());
@@ -165,10 +168,11 @@ public class NervosRpcService extends BaseRpcService {
             public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
                         validUntilBlock.longValue(), version, chainId, transferValue, "");
-                String rawTx = transaction.sign(walletItem.privateKey);
                 try {
+                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    String rawTx = transaction.sign(privateKey);
                     return Observable.just(service.ethSendRawTransaction(rawTx).send());
-                } catch (IOException e) {
+                } catch (GeneralSecurityException | IOException e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);

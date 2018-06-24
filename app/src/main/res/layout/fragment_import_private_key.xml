@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="钱包名称"
+            android:text="@string/wallet_name"
             android:textColor="@color/font_black"
             android:textSize="14sp"/>
 
@@ -65,7 +65,7 @@
             android:id="@+id/edit_wallet_name"
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
-            android:hint="请输入钱包名称"
+            android:hint="@string/input_wallet_name"
             android:paddingEnd="@dimen/default_margin"
             android:textSize="14sp"
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/unlock_password"
+            android:text="@string/set_password"
             android:textColor="@color/font_black"
             android:textSize="14sp"/>
 

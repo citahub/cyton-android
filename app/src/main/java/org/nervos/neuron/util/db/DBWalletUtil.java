@@ -12,8 +12,12 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -45,9 +49,19 @@ public class DBWalletUtil extends DBUtil {
         try {
             DB db = DBFactory.open(context, DB_WALLET);
             String[] keys = db.findKeys(DB_PREFIX);
-            db.close();
+            List<WalletItem> walletItems = new ArrayList<>();
             for(String key: keys) {
-                walletList.add(getDbOrigin(key));
+                walletItems.add(db.getObject(key, WalletItem.class));
+            }
+            db.close();
+            Collections.sort(walletItems, new Comparator<WalletItem>() {
+                @Override
+                public int compare(WalletItem o1, WalletItem o2) {
+                    return (int)(o2.timestamp - o1.timestamp);
+                }
+            });
+            for (WalletItem walletItem : walletItems) {
+                walletList.add(walletItem.name);
             }
         } catch (SnappydbException e) {
             e.printStackTrace();
@@ -65,16 +79,24 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void updateWalletPassword(Context context, String name, String password) {
+    public static boolean updateWalletPassword(Context context, String name, String oldPassword, String newPassword) {
         try {
             DB db = DBFactory.open(context, DB_WALLET);
             WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
-            walletItem.password = password;
+            try {
+                String privateKey = AESCrypt.decrypt(oldPassword, walletItem.cryptPrivateKey);
+                walletItem.cryptPrivateKey = AESCrypt.encrypt(newPassword, privateKey);
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+                return false;
+            }
             db.put(getDbKey(name), walletItem);
             db.close();
         } catch (SnappydbException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public static void updateWalletName(Context context, String name, String newName) {
