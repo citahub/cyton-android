@@ -6,24 +6,24 @@ android {
         applicationId "org.nervos.neuron"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode "${VERSION_CODE}" as int
+        versionName "${VERSION_NAME}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "IS_DEBUG", "true"
         multiDexEnabled true
     }
     signingConfigs {
         release {
-            storeFile file('/Users/duanyy/Documents/cita/Neuron/keystore.jks')
-            storePassword "123456789"
-            keyAlias "CitaWallet"
-            keyPassword "123456789"
+            storeFile file('keystore.jks')
+            storePassword "${signStorePassword}"
+            keyAlias "${signKeyAlias}"
+            keyPassword "${signKeyPassword}"
         }
         debug {
-            storeFile file('/Users/duanyy/Documents/cita/Neuron/keystore.jks')
-            storePassword "123456789"
-            keyAlias "CitaWallet"
-            keyPassword "123456789"
+            storeFile file('keystore.jks')
+            storePassword "${signStorePassword}"
+            keyAlias "${signKeyAlias}"
+            keyPassword "${signKeyPassword}"
         }
     }
 

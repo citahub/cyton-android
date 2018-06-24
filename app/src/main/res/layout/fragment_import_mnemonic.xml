@@ -95,7 +95,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="钱包名称"
+                android:text="@string/wallet_name"
                 android:textColor="@color/font_black"
                 android:textSize="14sp"/>
 
@@ -103,8 +103,10 @@
                 android:id="@+id/edit_wallet_name"
                 android:background="@android:color/white"
                 android:gravity="end|center_vertical"
-                android:hint="请输入钱包名称"
+                android:hint="@string/input_wallet_name_hint"
+                android:layout_marginStart="@dimen/default_margin"
                 android:paddingEnd="@dimen/default_margin"
+                android:singleLine="true"
                 android:textSize="12sp"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
@@ -139,9 +141,10 @@
                 android:id="@+id/edit_wallet_password"
                 android:layout_marginStart="@dimen/default_margin"
                 android:background="@android:color/white"
-                android:hint="@string/input_password_hint"
+                android:hint="@string/input_new_password_hint"
                 android:inputType="textPassword"
                 android:paddingEnd="@dimen/default_margin"
+                android:singleLine="true"
                 android:textSize="12sp"
                 android:gravity="end|center_vertical"
                 android:layout_width="match_parent"
@@ -178,6 +181,7 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:background="@android:color/white"
                 android:hint="@string/input_new_password_again_hint"
+                android:singleLine="true"
                 android:paddingEnd="@dimen/default_margin"
                 android:inputType="textPassword"
                 android:textSize="12sp"

@@ -36,6 +36,28 @@
         android:paddingStart="30dp"
         android:textSize="12sp"
         android:text="@string/backup_mnemonic_warning2"
+        android:paddingEnd="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:textColor="@color/warning_font"
+        android:drawablePadding="3dp"
+        android:paddingStart="30dp"
+        android:textSize="12sp"
+        android:text="@string/backup_mnemonic_warning3"
+        android:paddingEnd="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:textColor="@color/warning_font"
+        android:drawablePadding="3dp"
+        android:paddingStart="30dp"
+        android:textSize="12sp"
+        android:text="@string/backup_mnemonic_warning4"
         android:paddingEnd="@dimen/default_margin"
         android:paddingBottom="@dimen/default_margin"/>
 

@@ -15,6 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.NumberUtil;
 
 public class TokenTransferDialog extends Dialog {
 
@@ -60,7 +61,7 @@ public class TokenTransferDialog extends Dialog {
         } else {
             tokenImage.setImageURI(tokenItem.avatar);
         }
-        tokenBalanceText.setText(String.valueOf(tokenItem.balance));
+        tokenBalanceText.setText(NumberUtil.getDecimal_4(tokenItem.balance));
     }
 
     private void initListener() {

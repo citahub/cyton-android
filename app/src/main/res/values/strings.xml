@@ -54,7 +54,9 @@
     <string name="qrcode_transfer">扫一扫向我付款</string>
     <string name="copy_address">复制地址</string>
     <string name="backup_mnemonic_warning1">助记词将被用来恢复钱包或重置钱包密码</string>
-    <string name="backup_mnemonic_warning2">  - 如您的助记词被他人获取，您的财产可能受到损失 \n  - 不要截图或传送给他人 \n  - 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
+    <string name="backup_mnemonic_warning2">- 如您的助记词被他人获取，您的财产可能受到损失</string>
+    <string name="backup_mnemonic_warning3">- 不要截图或传送给他人</string>
+    <string name="backup_mnemonic_warning4">- 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
     <string name="input_password">输入密码</string>
     <string name="confirm_action">确认</string>
@@ -88,8 +90,8 @@
     <string name="input_wallet_name">请输入钱包名称</string>
     <string name="title_transaction">交易</string>
     <string name="input_password_hint">请输入密码</string>
-    <string name="input_new_password_hint">输入新密码</string>
-    <string name="input_new_password_again_hint">再次输入新密码</string>
+    <string name="input_new_password_hint">请输入新密码</string>
+    <string name="input_new_password_again_hint">请再次输入新密码</string>
     <string name="copy_success">复制成功</string>
     <string name="password_fail">密码错误</string>
     <string name="transfer_success">转账成功</string>
@@ -129,7 +131,7 @@
     <string name="old_password_error">原密码不正确</string>
     <string name="update_password_success">密码修改成功</string>
     <string name="update_wallet_name">修改钱包名称</string>
-    <string name="input_wallet_name_hint">输入钱包名称</string>
+    <string name="input_wallet_name_hint">请输入钱包名称</string>
     <string name="delete_success">删除成功</string>
     <string name="qrcode_handle_fail">解析二维码失败</string>
     <string name="wallet_manage_title">钱包管理</string>
