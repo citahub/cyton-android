@@ -111,7 +111,6 @@
     <string name="password_use_protect_private_key">此密码将被用于保护私钥和交易授权</string>
     <string name="no_wallet_suggestion">您还没有钱包，请先创建或者导入钱包</string>
     <string name="dapp">DApp</string>
-    <string name="cancel_collect">取消收藏</string>
     <string name="collect">收藏</string>
     <string name="switch_current_wallet">切换当前钱包</string>
     <string name="password_not_null">密码不能为空</string>
@@ -141,4 +140,6 @@
     <string name="source_and_private">服务与隐私条款</string>
     <string name="contact_us">联系我们</string>
     <string name="press_back_finish">再按一次返回键退出</string>
+    <string name="collect_success">收藏成功</string>
+    <string name="cancel_collect">取消收藏</string>
 </resources>

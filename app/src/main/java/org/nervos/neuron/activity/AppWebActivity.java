@@ -56,7 +56,7 @@ public class AppWebActivity extends BaseActivity {
         String url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
-        initTitleView();
+        initView();
         initWebView();
         webView.loadUrl(url);
 
@@ -64,7 +64,9 @@ public class AppWebActivity extends BaseActivity {
 
     }
 
-    private void initTitleView() {
+    private void initView() {
+        progressBar = findViewById(R.id.progressBar);
+        webView = findViewById(R.id.webview);
         titleText = findViewById(R.id.title_bar_center);
         titleText.setText(R.string.dapp);
         collectText = findViewById(R.id.menu_collect);
@@ -91,10 +93,10 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_collect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (WebAppUtil.isCollectApp(mActivity)) {
-                    WebAppUtil.cancelCollectApp(mActivity);
+                if (WebAppUtil.isCollectApp(webView)) {
+                    WebAppUtil.cancelCollectApp(webView);
                 } else {
-                    WebAppUtil.collectApp(mActivity);
+                    WebAppUtil.collectApp(webView);
                 }
                 initCollectView();
             }
@@ -106,7 +108,7 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initCollectView() {
-        collectText.setText(WebAppUtil.isCollectApp(mActivity)? getString(R.string.cancel_collect):getString(R.string.collect));
+        collectText.setText(WebAppUtil.isCollectApp(webView)? getString(R.string.cancel_collect):getString(R.string.collect));
         closeMenuWindow();
     }
 
@@ -115,10 +117,7 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
 
-
     private void initWebView() {
-        progressBar = findViewById(R.id.progressBar);
-        webView = findViewById(R.id.webview);
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
         webView.setWebChromeClient(new WebChromeClient(){
@@ -148,13 +147,9 @@ public class AppWebActivity extends BaseActivity {
             }
 
             @Override
-            public void onLoadResource(WebView view, String url) {
-                super.onLoadResource(view, url);
-//                injectJs();
-            }
-            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                initCollectView();
                 injectJs();
             }
         });

@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
@@ -44,6 +45,7 @@ import rx.schedulers.Schedulers;
 
 public class WebAppUtil {
 
+    private static final String WEB_ICON_PATH = "favicon.ico";
     private static ChainItem mChainItem;
 
     /**
@@ -117,31 +119,40 @@ public class WebAppUtil {
     }
 
 
-    public static boolean isCollectApp(Context context) {
+    public static boolean isCollectApp(WebView webView) {
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            return DBAppUtil.findApp(context, mChainItem.entry);
-        }
-        return false;
-    }
-
-    public static void collectApp(Context context) {
-        if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            AppItem appItem = new AppItem(mChainItem.entry,
-                    mChainItem.icon, mChainItem.name, mChainItem.provider);
-            DBAppUtil.saveDbApp(context, appItem);
-            EventBus.getDefault().post(new AppCollectEvent(true, appItem));
-            Toast.makeText(context, "收藏成功", Toast.LENGTH_SHORT).show();
+            return DBAppUtil.findApp(webView.getContext(), mChainItem.entry);
+        } else {
+            return DBAppUtil.findApp(webView.getContext(), webView.getUrl());
         }
     }
 
-    public static void cancelCollectApp(Context context) {
+    public static void collectApp(WebView webView) {
+        AppItem appItem;
         if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            DBAppUtil.deleteApp(context, mChainItem.entry);
-            AppItem appItem = new AppItem(mChainItem.entry,
+            appItem = new AppItem(mChainItem.entry,
                     mChainItem.icon, mChainItem.name, mChainItem.provider);
-            EventBus.getDefault().post(new AppCollectEvent(false, appItem));
-            Toast.makeText(context, "取消收藏", Toast.LENGTH_SHORT).show();
+        } else {
+            String icon = webView.getUrl() + WEB_ICON_PATH;
+            appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
         }
+        DBAppUtil.saveDbApp(webView.getContext(), appItem);
+        EventBus.getDefault().post(new AppCollectEvent(true, appItem));
+        Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void cancelCollectApp(WebView webView) {
+        AppItem appItem;
+        if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
+            appItem = new AppItem(mChainItem.entry,
+                    mChainItem.icon, mChainItem.name, mChainItem.provider);
+        } else {
+            String icon = webView.getUrl() + WEB_ICON_PATH;
+            appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+        }
+        DBAppUtil.deleteApp(webView.getContext(), appItem.entry);
+        EventBus.getDefault().post(new AppCollectEvent(false, appItem));
+        Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
     public static ChainItem getChainItem() {
