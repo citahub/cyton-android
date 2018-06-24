@@ -14,13 +14,13 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('keystore.jks')
+            storeFile file('/Users/duanyy/Documents/cita/Neuron/keystore.jks')
             storePassword "${signStorePassword}"
             keyAlias "${signKeyAlias}"
             keyPassword "${signKeyPassword}"
         }
         debug {
-            storeFile file('keystore.jks')
+            storeFile file('/Users/duanyy/Documents/cita/Neuron/keystore.jks')
             storePassword "${signStorePassword}"
             keyAlias "${signKeyAlias}"
             keyPassword "${signKeyPassword}"

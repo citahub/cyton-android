@@ -177,12 +177,6 @@ public class WalletFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 TokenTransferDialog dialog = new TokenTransferDialog(getContext(), tokenItemList.get(position));
-                if (TextUtils.isEmpty(tokenItemList.get(position).avatar)) {
-                    dialog.setTokenImage(tokenItemList.get(position).chainId < 0?
-                            R.drawable.ether_small:R.mipmap.ic_launcher);
-                } else {
-                    dialog.setTokenImage(tokenItemList.get(position).avatar);
-                }
                 dialog.setOnReceiveClickListener(v -> {
                     startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class));
                     dialog.dismiss();
@@ -237,7 +231,6 @@ public class WalletFragment extends BaseFragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder)holder;
-                LogUtil.d("avatar: " + tokenItemList.get(position).avatar);
                 if (TextUtils.isEmpty(tokenItemList.get(position).avatar)) {
                     viewHolder.tokenImage.setImageResource(tokenItemList.get(position).chainId < 0?
                             R.drawable.ether_small : R.mipmap.ic_launcher);

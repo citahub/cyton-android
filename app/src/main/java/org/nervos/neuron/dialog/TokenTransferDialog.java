@@ -2,13 +2,10 @@ package org.nervos.neuron.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,8 +23,6 @@ public class TokenTransferDialog extends Dialog {
     private AppCompatButton receiveButton;
 
     private TokenItem tokenItem;
-    private int imageResId;
-    private String imageUri;
 
     private OnTransferClickListener onTransferClickListener;
     private OnReceiveClickListener onReceiveClickListener;
@@ -57,7 +52,7 @@ public class TokenTransferDialog extends Dialog {
         tokenNameText.setText(tokenItem.symbol);
         if (TextUtils.isEmpty(tokenItem.avatar)) {
             tokenImage.setImageResource(tokenItem.chainId < 0?
-                    R.drawable.ether_big:R.mipmap.ic_launcher);
+                    R.drawable.ether_small:R.mipmap.ic_launcher);
         } else {
             tokenImage.setImageURI(tokenItem.avatar);
         }
@@ -89,14 +84,6 @@ public class TokenTransferDialog extends Dialog {
 
     public void setOnTransferClickListener(OnTransferClickListener onTransferClickListener) {
         this.onTransferClickListener = onTransferClickListener;
-    }
-
-    public void setTokenImage(@DrawableRes int resId) {
-        this.imageResId = resId;
-    }
-
-    public void setTokenImage(String uriString) {
-        this.imageUri = uriString;
     }
 
     public interface OnTransferClickListener{

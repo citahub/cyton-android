@@ -29,7 +29,7 @@ public class WalletItem implements Parcelable{
     public String address;
 
     /**
-     * wallet private key
+     * the cipher text of wallet private key
      */
     public String cryptPrivateKey;
 
