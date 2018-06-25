@@ -24,6 +24,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -189,15 +190,15 @@ public class WebAppUtil {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         String js = "javascript: ; const addressHex = '" + walletItem.address
                 + "'; const rpcURL = '"
-                + BaseRpcService.ETH_NODE_IP + "'; const wssURL = '"
-                + BaseRpcService.ETH_NODE_IP + "'; const chainID = 1; console.log('Injected finish')";
+                + ConstantUtil.ETH_NODE_IP + "'; const wssURL = '"
+                + ConstantUtil.ETH_NODE_IP + "'; const chainID = 1; console.log('Injected finish')";
         sb.append(js);
         sb.append(getFileFromAsset(context, "trust-init.js"));
         return sb.toString();
     }
 
     public static String getInjectNervosWeb3() {
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3('" + BaseRpcService.ETH_NODE_IP + "')}";
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3('" + ConstantUtil.ETH_NODE_IP + "')}";
     }
 
     public static String getInjectTransactionJs() {

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.bouncycastle.jcajce.provider.symmetric.AES;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -51,7 +52,7 @@ public class EthRpcService extends BaseRpcService {
 
     public static void init(Context context) {
         if (service == null) {
-            service = Web3jFactory.build(new InfuraHttpService(ETH_NODE_IP));
+            service = Web3jFactory.build(new InfuraHttpService(ConstantUtil.ETH_NODE_IP));
         }
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }

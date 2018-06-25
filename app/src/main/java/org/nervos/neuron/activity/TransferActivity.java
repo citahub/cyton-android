@@ -29,6 +29,7 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
@@ -79,7 +80,7 @@ public class TransferActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(this);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
         EthRpcService.init(mActivity);
-        NervosRpcService.init(mActivity, NervosRpcService.NERVOS_NODE_IP);
+        NervosRpcService.init(mActivity, ConstantUtil.NERVOS_NODE_IP);
         initView();
         initListener();
         initGasInfo();

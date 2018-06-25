@@ -24,14 +24,14 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
 
     public static final String TAG = AppFragment.class.getName();
-    private static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
-    private static final String INNER_URL = "http://47.97.171.140:8866/";
+
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -48,7 +48,7 @@ public class AppFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        webView.loadUrl(DISCOVER_URL);
+        webView.loadUrl(ConstantUtil.DISCOVER_URL);
         initWebSettings();
         initWebView();
     }
@@ -72,7 +72,7 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(INNER_URL)) {
+                if (url.contains(ConstantUtil.INNER_URL)) {
                     return false;
                 } else {
                     LogUtil.d(url);

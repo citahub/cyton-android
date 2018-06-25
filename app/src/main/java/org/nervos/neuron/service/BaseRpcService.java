@@ -15,13 +15,9 @@ import java.util.List;
 
 public class BaseRpcService {
 
-    static final BigInteger NervosDecimal = new BigInteger("100000000000000000");
-    public static final String NERVOS_NODE_IP = "http://47.94.105.230:1337";
-
     public static final String ETH = "ETH";
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x15F90");
-    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-//    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+
 
     static final String ZERO_16 = "000000000000000000000000";
     static final String NAME_HASH = "06fdde03";

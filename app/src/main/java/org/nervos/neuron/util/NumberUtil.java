@@ -1,5 +1,7 @@
 package org.nervos.neuron.util;
 
+import android.text.TextUtils;
+
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
@@ -8,6 +10,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+
+import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
 
 public class NumberUtil {
 
@@ -56,6 +60,14 @@ public class NumberUtil {
     public static BigInteger getBigFromDouble(double gasPrice) {
         return BigInteger.valueOf((int)(gasPrice * 1000000))
                 .divide(BigInteger.valueOf(1000000)).multiply(ConstantUtil.ETHDecimal);
+    }
+
+    public static String getStringNumberFromBig(String value) {
+        if (TextUtils.isEmpty(value)) return "0";
+        BigInteger bigValue = new BigInteger(value);
+        double result = bigValue.multiply(BigInteger.valueOf(10000))
+                .divide(ETHDecimal).doubleValue()/10000.0;
+        return NumberUtil.getDecimal_6(result);
     }
 
     public static double getDoubleFromBig(BigInteger gasPrice) {

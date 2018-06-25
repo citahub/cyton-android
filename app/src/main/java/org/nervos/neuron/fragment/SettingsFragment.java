@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.AboutUsActivity;
-import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.util.ConstantUtil;
 
@@ -61,7 +59,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SimpleWebActivity.class);
-                intent.putExtra(SimpleWebActivity.EXTRA_URL, ConstantUtil.GITHUB_URL);
+                intent.putExtra(SimpleWebActivity.EXTRA_URL, ConstantUtil.SOURCE_CODE_GITHUB_URL);
                 startActivity(intent);
             }
         });

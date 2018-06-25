@@ -102,7 +102,7 @@
     <string name="receive_token">收款</string>
     <string name="token_manage">资产管理</string>
     <string name="settings_title">设置</string>
-    <string name="wallet_passworrd_error">钱包密码错误</string>
+    <string name="wallet_password_error">钱包密码错误</string>
     <string name="password">密码</string>
     <string name="ask_confirm_delete_wallet">确认删除钱包吗？</string>
     <string name="password_weak">您的密码太弱，请重新输入</string>
@@ -151,4 +151,6 @@
     <string name="generate_keystore_fail">KeyStore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="network_error">网络请求错误</string>
+    <string name="input_token_info">请输入Token信息</string>
 </resources>

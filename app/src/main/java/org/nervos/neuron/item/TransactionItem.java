@@ -17,7 +17,7 @@ public class TransactionItem implements Parcelable{
     public String hash;
     public String from;
     public String to;
-    private String value;
+    public String value;
     private long timestamp;
     private long timeStamp;
     public String chainName;
@@ -36,15 +36,6 @@ public class TransactionItem implements Parcelable{
             return ft.format(timestamp);
         }
     }
-
-    public String getValue() {
-        if (TextUtils.isEmpty(value)) return "0" + (TextUtils.isEmpty(content)? "eth":"");
-        BigInteger bigValue = new BigInteger(value);
-        double value = bigValue.multiply(BigInteger.valueOf(10000))
-                .divide(ETHDecimal).doubleValue()/10000.0;
-        return NumberUtil.getDecimal_4(value) + (TextUtils.isEmpty(content)? "eth":"");
-    }
-
 
     @Override
     public int describeContents() {

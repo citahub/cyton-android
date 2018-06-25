@@ -18,6 +18,7 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -58,7 +59,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        NervosRpcService.init(this, NervosRpcService.NERVOS_NODE_IP);
+        NervosRpcService.init(this, ConstantUtil.NERVOS_NODE_IP);
     }
 
     private void initView() {
@@ -88,9 +89,8 @@ public class AddTokenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (tokenItem == null) {
-                    Toast.makeText(mActivity, "请输入Token信息", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
                 } else {
-                    LogUtil.d("token symbol: " + tokenItem.symbol);
                     DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
                     finish();
                 }

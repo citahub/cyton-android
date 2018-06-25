@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -117,7 +118,7 @@ public class NervosRpcService extends BaseRpcService {
             EthGetBalance ethGetBalance =
                     service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
             return ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
-                    .divide(NervosDecimal).doubleValue()/10000.0;
+                    .divide(ConstantUtil.NervosDecimal).doubleValue()/10000.0;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,7 +156,7 @@ public class NervosRpcService extends BaseRpcService {
     }
 
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value, String password) {
-        BigInteger transferValue = NervosDecimal
+        BigInteger transferValue = ConstantUtil.NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
         LogUtil.d("transfer value: " + transferValue.toString());
         return Observable.fromCallable(new Callable<BigInteger>() {

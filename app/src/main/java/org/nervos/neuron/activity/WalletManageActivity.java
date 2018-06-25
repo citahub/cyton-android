@@ -108,7 +108,7 @@ public class WalletManageActivity extends BaseActivity {
                         if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
                             Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                         } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
-                            Toast.makeText(mActivity, R.string.wallet_passworrd_error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
                         }else {
                             generateKeystore(simpleDialog.getMessage());
                             simpleDialog.dismiss();
@@ -132,7 +132,7 @@ public class WalletManageActivity extends BaseActivity {
                     @Override
                     public void onOkClick() {
                         if (!AESCrypt.checkPassword(deleteDialog.getMessage(), walletItem)) {
-                            Toast.makeText(mActivity, R.string.wallet_passworrd_error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         List<String> names = DBWalletUtil.getAllWalletName(mActivity);

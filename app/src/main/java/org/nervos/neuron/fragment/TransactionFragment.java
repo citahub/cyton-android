@@ -25,9 +25,14 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosHttpService;
+import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -101,7 +106,6 @@ public class TransactionFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                transactionItemList.clear();
                 getTransactionList();
             }
         });
@@ -124,19 +128,17 @@ public class TransactionFragment extends BaseFragment {
                 }
                 @Override
                 public void onNext(List<TransactionItem> list) {
-                    transactionItemList.removeAll(list);
-                    transactionItemList.addAll(list);
-                    Collections.sort(transactionItemList, new Comparator<TransactionItem>() {
+                    if (list == null) {
+                        Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Collections.sort(list, new Comparator<TransactionItem>() {
                         @Override
                         public int compare(TransactionItem item1, TransactionItem item2) {
                             return item2.getDate().compareTo(item1.getDate());
                         }
                     });
-
-                    if (transactionItemList == null) {
-                        Toast.makeText(getContext(), "网络请求错误", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    transactionItemList = list;
                     adapter.notifyDataSetChanged();
                 }
             });
@@ -170,16 +172,17 @@ public class TransactionFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
+                TransactionItem transactionItem = transactionItemList.get(position);
                 TransactionViewHolder viewHolder = (TransactionViewHolder)holder;
                 if (walletItem != null) {
                     viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 }
-                viewHolder.transactionIdText.setText(transactionItemList.get(position).hash);
-                String value = (transactionItemList.get(position).from.equalsIgnoreCase(walletItem.address)?
-                        "+" : "-") + transactionItemList.get(position).getValue();
+                viewHolder.transactionIdText.setText(transactionItem.hash);
+                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)? "+" : "-")
+                        + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
-                viewHolder.transactionChainNameText.setText(transactionItemList.get(position).chainName);
-                viewHolder.transactionTimeText.setText(transactionItemList.get(position).getDate());
+                viewHolder.transactionChainNameText.setText(transactionItem.chainName);
+                viewHolder.transactionTimeText.setText(transactionItem.getDate());
                 viewHolder.itemView.setTag(position);
             }
         }

@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case R.id.navigation_wallet:
                     if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
-                        startActivity(new Intent(MainActivity.this, AddWalletActivity.class));
+                        startActivity(new Intent(mActivity, AddWalletActivity.class));
                     } else {
                         if(walletFragment == null){
                             walletFragment = new WalletFragment();
@@ -102,11 +102,11 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 default:
-                    if(walletFragment == null){
-                        walletFragment = new WalletFragment();
-                        transaction.add(R.id.fragment, walletFragment);
+                    if(appFragment == null){
+                        appFragment = new AppFragment();
+                        transaction.add(R.id.fragment, appFragment);
                     } else {
-                        transaction.show(walletFragment);
+                        transaction.show(appFragment);
                     }
                     break;
             }
