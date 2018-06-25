@@ -27,6 +27,7 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.BaseRpcService;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -143,6 +144,8 @@ public class TransferActivity extends BaseActivity {
         nextActionButton.setOnClickListener(v -> {
             if (TextUtils.isEmpty(receiveAddressEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_address_not_null, Toast.LENGTH_SHORT).show();
+            } else if (!AddressUtil.isAddressValid(receiveAddressEdit.getText().toString().trim())) {
+                Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
             } else {

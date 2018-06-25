@@ -228,7 +228,7 @@ public class WebAppUtil {
     }
 
 
-    private final  static String HTTP= "http://";
+    private final  static String HTTP = "http://";
     private final  static  String HTTPS =  "https://";
     public static String addPrefixUrl(String url) {
         if (url.contains(HTTP) || url.contains(HTTPS)) {

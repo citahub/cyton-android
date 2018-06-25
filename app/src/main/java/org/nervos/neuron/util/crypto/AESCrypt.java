@@ -1,17 +1,17 @@
 package org.nervos.neuron.util.crypto;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Base64;
 
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.LogUtil;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Sign;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -24,15 +24,11 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public final class AESCrypt {
 
-    //AESCrypt uses CBC and PKCS7Padding
     private static final String AES_MODE = "AES/CBC/PKCS7Padding";
     private static final String CHARSET = "UTF-8";
-
-    //AESCrypt uses SHA-256 (and so a 256-bit key)
     private static final String HASH_ALGORITHM = "SHA-256";
 
-    //AESCrypt uses blank IV (not the best security, but the aim here is compatibility)
-    private static final byte[] ivBytes = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    private static final String KEY_IV = "00";
 
     /**
      * Generates SHA256 hash of the password which is used as key
@@ -62,7 +58,7 @@ public final class AESCrypt {
             throws GeneralSecurityException {
         try {
             final SecretKeySpec key = generateKey(password);
-            byte[] cipherText = encrypt(key, ivBytes, message.getBytes(CHARSET));
+            byte[] cipherText = encrypt(key, getIV(), message.getBytes(CHARSET));
             return Base64.encodeToString(cipherText, Base64.NO_WRAP);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -101,7 +97,7 @@ public final class AESCrypt {
         try {
             final SecretKeySpec key = generateKey(password);
             byte[] decodedCipherText = Base64.decode(base64EncodedCipherText, Base64.NO_WRAP);
-            byte[] decryptedBytes = decrypt(key, ivBytes, decodedCipherText);
+            byte[] decryptedBytes = decrypt(key, getIV(), decodedCipherText);
             return new String(decryptedBytes, CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -136,6 +132,36 @@ public final class AESCrypt {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private static byte[] getIV() {
+        return readIvFromFileOrGenerateNew();
+    }
+
+    private static SharedPreferences preferences;
+    public static void init(Context context) {
+        preferences = context.getSharedPreferences("ae", Context.MODE_PRIVATE);
+    }
+
+    private static byte[] readIvFromFileOrGenerateNew() {
+        final String encoded = preferences.getString(KEY_IV, null);
+        if (encoded == null) {
+            return generateAndSaveIv();
+        }
+        return Base64.decode(encoded, Base64.NO_WRAP);
+    }
+
+    private static byte[] generateAndSaveIv() {
+        final SecureRandom random = new SecureRandom();
+        final byte[] bytes = new byte[16];
+        random.nextBytes(bytes);
+        saveIvToFile(bytes);
+        return bytes;
+    }
+
+    private static void saveIvToFile(final byte[] iv) {
+        final String toWrite = Base64.encodeToString(iv, Base64.NO_WRAP);
+        preferences.edit().putString(KEY_IV, toWrite).apply();
     }
 
 }

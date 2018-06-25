@@ -14,13 +14,13 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
+import org.nervos.neuron.util.ConstantUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment {
 
     public static final String TAG = SettingsFragment.class.getName();
-    private static final String GITHUB_URL = "https://github.com/cryptape/Neuron-Android";
 
     private TextView contactText;
     private CircleImageView appImage;
@@ -61,7 +61,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SimpleWebActivity.class);
-                intent.putExtra(SimpleWebActivity.EXTRA_URL, GITHUB_URL);
+                intent.putExtra(SimpleWebActivity.EXTRA_URL, ConstantUtil.GITHUB_URL);
                 startActivity(intent);
             }
         });

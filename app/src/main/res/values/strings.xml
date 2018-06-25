@@ -150,4 +150,5 @@
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="generate_keystore_fail">KeyStore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
+    <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
 </resources>
