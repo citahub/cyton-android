@@ -34,8 +34,14 @@ import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
 
@@ -115,15 +121,34 @@ public class AddWebsiteActivity extends BaseActivity {
     }
 
 
-    private void gotoWebViewWithUrl(String url) {
+    private void gotoWebViewWithUrl(final String url) {
         if (TextUtils.isEmpty(url)) {
-            Toast.makeText(mActivity, "请输入正确的网页地址", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
         } else {
-            websiteEdit.setText(url);
-            DBHistoryUtil.saveHistory(mActivity, url);
-            Intent intent = new Intent(mActivity, AppWebActivity.class);
-            intent.putExtra(AppWebActivity.EXTRA_URL, url);
-            startActivity(intent);
+            showProgressCircle();
+            Observable.fromCallable(() -> WebAppUtil.addPrefixUrl(url))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        dismissProgressCircle();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        dismissProgressCircle();
+                        Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onNext(String newUrl) {
+                        websiteEdit.setText(newUrl);
+                        DBHistoryUtil.saveHistory(mActivity, newUrl);
+                        Intent intent = new Intent(mActivity, AppWebActivity.class);
+                        intent.putExtra(AppWebActivity.EXTRA_URL, newUrl);
+                        startActivity(intent);
+                    }
+                });
         }
     }
 

@@ -32,7 +32,9 @@ import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.concurrent.Callable;
 
 import okhttp3.Call;
@@ -226,11 +228,27 @@ public class WebAppUtil {
     }
 
 
-//    public static boolean isHttpUrl(String urlString) {
-//        if (urlString.indexOf("http://") != 0 && urlString.indexOf("https://") != 0) {
-//            urlString = "http://" + urlString;
-//        }
-////        URLUtil.isValidUrl()
-//    }
+    private final  static String HTTP= "http://";
+    private final  static  String HTTPS =  "https://";
+    public static String addPrefixUrl(String url) {
+        if (url.contains(HTTP) || url.contains(HTTPS)) {
+            return url;
+        } else if (exists(HTTPS + url)) {
+            return (HTTPS + url);
+        } else if (exists(HTTP + url)) {
+            return (HTTP + url);
+        }
+        return url;
+    }
+
+    private static boolean exists(String url) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            con.setConnectTimeout(3000);
+            return (con.getResponseCode() == 200);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }
