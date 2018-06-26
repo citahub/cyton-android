@@ -28,6 +28,7 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -37,6 +38,7 @@ import org.web3j.utils.Numeric;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class NervosRpcService extends BaseRpcService {
+public class NervosRpcService {
 
     private static Web3j service;
 
@@ -86,10 +88,10 @@ public class NervosRpcService extends BaseRpcService {
     public static double getErc20Balance(TokenItem tokenItem, String address) {
         try {
             Call balanceCall = new Call(address, tokenItem.contractAddress,
-                    BALANCEOF_HASH + ZERO_16 + Numeric.cleanHexPrefix(address));
+                    ConstantUtil.BALANCEOF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
             String balanceOf = service.ethCall(balanceCall,
                     DefaultBlockParameter.valueOf("latest")).send().getValue();
-            if (!TextUtils.isEmpty(balanceOf) && !"0x".equals(balanceOf)) {
+            if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
                 initIntTypes();
                 Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
                 double balances = balance.getValue().doubleValue();
@@ -184,7 +186,8 @@ public class NervosRpcService extends BaseRpcService {
 
     private static BigInteger getValidUntilBlock() {
         try {
-            return BigInteger.valueOf((service.ethBlockNumber().send()).getBlockNumber().longValue() + 80L);
+            return BigInteger.valueOf((service.ethBlockNumber().send())
+                    .getBlockNumber().longValue() + ConstantUtil.VALID_BLOCK_NUMBER_DIFF);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -193,10 +196,7 @@ public class NervosRpcService extends BaseRpcService {
 
     private static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
-
-        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
-        });
-
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
         Function function = new Function("transfer", params, returnTypes);
         return FunctionEncoder.encode(function);
     }
@@ -212,34 +212,56 @@ public class NervosRpcService extends BaseRpcService {
     }
 
     private static String getErc20Name(String contractAddress) throws IOException {
-        Call nameCall = new Call(walletItem.address, contractAddress, NAME_HASH);
+        Call nameCall = new Call(walletItem.address, contractAddress, ConstantUtil.NAME_HASH);
         String name = service.ethCall(nameCall, DefaultBlockParameter.valueOf("latest"))
                 .send().getValue();
-        if (TextUtils.isEmpty(name) || "0x".equals(name)) return null;
+        if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(name, stringTypes).get(0).toString();
     }
 
 
     private static String getErc20Symbol(String contractAddress) throws IOException {
-        Call symbolCall = new Call(walletItem.address, contractAddress, SYMBOL_HASH);
+        Call symbolCall = new Call(walletItem.address, contractAddress, ConstantUtil.SYMBOL_HASH);
         String symbol = service.ethCall(symbolCall, DefaultBlockParameter.valueOf("latest"))
                 .send().getValue();
-        if (TextUtils.isEmpty(symbol) || "0x".equals(symbol)) return null;
+        if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
     }
 
     private static int getErc20Decimals(String contractAddress) throws IOException {
-        Call decimalsCall = new Call(walletItem.address, contractAddress, DECIMALS_HASH);
+        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstantUtil.DECIMALS_HASH);
         String decimals = service.ethCall(decimalsCall,
                 DefaultBlockParameter.valueOf("latest")).send().getValue();
-        if (!TextUtils.isEmpty(decimals) && !"0x".equals(decimals)) {
+        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
             Int64 type = (Int64) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();
         }
         return 0;
+    }
+
+    private static List<TypeReference<Type>> intTypes = new ArrayList<>();
+    private static void initIntTypes() {
+        intTypes.clear();
+        intTypes.add(new TypeReference<Type>() {
+            @Override
+            public java.lang.reflect.Type getType() {
+                return Int64.class;
+            }
+        });
+    }
+
+    private static List<TypeReference<Type>> stringTypes = new ArrayList<>();
+    private static void initStringTypes() {
+        stringTypes.clear();
+        stringTypes.add(new TypeReference<Type>() {
+            @Override
+            public java.lang.reflect.Type getType() {
+                return Utf8String.class;
+            }
+        });
     }
 
 }

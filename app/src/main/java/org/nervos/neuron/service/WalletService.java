@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 
@@ -19,8 +20,6 @@ public class WalletService {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-    private static final String ETH = "ETH";
-
     public static void getWalletTokenBalance(Context context, WalletItem walletItem,
                                                    OnGetWalletTokenListener listener) {
         if (walletItem == null || walletItem.tokenItems.size() == 0) return;
@@ -30,21 +29,20 @@ public class WalletService {
             while(iterator.hasNext()){
                 TokenItem tokenItem = iterator.next();
                 iterator.remove();
-                LogUtil.d("token symbol: " + tokenItem.symbol);
-                if (tokenItem.chainId < 0) {
-                    if (ETH.equals(tokenItem.symbol)) {
+                if (tokenItem.chainId < 0) {                // ethereum
+                    if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                         tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                         tokenItemList.add(tokenItem);
                     } else {
                         tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);;
                         tokenItemList.add(tokenItem);
                     }
-                } else {
+                } else {                                    // nervos
                     ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                     if (chainItem != null) {
                         String httpProvider = chainItem.httpProvider;
                         NervosRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {    // nervos erc20 token
+                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
                             tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
                             tokenItemList.add(tokenItem);
                         } else {

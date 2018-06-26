@@ -46,9 +46,9 @@ public class ImportWalletActivity extends BaseActivity {
         importFragments.add(importMnemonicFragment);
         importFragments.add(importPrivateKeyFragment);
 
-        tabTitles.add("Keystore");
-        tabTitles.add("助记词");
-        tabTitles.add("私钥");
+        tabTitles.add(getString(R.string.keystore));
+        tabTitles.add(getString(R.string.nmemonic));
+        tabTitles.add(getString(R.string.private_key));
 
         FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

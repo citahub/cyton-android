@@ -26,7 +26,6 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstantUtil;
@@ -36,12 +35,9 @@ import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.web3j.crypto.Keys;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.math.BigInteger;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
@@ -122,7 +118,7 @@ public class TransferActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 mGasPrice = gasPrice;
-                mGas = NumberUtil.getDoubleFromBig(gasPrice.multiply(BaseRpcService.GAS_LIMIT));
+                mGas = NumberUtil.getDoubleFromBig(gasPrice.multiply(ConstantUtil.GAS_LIMIT));
                 feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }
@@ -230,7 +226,7 @@ public class TransferActivity extends BaseActivity {
                 simpleDialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
                 if (tokenItem.chainId < 0) {
-                    if (EthRpcService.ETH.equals(tokenItem.symbol)) {
+                    if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                         transferEth(password, value, progressBar);
                     } else {
                         transferEthErc20(password, value, progressBar);

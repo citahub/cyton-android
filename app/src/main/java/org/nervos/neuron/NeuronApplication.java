@@ -2,7 +2,6 @@ package org.nervos.neuron;
 
 import android.app.Application;
 
-import org.nervos.neuron.service.BaseRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;

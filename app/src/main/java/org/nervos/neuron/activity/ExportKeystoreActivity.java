@@ -40,7 +40,7 @@ public class ExportKeystoreActivity extends BaseActivity {
                 ClipData mClipData = ClipData.newPlainText("keystore", keystore);
                 if (cm != null) {
                     cm.setPrimaryClip(mClipData);
-                    Toast.makeText(mActivity, "复制成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
                 }
             }
         });
