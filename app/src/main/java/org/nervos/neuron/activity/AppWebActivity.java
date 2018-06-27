@@ -121,6 +121,7 @@ public class AppWebActivity extends BaseActivity {
     private void initCollectView() {
         collectText.setText(WebAppUtil.isCollectApp(webView)? getString(R.string.cancel_collect):getString(R.string.collect));
         closeMenuWindow();
+
     }
 
     private void closeMenuWindow() {
