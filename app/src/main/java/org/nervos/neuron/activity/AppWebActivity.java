@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -37,6 +37,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import trust.core.entity.Address;
+import trust.web3.Web3View;
 
 public class AppWebActivity extends BaseActivity {
 
@@ -44,7 +46,7 @@ public class AppWebActivity extends BaseActivity {
     public static final String EXTRA_CHAIN = "extra_chain";
     public static final String EXTRA_URL = "extra_url";
 
-    private WebView webView;
+    private Web3View webView;
     private TextView titleText;
     private TextView collectText;
     private ProgressBar progressBar;
@@ -61,7 +63,8 @@ public class AppWebActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         initView();
-        initWebView();
+//        initWebView();
+        initInjectWebView();
         webView.loadUrl(url);
 
         WebAppUtil.getHttpManifest(webView, url);
@@ -121,9 +124,25 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
 
+    private void initInjectWebView() {
+        webView.setChainId(1);
+        webView.setRpcUrl("https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk");
+        webView.setWalletAddress(new Address("0xf4c0762D2cB41896b72266cdd24497Be6F5c791c"));
+
+        webView.setOnSignTransactionListener(transaction -> {
+//                callSignTransaction = Trust.signTransaction().transaction(transaction).call(this)
+            Toast.makeText(mActivity,
+                    "transaction information: payload: " + transaction.payload
+                            + " gasPrice: " + transaction.gasPrice, Toast.LENGTH_LONG).show();
+            Log.d("trust", "transaction information: payload: " + transaction.payload
+                    + " gasPrice: " + transaction.gasPrice);
+
+        });
+    }
+
     private void initWebView() {
         WebAppUtil.initWebSettings(webView.getSettings());
-        webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
+        webView.addJavascriptInterface(new Nervos(), "nervos");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
@@ -164,15 +183,12 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-//        webView.loadUrl(WebAppUtil.getInjectJs(mActivity));
-//        webView.evaluateJavascript(WebAppUtil.getInjectTrust(mActivity), null);
-
         webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(), null);
         webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
     }
 
 
-    private class AppHybrid {
+    private class Nervos {
 
         @JavascriptInterface
         public void sendTransaction(String tx) {

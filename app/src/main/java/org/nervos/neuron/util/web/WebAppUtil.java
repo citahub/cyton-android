@@ -184,24 +184,12 @@ public class WebAppUtil {
         return null;
     }
 
-    public static String getInjectTrust(Context context) {
-        StringBuffer sb = new StringBuffer(getFileFromAsset(context, "trust.js"));
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        String js = "javascript: ; const addressHex = '" + walletItem.address
-                + "'; const rpcURL = '"
-                + ConstantUtil.ETH_NODE_IP + "'; const wssURL = '"
-                + ConstantUtil.ETH_NODE_IP + "'; const chainID = 1; console.log('Injected finish')";
-        sb.append(js);
-        sb.append(getFileFromAsset(context, "trust-init.js"));
-        return sb.toString();
-    }
-
     public static String getInjectNervosWeb3() {
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3('" + ConstantUtil.ETH_NODE_IP + "')}";
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstantUtil.ETH_NODE_IP + "')}";
     }
 
     public static String getInjectTransactionJs() {
-        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx))};";
+        return "javascript: web3.eth.sendTransaction = function(tx) {nervos.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {nervos.signTransaction(JSON.stringify(tx))};";
     }
 
     @SuppressLint("SetJavaScriptEnabled")
