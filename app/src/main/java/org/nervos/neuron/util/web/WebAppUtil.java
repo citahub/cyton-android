@@ -190,7 +190,7 @@ public class WebAppUtil {
     }
 
     public static String getInjectTransactionJs() {
-        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx))};";
+        return "javascript: web3.eth.sendTransaction = function(tx) {nervos.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {nervos.signTransaction(JSON.stringify(tx))};";
     }
 
     @SuppressLint("SetJavaScriptEnabled")
