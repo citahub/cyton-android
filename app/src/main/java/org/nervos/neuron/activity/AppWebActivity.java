@@ -369,14 +369,15 @@ public class AppWebActivity extends BaseActivity {
                     webView.evaluateJavascript("javascript:cancelled()", null);
                     break;
                 case RESULT_CODE_SUCCESS:
-                    webView.evaluateJavascript("javascript:onSignSuccessful("
+                    LogUtil.d("onSignSuccessful: " + data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
+                    webView.evaluateJavascript("javascript:onSignSuccessful('"
                             + data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH)
-                            + ")", null);
+                            + "')", null);
                     break;
                 case RESULT_CODE_FAIL:
-                    webView.evaluateJavascript("javascript:onSignFail("
+                    webView.evaluateJavascript("javascript:onSignFail('"
                             + data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR)
-                            + ")", null);
+                            + "')", null);
                     break;
                 default:
                     break;

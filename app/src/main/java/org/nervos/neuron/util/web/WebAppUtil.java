@@ -185,7 +185,7 @@ public class WebAppUtil {
     }
 
     public static String getInjectNervosWeb3() {
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3('" + ConstantUtil.NERVOS_NODE_URL + "')}";
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3(new Web3.providers.HttpProvider('" + ConstantUtil.NERVOS_NODE_URL + "'))}";
     }
 
     public static String getInjectTransactionJs() {

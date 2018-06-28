@@ -20,6 +20,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -266,6 +267,7 @@ public class PayTokenActivity extends BaseActivity {
 
 
     private void gotoSignSuccess(String hexHash) {
+        LogUtil.d("hexHash: " + hexHash);
         Intent intent = new Intent();
         intent.putExtra(EXTRA_HEX_HASH, hexHash);
         setResult(AppWebActivity.RESULT_CODE_SUCCESS, intent);
