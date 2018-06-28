@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -36,6 +37,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class PayTokenActivity extends BaseActivity {
+
+    public static final String EXTRA_HEX_HASH = "extra_hex_hash";
+    public static final String EXTRA_PAY_ERROR = "extra_pay_error";
 
     private TransactionRequest transactionRequest;
     private WalletItem walletItem;
@@ -115,6 +119,7 @@ public class PayTokenActivity extends BaseActivity {
         findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(AppWebActivity.RESULT_CODE_CANCEL);
                 finish();
             }
         });
@@ -203,19 +208,23 @@ public class PayTokenActivity extends BaseActivity {
                     e.printStackTrace();
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+                    gotoSignFail(e.getMessage());
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         sheetDialog.dismiss();
                         Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+                        gotoSignSuccess(ethSendTransaction.getTransactionHash());
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
                         sheetDialog.dismiss();
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        gotoSignFail(ethSendTransaction.getError().getMessage());
                     } else {
                         Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+                        gotoSignFail(getString(R.string.transfer_fail));
                     }
                 }
             });
@@ -232,6 +241,7 @@ public class PayTokenActivity extends BaseActivity {
                 public void onError(Throwable e) {
                     e.printStackTrace();
                     progressBar.setVisibility(View.GONE);
+                    gotoSignFail(e.getMessage());
                 }
                 @Override
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
@@ -239,17 +249,34 @@ public class PayTokenActivity extends BaseActivity {
                         sheetDialog.dismiss();
                         DBChainUtil.saveChain(mActivity, chainItem);
                         Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+                        gotoSignSuccess(ethSendTransaction.getSendTransactionResult().getHash());
                     } else if (ethSendTransaction.getError() != null &&
                             !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
                         sheetDialog.dismiss();
                         Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        gotoSignFail(ethSendTransaction.getError().getMessage());
                     } else {
                         Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+                        gotoSignFail(getString(R.string.transfer_fail));
                     }
                 }
             });
     }
 
+
+    private void gotoSignSuccess(String hexHash) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_HEX_HASH, hexHash);
+        setResult(AppWebActivity.RESULT_CODE_SUCCESS, intent);
+        finish();
+    }
+
+    private void gotoSignFail(String error) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_PAY_ERROR, error);
+        setResult(AppWebActivity.RESULT_CODE_FAIL, intent);
+        finish();
+    }
 
 }

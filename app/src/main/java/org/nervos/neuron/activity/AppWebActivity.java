@@ -30,6 +30,7 @@ import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.security.GeneralSecurityException;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,6 +44,10 @@ public class AppWebActivity extends BaseActivity {
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
     public static final String EXTRA_URL = "extra_url";
+    private static final int REQUEST_CODE = 0x01;
+    public static final int RESULT_CODE_SUCCESS = 0x02;
+    public static final int RESULT_CODE_FAIL = 0x01;
+    public static final int RESULT_CODE_CANCEL = 0x00;
 
     private WebView webView;
     private TextView titleText;
@@ -183,7 +188,7 @@ public class AppWebActivity extends BaseActivity {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, tx);
                 intent.putExtra(EXTRA_CHAIN, WebAppUtil.getChainItem());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         }
 
@@ -355,6 +360,29 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_CODE_CANCEL:
+                    webView.evaluateJavascript("javascript:cancelled()", null);
+                    break;
+                case RESULT_CODE_SUCCESS:
+                    webView.evaluateJavascript("javascript:onSignSuccessful("
+                            + data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH)
+                            + ")", null);
+                    break;
+                case RESULT_CODE_FAIL:
+                    webView.evaluateJavascript("javascript:onSignFail("
+                            + data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR)
+                            + ")", null);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
