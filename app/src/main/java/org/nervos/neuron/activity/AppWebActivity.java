@@ -30,7 +30,6 @@ import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.security.GeneralSecurityException;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
