@@ -184,8 +184,9 @@ public class WebAppUtil {
         return null;
     }
 
-    public static String getInjectNervosWeb3() {
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = CITAWeb3(web3.currentProvider) } else { web3 = CITAWeb3(new Web3.providers.HttpProvider('" + ConstantUtil.NERVOS_NODE_URL + "'))}";
+    public static String getInjectNervosWeb3(Context context) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstantUtil.NERVOS_NODE_URL + "'))}; web3.defaultAccount.address='" + walletItem.address + "'";
     }
 
     public static String getInjectTransactionJs() {

@@ -172,7 +172,7 @@ public class AppWebActivity extends BaseActivity {
 //        webView.loadUrl(WebAppUtil.getInjectJs(mActivity));
 //        webView.evaluateJavascript(WebAppUtil.getInjectTrust(mActivity), null);
 
-        webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(), null);
+        webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(mActivity), null);
         webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
     }
 

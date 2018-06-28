@@ -24,7 +24,7 @@ public class ConstantUtil {
     public static final String INNER_URL = "http://47.97.171.140:8866/";
 
     public static final BigInteger NervosDecimal = new BigInteger("100000000000000000");
-    public static final String NERVOS_NODE_IP = "http://47.94.105.230:1337";
+    public static final String NERVOS_NODE_IP = "http://47.97.108.229:1337";
     public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
 //    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 

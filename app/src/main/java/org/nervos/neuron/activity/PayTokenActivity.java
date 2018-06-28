@@ -61,7 +61,9 @@ public class PayTokenActivity extends BaseActivity {
 
     private void initData() {
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
-        transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
+        if (!TextUtils.isEmpty(payload)) {
+            transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
+        }
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         chainItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
     }
