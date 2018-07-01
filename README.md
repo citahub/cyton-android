@@ -4,9 +4,9 @@ Welcome to Neuron's open source Android app!
 Getting Started
 ===============
 
-1. Clone this code to your machine
-2. Download and fully install [Android Studio](https://developer.android.com/studio/index.html)
-3. Open this code in Android Studio (Choosing the containing directory in Android Studio `Open` dialog works)
+1. Clone this repo to your machine
+2. Download and install [Android Studio](https://developer.android.com/studio/index.html)
+3. Open this project in Android Studio (Choosing the contained directory in Android Studio `Open` dialog works)
 4. Click the `Play` button
 
 Making a new build for App store (Dev only)
