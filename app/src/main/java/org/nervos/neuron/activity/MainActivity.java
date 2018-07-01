@@ -1,5 +1,7 @@
 package org.nervos.neuron.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,10 +19,12 @@ import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class MainActivity extends BaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
+    private static final String KEY_FIRST = "key_first";
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -44,6 +48,19 @@ public class MainActivity extends BaseActivity {
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);
         fMgr = getSupportFragmentManager();
+
+        if (SharePrefUtil.getBoolean(KEY_FIRST)) {
+            SharePrefUtil.putBoolean(KEY_FIRST, false);
+            new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.dialog_title_tip)
+                .setMessage(R.string.dialog_tip_message)
+                .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+        }
     }
 
     @Override

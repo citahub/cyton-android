@@ -23,6 +23,14 @@ public class SharePrefUtil {
         return sharedPreferences.getString(key, null);
     }
 
+    public static boolean getBoolean(String key) {
+        return sharedPreferences.getBoolean(key, true);
+    }
+
+    public static void putBoolean(String key, boolean value) {
+        sharedPreferences.edit().putBoolean(key, value).apply();
+    }
+
     public static void putCurrentWalletName(String name){
         putString(WALLET_NAME, name);
     }

@@ -156,4 +156,7 @@
     <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
+    <string name="dialog_title_tip">提示</string>
+    <string name="dialog_tip_message">Neuron是Nervos AppChain的开源组件，目前处于beta测试版状态，主要提供给开发者开发、测试DApp，不建议普通用户使用，更不建议您在Neuron中托管大量的数字资产。</string>
+    <string name="have_known">知道了</string>
 </resources>
