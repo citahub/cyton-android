@@ -1,2 +1,34 @@
-# Neuron-Android
-The Nervos wallet app on Android operation system
+
+Welcome to Neuron's open source Android app!
+
+Getting Started
+===============
+
+1. Clone this code to your machine
+2. Download and fully install [Android Studio](https://developer.android.com/studio/index.html)
+3. Open this code in Android Studio (Choosing the containing directory in Android Studio `Open` dialog works)
+4. Open app/build.gradle and change certificate, alias and password
+5. Click the `Play` button
+
+Making a new build for App store (Dev only)
+============================================
+
+1. Open app/build.gradle
+2. Increase the versionCode by 1.
+3. Optionally change the versionName to whatever you want.
+4. Build the APK however you want (in Android Studio or via gradle)
+    - You'll need the release certificate, alias and password.
+5. Commit the changes to build.gradle, upload the APKs to App store
+
+Contributing
+============================================
+
+We intend for this project to be an open source resource: we are excited to
+share our wins, mistakes, and methodology of Android development as we work
+in the open. Our primary focus is to continue improving the app for our users in
+line with our roadmap.
+
+The best way to submit feedback and report bugs is to open a GitHub issue.
+Please be sure to include your operating system, device, version number, and
+steps to reproduce reported bugs. Keep in mind that all participants will be
+expected to follow our code of conduct.

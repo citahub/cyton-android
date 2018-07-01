@@ -50,7 +50,7 @@ public class SettingsFragment extends Fragment {
         try {
             String versionName = getContext().getPackageManager()
                     .getPackageInfo(getContext().getPackageName(), 0).versionName;
-            versionText.setText(String.format("v %s", versionName));
+            versionText.setText(String.format("V %s", versionName));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
