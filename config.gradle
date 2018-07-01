@@ -1,0 +1,8 @@
+ext.appConfig = [
+        versionCode: 1,
+
+        versionMajor: 1,
+        versionMinor: 0,
+        versionBeta: 0
+]
+
