@@ -58,9 +58,7 @@ public class EthRpcService {
     private static Web3j service;
 
     public static void init(Context context) {
-        if (service == null) {
-            service = Web3jFactory.build(new InfuraHttpService(ConstantUtil.ETH_NODE_IP));
-        }
+        service = Web3jFactory.build(new InfuraHttpService(ConstantUtil.ETH_NODE_IP));
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 

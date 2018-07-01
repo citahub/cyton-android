@@ -24,7 +24,6 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 public class MainActivity extends BaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
-    private static final String KEY_FIRST = "key_first";
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -49,8 +48,8 @@ public class MainActivity extends BaseActivity {
         navigation.check(RadioGroup.NO_ID);
         fMgr = getSupportFragmentManager();
 
-        if (SharePrefUtil.getBoolean(KEY_FIRST)) {
-            SharePrefUtil.putBoolean(KEY_FIRST, false);
+        if (SharePrefUtil.getFirstIn()) {
+            SharePrefUtil.putFirstIn(false);
             new AlertDialog.Builder(mActivity)
                 .setTitle(R.string.dialog_title_tip)
                 .setMessage(R.string.dialog_tip_message)

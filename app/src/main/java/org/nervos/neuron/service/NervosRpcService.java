@@ -3,6 +3,8 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+
+import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
@@ -62,7 +64,7 @@ public class NervosRpcService {
     private static WalletItem walletItem;
 
     public static void init(Context context, String httpProvider) {
-        HttpService.setDebug(true);
+        HttpService.setDebug(BuildConfig.IS_DEBUG);
         service = Web3j.build(new HttpService(httpProvider));
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }

@@ -10,7 +10,7 @@ android {
         versionCode appConfig.versionCode
         versionName getVersionName(true)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "boolean", "IS_DEBUG", "true"
+        buildConfigField "boolean", "IS_DEBUG", "false"
         multiDexEnabled true
 
     }

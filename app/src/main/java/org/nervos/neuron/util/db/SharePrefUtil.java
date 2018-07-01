@@ -9,6 +9,7 @@ public class SharePrefUtil {
 
     private static final String FILE_NAME = "shared_name";
     private static final String WALLET_NAME = "wallet_name";
+    private static final String KEY_FIRST = "key_first";
     private static SharedPreferences sharedPreferences;
 
     public static void init(Context context) {
@@ -29,6 +30,14 @@ public class SharePrefUtil {
 
     public static void putBoolean(String key, boolean value) {
         sharedPreferences.edit().putBoolean(key, value).apply();
+    }
+
+    public static boolean getFirstIn() {
+        return sharedPreferences.getBoolean(KEY_FIRST, true);
+    }
+
+    public static void putFirstIn(boolean value) {
+        sharedPreferences.edit().putBoolean(KEY_FIRST, value).apply();
     }
 
     public static void putCurrentWalletName(String name){

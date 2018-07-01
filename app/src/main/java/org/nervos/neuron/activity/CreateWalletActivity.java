@@ -1,5 +1,7 @@
 package org.nervos.neuron.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -68,6 +70,19 @@ public class CreateWalletActivity extends BaseActivity {
         if (getIntent() != null &&
                 getIntent().getBooleanExtra(SplashActivity.EXTRA_FIRST, false)) {
             titleBar.hideLeft();
+        }
+
+        if (SharePrefUtil.getFirstIn()) {
+            SharePrefUtil.putFirstIn(false);
+            new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.dialog_title_tip)
+                    .setMessage(R.string.dialog_tip_message)
+                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
     }
 

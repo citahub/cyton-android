@@ -45,7 +45,7 @@ public class NervosHttpService {
         return Observable.fromCallable(new Callable<EthMetaData.EthMetaDataResult>() {
                 @Override
                 public EthMetaData.EthMetaDataResult call() {
-                    NervosRpcService.init(context, ConstantUtil.NERVOS_NODE_URL);
+                    NervosRpcService.init(context, ConstantUtil.NERVOS_NODE_IP);
                     return NervosRpcService.getMetaData().getEthMetaDataResult();
                 }
             }).flatMap(new Func1<EthMetaData.EthMetaDataResult, Observable<List<TransactionItem>>>() {
