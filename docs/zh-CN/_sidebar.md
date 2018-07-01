@@ -1,1 +1,3 @@
 - [Neuron 简介](zh-CN/neuron.md)
+- [隐私政策](zh-CN/privacy-policy.md)
+- [产品协议](zh-CN/product-agreement.md)
