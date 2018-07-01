@@ -1,12 +1,15 @@
 package org.nervos.neuron.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
@@ -18,6 +21,7 @@ public class SimpleWebActivity extends BaseActivity {
 
     private WebView webView;
     private TitleBar titleBar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,14 +32,26 @@ public class SimpleWebActivity extends BaseActivity {
         webView.loadUrl(url);
     }
 
+    public static void gotoSimpleWeb(Context context, String url) {
+        Intent intent = new Intent(context, SimpleWebActivity.class);
+        intent.putExtra(SimpleWebActivity.EXTRA_URL, url);
+        context.startActivity(intent);
+    }
+
     private void initWebView() {
         webView = findViewById(R.id.webview);
         titleBar = findViewById(R.id.title);
+        progressBar = findViewById(R.id.progressBar);
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
-
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);
+                }
             }
             @Override
             public void onReceivedTitle(WebView view, String title) {

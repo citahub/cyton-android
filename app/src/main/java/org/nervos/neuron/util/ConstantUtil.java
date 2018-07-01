@@ -11,6 +11,8 @@ public class ConstantUtil {
     public static final BigInteger ETHDecimal = new BigInteger("1000000000000000000");
     public static final String ETH_MAIN_NET = "Ethereum Mainnet";
     public static final String SOURCE_CODE_GITHUB_URL = "https://github.com/cryptape/Neuron-Android";
+    public static final String PRODUCT_AGREEMENT_URL = "https://cryptape.github.io/Neuron-Android/#/zh-CN/product-agreement";
+    public static final String CONTACT_US_RUL = "http://appchain.nervos.org//#/contact-us";
 
     // transaction list page config information
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
