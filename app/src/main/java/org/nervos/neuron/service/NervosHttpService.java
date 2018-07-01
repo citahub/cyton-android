@@ -14,6 +14,8 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -84,7 +86,9 @@ public class NervosHttpService {
                             item.chainName = ConstantUtil.ETH_MAIN_NET;
                             item.value = (NumberUtil.getStringNumberFromBig(item.value) + ConstantUtil.ETH);
                         }
-                        response.result.addAll(list);
+                        if (list != null && list.size() != 0) {
+                            response.result.addAll(list);
+                        }
                         return Observable.just(response.result);
                     } catch (IOException e) {
                         e.printStackTrace();
