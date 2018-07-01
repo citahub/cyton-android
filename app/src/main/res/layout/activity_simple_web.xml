@@ -12,6 +12,13 @@
         android:background="@color/colorPrimary"
         app:isShowLeft="true"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
+        android:visibility="gone" />
+
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"

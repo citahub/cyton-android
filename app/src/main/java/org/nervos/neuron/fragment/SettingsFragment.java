@@ -2,7 +2,6 @@ package org.nervos.neuron.fragment;
 
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ public class SettingsFragment extends Fragment {
     private CircleImageView appImage;
     private TextView versionText;
     private TextView sourceCodeText;
+    private TextView protocolText;
 
     @Nullable
     @Override
@@ -33,6 +33,7 @@ public class SettingsFragment extends Fragment {
         appImage = view.findViewById(R.id.app_photo);
         versionText = view.findViewById(R.id.app_version);
         sourceCodeText = view.findViewById(R.id.setting_source_code);
+        protocolText = view.findViewById(R.id.service_protocol);
         return view;
     }
 
@@ -58,10 +59,23 @@ public class SettingsFragment extends Fragment {
         sourceCodeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SimpleWebActivity.class);
-                intent.putExtra(SimpleWebActivity.EXTRA_URL, ConstantUtil.SOURCE_CODE_GITHUB_URL);
-                startActivity(intent);
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.SOURCE_CODE_GITHUB_URL);
             }
         });
+
+        protocolText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.PRODUCT_AGREEMENT_URL);
+            }
+        });
+
+        contactText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.CONTACT_US_RUL);
+            }
+        });
+
     }
 }
