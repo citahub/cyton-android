@@ -17,15 +17,15 @@ android {
     signingConfigs {
         release {
             storeFile file('../keystore.jks')
-            storePassword "${signStorePassword}"
-            keyAlias "${signKeyAlias}"
-            keyPassword "${signKeyPassword}"
+            storePassword appConfig.signStorePassword
+            keyAlias appConfig.signKeyAlias
+            keyPassword appConfig.signKeyPassword
         }
         debug {
             storeFile file('../keystore.jks')
-            storePassword "${signStorePassword}"
-            keyAlias "${signKeyAlias}"
-            keyPassword "${signKeyPassword}"
+            storePassword appConfig.signStorePassword
+            keyAlias appConfig.signKeyAlias
+            keyPassword appConfig.signKeyPassword
         }
     }
 

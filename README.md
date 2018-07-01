@@ -7,8 +7,7 @@ Getting Started
 1. Clone this code to your machine
 2. Download and fully install [Android Studio](https://developer.android.com/studio/index.html)
 3. Open this code in Android Studio (Choosing the containing directory in Android Studio `Open` dialog works)
-4. Open app/build.gradle and change certificate, alias and password
-5. Click the `Play` button
+4. Click the `Play` button
 
 Making a new build for App store (Dev only)
 ============================================
