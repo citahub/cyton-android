@@ -8,9 +8,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 27
         versionCode appConfig.versionCode
-        versionName getVersionName(true)
+        versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "boolean", "IS_DEBUG", "false"
         multiDexEnabled true
 
     }
@@ -34,18 +33,21 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "IS_DEBUG", "true"
         }
 
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "IS_DEBUG", "false"
         }
     }
 
     applicationVariants.all {
         variant ->
             variant.outputs.all { output ->
+                println "buildType: " + variant.buildType.name
                 if (variant.buildType.name == 'release') {
                     def apkName = "neuron_v${getVersionName(false)}.apk"
                     outputFileName = new File(apkName)

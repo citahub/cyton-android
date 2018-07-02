@@ -7,6 +7,8 @@ ext.appConfig = [
 
         signStorePassword: "cryptape2016@#",
         signKeyAlias: "neuron",
-        signKeyPassword: "cryptape2016@#"
+        signKeyPassword: "cryptape2016@#",
+
+        isDebug: false
 ]
 
