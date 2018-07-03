@@ -31,3 +31,7 @@ The best way to submit feedback and report bugs is to open a GitHub issue.
 Please be sure to include your operating system, device, version number, and
 steps to reproduce reported bugs. Keep in mind that all participants will be
 expected to follow our code of conduct.
+
+MIT License
+============================================
+Neuron is open sourced under MIT License.
