@@ -1,2 +1,2 @@
 include ':app', ':lib'
-project(':lib').projectDir = new File('inject')
+project(':lib').projectDir = new File('lib')
