@@ -114,11 +114,16 @@ public class TransferActivity extends BaseActivity {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                dismissProgressCircle();
             }
             @Override
             public void onNext(BigInteger gasPrice) {
                 mGasPrice = gasPrice;
-                mGas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_LIMIT));
+                if (ConstUtil.ETH.equalsIgnoreCase(tokenItem.name)) {
+                    mGas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_LIMIT));
+                } else {
+                    mGas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_ERC20_LIMIT));
+                }
                 feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }
@@ -270,9 +275,9 @@ public class TransferActivity extends BaseActivity {
             }
             @Override
             public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                progressBar.setVisibility(View.GONE);
                 if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                     Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
                     sheetDialog.dismiss();
                     finish();
                 } else if (ethSendTransaction.getError() != null &&
@@ -309,9 +314,9 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    progressBar.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                         Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&
@@ -348,9 +353,9 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
+                    progressBar.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&
@@ -387,9 +392,9 @@ public class TransferActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
+                    progressBar.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                         Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
                         sheetDialog.dismiss();
                         finish();
                     } else if (ethSendTransaction.getError() != null &&

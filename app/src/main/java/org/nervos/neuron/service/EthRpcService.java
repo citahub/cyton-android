@@ -215,7 +215,7 @@ public class EthRpcService {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
                     RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
-                            gasPrice, ConstUtil.GAS_LIMIT, tokenItem.contractAddress, data);
+                            gasPrice, ConstUtil.GAS_ERC20_LIMIT, tokenItem.contractAddress, data);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {

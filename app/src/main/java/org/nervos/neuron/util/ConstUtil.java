@@ -40,6 +40,7 @@ public class ConstUtil {
     public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x5208");  // default eth gas limit is 21000
+    public static final BigInteger GAS_ERC20_LIMIT = Numeric.toBigInt("0x23280");  // default eth gas limit is 21000
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x4E3B29200");
     public static final String RPC_RESULT_ZERO = "0x";
 
