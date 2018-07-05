@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +19,9 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -87,10 +90,15 @@ public class AddTokenActivity extends BaseActivity {
         findViewById(R.id.add_token_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tokenItem == null) {
+                if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
+                    || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
                     Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
                 } else {
                     DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
+                    if (!DBTokenUtil.checkTokenExist(mActivity, tokenItem)) {
+                        DBTokenUtil.saveToken(mActivity, tokenItem);
+                        setResult(TokenManageActivity.RESULT_CODE);
+                    }
                     finish();
                 }
             }
@@ -136,6 +144,10 @@ public class AddTokenActivity extends BaseActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
+                if (!AddressUtil.isAddressValid(s.toString())) {
+                    Toast.makeText(mActivity, R.string.contract_address_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
                     if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {

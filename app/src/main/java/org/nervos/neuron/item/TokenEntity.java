@@ -83,4 +83,11 @@ public class TokenEntity {
         public String youtube;
 
     }
+
+    public TokenEntity(TokenItem item) {
+        this.name = item.name;
+        this.decimals = item.decimals;
+        this.symbol = item.symbol;
+        this.address = item.contractAddress;
+    }
 }

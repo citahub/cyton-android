@@ -255,7 +255,7 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferNervosToken(String password, double value, ProgressBar progressBar){
-    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value, password)
+    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value, "", password)
         .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
             @Override
             public void onCompleted() {

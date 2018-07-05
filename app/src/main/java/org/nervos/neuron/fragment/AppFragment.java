@@ -73,7 +73,6 @@ public class AppFragment extends Fragment {
                 if (url.contains(ConstUtil.INNER_URL)) {
                     return false;
                 } else {
-                    LogUtil.d(url);
                     Intent intent = new Intent(getContext(), AppWebActivity.class);
                     intent.putExtra(AppWebActivity.EXTRA_URL, url);
                     startActivity(intent);

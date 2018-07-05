@@ -53,8 +53,7 @@ public class NervosHttpService {
                 public Observable<List<TransactionItem>> call(EthMetaData.EthMetaDataResult result) {
                     ethMetaDataResult = result;
                     try {
-                        String nervosUrl = ConstUtil.NERVOS_TRANSACTION_URL
-                                + "?account=" + walletItem.address;
+                        String nervosUrl = ConstUtil.NERVOS_TRANSACTION_URL + walletItem.address;
                         final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
                         Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
 

@@ -93,12 +93,12 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
-                    Toast.makeText(getContext(), "您的密码太弱，请重新输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
                 } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
-                    Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
                 } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
-                    Toast.makeText(getContext(), "该钱包名称已存在", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     cachedThreadPool.execute(() -> generateAndSaveWallet());
                 }
@@ -239,7 +239,6 @@ public class ImportMnemonicFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
             if (null != data) {
                 Bundle bundle = data.getExtras();
                 if (bundle == null) {

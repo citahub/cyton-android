@@ -32,6 +32,7 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 
