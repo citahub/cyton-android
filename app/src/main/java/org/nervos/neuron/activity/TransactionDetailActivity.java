@@ -69,8 +69,7 @@ public class TransactionDetailActivity extends BaseActivity {
             transactionChainName.setText(R.string.ethereum_main_net);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
-            transactionGas.setText(NumberUtil.getDecimal_6(
-                    NumberUtil.getDoubleFromBig(gasPriceBig.multiply(gasUsedBig))) + "eth");
+            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal6(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(gasPriceBig.divide(BigInteger.valueOf(1000000000)).intValue() + " Gwei");
         }
         int blockNumber = Integer.parseInt(

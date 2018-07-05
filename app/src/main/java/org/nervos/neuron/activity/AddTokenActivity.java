@@ -18,8 +18,7 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -59,7 +58,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        NervosRpcService.init(this, ConstantUtil.NERVOS_NODE_IP);
+        NervosRpcService.init(this, ConstUtil.NERVOS_NODE_IP);
     }
 
     private void initView() {

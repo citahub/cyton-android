@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.SimpleWebActivity;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,21 +59,21 @@ public class SettingsFragment extends Fragment {
         sourceCodeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.SOURCE_CODE_GITHUB_URL);
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.SOURCE_CODE_GITHUB_URL);
             }
         });
 
         protocolText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.PRODUCT_AGREEMENT_URL);
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.PRODUCT_AGREEMENT_URL);
             }
         });
 
         contactText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstantUtil.CONTACT_US_RUL);
+                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
             }
         });
 

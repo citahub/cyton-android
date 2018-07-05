@@ -23,7 +23,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -186,7 +186,7 @@ public class WebAppUtil {
 
     public static String getInjectNervosWeb3(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstantUtil.NERVOS_NODE_IP + "'))}; web3.defaultAccount.address='" + walletItem.address + "'";
+        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstUtil.NERVOS_NODE_IP + "'))}; web3.defaultAccount.address='" + walletItem.address + "'";
     }
 
     public static String getInjectTransactionJs() {

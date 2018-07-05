@@ -2,23 +2,19 @@ package org.nervos.neuron.service;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.Web3j;
-import org.nervos.web3j.protocol.account.Account;
-import org.nervos.web3j.protocol.account.CompiledContract;
 import org.nervos.web3j.protocol.core.DefaultBlockParameter;
 import org.nervos.web3j.protocol.core.methods.request.Call;
 import org.nervos.web3j.protocol.core.methods.request.Transaction;
-import org.nervos.web3j.protocol.core.methods.response.AbiDefinition;
-import org.nervos.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.nervos.web3j.protocol.core.methods.response.EthGetBalance;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 import org.nervos.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -33,7 +29,6 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.utils.Numeric;
 
 
@@ -46,8 +41,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import javax.security.auth.callback.Callback;
-
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -58,7 +51,6 @@ public class NervosRpcService {
     private static Web3j service;
 
     private static Random random;
-    private static BigInteger quota = BigInteger.valueOf(1000000);
     private static int version = 0;
     private static int chainId = 1;
     private static WalletItem walletItem;
@@ -90,10 +82,10 @@ public class NervosRpcService {
     public static double getErc20Balance(TokenItem tokenItem, String address) {
         try {
             Call balanceCall = new Call(address, tokenItem.contractAddress,
-                    ConstantUtil.BALANCEOF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                    ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
             String balanceOf = service.ethCall(balanceCall,
                     DefaultBlockParameter.valueOf("latest")).send().getValue();
-            if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+            if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
                 initIntTypes();
                 Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
                 double balances = balance.getValue().doubleValue();
@@ -121,8 +113,7 @@ public class NervosRpcService {
         try {
             EthGetBalance ethGetBalance =
                     service.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
-            return ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
-                    .divide(ConstantUtil.NervosDecimal).doubleValue()/10000.0;
+            return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,7 +134,7 @@ public class NervosRpcService {
             @Override
             public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(contractAddress,
-                        randomNonce(), quota.longValue(), validUntilBlock.longValue(),
+                        randomNonce(), ConstUtil.DEFAULT_QUATO, validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO, data);
                 try {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
@@ -159,10 +150,9 @@ public class NervosRpcService {
 
     }
 
-    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value, String password) {
-        BigInteger transferValue = ConstantUtil.NervosDecimal
-                .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-        LogUtil.d("transfer value: " + transferValue.toString());
+    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value,
+                                                                String data, String password) {
+        LogUtil.d("transfer value: " + NumberUtil.getWeiFromEth(value));
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
@@ -171,8 +161,10 @@ public class NervosRpcService {
         }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
             @Override
             public Observable<EthSendTransaction> call(BigInteger validUntilBlock) {
-                Transaction transaction = Transaction.createFunctionCallTransaction(toAddress, randomNonce(), quota.longValue(),
-                        validUntilBlock.longValue(), version, chainId, transferValue, "");
+                Transaction transaction = Transaction.createFunctionCallTransaction(toAddress,
+                        randomNonce(), ConstUtil.DEFAULT_QUATO,
+                        validUntilBlock.longValue(), version, chainId,
+                        NumberUtil.getWeiFromEth(value), TextUtils.isEmpty(data)? "":data);
                 try {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     String rawTx = transaction.sign(privateKey);
@@ -189,7 +181,7 @@ public class NervosRpcService {
     private static BigInteger getValidUntilBlock() {
         try {
             return BigInteger.valueOf((service.ethBlockNumber().send())
-                    .getBlockNumber().longValue() + ConstantUtil.VALID_BLOCK_NUMBER_DIFF);
+                    .getBlockNumber().longValue() + ConstUtil.VALID_BLOCK_NUMBER_DIFF);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,34 +201,34 @@ public class NervosRpcService {
             sb.append("0");
         }
         BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long)(10000*value)))
-                .divide(BigInteger.valueOf(10000));
+        return ERC20Decimal.multiply(BigInteger.valueOf((long)(ConstUtil.LONG_6*value)))
+                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
     private static String getErc20Name(String contractAddress) throws IOException {
-        Call nameCall = new Call(walletItem.address, contractAddress, ConstantUtil.NAME_HASH);
+        Call nameCall = new Call(walletItem.address, contractAddress, ConstUtil.NAME_HASH);
         String name = service.ethCall(nameCall, DefaultBlockParameter.valueOf("latest"))
                 .send().getValue();
-        if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
+        if (TextUtils.isEmpty(name) || ConstUtil.RPC_RESULT_ZERO.equals(name)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(name, stringTypes).get(0).toString();
     }
 
 
     private static String getErc20Symbol(String contractAddress) throws IOException {
-        Call symbolCall = new Call(walletItem.address, contractAddress, ConstantUtil.SYMBOL_HASH);
+        Call symbolCall = new Call(walletItem.address, contractAddress, ConstUtil.SYMBOL_HASH);
         String symbol = service.ethCall(symbolCall, DefaultBlockParameter.valueOf("latest"))
                 .send().getValue();
-        if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
+        if (TextUtils.isEmpty(symbol) || ConstUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
     }
 
     private static int getErc20Decimals(String contractAddress) throws IOException {
-        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstantUtil.DECIMALS_HASH);
+        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstUtil.DECIMALS_HASH);
         String decimals = service.ethCall(decimalsCall,
                 DefaultBlockParameter.valueOf("latest")).send().getValue();
-        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
+        if (!TextUtils.isEmpty(decimals) && !ConstUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
             Int64 type = (Int64) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();

@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -24,7 +22,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 
@@ -48,7 +46,7 @@ public class AppFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        webView.loadUrl(ConstantUtil.DISCOVER_URL);
+        webView.loadUrl(ConstUtil.DISCOVER_URL);
         initWebSettings();
         initWebView();
     }
@@ -72,7 +70,7 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(ConstantUtil.INNER_URL)) {
+                if (url.contains(ConstUtil.INNER_URL)) {
                     return false;
                 } else {
                     LogUtil.d(url);
