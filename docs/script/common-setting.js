@@ -2,57 +2,53 @@
 // these are the default settings for all the Nervos Documents
 // you can overwrite settings in this page by set them again in customization.js
 
+// add language variable to session storage, if it's not existed
+if (sessionStorage.getItem("language")) {
+    var language = sessionStorage.getItem("language");
+} else {
+    sessionStorage.setItem("language", default_language);
+    var language = default_language;
+}
+
+// add version variable to session storage, if it's not existed
+if (sessionStorage.getItem("version")) {
+    var version = sessionStorage.getItem("version");
+} else {
+    sessionStorage.setItem("version", "latest");
+    var version = "latest";
+}
+
 var common = {
 
     loadSidebar: true,
     autoHeader: true,
     subMaxLevel: 2,
-    loadNavbar: true,
-    basePath: './',
+    basePath: versionIsSupported ? `./${language}/${version}/` : `./${language}/`,
 
-    // search: 'auto',
-
-    // the default 
-    alias: {
-        '/_sidebar.md': `/${default_language}/_sidebar.md`,
-        '/_navbar.md': `/${default_language}/_navbar.md`,
-    },
 
     // configuration for searching plugin
     search: {
         maxAge: 86400000, // expiration time in milliseconds, one day by default
-        // paths: [
-        // '/',
-        // ], // or 'auto'
-
-        // localization
-        placeholder: {
-            '/zh-CN/': '搜索',
-            '/': 'Type to search',
-        },
-
-
-        // localization
-        noData: {
-            '/zh-CN/': '找不到结果',
-            '/': 'No Results',
-        },
 
         // depth of the maximum searching title levels
         depth: 6,
     },
 
-        // add edit on github feature
-        plugins: [
-            function(hook, vm) {
-              hook.afterEach(function (html,next) {
-                var url = github_url + vm.route.file
+    plugins: [
+        function (hook, vm) {
+            hook.afterEach(function (html, next) {
+                if (versionIsSupported) {
+                    var url = github_url + language + '/' + version + '/' + vm.route.file
+                } else {
+                    var url = github_url + language + '/' + vm.route.file
+                }
+
                 var editHtml = `<hr> If you find any mistakes on this page, feel free to <a target='_blank' href="${url}">edit this document on GitHub</a>`
-        
-                next( html + editHtml)
-              })
-            }
-          ]
+
+                next(html + editHtml)
+            })
+        }
+    ]
 
 
 }

@@ -1,6 +1,6 @@
 # Neuron 简介
 
-> Neuron 是 Nervos AppChain 的多链 DApp 钱包。目前处于 Beta 测试版状态，主要提供给开发者开发、测试 DApp 。不建议普通用户使用，更**不建议您在 Neuron 中托管大量的数字资产**，因此形成的损失我们不承担连带责任。
+!> Neuron 是 Nervos AppChain 的多链 DApp 钱包。目前处于 Beta 测试版状态，主要提供给开发者开发、测试 DApp 。不建议普通用户使用，更**不建议您在 Neuron 中托管大量的数字资产**，因此形成的损失我们不承担连带责任。
 
 ## 多链资产管理
 

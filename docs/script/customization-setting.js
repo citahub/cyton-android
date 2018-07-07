@@ -6,5 +6,7 @@ var customization = {
 
     name: 'Neuron', // name of this document
 
-    homepage: `${default_language}/neuron.md`,// the home page, extension name '.md' cannot be omitted.
+    homepage: 'neuron.md',// the home page, extension name '.md' cannot be omitted.
+
+    
 }

@@ -12,17 +12,58 @@
     <meta name="description" content="Description">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
-    <script src="//unpkg.com/lodash/lodash.min.js"></script>
-    <script src="script/utils.js"></script>
-    <script src="script/customization-value.js"></script>
-    <script src="script/common-setting.js"></script>
-    <script src="script/customization-setting.js"></script>
-    <script src="script/main.js"></script>
+
 </head>
 
 <body>
-    <nav></nav>
+
+
+    <nav class="app-nav no-badge">
+        <ul>
+            <li>
+                <a href="https://cryptape.github.io/Nervos-Docs">Nervos</a>
+                <ul>
+                    <li>
+                        <a href="https://cryptape.github.io/Nervos-AppChain-Docs/">AppChain</a>
+                    </li>
+                    <li>
+                        <a href="https://cryptape.github.io/cita/">CITA</a>
+                    </li>
+                    <li>
+                        <a href="https://cryptape.github.io/Neuron-Android/#/">Neuron</a>
+                    </li>
+                    <li>
+                        <a href="https://cryptape.github.io/Microscope/">Microscope</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li id="tag_language">Language
+                <ul>
+                    <li>
+                        <a href="" onclick="setLang('en-US');">EN</a>
+                    </li>
+                    <li>
+                        <a href="" onclick="setLang('zh-CN');">中文</a>
+                    </li>
+                </ul>
+            </li> -->
+        </ul>
+    </nav>
+
+    <script>
+        function setLang(language) {
+            sessionStorage.setItem("language", language);
+        }
+    </script>
+
     <div id="app">Loading</div>
+
+    <script src="//unpkg.com/lodash/lodash.min.js"></script>
+    <script src="script/customization-value.js"></script>
+    <script src="script/utils.js"></script>
+    <script src="script/common-setting.js"></script>
+    <script src="script/customization-setting.js"></script>
+    <script src="script/main.js"></script>
     <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
     <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
     <script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
