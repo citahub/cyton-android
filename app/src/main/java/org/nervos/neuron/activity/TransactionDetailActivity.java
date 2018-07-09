@@ -61,7 +61,7 @@ public class TransactionDetailActivity extends BaseActivity {
         walletAddressText.setText(walletItem.address);
         transactionHashText.setText(transactionItem.hash);
         String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
-                "+" : "-") + transactionItem.value;
+                "-" : "+") + transactionItem.value;
         transactionValueText.setText(value);
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);

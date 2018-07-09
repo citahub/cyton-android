@@ -157,7 +157,7 @@ public class TransactionFragment extends BaseFragment {
                     viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 }
                 viewHolder.transactionIdText.setText(transactionItem.hash);
-                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)? "+" : "-")
+                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)? "-" : "+")
                         + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
                 viewHolder.transactionChainNameText.setText(transactionItem.chainName);
