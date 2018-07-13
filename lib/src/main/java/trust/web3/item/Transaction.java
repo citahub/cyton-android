@@ -43,6 +43,7 @@ public class Transaction implements Parcelable {
         this.recipient = recipient;
         this.contract = contract;
         this.value = value;
+        this.to = recipient.toString();
         if (TYPE_ETH.equalsIgnoreCase(chainType)) {
             this.gasPrice = gasPrice;
             this.gasLimit = gasLimit;

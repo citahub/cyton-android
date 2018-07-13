@@ -194,15 +194,6 @@ public class WebAppUtil {
         return mAppItem;
     }
 
-    public static String getInjectNervosWeb3(Context context) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstantUtil.NERVOS_NODE_IP + "'))}; web3.defaultAccount.address='" + walletItem.address + "'";
-    }
-
-    public static String getInjectTransactionJs() {
-        return "javascript: web3.eth.sendTransaction = function(tx) {nervos.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {nervos.signTransaction(JSON.stringify(tx))};";
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     public static void initWebSettings(WebSettings webSettings) {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);

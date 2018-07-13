@@ -9,6 +9,7 @@ import java.math.BigInteger;
 public class TransactionRequest {
 
     private static final BigInteger TOKENDecimal = new BigInteger("1000000000000000000");
+    private static final BigInteger BIG_10000 = BigInteger.valueOf(10000);
 
     public String from;
     public String to;
@@ -22,19 +23,26 @@ public class TransactionRequest {
     private String gasPrice;
 
     public double getValue() {
-        return new BigInteger(value).multiply(BigInteger.valueOf(10000))
-                .divide(TOKENDecimal).doubleValue()/10000.0;
+        if (Numeric.containsHexPrefix(value)) {
+            return Numeric.toBigInt(value).multiply(BIG_10000)
+                    .divide(TOKENDecimal).doubleValue()/10000.0;
+        } else {
+            return new BigInteger(value).multiply(BIG_10000)
+                    .divide(TOKENDecimal).doubleValue()/10000.0;
+        }
     }
 
     public double getQuota() {
-        return BigInteger.valueOf(quota).multiply(BigInteger.valueOf(10000))
+        return BigInteger.valueOf(quota).multiply(BIG_10000)
                 .divide(TOKENDecimal).doubleValue()/10000.0;
     }
 
     public double getGas() {
-        return Numeric.toBigInt(gasLimit).multiply(Numeric.toBigInt(gasPrice))
-                .multiply(BigInteger.valueOf(10000))
-                .divide(TOKENDecimal).doubleValue()/10000.0;
+        BigInteger limit = Numeric.containsHexPrefix(gasLimit)?
+                Numeric.toBigInt(gasLimit):new BigInteger(gasLimit);
+        BigInteger price = Numeric.containsHexPrefix(gasPrice)?
+                Numeric.toBigInt(gasPrice):new BigInteger(gasPrice);
+        return limit.multiply(price).multiply(BIG_10000).divide(TOKENDecimal).doubleValue()/10000.0;
     }
 
     public String getGasLimit() {

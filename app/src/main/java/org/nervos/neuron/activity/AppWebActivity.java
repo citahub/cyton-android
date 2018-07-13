@@ -162,9 +162,6 @@ public class AppWebActivity extends BaseActivity {
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
-                if (newProgress > 20 && newProgress < 80) {
-                    injectJs();
-                }
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
                 } else {
@@ -188,21 +185,9 @@ public class AppWebActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 initCollectView();
-                injectJs();
             }
         });
     }
-
-
-    /**
-     * inject js file to webview
-     */
-    private void injectJs() {
-
-        webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(mActivity), null);
-        webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
-    }
-
 
     private class Nervos {
 

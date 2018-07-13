@@ -123,7 +123,7 @@ public class AddWebsiteActivity extends BaseActivity {
 
 
     private void gotoWebViewWithUrl(final String url) {
-        if (UrlUtil.valid(url)) {
+        if (TextUtils.isEmpty(url)) {
             Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
         } else {
             showProgressCircle();
@@ -143,6 +143,11 @@ public class AddWebsiteActivity extends BaseActivity {
                     }
                     @Override
                     public void onNext(String newUrl) {
+                        if (TextUtils.isEmpty(newUrl)) {
+                            dismissProgressCircle();
+                            Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         websiteEdit.setText(newUrl);
                         DBHistoryUtil.saveHistory(mActivity, newUrl);
                         Intent intent = new Intent(mActivity, AppWebActivity.class);

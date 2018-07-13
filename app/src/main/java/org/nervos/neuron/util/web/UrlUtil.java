@@ -15,18 +15,7 @@ public class UrlUtil {
         } else if (exists(HTTP + url)) {
             return (HTTP + url);
         }
-        return url;
-    }
-
-    public static boolean valid(String url) {
-        if ((url.contains(HTTP) || url.contains(HTTPS)) && exists(url)) {
-            return true;
-        } else if (exists(HTTPS + url)) {
-            return true;
-        } else if (exists(HTTP + url)) {
-            return true;
-        }
-        return false;
+        return null;
     }
 
     private static boolean exists(String url) {
