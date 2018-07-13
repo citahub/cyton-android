@@ -3,6 +3,7 @@ package trust.web3;
 import android.net.http.SslError;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -87,6 +88,7 @@ public class Web3ViewClient extends WebViewClient {
                         || request.getUrl().toString().contains("css"))) {
                 synchronized (lock) {
                     if (!isInjected) {
+                        Log.d("Neuron", "Web3ViewClient shouldInterceptRequest injectScriptFile");
                         injectScriptFile(view);
                         isInjected = true;
                     }
@@ -103,6 +105,7 @@ public class Web3ViewClient extends WebViewClient {
         Map<String, String> headers = request.getRequestHeaders();
         JsInjectorResponse response;
         try {
+            Log.d("Neuron", "Web3ViewClient shouldInterceptRequest jsInjectorClient.loadUrl");
             response = jsInjectorClient.loadUrl(httpUrl.toString(), headers);
         } catch (Exception ex) {
             return null;

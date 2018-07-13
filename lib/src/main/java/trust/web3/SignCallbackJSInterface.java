@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -11,9 +12,9 @@ import java.math.BigInteger;
 
 import trust.core.entity.Address;
 import trust.core.entity.Message;
-import trust.core.entity.Transaction;
 import trust.core.entity.TypedData;
 import trust.core.util.Hex;
+import trust.web3.item.Transaction;
 
 public class SignCallbackJSInterface {
 
@@ -46,20 +47,25 @@ public class SignCallbackJSInterface {
             String recipient,
             String value,
             String nonce,
-            String gasLimit,
-            String gasPrice,
-            String payload) {
+            String gasLimit,    // quota
+            String gasPrice,    // validUntilBlock
+            String payload,
+            String chainId,
+            String version,
+            String chainType) {
         Transaction transaction = new Transaction(
                 TextUtils.isEmpty(recipient) ? Address.EMPTY : new Address(recipient),
                 null,
                 Hex.hexToBigInteger(value),
+                Hex.hexToBigInteger(gasLimit, BigInteger.ZERO),
                 Hex.hexToBigInteger(gasPrice, BigInteger.ZERO),
-                Hex.hexToLong(gasLimit, 0),
                 Hex.hexToLong(nonce, -1),
                 payload,
+                Hex.hexToLong(chainId, -1),
+                Hex.hexToInteger(version, 0),
+                chainType,
                 callbackId);
         onSignTransactionListener.onSignTransaction(transaction);
-
     }
 
     @JavascriptInterface

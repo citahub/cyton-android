@@ -65,11 +65,11 @@ class JsInjectorClient {
         this.rpcUrl = rpcUrl;
     }
 
-    JsInjectorResponse loadUrl(final String url, String userAgent) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", userAgent);
-        return loadUrl(url, headers);
-    }
+//    JsInjectorResponse loadUrl(final String url, String userAgent) {
+//        Map<String, String> headers = new HashMap<>();
+//        headers.put("User-Agent", userAgent);
+//        return loadUrl(url, headers);
+//    }
 
     @Nullable
     JsInjectorResponse loadUrl(final String url, final Map<String, String> headers) {
@@ -87,6 +87,7 @@ class JsInjectorClient {
     String assembleJs(Context context, String template) {
         if (TextUtils.isEmpty(jsLibrary)) {
 //            jsLibrary = loadFile(context, trust.web3jprovider.R.raw.trust);
+            Log.d("Neuron", "assembleJs");
             jsLibrary = loadFile(context, R.raw.trust_web3);
         }
         String initJs = loadInitJs(context);

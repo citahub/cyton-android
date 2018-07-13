@@ -22,11 +22,11 @@ public class TransactionRequest {
 
     public String from;
     public String to;
-    public int nonce;
-    private int quota = -1;
+    public long nonce;
+    private long quota = -1;
     public String data;
     private String value;
-    public int chainId;
+    public long chainId;
     public int version;
     private String gasLimit;
     private String gasPrice;

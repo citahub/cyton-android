@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -16,10 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
@@ -39,6 +41,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import trust.core.entity.Address;
 import trust.web3.Web3View;
+import trust.web3.item.Transaction;
 
 public class AppWebActivity extends BaseActivity {
 
@@ -57,6 +60,7 @@ public class AppWebActivity extends BaseActivity {
     private BottomSheetDialog sheetDialog;
 
     private WalletItem walletItem;
+    private Transaction transaction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class AppWebActivity extends BaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         initView();
-//        initWebView();
+        initWebView();
         initInjectWebView();
         webView.loadUrl(url);
 
@@ -119,7 +123,8 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initCollectView() {
-        collectText.setText(WebAppUtil.isCollectApp(webView)? getString(R.string.cancel_collect):getString(R.string.collect));
+        collectText.setText(WebAppUtil.isCollectApp(webView)?
+                getString(R.string.cancel_collect):getString(R.string.collect));
         closeMenuWindow();
 
     }
@@ -130,24 +135,31 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initInjectWebView() {
+
         webView.setChainId(1);
-        webView.setRpcUrl("https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk");
+        webView.setRpcUrl(ConstantUtil.ETH_NODE_IP);
         webView.setWalletAddress(new Address("0xf4c0762D2cB41896b72266cdd24497Be6F5c791c"));
 
         webView.setOnSignTransactionListener(transaction -> {
-//                callSignTransaction = Trust.signTransaction().transaction(transaction).call(this)
             Toast.makeText(mActivity,
                     "transaction information: payload: " + transaction.payload
                             + " gasPrice: " + transaction.gasPrice, Toast.LENGTH_LONG).show();
-            Log.d("trust", "transaction information: payload: " + transaction.payload
-                    + " gasPrice: " + transaction.gasPrice);
+
+            this.transaction = transaction;
+            if (walletItem == null) {
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mActivity, AddWalletActivity.class));
+            } else {
+                Intent intent = new Intent(mActivity, PayTokenActivity.class);
+                intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getChainItem());
+                startActivityForResult(intent, REQUEST_CODE);
+            }
 
         });
     }
 
     private void initWebView() {
-        WebAppUtil.initWebSettings(webView.getSettings());
-        webView.addJavascriptInterface(new Nervos(), "nervos");
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
@@ -160,7 +172,6 @@ public class AppWebActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(newProgress);
                 }
-                LogUtil.d("web progress: " + newProgress);
             }
             @Override
             public void onReceivedTitle(WebView view, String title) {
@@ -188,8 +199,6 @@ public class AppWebActivity extends BaseActivity {
      * inject js file to webview
      */
     private void injectJs() {
-//        webView.loadUrl(WebAppUtil.getInjectJs(mActivity));
-//        webView.evaluateJavascript(WebAppUtil.getInjectTrust(mActivity), null);
 
         webView.evaluateJavascript(WebAppUtil.getInjectNervosWeb3(mActivity), null);
         webView.evaluateJavascript(WebAppUtil.getInjectTransactionJs(), null);
@@ -197,19 +206,6 @@ public class AppWebActivity extends BaseActivity {
 
 
     private class Nervos {
-
-        @JavascriptInterface
-        public void sendTransaction(String tx) {
-            if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(mActivity, AddWalletActivity.class));
-            } else {
-                Intent intent = new Intent(mActivity, PayTokenActivity.class);
-                intent.putExtra(EXTRA_PAYLOAD, tx);
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getChainItem());
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        }
 
         @JavascriptInterface
         public void signTransaction(String tx) {
@@ -385,18 +381,15 @@ public class AppWebActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE) {
             switch (resultCode) {
                 case RESULT_CODE_CANCEL:
-                    webView.evaluateJavascript("javascript:cancelled()", null);
+                    webView.onSignCancel(transaction);
                     break;
                 case RESULT_CODE_SUCCESS:
-                    LogUtil.d("onSignSuccessful: " + data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
-                    webView.evaluateJavascript("javascript:onSignSuccessful('"
-                            + data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH)
-                            + "')", null);
+                    webView.onSignTransactionSuccessful(transaction,
+                            data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
                     break;
                 case RESULT_CODE_FAIL:
-                    webView.evaluateJavascript("javascript:onSignFail('"
-                            + data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR)
-                            + "')", null);
+                    webView.onSignError(transaction,
+                            data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
                     break;
                 default:
                     break;

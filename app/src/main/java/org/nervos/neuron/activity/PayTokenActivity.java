@@ -269,7 +269,6 @@ public class PayTokenActivity extends BaseActivity {
 
 
     private void gotoSignSuccess(String hexHash) {
-        LogUtil.d("hexHash: " + hexHash);
         Intent intent = new Intent();
         intent.putExtra(EXTRA_HEX_HASH, hexHash);
         setResult(AppWebActivity.RESULT_CODE_SUCCESS, intent);

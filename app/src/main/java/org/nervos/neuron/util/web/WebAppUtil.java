@@ -88,6 +88,11 @@ public class WebAppUtil {
                 }
                 return Observable.just(new Gson().fromJson(response, ChainItem.class));
             }
+        }).filter(new Func1<ChainItem, Boolean>() {
+            @Override
+            public Boolean call(ChainItem chainItem) {
+                return !TextUtils.isEmpty(chainItem.httpProvider);
+            }
         }).flatMap(new Func1<ChainItem, Observable<EthMetaData.EthMetaDataResult>>() {
             @Override
             public Observable<EthMetaData.EthMetaDataResult> call(ChainItem chainItem) {
@@ -115,6 +120,10 @@ public class WebAppUtil {
                             TokenItem tokenItem = new TokenItem(mChainItem);
                             DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                         }
+                    } else {
+                        Toast.makeText(webView.getContext(),
+                                webView.getContext().getString(R.string.meta_data_error)
+                                        + mChainItem.httpProvider, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

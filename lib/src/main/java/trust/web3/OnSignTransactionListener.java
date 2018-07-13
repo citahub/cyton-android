@@ -1,6 +1,6 @@
 package trust.web3;
 
-import trust.core.entity.Transaction;
+import trust.web3.item.Transaction;
 
 public interface OnSignTransactionListener {
     void onSignTransaction(Transaction transaction);

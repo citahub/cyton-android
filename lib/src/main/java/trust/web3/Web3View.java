@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 import trust.core.entity.Address;
 import trust.core.entity.Message;
-import trust.core.entity.Transaction;
 import trust.core.entity.TypedData;
+import trust.web3.item.Transaction;
 
 public class Web3View extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";
@@ -77,6 +77,7 @@ public class Web3View extends WebView {
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setDomStorageEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(true);
         addJavascriptInterface(new SignCallbackJSInterface(
                 this,
                 innerOnSignTransactionListener,
