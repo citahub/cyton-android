@@ -4,11 +4,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import java.math.BigInteger;
 
 import trust.core.entity.Address;
 import trust.core.entity.Message;
@@ -56,9 +53,9 @@ public class SignCallbackJSInterface {
         Transaction transaction = new Transaction(
                 TextUtils.isEmpty(recipient) ? Address.EMPTY : new Address(recipient),
                 null,
-                Hex.hexToBigInteger(value),
-                Hex.hexToBigInteger(gasLimit, BigInteger.ZERO),
-                Hex.hexToBigInteger(gasPrice, BigInteger.ZERO),
+                value,
+                gasLimit,
+                gasPrice,
                 Hex.hexToLong(nonce, -1),
                 payload,
                 Hex.hexToLong(chainId, -1),
