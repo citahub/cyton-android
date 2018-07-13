@@ -18,7 +18,6 @@ public class Transaction implements Parcelable {
     public String gasPrice;
     public String gasLimit;
     public long nonce;
-    public String payload;
     public long leafPosition;
 
     public String from;
@@ -54,7 +53,7 @@ public class Transaction implements Parcelable {
             this.version = version;
         }
         this.nonce = nonce;
-        this.payload = payload;
+        this.data = payload;
         this.leafPosition = leafPosition;
     }
 
@@ -72,7 +71,6 @@ public class Transaction implements Parcelable {
         dest.writeString(this.gasPrice);
         dest.writeString(this.gasLimit);
         dest.writeLong(this.nonce);
-        dest.writeString(this.payload);
         dest.writeLong(this.leafPosition);
         dest.writeString(this.from);
         dest.writeString(this.to);
@@ -90,7 +88,6 @@ public class Transaction implements Parcelable {
         this.gasPrice = in.readString();
         this.gasLimit = in.readString();
         this.nonce = in.readLong();
-        this.payload = in.readString();
         this.leafPosition = in.readLong();
         this.from = in.readString();
         this.to = in.readString();

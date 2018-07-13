@@ -14,17 +14,16 @@ import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
-import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.TransactionRequest;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
 
@@ -45,7 +44,7 @@ public class PayTokenActivity extends BaseActivity {
     private TransactionRequest transactionRequest;
     private WalletItem walletItem;
     private BottomSheetDialog sheetDialog;
-    private ChainItem chainItem;
+    private AppItem appItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class PayTokenActivity extends BaseActivity {
             transactionRequest = new Gson().fromJson(payload, TransactionRequest.class);
         }
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        chainItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
+        appItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
     }
 
     private void initView() {
@@ -81,7 +80,7 @@ public class PayTokenActivity extends BaseActivity {
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        payNameText.setText(chainItem.entry);
+        payNameText.setText(appItem.entry);
         if (transactionRequest.isEthereum()) {
             payAddressText.setText(transactionRequest.to);
             payAmountText.setText(NumberUtil.getDecimal_4(transactionRequest.getValue()));
@@ -234,6 +233,7 @@ public class PayTokenActivity extends BaseActivity {
     }
 
     private void transferNervos(String password, ProgressBar progressBar) {
+        NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionRequest.chainId));
         NervosRpcService.transferNervos(transactionRequest.to, transactionRequest.getValue(), password)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
@@ -250,7 +250,6 @@ public class PayTokenActivity extends BaseActivity {
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
                     if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                         sheetDialog.dismiss();
-                        DBChainUtil.saveChain(mActivity, chainItem);
                         Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                         gotoSignSuccess(ethSendTransaction.getSendTransactionResult().getHash());
                     } else if (ethSendTransaction.getError() != null &&

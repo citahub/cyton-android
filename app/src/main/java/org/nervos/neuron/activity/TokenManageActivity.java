@@ -32,6 +32,7 @@ import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
@@ -59,7 +60,7 @@ public class TokenManageActivity extends BaseActivity {
 
     private void initData() {
         tokenNames = DBWalletUtil.getAllWalletName(mActivity);
-        String tokens = WebAppUtil.getFileFromAsset(mActivity, "tokens-eth.json");
+        String tokens = FileUtil.getFileFromAsset(mActivity, "tokens-eth.json");
         Type type = new TypeToken<List<TokenEntity>>() {}.getType();
         tokenList = new Gson().fromJson(tokens, type);
         adapter.notifyDataSetChanged();

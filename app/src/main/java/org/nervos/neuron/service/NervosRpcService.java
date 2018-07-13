@@ -69,6 +69,10 @@ public class NervosRpcService {
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
+    public static void setHttpProvider(String httpProvider) {
+        service = Web3j.build(new HttpService(httpProvider));
+    }
+
     private static BigInteger randomNonce() {
         random = new Random(System.currentTimeMillis());
         return BigInteger.valueOf(Math.abs(random.nextLong()));
@@ -159,10 +163,10 @@ public class NervosRpcService {
 
     }
 
-    public static Observable<EthSendTransaction> transferNervos(String toAddress, double value, String password) {
+    public static Observable<EthSendTransaction> transferNervos(String toAddress,
+                                                                double value, String password) {
         BigInteger transferValue = ConstantUtil.NervosDecimal
                 .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
-        LogUtil.d("transfer value: " + transferValue.toString());
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {

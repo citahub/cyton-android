@@ -32,6 +32,7 @@ import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -255,35 +256,36 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferNervosToken(String password, double value, ProgressBar progressBar){
-    NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value, password)
-        .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
-            @Override
-            public void onCompleted() {
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                Toast.makeText(TransferActivity.this,
-                        e.getMessage(), Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                sheetDialog.dismiss();
-            }
-            @Override
-            public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
-                    Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+        NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
+        NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value, password)
+            .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                @Override
+                public void onCompleted() {
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    Toast.makeText(TransferActivity.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     sheetDialog.dismiss();
-                    finish();
-                } else if (ethSendTransaction.getError() != null &&
-                        !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
-                    Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+                @Override
+                public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                        Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        sheetDialog.dismiss();
+                        finish();
+                    } else if (ethSendTransaction.getError() != null &&
+                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
     }
 
 
@@ -293,6 +295,7 @@ public class TransferActivity extends BaseActivity {
      * @param progressBar
      */
     private void transferNervosErc20(String password, double value, ProgressBar progressBar) throws Exception {
+        NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value, password)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {

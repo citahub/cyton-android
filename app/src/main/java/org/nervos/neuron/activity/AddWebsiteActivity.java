@@ -30,6 +30,7 @@ import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.web.UrlUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.util.ArrayList;
@@ -122,11 +123,11 @@ public class AddWebsiteActivity extends BaseActivity {
 
 
     private void gotoWebViewWithUrl(final String url) {
-        if (TextUtils.isEmpty(url)) {
+        if (UrlUtil.valid(url)) {
             Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
         } else {
             showProgressCircle();
-            Observable.fromCallable(() -> WebAppUtil.addPrefixUrl(url))
+            Observable.fromCallable(() -> UrlUtil.addPrefixUrl(url))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {

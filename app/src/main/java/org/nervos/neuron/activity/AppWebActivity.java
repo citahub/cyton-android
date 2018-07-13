@@ -142,9 +142,8 @@ public class AppWebActivity extends BaseActivity {
 
         webView.setOnSignTransactionListener(transaction -> {
             Toast.makeText(mActivity,
-                    "transaction information: payload: " + transaction.payload
+                    "transaction information: payload: " + transaction.data
                             + " gasPrice: " + transaction.gasPrice, Toast.LENGTH_LONG).show();
-
             this.transaction = transaction;
             if (walletItem == null) {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
@@ -152,7 +151,7 @@ public class AppWebActivity extends BaseActivity {
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getChainItem());
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem());
                 startActivityForResult(intent, REQUEST_CODE);
             }
 
@@ -244,11 +243,11 @@ public class AppWebActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
-        payOwnerText.setText(WebAppUtil.getChainItem().entry);
+        payOwnerText.setText(WebAppUtil.getAppItem().entry);
         payDataText.setText(tx);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        if (WebAppUtil.getChainItem() != null) {
-            payOwnerText.setText(WebAppUtil.getChainItem().provider);
+        if (WebAppUtil.getAppItem() != null) {
+            payOwnerText.setText(WebAppUtil.getAppItem().provider);
             payDataText.setText(tx);
         }
         view.findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
