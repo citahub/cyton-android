@@ -147,12 +147,8 @@ public class PayTokenActivity extends BaseActivity {
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
         valueText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()));
-        if (transactionInfo.isEthereum()) {
-            feeConfirmText.setText(NumberUtil.getDecimal_4(transactionInfo.getGas()));
-        } else {
-            feeConfirmText.setText(NumberUtil.getDecimal_4(transactionInfo.getQuota()));
-        }
-
+        feeConfirmText.setText(NumberUtil.getDecimal_4(transactionInfo.isEthereum()?
+                transactionInfo.getGas():transactionInfo.getQuota()));
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
                 showPasswordConfirmView(progressBar));
@@ -170,19 +166,17 @@ public class PayTokenActivity extends BaseActivity {
             public void onOkClick() {
                 if (TextUtils.isEmpty(simpleDialog.getMessage())) {
                     Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-                    return;
                 } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
                     Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                simpleDialog.dismiss();
-                progressBar.setVisibility(View.VISIBLE);
-                if (transactionInfo.isEthereum()) {
-                    transferEth(simpleDialog.getMessage(), progressBar);
                 } else {
-                    transferNervos(simpleDialog.getMessage(), progressBar);
+                    simpleDialog.dismiss();
+                    progressBar.setVisibility(View.VISIBLE);
+                    if (transactionInfo.isEthereum()) {
+                        transferEth(simpleDialog.getMessage(), progressBar);
+                    } else {
+                        transferNervos(simpleDialog.getMessage(), progressBar);
+                    }
                 }
-
             }
         });
         simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
@@ -214,20 +208,7 @@ public class PayTokenActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(EthSendTransaction ethSendTransaction) {
-                    if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-                        sheetDialog.dismiss();
-                        Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                        gotoSignSuccess(ethSendTransaction.getTransactionHash());
-                    } else if (ethSendTransaction.getError() != null &&
-                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
-                        sheetDialog.dismiss();
-                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                        gotoSignFail(ethSendTransaction.getError().getMessage());
-                    } else {
-                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-                        gotoSignFail(getString(R.string.transfer_fail));
-                    }
+                    handleTransfer(ethSendTransaction);
                 }
             });
     }
@@ -248,22 +229,51 @@ public class PayTokenActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                    if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
-                        sheetDialog.dismiss();
-                        Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-                        gotoSignSuccess(ethSendTransaction.getSendTransactionResult().getHash());
-                    } else if (ethSendTransaction.getError() != null &&
-                            !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
-                        sheetDialog.dismiss();
-                        Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                        gotoSignFail(ethSendTransaction.getError().getMessage());
-                    } else {
-                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-                        gotoSignFail(getString(R.string.transfer_fail));
-                    }
+                    handleTransfer(ethSendTransaction);
                 }
             });
+    }
+
+    /**
+     * handle ethereum transfer result
+     * @param ethSendTransaction   result of ethereum transaction
+     */
+    private void handleTransfer(EthSendTransaction ethSendTransaction) {
+        if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+            sheetDialog.dismiss();
+            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(ethSendTransaction.getTransactionHash());
+        } else if (ethSendTransaction.getError() != null &&
+                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())){
+            sheetDialog.dismiss();
+            Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            gotoSignFail(ethSendTransaction.getError().getMessage());
+        } else {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getString(R.string.transfer_fail));
+        }
+    }
+
+    /**
+     * handle nervos transfer result
+     * @param nervosSendTransaction   result of nervos transaction
+     */
+    private void handleTransfer(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction nervosSendTransaction) {
+        if (!TextUtils.isEmpty(nervosSendTransaction.getSendTransactionResult().getHash())) {
+            sheetDialog.dismiss();
+            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(nervosSendTransaction.getSendTransactionResult().getHash());
+        } else if (nervosSendTransaction.getError() != null &&
+                !TextUtils.isEmpty(nervosSendTransaction.getError().getMessage())){
+            sheetDialog.dismiss();
+            Toast.makeText(mActivity, nervosSendTransaction.getError().getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            gotoSignFail(nervosSendTransaction.getError().getMessage());
+        } else {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getString(R.string.transfer_fail));
+        }
     }
 
 
