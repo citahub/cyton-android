@@ -11,7 +11,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
-import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
+import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class NumberUtil {
 
@@ -22,11 +22,6 @@ public class NumberUtil {
 
     public static String getDecimal_4(Double value) {
         DecimalFormat fmt = new DecimalFormat("0.####");
-        return fmt.format(value);
-    }
-
-    public static String getDecimal_2(Double value) {
-        DecimalFormat fmt = new DecimalFormat("0.##");
         return fmt.format(value);
     }
 
@@ -57,23 +52,33 @@ public class NumberUtil {
     }
 
 
-    public static BigInteger getBigFromDouble(double gasPrice) {
-        return BigInteger.valueOf((int)(gasPrice * 1000000))
-                .divide(BigInteger.valueOf(1000000)).multiply(ConstantUtil.ETHDecimal);
+    public static BigInteger getWeiFromEth(double value) {
+        return BigInteger.valueOf((int)(value * ConstUtil.LONG_6)).multiply(ConstUtil.ETHDecimal)
+                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
-    public static String getStringNumberFromBig(String value) {
-        if (TextUtils.isEmpty(value)) return "0";
-        BigInteger bigValue = new BigInteger(value);
-        double result = bigValue.multiply(BigInteger.valueOf(10000))
-                .divide(ETHDecimal).doubleValue()/10000.0;
-        return NumberUtil.getDecimal_6(result);
+    public static String getEthFromWeiForStringDecimal6(String value) {
+        return getDecimal_6(getEthFromWeiForDoubleDecimal6(value));
     }
 
-    public static double getDoubleFromBig(BigInteger gasPrice) {
-        return gasPrice.multiply(BigInteger.valueOf(1000000))
-                .divide(ConstantUtil.ETHDecimal).doubleValue()/1000000.0;
+    public static String getEthFromWeiForStringDecimal6(BigInteger value) {
+        return getDecimal_6(getEthFromWei(value));
     }
+
+    public static double getEthFromWeiForDoubleDecimal6(String value) {
+        if (TextUtils.isEmpty(value)) return 0.0;
+        if (Numeric.containsHexPrefix(value)) {
+            return getEthFromWei(Numeric.toBigInt(value));
+        } else {
+            return getEthFromWei(new BigInteger(value));
+        }
+    }
+
+    public static double getEthFromWei(BigInteger value) {
+        return value.multiply(BigInteger.valueOf(ConstUtil.LONG_6))
+                .divide(ETHDecimal).doubleValue()/ConstUtil.DOUBLE_6;
+    }
+
 
     public static boolean isPasswordOk(String password) {
         int len = password.length();

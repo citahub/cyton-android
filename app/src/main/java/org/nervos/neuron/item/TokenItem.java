@@ -57,7 +57,9 @@ public class TokenItem implements Parcelable{
         this.name = tokenEntity.name;
         this.symbol = tokenEntity.symbol;
         this.contractAddress = tokenEntity.address;
-        this.avatar = tokenEntity.logo.src;
+        if (tokenEntity.logo != null) {
+            this.avatar = tokenEntity.logo.src;
+        }
         this.decimals = tokenEntity.decimals;
         this.chainId = -1;
     }

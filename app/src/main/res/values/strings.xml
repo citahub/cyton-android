@@ -152,7 +152,7 @@
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
     <string name="network_error">网络请求错误</string>
-    <string name="input_token_info">请输入Token信息</string>
+    <string name="input_token_info">请输入完整的代币信息</string>
     <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
@@ -160,4 +160,5 @@
     <string name="dialog_tip_message">Neuron是Nervos AppChain的开源组件，目前处于beta测试版状态，主要提供给开发者开发、测试DApp，不建议普通用户使用，更不建议您在Neuron中托管大量的数字资产。</string>
     <string name="have_known">知道了</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
+    <string name="contract_address_error">合约地址错误</string>
 </resources>

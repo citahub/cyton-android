@@ -2,15 +2,9 @@ package org.nervos.neuron.item;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
-import org.nervos.neuron.util.NumberUtil;
-
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
 
 public class TransactionItem implements Parcelable{
 

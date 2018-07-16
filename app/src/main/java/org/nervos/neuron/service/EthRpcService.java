@@ -4,12 +4,11 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.bouncycastle.jcajce.provider.symmetric.AES;
-import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
@@ -33,6 +32,7 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 
@@ -50,7 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
+import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class EthRpcService {
 
@@ -58,7 +58,7 @@ public class EthRpcService {
     private static Web3j service;
 
     public static void init(Context context) {
-        service = Web3jFactory.build(new InfuraHttpService(ConstantUtil.ETH_NODE_IP));
+        service = Web3jFactory.build(new InfuraHttpService(ConstUtil.ETH_NODE_IP));
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
@@ -67,8 +67,7 @@ public class EthRpcService {
             EthGetBalance ethGetBalance = service.ethGetBalance(address,
                     DefaultBlockParameterName.LATEST).send();
             if (ethGetBalance != null) {
-                return ethGetBalance.getBalance().multiply(BigInteger.valueOf(10000))
-                        .divide(ETHDecimal).doubleValue()/10000.0;
+                return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,7 +79,7 @@ public class EthRpcService {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
-                BigInteger gasPrice = ConstantUtil.GAS_PRICE;
+                BigInteger gasPrice = ConstUtil.GAS_PRICE;
                 try {
                     gasPrice = service.ethGasPrice().send().getGasPrice();
                 } catch (IOException e) {
@@ -107,10 +106,8 @@ public class EthRpcService {
                 try {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
-                    BigInteger transferValue = ETHDecimal
-                            .multiply(BigInteger.valueOf((long)(10000*value))).divide(BigInteger.valueOf(10000));
                     RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
-                            gasPrice, ConstantUtil.GAS_LIMIT, address, transferValue);
+                            gasPrice, ConstUtil.GAS_LIMIT, address, NumberUtil.getWeiFromEth(value));
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {
@@ -184,9 +181,9 @@ public class EthRpcService {
         try {
             long decimal = getErc20Decimal(address, contractAddress);
             Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
-                    ConstantUtil.BALANCEOF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                    ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
             String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-            if (!TextUtils.isEmpty(balanceOf) && ! ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+            if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
                 initIntTypes();
                 Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
                 double balances = balance.getValue().doubleValue();
@@ -218,7 +215,7 @@ public class EthRpcService {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
                     RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
-                            gasPrice, ConstantUtil.GAS_LIMIT, tokenItem.contractAddress, data);
+                            gasPrice, ConstUtil.GAS_ERC20_LIMIT, tokenItem.contractAddress, data);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {
@@ -249,8 +246,8 @@ public class EthRpcService {
             sb.append("0");
         }
         BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long)(10000*value)))
-                .divide(BigInteger.valueOf(10000));
+        return ERC20Decimal.multiply(BigInteger.valueOf((long)(ConstUtil.LONG_6*value)))
+                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
 
@@ -262,25 +259,25 @@ public class EthRpcService {
     }
 
     private static String getErc20Name(String address, String contractAddress) throws IOException {
-        Transaction nameCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.NAME_HASH);
+        Transaction nameCall = Transaction.createEthCallTransaction(address, contractAddress, ConstUtil.NAME_HASH);
         String name = service.ethCall(nameCall, DefaultBlockParameterName.LATEST).send().getValue();
-        if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
+        if (TextUtils.isEmpty(name) || ConstUtil.RPC_RESULT_ZERO.equals(name)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(name, stringTypes).get(0).toString();
     }
 
     private static String getErc20Symbol(String address, String contractAddress) throws IOException {
-        Transaction symbolCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.SYMBOL_HASH);
+        Transaction symbolCall = Transaction.createEthCallTransaction(address, contractAddress, ConstUtil.SYMBOL_HASH);
         String symbol = service.ethCall(symbolCall, DefaultBlockParameterName.LATEST).send().getValue();
-        if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
+        if (TextUtils.isEmpty(symbol) || ConstUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
     }
 
     private static int getErc20Decimal(String address, String contractAddress) throws IOException {
-        Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.DECIMALS_HASH);
+        Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, ConstUtil.DECIMALS_HASH);
         String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
+        if (!TextUtils.isEmpty(decimals) && !ConstUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
             Int64 type = (Int64) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();

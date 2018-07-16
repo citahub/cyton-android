@@ -6,8 +6,7 @@ import android.text.TextUtils;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class WalletService {
                 TokenItem tokenItem = iterator.next();
                 iterator.remove();
                 if (tokenItem.chainId < 0) {                // ethereum
-                    if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
+                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                         tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                         tokenItemList.add(tokenItem);
                     } else {

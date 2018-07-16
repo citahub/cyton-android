@@ -21,7 +21,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
@@ -137,7 +137,7 @@ public class AppWebActivity extends BaseActivity {
     private void initInjectWebView() {
 
         webView.setChainId(1);
-        webView.setRpcUrl(ConstantUtil.ETH_NODE_IP);
+        webView.setRpcUrl(ConstUtil.ETH_NODE_IP);
         webView.setWalletAddress(new Address("0xf4c0762D2cB41896b72266cdd24497Be6F5c791c"));
 
         webView.setOnSignTransactionListener(transaction -> {
