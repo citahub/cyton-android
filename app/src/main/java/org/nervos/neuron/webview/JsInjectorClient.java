@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -6,9 +6,10 @@ import android.support.annotation.RawRes;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.nervos.neuron.R;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -86,8 +87,6 @@ class JsInjectorClient {
 
     String assembleJs(Context context, String template) {
         if (TextUtils.isEmpty(jsLibrary)) {
-//            jsLibrary = loadFile(context, trust.web3jprovider.R.raw.trust);
-            Log.d("Neuron", "assembleJs");
             jsLibrary = loadFile(context, R.raw.trust_web3);
         }
         String initJs = loadInitJs(context);

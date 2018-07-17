@@ -96,12 +96,12 @@ public class WebAppUtil {
         }).filter(new Func1<AppItem, Boolean>() {
             @Override
             public Boolean call(AppItem appItem) {
-                return appItem.chainset.size() > 0 && appItem.chainset.size() <= 5;
+                return appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5;
             }
         }).flatMap(new Func1<AppItem, Observable<ChainItem>>() {
             @Override
             public Observable<ChainItem> call(AppItem appItem) {
-                Map<String, String> chainSet = appItem.chainset;
+                Map<String, String> chainSet = appItem.chainSet;
                 List<ChainItem> chainItemList = new ArrayList<>();
                 for(Map.Entry<String, String> entry : chainSet.entrySet()) {
                     ChainItem item = new ChainItem();

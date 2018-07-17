@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -7,11 +7,12 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 
+import org.nervos.neuron.webview.item.Message;
+import org.nervos.neuron.webview.item.Transaction;
+
 import trust.core.entity.Address;
-import trust.core.entity.Message;
 import trust.core.entity.TypedData;
 import trust.core.util.Hex;
-import trust.web3.item.Transaction;
 
 public class SignCallbackJSInterface {
 
@@ -46,7 +47,7 @@ public class SignCallbackJSInterface {
             String nonce,
             String gasLimit,    // quota
             String gasPrice,    // validUntilBlock
-            String payload,
+            String data,
             String chainId,
             String version,
             String chainType) {
@@ -57,7 +58,7 @@ public class SignCallbackJSInterface {
                 gasLimit,
                 gasPrice,
                 Hex.hexToLong(nonce, -1),
-                payload,
+                data,
                 Hex.hexToLong(chainId, -1),
                 Hex.hexToInteger(version, 0),
                 chainType,
@@ -66,8 +67,9 @@ public class SignCallbackJSInterface {
     }
 
     @JavascriptInterface
-    public void signMessage(int callbackId, String data) {
-        webView.post(() -> onSignMessageListener.onSignMessage(new Message<>(data, getUrl(), callbackId)));
+    public void signMessage(int callbackId, String data, String chainType) {
+        Transaction transaction = new Transaction(data, chainType);
+        webView.post(() -> onSignMessageListener.onSignMessage(new Message<>(transaction, getUrl(), callbackId)));
     }
 
     @JavascriptInterface

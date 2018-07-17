@@ -46192,14 +46192,24 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sendTransaction':
-    case 'sendTransaction':
-      console.log("sendTransaction inject")
+      console.log("eth_sendTransaction inject")
       txParams = payload.params[0]
+      txParams.chainType = "ETH"
       waterfall([
 //        (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processTransaction(txParams, cb),
       ], end)
       return
+
+    case 'sendTransaction':
+        console.log("sendTransaction inject")
+        txParams = payload.params[0]
+        txParams.chainType = "AppChain"
+        waterfall([
+    //        (cb) => self.validateTransaction(txParams, cb),
+          (cb) => self.processTransaction(txParams, cb),
+        ], end)
+        return
 
     case 'eth_signTransaction':
       console.log("eth_signTransaction")
@@ -46211,7 +46221,6 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sign':
-      console.log("eth_sign")
       // process normally
       address = payload.params[0]
       message = payload.params[1]
@@ -46222,11 +46231,32 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
+      msgParams.chainType = "ETH";
+      console.log("eth_sign msgParams: ", msgParams)
       waterfall([
-        (cb) => self.validateMessage(msgParams, cb),
+//        (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
       ], end)
       return
+
+    case 'sign':
+          // process normally
+          address = payload.params[0]
+          message = payload.params[1]
+          // non-standard "extraParams" to be appended to our "msgParams" obj
+          // good place for metadata
+          extraParams = payload.params[2] || {}
+          msgParams = extend(extraParams, {
+            from: address,
+            data: message,
+          })
+          msgParams.chainType = "AppChain";
+          console.log("sign msgParams: ", msgParams)
+          waterfall([
+    //        (cb) => self.validateMessage(msgParams, cb),
+            (cb) => self.processMessage(msgParams, cb),
+          ], end)
+          return
 
     case 'personal_sign':
       // process normally

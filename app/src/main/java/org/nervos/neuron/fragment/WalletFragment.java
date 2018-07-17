@@ -239,7 +239,7 @@ public class WalletFragment extends BaseFragment {
                 }
                 if (tokenItemList.get(position) != null) {
                     viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
-                    viewHolder.tokenAmount.setText(NumberUtil.getDecimal_4(tokenItemList.get(position).balance));
+                    viewHolder.tokenAmount.setText(NumberUtil.getDecimal_6(tokenItemList.get(position).balance));
                 }
                 viewHolder.itemView.setTag(position);
             }

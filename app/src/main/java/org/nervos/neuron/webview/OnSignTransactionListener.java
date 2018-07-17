@@ -1,6 +1,6 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
-import trust.web3.item.Transaction;
+import org.nervos.neuron.webview.item.Transaction;
 
 public interface OnSignTransactionListener {
     void onSignTransaction(Transaction transaction);

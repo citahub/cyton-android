@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,14 +15,15 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.nervos.neuron.webview.item.Message;
+import org.nervos.neuron.webview.item.Transaction;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import trust.core.entity.Address;
-import trust.core.entity.Message;
 import trust.core.entity.TypedData;
-import trust.web3.item.Transaction;
 
 public class Web3View extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";
@@ -139,7 +140,7 @@ public class Web3View extends WebView {
     public void setOnSignPersonalMessageListener(@Nullable OnSignPersonalMessageListener onSignPersonalMessageListener) {
         this.onSignPersonalMessageListener = onSignPersonalMessageListener;
     }
-    
+
     public void setOnSignTypedMessageListener(@Nullable OnSignTypedMessageListener onSignTypedMessageListener) {
         this.onSignTypedMessageListener = onSignTypedMessageListener;
     }

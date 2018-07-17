@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

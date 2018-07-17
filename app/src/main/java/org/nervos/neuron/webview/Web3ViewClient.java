@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.net.http.SslError;
 import android.text.TextUtils;

@@ -1,6 +1,7 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
-import trust.core.entity.Message;
+import org.nervos.neuron.webview.item.Message;
+
 import trust.core.entity.TypedData;
 
 public interface OnSignTypedMessageListener {

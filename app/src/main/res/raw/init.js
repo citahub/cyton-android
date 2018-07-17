@@ -11,49 +11,43 @@ function onSignSuccessful(id, value) {
 function onSignError(id, error) {
   Trust.executeCallback(id, error, null)
 }
-console.log("trust init")
 window.Trust.init(rpcURL, {
   getAccounts: function (cb) { cb(null, [addressHex]) },
   processTransaction: function (tx, cb){
     console.log('signing a transaction', tx)
     const { id = 8888 } = tx
     Trust.addCallback(id, cb)
-    if (typeof tx.gasPrice !== 'undefined') {
+
+    var data = tx.data || null;
+    var nonce = tx.nonce || -1;
+    var chainId = tx.chainId || -1;
+    var version = tx.version || 0;
+    var value = tx.value || null;
+    var chainType = tx.chainType || null;
+
+    if (tx.chainType == "ETH") {
         var gasLimit = tx.gasLimit || tx.gas || null;
         var gasPrice = tx.gasPrice || null;
-        var data = tx.data || null;
-        var nonce = tx.nonce || -1;
-        var chainId = -1;
-        var version = 0;
-        var chainType = "ETH";
-        trust.signTransaction(id, tx.to || null, tx.value, nonce, gasLimit, gasPrice,
+        trust.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
                         data, chainId, version, chainType);
     } else {
         var quota = tx.quota || null;
         var validUntilBlock = tx.validUntilBlock || 0;
-        var data = tx.data || null;
-        var nonce = tx.nonce || 0;
-        var chainId = tx.chainId;
-        var version = tx.version;
-        var chainType = "AppChain";
-        trust.signTransaction(id, tx.to || null, tx.value, nonce, quota, validUntilBlock,
+        trust.signTransaction(id, tx.to || null, value, nonce, quota, validUntilBlock,
                         data, chainId, version, chainType);
     }
-
   },
   signMessage: function (msgParams, cb) {
     console.log('signMessage', msgParams)
-    const { data } = msgParams
+    const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
-    console.log("signing a message", msgParams)
     Trust.addCallback(id, cb)
-    trust.signMessage(id, data);
+    trust.signMessage(id, data, chainType);
   },
   signPersonalMessage: function (msgParams, cb) {
     console.log('signPersonalMessage', msgParams)
     const { data } = msgParams
     const { id = 8888 } = msgParams
-    console.log("signing a personal message", msgParams)
     Trust.addCallback(id, cb)
     trust.signPersonalMessage(id, data);
   },

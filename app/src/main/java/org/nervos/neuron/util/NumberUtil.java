@@ -20,11 +20,6 @@ public class NumberUtil {
         return fmt.format(value);
     }
 
-    public static String getDecimal_4(Double value) {
-        DecimalFormat fmt = new DecimalFormat("0.####");
-        return fmt.format(value);
-    }
-
     public static String hexToUtf8(String hex) {
         hex = Numeric.cleanHexPrefix(hex);
         ByteBuffer buff = ByteBuffer.allocate(hex.length()/2);
@@ -66,6 +61,7 @@ public class NumberUtil {
     }
 
     public static double getEthFromWeiForDoubleDecimal6(String value) {
+        LogUtil.d("value: " + value);
         if (TextUtils.isEmpty(value)) return 0.0;
         if (Numeric.containsHexPrefix(value)) {
             return getEthFromWei(Numeric.toBigInt(value));

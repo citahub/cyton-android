@@ -1,16 +1,14 @@
-package trust.web3.item;
+package org.nervos.neuron.webview.item;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.math.BigInteger;
 
 import trust.core.entity.Address;
 
 public class Transaction implements Parcelable {
 
-    private static final String TYPE_ETH = "ETH";
-    private static final String TYPE_APPCHAIN = "AppChain";
+    public static final String TYPE_ETH = "ETH";
+    public static final String TYPE_APPCHAIN = "AppChain";
 
     public Address recipient;
     public Address contract;
@@ -27,6 +25,14 @@ public class Transaction implements Parcelable {
     public String validUntilBlock;
     public int version;
     public long chainId;
+    public String chainType;
+
+    public Transaction(
+            String data,
+            String chainType) {
+        this.data = data;
+        this.chainType = chainType;
+    }
 
     public Transaction(
             Address recipient,
@@ -35,7 +41,22 @@ public class Transaction implements Parcelable {
             String gasLimit,
             String gasPrice,
             long nonce,
-            String payload,
+            String data,
+            long chainId,
+            int version,
+            String chainType) {
+        this(recipient, contract, value, gasLimit, gasPrice, nonce, data,
+                chainId, version, chainType, 0);
+    }
+
+    public Transaction(
+            Address recipient,
+            Address contract,
+            String value,
+            String gasLimit,
+            String gasPrice,
+            long nonce,
+            String data,
             long chainId,
             int version,
             String chainType,
@@ -44,6 +65,7 @@ public class Transaction implements Parcelable {
         this.contract = contract;
         this.value = value;
         this.to = recipient.toString();
+        this.chainType = chainType;
         if (TYPE_ETH.equalsIgnoreCase(chainType)) {
             this.gasPrice = gasPrice;
             this.gasLimit = gasLimit;
@@ -54,7 +76,7 @@ public class Transaction implements Parcelable {
             this.version = version;
         }
         this.nonce = nonce;
-        this.data = payload;
+        this.data = data;
         this.leafPosition = leafPosition;
     }
 

@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.os.Build;
 import android.support.annotation.Nullable;

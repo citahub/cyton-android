@@ -6,33 +6,29 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
+import java.math.BigInteger;
+
 public class TransactionInfo implements Parcelable {
 
-    /**
-     * from : 0x627306090abaB3A6e1400e9345bC60c78a8BEf57
-     * nonce : 100
-     * quota : 100
-     * data : 0x627306090abaB3A6e1400e9345bC60c78a8BEf57
-     * value : 0
-     * chainId : 1
-     * version : 0
-     */
+    private static final String TYPE_ETH = "ETH";
+    private static final String TYPE_APPCHAIN = "AppChain";
 
     public String from;
     public String to;
     public long nonce;
     private long quota = -1;
     public String data;
-    @SerializedName("value")
-    public String value;
+    private String value;
     public long chainId;
     public int version;
-    private String gasLimit;
-    private String gasPrice;
-    public String uuid;
+    public String gasLimit;
+    public String gasPrice;
+    public String chainType;
 
     public TransactionInfo(String to, String value) {
         this.to = to;
@@ -40,6 +36,7 @@ public class TransactionInfo implements Parcelable {
     }
 
     public double getValue() {
+        value = TextUtils.isEmpty(value)? "0":value;
         return NumberUtil.getEthFromWeiForDoubleDecimal6(value);
     }
 
@@ -48,32 +45,15 @@ public class TransactionInfo implements Parcelable {
     }
 
     public double getGas() {
+        BigInteger limitBig = TextUtils.isEmpty(gasLimit)?
+                ConstUtil.GAS_LIMIT:Numeric.toBigInt(gasLimit);
+        BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO:Numeric.toBigInt(gasPrice);
         return NumberUtil.getEthFromWeiForDoubleDecimal6(
-                Numeric.toBigInt(gasLimit).multiply(Numeric.toBigInt(gasPrice)).toString());
-    }
-
-    public String getGasLimit() {
-        return gasLimit;
-    }
-
-    public String getGasPrice() {
-        return gasPrice;
-    }
-
-    public void setGasLimit(String gasLimit) {
-        this.gasLimit = gasLimit;
-    }
-
-    public void setQuota(long quota) {
-        this.quota = quota;
-    }
-
-    public void setGasPrice(String gasPrice) {
-        this.gasPrice = gasPrice;
+                limitBig.multiply(priceBig).toString());
     }
 
     public boolean isEthereum() {
-        return !TextUtils.isEmpty(gasPrice);
+        return !TextUtils.isEmpty(chainType) && TYPE_ETH.equals(chainType);
     }
 
 
@@ -94,7 +74,6 @@ public class TransactionInfo implements Parcelable {
         dest.writeInt(this.version);
         dest.writeString(this.gasLimit);
         dest.writeString(this.gasPrice);
-        dest.writeString(this.uuid);
     }
 
     protected TransactionInfo(Parcel in) {
@@ -108,7 +87,6 @@ public class TransactionInfo implements Parcelable {
         this.version = in.readInt();
         this.gasLimit = in.readString();
         this.gasPrice = in.readString();
-        this.uuid = in.readString();
     }
 
     public static final Creator<TransactionInfo> CREATOR = new Creator<TransactionInfo>() {

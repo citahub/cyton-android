@@ -7,7 +7,6 @@ import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,7 +18,9 @@ import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
+import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.SignService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
@@ -27,21 +28,16 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
-import java.security.GeneralSecurityException;
-import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import trust.core.entity.Address;
-import trust.web3.Web3View;
-import trust.web3.item.Transaction;
+import org.nervos.neuron.webview.OnSignMessageListener;
+import org.nervos.neuron.webview.Web3View;
+import org.nervos.neuron.webview.item.Message;
+import org.nervos.neuron.webview.item.Transaction;
 
 public class AppWebActivity extends BaseActivity {
 
@@ -60,14 +56,15 @@ public class AppWebActivity extends BaseActivity {
     private BottomSheetDialog sheetDialog;
 
     private WalletItem walletItem;
-    private Transaction transaction;
+    private Transaction signTransaction;
+    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_web);
 
-        String url = getIntent().getStringExtra(EXTRA_URL);
+        url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         initView();
@@ -142,21 +139,36 @@ public class AppWebActivity extends BaseActivity {
 
         webView.setOnSignTransactionListener(transaction -> {
             Toast.makeText(mActivity,
-                    "transaction information: payload: " + transaction.data
-                            + " gasPrice: " + transaction.gasPrice, Toast.LENGTH_LONG).show();
-            this.transaction = transaction;
-            if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(mActivity, AddWalletActivity.class));
-            } else {
-                Intent intent = new Intent(mActivity, PayTokenActivity.class);
-                intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem());
-                startActivityForResult(intent, REQUEST_CODE);
-            }
+                    "transaction information: payload: " + transaction.data, Toast.LENGTH_LONG).show();
+            signTxAction(transaction);
+        });
 
+        webView.setOnSignMessageListener(new OnSignMessageListener() {
+            @Override
+            public void onSignMessage(Message<Transaction> message) {
+                Toast.makeText(mActivity,
+                        "transaction information: message: " + message.url + " "
+                                + message.value + " " + message.leafPosition, Toast.LENGTH_LONG).show();
+                showSignMessageDialog(message);
+            }
         });
     }
+
+
+    private void signTxAction(Transaction transaction) {
+        this.signTransaction = transaction;
+        if (walletItem == null) {
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(mActivity, AddWalletActivity.class));
+        } else {
+            Intent intent = new Intent(mActivity, PayTokenActivity.class);
+            intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
+            intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null?
+                    new AppItem(url):WebAppUtil.getAppItem());
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+    }
+
 
     private void initWebView() {
         webView.setWebChromeClient(new WebChromeClient(){
@@ -189,19 +201,6 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
-    private class Nervos {
-
-        @JavascriptInterface
-        public void signTransaction(String tx) {
-            if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(mActivity, AddWalletActivity.class));
-            } else {
-                showSignMessageDialog(tx);
-            }
-        }
-    }
-
     @Override
     public void onDestroy() {
         if (sheetDialog != null && sheetDialog.isShowing()) {
@@ -210,14 +209,14 @@ public class AppWebActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void showSignMessageDialog(String tx) {
+    private void showSignMessageDialog(Message<Transaction> message) {
         sheetDialog = new BottomSheetDialog(mActivity);
         sheetDialog.setCanceledOnTouchOutside(true);
-        sheetDialog.setContentView(getSignMessageView(tx));
+        sheetDialog.setContentView(getSignMessageView(message));
         sheetDialog.show();
     }
 
-    private View getSignMessageView(String tx) {
+    private View getSignMessageView(Message<Transaction> message) {
         View view = getLayoutInflater().inflate(R.layout.dialog_sign_message, null);
         TextView walletNameText = view.findViewById(R.id.wallet_name);
         TextView walletAddressText = view.findViewById(R.id.wallet_address);
@@ -228,19 +227,19 @@ public class AppWebActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
-        payOwnerText.setText(WebAppUtil.getAppItem().entry);
-        payDataText.setText(tx);
+        payOwnerText.setText(WebAppUtil.getAppItem() == null?
+                url:WebAppUtil.getAppItem().entry);
+        payDataText.setText(message.value.data);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         if (WebAppUtil.getAppItem() != null) {
             payOwnerText.setText(WebAppUtil.getAppItem().provider);
-            payDataText.setText(tx);
         }
         view.findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 view.findViewById(R.id.pay_data_left_line).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.pay_data_right_line).setVisibility(View.GONE);
-                payDataText.setText(tx);
+                payDataText.setText(message.value.data);
             }
         });
 
@@ -249,8 +248,8 @@ public class AppWebActivity extends BaseActivity {
             public void onClick(View v) {
                 view.findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
                 view.findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
-                if (Numeric.containsHexPrefix(tx)) {
-                    payDataText.setText(NumberUtil.hexToUtf8(tx));
+                if (Numeric.containsHexPrefix(message.value.data)) {
+                    payDataText.setText(NumberUtil.hexToUtf8(message.value.data));
                 }
             }
         });
@@ -258,21 +257,22 @@ public class AppWebActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 sheetDialog.dismiss();
+                webView.onSignCancel(message);
             }
         });
         view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPasswordConfirmView(progressBar, tx);
+                showPasswordConfirmView(progressBar, message);
             }
         });
         return view;
     }
 
-    private void showPasswordConfirmView(ProgressBar progressBar, String tx) {
+    private void showPasswordConfirmView(ProgressBar progressBar, Message<Transaction> message) {
         SimpleDialog simpleDialog = new SimpleDialog(mActivity);
         simpleDialog.setTitle(R.string.input_password_hint);
-        simpleDialog.setMessageHint("password");
+        simpleDialog.setMessageHint(R.string.input_password_hint);
         simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
@@ -286,77 +286,56 @@ public class AppWebActivity extends BaseActivity {
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
-                actionSignNervos(password, tx);
                 simpleDialog.dismiss();
-
+                if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
+                    actionSignEth(password, message);
+                } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)){
+                    actionSignNervos(password, message);
+                }
             }
         });
         simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
         simpleDialog.show();
     }
 
-    private void actionSignEth(String password, String tx) {
-        Observable.fromCallable(new Callable<Sign.SignatureData>() {
-            @Override
-            public Sign.SignatureData call() {
-                try {
-                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
-                    return Sign.signMessage(tx.getBytes(),
-                            ECKeyPair.create(Numeric.toBigInt(privateKey)));
-                } catch (GeneralSecurityException e) {
-                    e.printStackTrace();
+    private void actionSignEth(String password, Message<Transaction> message) {
+        SignService.signEthMessage(mActivity, message.value.data, password).
+            subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+                    sheetDialog.dismiss();
                 }
-                return null;
-            }
-        }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<Sign.SignatureData>() {
-            @Override
-            public void onCompleted() {
-                sheetDialog.dismiss();
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                sheetDialog.dismiss();
-            }
-            @Override
-            public void onNext(Sign.SignatureData signatureData) {
-                LogUtil.d("signatureData: " + new String(signatureData.getR()));
-            }
-        });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    sheetDialog.dismiss();
+                    webView.onSignError(message, e.getMessage());
+                }
+                @Override
+                public void onNext(String hexSign) {
+                    webView.onSignMessageSuccessful(message, hexSign);
+                }
+            });
     }
 
-    private void actionSignNervos(String password, String tx) {
-        Observable.fromCallable(new Callable<org.nervos.web3j.crypto.Sign.SignatureData>() {
-            @Override
-            public org.nervos.web3j.crypto.Sign.SignatureData call() {
-                try {
-                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
-                    return org.nervos.web3j.crypto.Sign.signMessage(tx.getBytes(),
-                            org.nervos.web3j.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
-                } catch (GeneralSecurityException e) {
-                    e.printStackTrace();
+    private void actionSignNervos(String password, Message<Transaction> message) {
+        SignService.signNervosMessage(mActivity, message.value.data, password)
+            .subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+                    sheetDialog.dismiss();
                 }
-                return null;
-            }
-        }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<org.nervos.web3j.crypto.Sign.SignatureData>() {
-            @Override
-            public void onCompleted() {
-                sheetDialog.dismiss();
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                sheetDialog.dismiss();
-            }
-            @Override
-            public void onNext(org.nervos.web3j.crypto.Sign.SignatureData signatureData) {
-                LogUtil.d("signatureData: " + new String(signatureData.get_signature()));
-            }
-        });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    sheetDialog.dismiss();
+                    webView.onSignError(message, e.getMessage());
+                }
+                @Override
+                public void onNext(String hexSign) {
+                    webView.onSignMessageSuccessful(message, hexSign);
+                }
+            });
     }
 
     @Override
@@ -365,14 +344,14 @@ public class AppWebActivity extends BaseActivity {
         if (requestCode == REQUEST_CODE) {
             switch (resultCode) {
                 case RESULT_CODE_CANCEL:
-                    webView.onSignCancel(transaction);
+                    webView.onSignCancel(signTransaction);
                     break;
                 case RESULT_CODE_SUCCESS:
-                    webView.onSignTransactionSuccessful(transaction,
+                    webView.onSignTransactionSuccessful(signTransaction,
                             data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
                     break;
                 case RESULT_CODE_FAIL:
-                    webView.onSignError(transaction,
+                    webView.onSignError(signTransaction,
                             data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
                     break;
                 default:

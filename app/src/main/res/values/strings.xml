@@ -161,4 +161,5 @@
     <string name="have_known">知道了</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
     <string name="contract_address_error">合约地址错误</string>
+    <string name="password_hint">password</string>
 </resources>
