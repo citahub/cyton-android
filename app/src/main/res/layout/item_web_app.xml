@@ -10,6 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:lines="1"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="14sp"
         android:textColor="@color/default_gray_6"/>
 

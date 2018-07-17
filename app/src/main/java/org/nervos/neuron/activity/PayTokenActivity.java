@@ -129,7 +129,8 @@ public class PayTokenActivity extends BaseActivity {
             public void onClick(View v) {
                 findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
                 findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
-                if (Numeric.containsHexPrefix(transactionInfo.data)) {
+                if (!TextUtils.isEmpty(transactionInfo.data) &&
+                        Numeric.containsHexPrefix(transactionInfo.data)) {
                     payDataText.setText(NumberUtil.hexToUtf8(transactionInfo.data));
                 }
             }

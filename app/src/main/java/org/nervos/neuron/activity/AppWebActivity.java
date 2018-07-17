@@ -138,17 +138,12 @@ public class AppWebActivity extends BaseActivity {
         webView.setWalletAddress(new Address("0xf4c0762D2cB41896b72266cdd24497Be6F5c791c"));
 
         webView.setOnSignTransactionListener(transaction -> {
-            Toast.makeText(mActivity,
-                    "transaction information: payload: " + transaction.data, Toast.LENGTH_LONG).show();
             signTxAction(transaction);
         });
 
         webView.setOnSignMessageListener(new OnSignMessageListener() {
             @Override
             public void onSignMessage(Message<Transaction> message) {
-                Toast.makeText(mActivity,
-                        "transaction information: message: " + message.url + " "
-                                + message.value + " " + message.leafPosition, Toast.LENGTH_LONG).show();
                 showSignMessageDialog(message);
             }
         });
@@ -248,7 +243,8 @@ public class AppWebActivity extends BaseActivity {
             public void onClick(View v) {
                 view.findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
                 view.findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
-                if (Numeric.containsHexPrefix(message.value.data)) {
+                if (!TextUtils.isEmpty(message.value.data) &&
+                        Numeric.containsHexPrefix(message.value.data)) {
                     payDataText.setText(NumberUtil.hexToUtf8(message.value.data));
                 }
             }
