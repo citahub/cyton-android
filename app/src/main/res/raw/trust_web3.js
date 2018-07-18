@@ -54003,7 +54003,6 @@ var Trust = {
     context.web3 = web3;
     globalSyncOptions = syncOptions;
 
-    engine.host = rpcUrl;
     engine.addProvider(new CacheSubprovider());
     engine.addProvider(new SubscriptionsSubprovider());
     engine.addProvider(new FilterSubprovider());
@@ -54043,6 +54042,11 @@ var Trust = {
 
 if (typeof context.Trust === 'undefined') {
   context.Trust = Trust;
+}
+
+ProviderEngine.prototype.setHost = function (host) {
+    var length = this._providers.length;
+    this._providers[length - 1].provider.host = host;
 }
 
 ProviderEngine.prototype.send = function (payload) {
