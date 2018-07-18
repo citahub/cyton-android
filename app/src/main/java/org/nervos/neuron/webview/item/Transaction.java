@@ -3,8 +3,6 @@ package org.nervos.neuron.webview.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import trust.core.entity.Address;
-
 public class Transaction implements Parcelable {
 
     public static final String TYPE_ETH = "ETH";

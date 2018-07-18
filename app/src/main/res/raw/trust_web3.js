@@ -46221,6 +46221,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sign':
+      console.log('eth_sign', payload)
       // process normally
       address = payload.params[0]
       message = payload.params[1]
@@ -46232,7 +46233,6 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         data: message,
       })
       msgParams.chainType = "ETH";
-      console.log("eth_sign msgParams: ", msgParams)
       waterfall([
 //        (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
@@ -46240,25 +46240,27 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'sign':
-          // process normally
-          address = payload.params[0]
-          message = payload.params[1]
-          // non-standard "extraParams" to be appended to our "msgParams" obj
-          // good place for metadata
-          extraParams = payload.params[2] || {}
-          msgParams = extend(extraParams, {
-            from: address,
-            data: message,
-          })
-          msgParams.chainType = "AppChain";
-          console.log("sign msgParams: ", msgParams)
-          waterfall([
-    //        (cb) => self.validateMessage(msgParams, cb),
-            (cb) => self.processMessage(msgParams, cb),
-          ], end)
-          return
+        console.log('sign', payload)
+        // process normally
+        address = payload.params[0]
+        message = payload.params[1]
+        // non-standard "extraParams" to be appended to our "msgParams" obj
+        // good place for metadata
+        extraParams = payload.params[2] || {}
+        msgParams = extend(extraParams, {
+        from: address,
+        data: message,
+        })
+        msgParams.chainType = "AppChain";
+        waterfall([
+        //        (cb) => self.validateMessage(msgParams, cb),
+        (cb) => self.processMessage(msgParams, cb),
+        ], end)
+        return
 
     case 'personal_sign':
+
+      console.log('personal_sign', payload)
       // process normally
       const first = payload.params[0]
       const second = payload.params[1]
@@ -46291,8 +46293,9 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
+      msgParams.chainType = "ETH";
       waterfall([
-        (cb) => self.validatePersonalMessage(msgParams, cb),
+//        (cb) => self.validatePersonalMessage(msgParams, cb),
         (cb) => self.processPersonalMessage(msgParams, cb),
       ], end)
       return

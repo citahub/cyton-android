@@ -28,12 +28,13 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.webview.OnSignPersonalMessageListener;
+import org.nervos.neuron.webview.item.Address;
 import org.web3j.utils.Numeric;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
-import trust.core.entity.Address;
 import org.nervos.neuron.webview.OnSignMessageListener;
 import org.nervos.neuron.webview.Web3View;
 import org.nervos.neuron.webview.item.Message;
@@ -135,7 +136,7 @@ public class AppWebActivity extends BaseActivity {
 
         webView.setChainId(1);
         webView.setRpcUrl(ConstUtil.ETH_NODE_IP);
-        webView.setWalletAddress(new Address("0xf4c0762D2cB41896b72266cdd24497Be6F5c791c"));
+        webView.setWalletAddress(new Address(walletItem.address));
 
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
@@ -144,6 +145,13 @@ public class AppWebActivity extends BaseActivity {
         webView.setOnSignMessageListener(new OnSignMessageListener() {
             @Override
             public void onSignMessage(Message<Transaction> message) {
+                showSignMessageDialog(message);
+            }
+        });
+
+        webView.setOnSignPersonalMessageListener(new OnSignPersonalMessageListener() {
+            @Override
+            public void onSignPersonalMessage(Message<Transaction> message) {
                 showSignMessageDialog(message);
             }
         });
@@ -309,6 +317,7 @@ public class AppWebActivity extends BaseActivity {
                 }
                 @Override
                 public void onNext(String hexSign) {
+                    LogUtil.d("hexSign: " + hexSign);
                     webView.onSignMessageSuccessful(message, hexSign);
                 }
             });

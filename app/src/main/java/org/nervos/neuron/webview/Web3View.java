@@ -15,15 +15,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.nervos.neuron.webview.item.Address;
 import org.nervos.neuron.webview.item.Message;
 import org.nervos.neuron.webview.item.Transaction;
+import org.nervos.neuron.webview.item.TypedData;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import trust.core.entity.Address;
-import trust.core.entity.TypedData;
 
 public class Web3View extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";

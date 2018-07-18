@@ -7,12 +7,13 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 
+import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.webview.item.Address;
 import org.nervos.neuron.webview.item.Message;
 import org.nervos.neuron.webview.item.Transaction;
-
-import trust.core.entity.Address;
-import trust.core.entity.TypedData;
-import trust.core.util.Hex;
+import org.nervos.neuron.webview.item.TypedData;
+import org.web3j.utils.Numeric;
 
 public class SignCallbackJSInterface {
 
@@ -57,10 +58,10 @@ public class SignCallbackJSInterface {
                 value,
                 gasLimit,
                 gasPrice,
-                Hex.hexToLong(nonce, -1),
+                NumberUtil.hexToLong(nonce, -1),
                 data,
-                Hex.hexToLong(chainId, -1),
-                Hex.hexToInteger(version, 0),
+                NumberUtil.hexToLong(chainId, -1),
+                NumberUtil.hexToInteger(version, 0),
                 chainType,
                 callbackId);
         onSignTransactionListener.onSignTransaction(transaction);
@@ -73,8 +74,11 @@ public class SignCallbackJSInterface {
     }
 
     @JavascriptInterface
-    public void signPersonalMessage(int callbackId, String data) {
-        webView.post(() -> onSignPersonalMessageListener.onSignPersonalMessage(new Message<>(data, getUrl(), callbackId)));
+    public void signPersonalMessage(int callbackId, String data, String chainType) {
+        Transaction transaction = new Transaction(data, chainType);
+        LogUtil.d("signPersonalMessage: " + data + " " + chainType);
+        webView.post(() -> onSignPersonalMessageListener.onSignPersonalMessage(
+                new Message<>(transaction, getUrl(), callbackId)));
     }
 
     @JavascriptInterface

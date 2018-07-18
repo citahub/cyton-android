@@ -46,10 +46,10 @@ window.Trust.init(rpcURL, {
   },
   signPersonalMessage: function (msgParams, cb) {
     console.log('signPersonalMessage', msgParams)
-    const { data } = msgParams
+    const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
     Trust.addCallback(id, cb)
-    trust.signPersonalMessage(id, data);
+    trust.signPersonalMessage(id, data, chainType);
   },
   signTypedMessage: function (msgParams, cb) {
     console.log('signTypedMessage ', msgParams)

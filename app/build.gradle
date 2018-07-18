@@ -101,7 +101,6 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
     implementation 'com.github.TrustWallet:trust-web3-provider:0.2.1'
-    api 'com.github.TrustWallet:TrustCoreAndroid:0.01.6'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
