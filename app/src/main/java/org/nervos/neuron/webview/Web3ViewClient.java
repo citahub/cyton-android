@@ -105,12 +105,13 @@ public class Web3ViewClient extends WebViewClient {
         Map<String, String> headers = request.getRequestHeaders();
         JsInjectorResponse response;
         try {
-            Log.d("Neuron", "Web3ViewClient shouldInterceptRequest jsInjectorClient.loadUrl");
             response = jsInjectorClient.loadUrl(httpUrl.toString(), headers);
         } catch (Exception ex) {
             return null;
         }
         if (response == null || response.isRedirect) {
+            return null;
+        } else if (TextUtils.isEmpty(response.data)){
             return null;
         } else {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(response.data.getBytes());

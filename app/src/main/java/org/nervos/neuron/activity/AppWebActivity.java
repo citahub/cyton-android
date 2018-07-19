@@ -303,7 +303,9 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void actionSignEth(String password, Message<Transaction> message) {
-        SignService.signEthMessage(mActivity, message.value.data, password).
+        String data = NumberUtil.hexToUtf8(message.value.data);
+        LogUtil.d("sign data: " + data);
+        SignService.signEthMessage(mActivity, data, password).
             subscribe(new Subscriber<String>() {
                 @Override
                 public void onCompleted() {
