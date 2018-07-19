@@ -46192,14 +46192,24 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sendTransaction':
-    case 'sendTransaction':
-      console.log("sendTransaction inject")
+      console.log("eth_sendTransaction inject")
       txParams = payload.params[0]
+      txParams.chainType = "ETH"
       waterfall([
 //        (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processTransaction(txParams, cb),
       ], end)
       return
+
+    case 'sendTransaction':
+        console.log("sendTransaction inject")
+        txParams = payload.params[0]
+        txParams.chainType = "AppChain"
+        waterfall([
+    //        (cb) => self.validateTransaction(txParams, cb),
+          (cb) => self.processTransaction(txParams, cb),
+        ], end)
+        return
 
     case 'eth_signTransaction':
       console.log("eth_signTransaction")
@@ -46211,7 +46221,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sign':
-      console.log("eth_sign")
+      console.log('eth_sign', payload)
       // process normally
       address = payload.params[0]
       message = payload.params[1]
@@ -46222,13 +46232,35 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
+      msgParams.chainType = "ETH";
       waterfall([
-        (cb) => self.validateMessage(msgParams, cb),
+//        (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
       ], end)
       return
 
+    case 'sign':
+        console.log('sign', payload)
+        // process normally
+        address = payload.params[0]
+        message = payload.params[1]
+        // non-standard "extraParams" to be appended to our "msgParams" obj
+        // good place for metadata
+        extraParams = payload.params[2] || {}
+        msgParams = extend(extraParams, {
+        from: address,
+        data: message,
+        })
+        msgParams.chainType = "AppChain";
+        waterfall([
+        //        (cb) => self.validateMessage(msgParams, cb),
+        (cb) => self.processMessage(msgParams, cb),
+        ], end)
+        return
+
     case 'personal_sign':
+
+      console.log('personal_sign', payload)
       // process normally
       const first = payload.params[0]
       const second = payload.params[1]
@@ -46261,8 +46293,9 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
+      msgParams.chainType = "ETH";
       waterfall([
-        (cb) => self.validatePersonalMessage(msgParams, cb),
+//        (cb) => self.validatePersonalMessage(msgParams, cb),
         (cb) => self.processPersonalMessage(msgParams, cb),
       ], end)
       return
@@ -53970,7 +54003,6 @@ var Trust = {
     context.web3 = web3;
     globalSyncOptions = syncOptions;
 
-    engine.host = rpcUrl;
     engine.addProvider(new CacheSubprovider());
     engine.addProvider(new SubscriptionsSubprovider());
     engine.addProvider(new FilterSubprovider());
@@ -54010,6 +54042,11 @@ var Trust = {
 
 if (typeof context.Trust === 'undefined') {
   context.Trust = Trust;
+}
+
+ProviderEngine.prototype.setHost = function (host) {
+    var length = this._providers.length;
+    this._providers[length - 1].provider.host = host;
 }
 
 ProviderEngine.prototype.send = function (payload) {

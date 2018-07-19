@@ -100,6 +100,7 @@ dependencies {
     //    implementation 'org.web3j:core:3.3.1-android'
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
+    implementation 'com.github.TrustWallet:trust-web3-provider:0.2.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
@@ -115,7 +116,6 @@ dependencies {
     implementation files('libs/rlp-3.3.2-android.jar')
     implementation files('libs/tuples-3.3.2-android.jar')
     implementation files('libs/utils-3.3.2-android.jar')
-    implementation project(path: ':lib')
 }
 
 def getVersionName(boolean isDebug) {

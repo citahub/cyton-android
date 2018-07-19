@@ -1,4 +1,4 @@
-package trust.web3;
+package org.nervos.neuron.webview;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -7,11 +7,13 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 
-import trust.core.entity.Address;
-import trust.core.entity.Message;
-import trust.core.entity.TypedData;
-import trust.core.util.Hex;
-import trust.web3.item.Transaction;
+import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.webview.item.Address;
+import org.nervos.neuron.webview.item.Message;
+import org.nervos.neuron.webview.item.Transaction;
+import org.nervos.neuron.webview.item.TypedData;
+import org.web3j.utils.Numeric;
 
 public class SignCallbackJSInterface {
 
@@ -46,7 +48,7 @@ public class SignCallbackJSInterface {
             String nonce,
             String gasLimit,    // quota
             String gasPrice,    // validUntilBlock
-            String payload,
+            String data,
             String chainId,
             String version,
             String chainType) {
@@ -56,23 +58,27 @@ public class SignCallbackJSInterface {
                 value,
                 gasLimit,
                 gasPrice,
-                Hex.hexToLong(nonce, -1),
-                payload,
-                Hex.hexToLong(chainId, -1),
-                Hex.hexToInteger(version, 0),
+                NumberUtil.hexToLong(nonce, -1),
+                data,
+                NumberUtil.hexToLong(chainId, -1),
+                NumberUtil.hexToInteger(version, 0),
                 chainType,
                 callbackId);
         onSignTransactionListener.onSignTransaction(transaction);
     }
 
     @JavascriptInterface
-    public void signMessage(int callbackId, String data) {
-        webView.post(() -> onSignMessageListener.onSignMessage(new Message<>(data, getUrl(), callbackId)));
+    public void signMessage(int callbackId, String data, String chainType) {
+        Transaction transaction = new Transaction(data, chainType);
+        webView.post(() -> onSignMessageListener.onSignMessage(new Message<>(transaction, getUrl(), callbackId)));
     }
 
     @JavascriptInterface
-    public void signPersonalMessage(int callbackId, String data) {
-        webView.post(() -> onSignPersonalMessageListener.onSignPersonalMessage(new Message<>(data, getUrl(), callbackId)));
+    public void signPersonalMessage(int callbackId, String data, String chainType) {
+        Transaction transaction = new Transaction(data, chainType);
+        LogUtil.d("signPersonalMessage: " + data + " " + chainType);
+        webView.post(() -> onSignPersonalMessageListener.onSignPersonalMessage(
+                new Message<>(transaction, getUrl(), callbackId)));
     }
 
     @JavascriptInterface

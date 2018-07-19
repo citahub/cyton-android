@@ -7,7 +7,7 @@ import org.nervos.neuron.BuildConfig;
 
 public class LogUtil {
 
-    private static final String TAG = "Nervos";
+    private static final String TAG = "Neuron";
 
     public static void v(String tag, String msg) {
         if (BuildConfig.IS_DEBUG && !TextUtils.isEmpty(msg)) {

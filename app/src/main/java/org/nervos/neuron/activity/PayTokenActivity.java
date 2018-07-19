@@ -20,6 +20,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -67,6 +68,7 @@ public class PayTokenActivity extends BaseActivity {
         appItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
     }
 
+
     private void initView() {
         TextView walletNameText = findViewById(R.id.wallet_name);
         TextView walletAddressText = findViewById(R.id.wallet_address);
@@ -81,18 +83,36 @@ public class PayTokenActivity extends BaseActivity {
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         payNameText.setText(appItem.entry);
+        payDataText.setText(transactionInfo.data);
+        payAddressText.setText(transactionInfo.to);
         if (transactionInfo.isEthereum()) {
-            payAddressText.setText(transactionInfo.to);
-            payAmountText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()
+            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
+            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
                     + transactionInfo.getGas()));
-            payDataText.setText(transactionInfo.data);
+            if (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice)) {
+                showProgressCircle();
+                EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
+                    @Override
+                    public void onCompleted() {
+                        dismissProgressCircle();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        dismissProgressCircle();
+                    }
+                    @Override
+                    public void onNext(BigInteger gasPrice) {
+                        transactionInfo.gasPrice = gasPrice.toString(16);
+                        paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
+                                + transactionInfo.getGas()));
+                    }
+                });
+            }
         } else {
-            payAddressText.setText(transactionInfo.to);
-            payAmountText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()
+            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
+            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
                     + transactionInfo.getQuota()));
-            payDataText.setText(transactionInfo.data);
         }
 
         findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
@@ -109,7 +129,8 @@ public class PayTokenActivity extends BaseActivity {
             public void onClick(View v) {
                 findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
                 findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
-                if (Numeric.containsHexPrefix(transactionInfo.data)) {
+                if (!TextUtils.isEmpty(transactionInfo.data) &&
+                        Numeric.containsHexPrefix(transactionInfo.data)) {
                     payDataText.setText(NumberUtil.hexToUtf8(transactionInfo.data));
                 }
             }
@@ -146,8 +167,8 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_4(transactionInfo.getValue()));
-        feeConfirmText.setText(NumberUtil.getDecimal_4(transactionInfo.isEthereum()?
+        valueText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
+        feeConfirmText.setText(NumberUtil.getDecimal_6(transactionInfo.isEthereum()?
                 transactionInfo.getGas():transactionInfo.getQuota()));
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
@@ -159,7 +180,7 @@ public class PayTokenActivity extends BaseActivity {
     private void showPasswordConfirmView(ProgressBar progressBar) {
         SimpleDialog simpleDialog = new SimpleDialog(mActivity);
         simpleDialog.setTitle(R.string.input_password_hint);
-        simpleDialog.setMessageHint("password");
+        simpleDialog.setMessageHint(R.string.input_password_hint);
         simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
@@ -185,8 +206,18 @@ public class PayTokenActivity extends BaseActivity {
 
 
     private void transferEth(String password, ProgressBar progressBar) {
-        EthRpcService.getEthGasPrice()
-            .flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
+        Observable.just(transactionInfo.gasPrice)
+            .flatMap(new Func1<String, Observable<BigInteger>>() {
+                @Override
+                public Observable<BigInteger> call(String gasPrice) {
+                    if (TextUtils.isEmpty(transactionInfo.gasPrice)
+                            || "0".equals(transactionInfo.gasPrice)) {
+                        return EthRpcService.getEthGasPrice();
+                    } else {
+                        return Observable.just(Numeric.toBigInt(gasPrice));
+                    }
+                }
+            }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionInfo.to,
@@ -215,7 +246,8 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferNervos(String password, ProgressBar progressBar) {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(), transactionInfo.data, password)
+        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(),
+                transactionInfo.data, password)
             .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
                 @Override
                 public void onCompleted() {
