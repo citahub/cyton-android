@@ -17161,10 +17161,10 @@ exports.createDecipheriv = exports.Decipheriv = createDecipheriv
 exports.listCiphers = exports.getCiphers = getCiphers
 
 },{"browserify-aes/browser":51,"browserify-aes/modes":62,"browserify-des":67,"browserify-des/modes":68,"evp_bytestokey":157}],67:[function(require,module,exports){
-(function (Buffer){
 var CipherBase = require('cipher-base')
 var des = require('des.js')
 var inherits = require('inherits')
+var Buffer = require('safe-buffer').Buffer
 
 var modes = {
   'des-ede3-cbc': des.CBC.instantiate(des.EDE),
@@ -17189,10 +17189,16 @@ function DES (opts) {
     type = 'encrypt'
   }
   var key = opts.key
+  if (!Buffer.isBuffer(key)) {
+    key = Buffer.from(key)
+  }
   if (modeName === 'des-ede' || modeName === 'des-ede-cbc') {
     key = Buffer.concat([key, key.slice(0, 8)])
   }
   var iv = opts.iv
+  if (!Buffer.isBuffer(iv)) {
+    iv = Buffer.from(iv)
+  }
   this._des = mode.create({
     key: key,
     iv: iv,
@@ -17200,14 +17206,13 @@ function DES (opts) {
   })
 }
 DES.prototype._update = function (data) {
-  return new Buffer(this._des.update(data))
+  return Buffer.from(this._des.update(data))
 }
 DES.prototype._final = function () {
-  return new Buffer(this._des.final())
+  return Buffer.from(this._des.final())
 }
 
-}).call(this,require("buffer").Buffer)
-},{"buffer":78,"cipher-base":79,"des.js":122,"inherits":174}],68:[function(require,module,exports){
+},{"cipher-base":79,"des.js":122,"inherits":174,"safe-buffer":259}],68:[function(require,module,exports){
 exports['des-ecb'] = {
   key: 8,
   iv: 0
@@ -45157,8 +45162,6 @@ Web3ProviderEngine.prototype.sendAsync = function(payload, cb){
   const self = this
   self._ready.await(function(){
 
-    console.log("Web3ProviderEngine sendAsync")
-    console.log(payload)
     if (Array.isArray(payload)) {
       // handle batch
       map(payload, self._handleAsync.bind(self), cb)
@@ -46192,36 +46195,24 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'eth_sendTransaction':
-      console.log("eth_sendTransaction inject")
       txParams = payload.params[0]
       txParams.chainType = "ETH"
       waterfall([
-//        (cb) => self.validateTransaction(txParams, cb),
+        // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processTransaction(txParams, cb),
       ], end)
       return
 
-    case 'sendTransaction':
-        console.log("sendTransaction inject")
-        txParams = payload.params[0]
-        txParams.chainType = "AppChain"
-        waterfall([
-    //        (cb) => self.validateTransaction(txParams, cb),
-          (cb) => self.processTransaction(txParams, cb),
-        ], end)
-        return
-
     case 'eth_signTransaction':
-      console.log("eth_signTransaction")
       txParams = payload.params[0]
+      txParams.chainType = "ETH"
       waterfall([
-        (cb) => self.validateTransaction(txParams, cb),
+        // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processSignTransaction(txParams, cb),
       ], end)
       return
 
     case 'eth_sign':
-      console.log('eth_sign', payload)
       // process normally
       address = payload.params[0]
       message = payload.params[1]
@@ -46232,35 +46223,14 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "ETH";
+      msgParams.chainType = "ETH"
       waterfall([
-//        (cb) => self.validateMessage(msgParams, cb),
+        // (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
       ], end)
       return
 
-    case 'sign':
-        console.log('sign', payload)
-        // process normally
-        address = payload.params[0]
-        message = payload.params[1]
-        // non-standard "extraParams" to be appended to our "msgParams" obj
-        // good place for metadata
-        extraParams = payload.params[2] || {}
-        msgParams = extend(extraParams, {
-        from: address,
-        data: message,
-        })
-        msgParams.chainType = "AppChain";
-        waterfall([
-        //        (cb) => self.validateMessage(msgParams, cb),
-        (cb) => self.processMessage(msgParams, cb),
-        ], end)
-        return
-
     case 'personal_sign':
-
-      console.log('personal_sign', payload)
       // process normally
       const first = payload.params[0]
       const second = payload.params[1]
@@ -46293,9 +46263,9 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "ETH";
+      msgParams.chainType = "ETH"
       waterfall([
-//        (cb) => self.validatePersonalMessage(msgParams, cb),
+        // (cb) => self.validatePersonalMessage(msgParams, cb),
         (cb) => self.processPersonalMessage(msgParams, cb),
       ], end)
       return
@@ -46351,6 +46321,93 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         end(null, account)
       })
       return
+
+
+    // adpter to appchain
+    case 'accounts':
+      // process normally
+      self.getAccounts(function(err, accounts){
+        if (err) return end(err)
+        end(null, accounts)
+      })
+      return
+
+    case 'sendTransaction':
+      txParams = payload.params[0]
+      txParams.chainType = "AppChain"
+      waterfall([
+        // (cb) => self.validateTransaction(txParams, cb),
+        (cb) => self.processTransaction(txParams, cb),
+      ], end)
+      return
+
+    case 'signTransaction':
+      txParams = payload.params[0]
+      txParams.chainType = "AppChain"
+      waterfall([
+        // (cb) => self.validateTransaction(txParams, cb),
+        (cb) => self.processSignTransaction(txParams, cb),
+      ], end)
+      return
+
+    case 'sign':
+      // process normally
+      address = payload.params[0]
+      message = payload.params[1]
+      // non-standard "extraParams" to be appended to our "msgParams" obj
+      // good place for metadata
+      extraParams = payload.params[2] || {}
+      msgParams = extend(extraParams, {
+        from: address,
+        data: message,
+      })
+      msgParams.chainType = "AppChain"
+      waterfall([
+        // (cb) => self.validateMessage(msgParams, cb),
+        (cb) => self.processMessage(msgParams, cb),
+      ], end)
+      return
+
+    // come from personal_sign of ethereum  
+    case 'neuron_sign':
+      // process normally
+      const first_neuron = payload.params[0]
+      const second_neuron = payload.params[1]
+
+      // We initially incorrectly ordered these parameters.
+      // To gracefully respect users who adopted this API early,
+      // we are currently gracefully recovering from the wrong param order
+      // when it is clearly identifiable.
+      //
+      // That means when the first param is definitely an address,
+      // and the second param is definitely not, but is hex.
+      if (resemblesData(second_neuron) && resemblesAddress(first_neuron)) {
+        let warning = `The eth_personalSign method requires params ordered `
+        warning += `[message, address]. This was previously handled incorrectly, `
+        warning += `and has been corrected automatically. `
+        warning += `Please switch this param order for smooth behavior in the future.`
+        console.warn(warning)
+
+        address = payload.params[0]
+        message = payload.params[1]
+      } else {
+        message = payload.params[0]
+        address = payload.params[1]
+      }
+
+      // non-standard "extraParams" to be appended to our "msgParams" obj
+      // good place for metadata
+      extraParams = payload.params[2] || {}
+      msgParams = extend(extraParams, {
+        from: address,
+        data: message,
+      })
+      msgParams.chainType = "AppChain"
+      waterfall([
+        // (cb) => self.validatePersonalMessage(msgParams, cb),
+        (cb) => self.processPersonalMessage(msgParams, cb),
+      ], end)
+      return  
 
     default:
       next()
@@ -46572,8 +46629,6 @@ HookedWalletSubprovider.prototype.finalizeAndSubmitTx = function(txParams, cb) {
   const self = this
   // can only allow one tx to pass through this flow at a time
   // so we can atomically consume a nonce
-  console.log("txParams")
-  console.log(txParams)
   self.nonceLock.take(function(){
     waterfall([
       self.fillInTxExtras.bind(self, txParams),
@@ -53995,11 +54050,10 @@ var callbacks = {};
 var hookedSubProvider = void 0;
 var globalSyncOptions = {};
 
-var Trust = {
+var Neuron = {
   init: function init(rpcUrl, options, syncOptions) {
     var engine = new ProviderEngine();
     var web3 = new Web3(engine);
-    console.log(web3)
     context.web3 = web3;
     globalSyncOptions = syncOptions;
 
@@ -54011,7 +54065,7 @@ var Trust = {
     engine.on('error', function (err) {
       return console.error(err.stack);
     });
-    engine.isTrust = true;
+    engine.isNeuron = true;
     engine.start();
 
     return engine;
@@ -54040,13 +54094,8 @@ var Trust = {
   }
 };
 
-if (typeof context.Trust === 'undefined') {
-  context.Trust = Trust;
-}
-
-ProviderEngine.prototype.setHost = function (host) {
-    var length = this._providers.length;
-    this._providers[length - 1].provider.host = host;
+if (typeof context.Neuron === 'undefined') {
+  context.Neuron = Neuron;
 }
 
 ProviderEngine.prototype.send = function (payload) {
@@ -54086,7 +54135,7 @@ ProviderEngine.prototype.send = function (payload) {
 
     // throw not-supported Error
     default:
-      var message = 'The Trust Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
+      var message = 'The Neuron Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
       throw new Error(message);
   }
   // return the result
@@ -54106,7 +54155,7 @@ ProviderEngine.prototype.isConnected = function () {
   }).result;
 };
 
-module.exports = Trust;
+module.exports = Neuron;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"web3":297,"web3-provider-engine":283,"web3-provider-engine/subproviders/cache.js":284,"web3-provider-engine/subproviders/filters.js":285,"web3-provider-engine/subproviders/hooked-wallet.js":286,"web3-provider-engine/subproviders/provider.js":287,"web3-provider-engine/subproviders/subscriptions.js":289}]},{},[349]);

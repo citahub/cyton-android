@@ -3,20 +3,20 @@ const addressHex = "%1$s";
 const rpcURL = "%2$s";
 const chainID = "%3$s";
 function executeCallback (id, error, value) {
-  Trust.executeCallback(id, error, value)
+  Neuron.executeCallback(id, error, value)
 }
 function onSignSuccessful(id, value) {
-  Trust.executeCallback(id, null, value)
+  Neuron.executeCallback(id, null, value)
 }
 function onSignError(id, error) {
-  Trust.executeCallback(id, error, null)
+  Neuron.executeCallback(id, error, null)
 }
-window.Trust.init(rpcURL, {
+window.Neuron.init(rpcURL, {
   getAccounts: function (cb) { cb(null, [addressHex]) },
   processTransaction: function (tx, cb){
     console.log('signing a transaction', tx)
     const { id = 8888 } = tx
-    Trust.addCallback(id, cb)
+    Neuron.addCallback(id, cb)
 
     var data = tx.data || null;
     var nonce = tx.nonce || -1;
@@ -28,12 +28,12 @@ window.Trust.init(rpcURL, {
     if (tx.chainType == "ETH") {
         var gasLimit = tx.gasLimit || tx.gas || null;
         var gasPrice = tx.gasPrice || null;
-        trust.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
+        neuron.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
                         data, chainId, version, chainType);
     } else {
         var quota = tx.quota || null;
         var validUntilBlock = tx.validUntilBlock || 0;
-        trust.signTransaction(id, tx.to || null, value, nonce, quota, validUntilBlock,
+        neuron.signTransaction(id, tx.to || null, value, nonce, quota, validUntilBlock,
                         data, chainId, version, chainType);
     }
   },
@@ -41,29 +41,29 @@ window.Trust.init(rpcURL, {
     console.log('signMessage', msgParams)
     const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
-    Trust.addCallback(id, cb)
-    trust.signMessage(id, data, chainType);
+    Neuron.addCallback(id, cb)
+    neuron.signMessage(id, data, chainType);
   },
   signPersonalMessage: function (msgParams, cb) {
     console.log('signPersonalMessage', msgParams)
     const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
-    Trust.addCallback(id, cb)
-    trust.signPersonalMessage(id, data, chainType);
+    Neuron.addCallback(id, cb)
+    neuron.signPersonalMessage(id, data, chainType);
   },
   signTypedMessage: function (msgParams, cb) {
     console.log('signTypedMessage ', msgParams)
     const { data } = msgParams
     const { id = 8888 } = msgParams
-    Trust.addCallback(id, cb)
-    trust.signTypedMessage(id, JSON.stringify(data))
+    Neuron.addCallback(id, cb)
+    neuron.signTypedMessage(id, JSON.stringify(data))
   }
 }, {
     address: addressHex,
     networkVersion: chainID
 })
 window.web3.setProvider = function () {
-  console.debug('Trust Wallet - overrode web3.setProvider')
+  console.debug('Neuron Wallet - overrode web3.setProvider')
 }
 window.web3.eth.defaultAccount = addressHex
 window.web3.version.getNetwork = function(cb) {

@@ -88,7 +88,6 @@ public class Web3ViewClient extends WebViewClient {
                         || request.getUrl().toString().contains("css"))) {
                 synchronized (lock) {
                     if (!isInjected) {
-                        Log.d("Neuron", "Web3ViewClient shouldInterceptRequest injectScriptFile");
                         injectScriptFile(view);
                         isInjected = true;
                     }

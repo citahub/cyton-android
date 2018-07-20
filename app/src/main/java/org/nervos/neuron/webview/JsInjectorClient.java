@@ -87,7 +87,7 @@ class JsInjectorClient {
 
     String assembleJs(Context context, String template) {
         if (TextUtils.isEmpty(jsLibrary)) {
-            jsLibrary = loadFile(context, R.raw.trust_web3);
+            jsLibrary = loadFile(context, R.raw.neuron);
         }
         String initJs = loadInitJs(context);
         return String.format(template, jsLibrary, initJs);

@@ -76,7 +76,6 @@ public class SignCallbackJSInterface {
     @JavascriptInterface
     public void signPersonalMessage(int callbackId, String data, String chainType) {
         Transaction transaction = new Transaction(data, chainType);
-        LogUtil.d("signPersonalMessage: " + data + " " + chainType);
         webView.post(() -> onSignPersonalMessageListener.onSignPersonalMessage(
                 new Message<>(transaction, getUrl(), callbackId)));
     }
