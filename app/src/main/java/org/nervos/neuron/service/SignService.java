@@ -3,9 +3,7 @@ package org.nervos.neuron.service;
 import android.content.Context;
 
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.bip44.HexUtils;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
@@ -20,11 +18,11 @@ import rx.schedulers.Schedulers;
 
 public class SignService {
 
-    public static Observable<String> signEthMessage(
-            Context context, String message, String password) {
+    public static Observable<String> signEthMessage(Context context,
+                                                    String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
-            public String call() throws GeneralSecurityException{
+            public String call() throws GeneralSecurityException {
                 WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
                 String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                 Sign.SignatureData signatureData = Sign.signMessage(message.getBytes(),
@@ -33,6 +31,27 @@ public class SignService {
             }
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<String> signPersonalMessage(Context context,
+                                                         String message, String password) {
+        return Observable.fromCallable(new Callable<String>() {
+            @Override
+            public String call() throws GeneralSecurityException {
+                WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+
+                byte[] unSignData = ("\u0019Ethereum Signed Message:\n"
+                        + message.getBytes().length
+                        + Numeric.cleanHexPrefix(message)).getBytes();
+
+                Sign.SignatureData signatureData = Sign.signMessage(unSignData,
+                        ECKeyPair.create(Numeric.toBigInt(privateKey)));
+                
+                return getSignature(signatureData);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -51,6 +70,7 @@ public class SignService {
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread());
     }
+
 
 
 

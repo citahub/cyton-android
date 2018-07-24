@@ -3,11 +3,8 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.storage.StorageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
@@ -27,16 +23,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.fragment.AppFragment;
-import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.FileUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -64,7 +55,7 @@ public class TokenManageActivity extends BaseActivity {
 
     private void initData() {
         tokenNames = DBWalletUtil.getAllWalletName(mActivity);
-        String tokens = FileUtil.getFileFromAsset(mActivity, "tokens-eth.json");
+        String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
         Type type = new TypeToken<List<TokenEntity>>() {}.getType();
         tokenList = new Gson().fromJson(tokens, type);
         addCustomToken();

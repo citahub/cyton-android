@@ -88,6 +88,7 @@ dependencies {
     implementation 'com.just.agentweb:agentweb:4.0.2'
     implementation 'com.google.guava:guava:24.1-android'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    implementation 'com.madgag.spongycastle:core:1.54.0.0'
     implementation 'com.madgag.spongycastle:prov:1.54.0.0'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
     implementation 'com.esotericsoftware.kryo:kryo:2.24.0'

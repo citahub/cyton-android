@@ -4,10 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
-import org.nervos.neuron.util.crypto.AESCrypt;
-import org.nervos.neuron.util.crypto.WalletEntity;
-import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletFile;
+import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.crypto.WalletEntity;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;

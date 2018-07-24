@@ -28,7 +28,7 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 import org.web3j.utils.Numeric;
 

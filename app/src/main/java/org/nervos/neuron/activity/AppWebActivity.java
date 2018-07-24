@@ -25,7 +25,7 @@ import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.webview.OnSignPersonalMessageListener;
@@ -34,6 +34,7 @@ import org.web3j.utils.Numeric;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
 import rx.Subscriber;
 import org.nervos.neuron.webview.OnSignMessageListener;
 import org.nervos.neuron.webview.Web3View;
@@ -59,6 +60,7 @@ public class AppWebActivity extends BaseActivity {
     private WalletItem walletItem;
     private Transaction signTransaction;
     private String url;
+    private boolean isPersonalSign = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,6 +147,7 @@ public class AppWebActivity extends BaseActivity {
         webView.setOnSignMessageListener(new OnSignMessageListener() {
             @Override
             public void onSignMessage(Message<Transaction> message) {
+                isPersonalSign = false;
                 showSignMessageDialog(message);
             }
         });
@@ -152,6 +155,7 @@ public class AppWebActivity extends BaseActivity {
         webView.setOnSignPersonalMessageListener(new OnSignPersonalMessageListener() {
             @Override
             public void onSignPersonalMessage(Message<Transaction> message) {
+                isPersonalSign = true;
                 showSignMessageDialog(message);
             }
         });
@@ -303,24 +307,31 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void actionSignEth(String password, Message<Transaction> message) {
-        SignService.signEthMessage(mActivity, message.value.data, password).
-            subscribe(new Subscriber<String>() {
-                @Override
-                public void onCompleted() {
-                    sheetDialog.dismiss();
-                }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                    sheetDialog.dismiss();
-                    webView.onSignError(message, e.getMessage());
-                }
-                @Override
-                public void onNext(String hexSign) {
-                    LogUtil.d("hexSign: " + hexSign);
-                    webView.onSignMessageSuccessful(message, hexSign);
-                }
-            });
+        Observable<String> observable;
+        if (isPersonalSign) {
+            observable = SignService.signPersonalMessage(mActivity,
+                    NumberUtil.hexToUtf8(message.value.data), password);
+        } else {
+            observable = SignService.signEthMessage(mActivity, message.value.data, password);
+        }
+        observable.subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                sheetDialog.dismiss();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                sheetDialog.dismiss();
+                webView.onSignError(message, e.getMessage());
+            }
+            @Override
+            public void onNext(String hexSign) {
+                LogUtil.d("hexSign: " + hexSign);
+
+                webView.onSignMessageSuccessful(message, hexSign);
+            }
+        });
     }
 
     private void actionSignNervos(String password, Message<Transaction> message) {

@@ -14,10 +14,10 @@ import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.crypto.WalletEntity;
 
 import java.security.GeneralSecurityException;
 import java.util.List;

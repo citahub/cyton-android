@@ -68,9 +68,9 @@ public class NumberUtil {
             return null;
         }
         try {
-            boolean isHex = containsHexPrefix(input);
+            boolean isHex = Numeric.containsHexPrefix(input);
             if (isHex) {
-                input = cleanHexPrefix(input);
+                input = Numeric.cleanHexPrefix(input);
             }
             return new BigInteger(input, isHex ? 16 : 10);
         } catch (NullPointerException | NumberFormatException ex) {
@@ -84,18 +84,6 @@ public class NumberUtil {
         return value == null ? def : value;
     }
 
-
-    public static boolean containsHexPrefix(String input) {
-        return input.length() > 1 && input.charAt(0) == '0' && input.charAt(1) == 'x';
-    }
-
-    @Nullable
-    public static String cleanHexPrefix(@Nullable String input) {
-        if (input != null && containsHexPrefix(input)) {
-            input = input.substring(2);
-        }
-        return input;
-    }
 
     @Nullable
     public static String hexToDecimal(@Nullable String value) {
@@ -117,7 +105,6 @@ public class NumberUtil {
         return sb.toString();
     }
 
-
     public static BigInteger getWeiFromEth(double value) {
         return BigInteger.valueOf((int)(value * ConstUtil.LONG_6)).multiply(ConstUtil.ETHDecimal)
                 .divide(BigInteger.valueOf(ConstUtil.LONG_6));
@@ -132,7 +119,6 @@ public class NumberUtil {
     }
 
     public static double getEthFromWeiForDoubleDecimal6(String value) {
-        LogUtil.d("value: " + value);
         if (TextUtils.isEmpty(value)) return 0.0;
         if (Numeric.containsHexPrefix(value)) {
             return getEthFromWei(Numeric.toBigInt(value));

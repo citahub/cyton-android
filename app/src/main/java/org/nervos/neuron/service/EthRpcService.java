@@ -9,7 +9,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -32,7 +32,6 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 
@@ -49,8 +48,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class EthRpcService {
 
