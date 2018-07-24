@@ -23,12 +23,11 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.crypto.WalletEntity;
 import org.web3j.crypto.CipherException;
 
 import java.util.concurrent.ExecutorService;

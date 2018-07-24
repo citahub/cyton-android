@@ -105,7 +105,6 @@ public class NumberUtil {
         return sb.toString();
     }
 
-
     public static BigInteger getWeiFromEth(double value) {
         return BigInteger.valueOf((int)(value * ConstUtil.LONG_6)).multiply(ConstUtil.ETHDecimal)
                 .divide(BigInteger.valueOf(ConstUtil.LONG_6));

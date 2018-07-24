@@ -9,7 +9,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.web3j.protocol.Web3j;
 import org.nervos.web3j.protocol.core.DefaultBlockParameter;
