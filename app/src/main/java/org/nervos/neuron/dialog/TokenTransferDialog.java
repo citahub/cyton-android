@@ -56,7 +56,7 @@ public class TokenTransferDialog extends Dialog {
         } else {
             tokenImage.setImageURI(tokenItem.avatar);
         }
-        tokenBalanceText.setText(NumberUtil.getDecimal_4(tokenItem.balance));
+        tokenBalanceText.setText(NumberUtil.getDecimal_6(tokenItem.balance));
     }
 
     private void initListener() {

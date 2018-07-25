@@ -3,11 +3,8 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.storage.StorageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
@@ -27,20 +23,20 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.fragment.AppFragment;
-import org.nervos.neuron.fragment.WalletFragment;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.FileUtil;
+import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TokenManageActivity extends BaseActivity {
+
+    private static final int REQUEST_CODE = 0x01;
+    public static final int RESULT_CODE = 0x01;
 
     private TitleBar titleBar;
     private RecyclerView recyclerView;
@@ -59,9 +55,20 @@ public class TokenManageActivity extends BaseActivity {
 
     private void initData() {
         tokenNames = DBWalletUtil.getAllWalletName(mActivity);
-        String tokens = WebAppUtil.getFileFromAsset(mActivity, "tokens-eth.json");
+        String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
         Type type = new TypeToken<List<TokenEntity>>() {}.getType();
         tokenList = new Gson().fromJson(tokens, type);
+        addCustomToken();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void addCustomToken() {
+        List<TokenItem> customList = DBTokenUtil.getAllTokens(mActivity);
+        if (customList != null && customList.size() > 0) {
+            for (int i = 0; i < customList.size(); i++) {
+                tokenList.add(i, new TokenEntity(customList.get(i)));       // add front of list
+            }
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -70,7 +77,7 @@ public class TokenManageActivity extends BaseActivity {
         titleBar.setOnRightClickListener(new TitleBar.OnRightClickListener() {
             @Override
             public void onRightClick() {
-                startActivity(new Intent(mActivity, AddTokenActivity.class));
+                startActivityForResult(new Intent(mActivity, AddTokenActivity.class), REQUEST_CODE);
             }
         });
         titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
@@ -101,7 +108,8 @@ public class TokenManageActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder)holder;
-                if (TextUtils.isEmpty(tokenList.get(position).logo.src)) {
+                if (tokenList.get(position).logo == null ||
+                        TextUtils.isEmpty(tokenList.get(position).logo.src)) {
                     viewHolder.tokenImage.setImageResource(R.drawable.ether_big);
                 } else {
                     viewHolder.tokenImage.setImageURI(Uri.parse(tokenList.get(position).logo.src));
@@ -164,5 +172,13 @@ public class TokenManageActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_CODE) {
+            addCustomToken();
+        }
     }
 }

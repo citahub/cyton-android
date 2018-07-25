@@ -14,16 +14,10 @@ public class ChainItem implements Parcelable{
     public String icon;
     public String entry;
     public String provider;
-    public List<ChainSet> chainset;
     public String tokenName;
     public String tokenSymbol;
     public String tokenAvatar;
-
-    public static class ChainSet {
-        public int chainId;
-        public String networkId;
-        public String httpProvider;
-    }
+    public String errorMessage;
 
     public ChainItem(){}
 
@@ -33,10 +27,14 @@ public class ChainItem implements Parcelable{
 
     }
 
-    public ChainItem(int chainId, String name, String httpProvider) {
+    public ChainItem(int chainId, String name, String httpProvider, String tokenName,
+                     String tokenSymbol, String tokenAvatar) {
         this.chainId = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
+        this.tokenName = tokenName;
+        this.tokenSymbol = tokenSymbol;
+        this.tokenAvatar = tokenAvatar;
     }
 
 
@@ -57,6 +55,7 @@ public class ChainItem implements Parcelable{
         dest.writeString(this.tokenName);
         dest.writeString(this.tokenSymbol);
         dest.writeString(this.tokenAvatar);
+        dest.writeString(this.errorMessage);
     }
 
     protected ChainItem(Parcel in) {
@@ -70,6 +69,7 @@ public class ChainItem implements Parcelable{
         this.tokenName = in.readString();
         this.tokenSymbol = in.readString();
         this.tokenAvatar = in.readString();
+        this.errorMessage = in.readString();
     }
 
     public static final Creator<ChainItem> CREATOR = new Creator<ChainItem>() {

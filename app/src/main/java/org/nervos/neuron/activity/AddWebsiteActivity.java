@@ -30,6 +30,7 @@ import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.web.UrlUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class AddWebsiteActivity extends BaseActivity {
             Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
         } else {
             showProgressCircle();
-            Observable.fromCallable(() -> WebAppUtil.addPrefixUrl(url))
+            Observable.fromCallable(() -> UrlUtil.addPrefixUrl(url))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
@@ -142,6 +143,11 @@ public class AddWebsiteActivity extends BaseActivity {
                     }
                     @Override
                     public void onNext(String newUrl) {
+                        if (TextUtils.isEmpty(newUrl)) {
+                            dismissProgressCircle();
+                            Toast.makeText(mActivity, R.string.input_correct_url, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         websiteEdit.setText(newUrl);
                         DBHistoryUtil.saveHistory(mActivity, newUrl);
                         Intent intent = new Intent(mActivity, AppWebActivity.class);

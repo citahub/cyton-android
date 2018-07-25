@@ -23,10 +23,11 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import okhttp3.Call;
@@ -48,10 +52,10 @@ import rx.schedulers.Schedulers;
 public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";
-    private static ChainItem mChainItem;
+    private static AppItem mAppItem;
 
     /**
-     * get manifest.json from manifest path which contains host and path
+     * get app information from manifest.json and getMetaData from each http provider host
      * @param webView
      * @param url           the web url from the third part
      */
@@ -73,9 +77,9 @@ public class WebAppUtil {
             public Boolean call(String path) {
                 return !TextUtils.isEmpty(path);
             }
-        }).flatMap(new Func1<String, Observable<ChainItem>>() {
+        }).flatMap(new Func1<String, Observable<AppItem>>() {
             @Override
-            public Observable<ChainItem> call(String path) {
+            public Observable<AppItem> call(String path) {
                 URI uri = URI.create(url);
                 String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
                 Request request = new Request.Builder().url(manifestUrl).build();
@@ -86,44 +90,73 @@ public class WebAppUtil {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return Observable.just(new Gson().fromJson(response, ChainItem.class));
+                mAppItem = new Gson().fromJson(response, AppItem.class);
+                return Observable.just(mAppItem);
             }
-        }).flatMap(new Func1<ChainItem, Observable<EthMetaData.EthMetaDataResult>>() {
+        }).filter(new Func1<AppItem, Boolean>() {
             @Override
-            public Observable<EthMetaData.EthMetaDataResult> call(ChainItem chainItem) {
-                mChainItem = chainItem;
-                NervosRpcService.init(webView.getContext(), mChainItem.httpProvider);
-                return Observable.just(NervosRpcService.getMetaData().getEthMetaDataResult());
+            public Boolean call(AppItem appItem) {
+                return appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5;
+            }
+        }).flatMap(new Func1<AppItem, Observable<ChainItem>>() {
+            @Override
+            public Observable<ChainItem> call(AppItem appItem) {
+                Map<String, String> chainSet = appItem.chainSet;
+                List<ChainItem> chainItemList = new ArrayList<>();
+                for(Map.Entry<String, String> entry : chainSet.entrySet()) {
+                    ChainItem item = new ChainItem();
+                    item.chainId = Integer.parseInt(entry.getKey());
+                    item.httpProvider = entry.getValue();
+                    chainItemList.add(item);
+                    SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
+                }
+                return Observable.from(chainItemList);
+            }
+        }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
+            @Override
+            public Observable<ChainItem> call(ChainItem chainItem) {
+                NervosRpcService.init(webView.getContext(), chainItem.httpProvider);
+                EthMetaData.EthMetaDataResult ethMetaData =
+                        NervosRpcService.getMetaData().getEthMetaDataResult();
+                if (ethMetaData != null) {
+                    chainItem.name = ethMetaData.chainName;
+                    chainItem.tokenAvatar = ethMetaData.tokenAvatar;
+                    chainItem.tokenSymbol = ethMetaData.tokenSymbol;
+                    chainItem.tokenName = ethMetaData.tokenName;
+                } else {
+                    chainItem.errorMessage = webView.getContext().getString(R.string.meta_data_error)
+                            + chainItem.httpProvider;
+                }
+                return Observable.just(chainItem);
             }
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<EthMetaData.EthMetaDataResult>() {
-                @Override
-                public void onCompleted() { }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                }
-                @Override
-                public void onNext(EthMetaData.EthMetaDataResult ethMetaData) {
-                    if (ethMetaData != null && ethMetaData.chainId == mChainItem.chainId) {
-                        mChainItem.tokenName = ethMetaData.tokenName;
-                        mChainItem.tokenSymbol = ethMetaData.tokenSymbol;
-                        mChainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                        DBChainUtil.saveChain(webView.getContext(), mChainItem);
-                        if (!TextUtils.isEmpty(mChainItem.tokenName)) {
-                            TokenItem tokenItem = new TokenItem(mChainItem);
-                            DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                        }
+          .subscribe(new Subscriber<ChainItem>() {
+            @Override
+            public void onCompleted() { }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onNext(ChainItem chainItem) {
+                if (TextUtils.isEmpty(chainItem.errorMessage)) {
+                    DBChainUtil.saveChain(webView.getContext(), chainItem);
+                    if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                        TokenItem tokenItem = new TokenItem(chainItem);
+                        DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                     }
+                } else {
+                    Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+        });
     }
 
 
     public static boolean isCollectApp(WebView webView) {
-        if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            return DBAppUtil.findApp(webView.getContext(), mChainItem.entry);
+        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
+            return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
         } else {
             return DBAppUtil.findApp(webView.getContext(), webView.getUrl());
         }
@@ -131,9 +164,9 @@ public class WebAppUtil {
 
     public static void collectApp(WebView webView) {
         AppItem appItem;
-        if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            appItem = new AppItem(mChainItem.entry,
-                    mChainItem.icon, mChainItem.name, mChainItem.provider);
+        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
+            appItem = new AppItem(mAppItem.entry,
+                    mAppItem.icon, mAppItem.name, mAppItem.provider);
         } else {
             String icon = webView.getUrl() + WEB_ICON_PATH;
             appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
@@ -145,9 +178,9 @@ public class WebAppUtil {
 
     public static void cancelCollectApp(WebView webView) {
         AppItem appItem;
-        if (mChainItem != null && !TextUtils.isEmpty(mChainItem.entry)) {
-            appItem = new AppItem(mChainItem.entry,
-                    mChainItem.icon, mChainItem.name, mChainItem.provider);
+        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
+            appItem = new AppItem(mAppItem.entry,
+                    mAppItem.icon, mAppItem.name, mAppItem.provider);
         } else {
             String icon = webView.getUrl() + WEB_ICON_PATH;
             appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
@@ -157,40 +190,8 @@ public class WebAppUtil {
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
-    public static ChainItem getChainItem() {
-        return mChainItem;
-    }
-
-    /**
-     * read String content of rejected JavaScript file from assets
-     * @param fileName    the name of JavaScript file
-     * @return  the content of JavaScript file
-     */
-    public static String getFileFromAsset(Context context, String fileName) {
-        AssetManager am = context.getAssets();
-        try {
-            InputStream in = am.open(fileName);
-            byte buff[] = new byte[1024];
-            ByteArrayOutputStream fromFile = new ByteArrayOutputStream();
-            do {
-                int num = in.read(buff);
-                if (num <= 0) break;
-                fromFile.write(buff, 0, num);
-            } while (true);
-            return fromFile.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String getInjectNervosWeb3(Context context) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return "javascript: if (typeof web3 !== 'undefined') { web3 = NervosWeb3(web3.currentProvider) } else { web3 = NervosWeb3('" + ConstantUtil.NERVOS_NODE_IP + "'))}; web3.defaultAccount.address='" + walletItem.address + "'";
-    }
-
-    public static String getInjectTransactionJs() {
-        return "javascript: web3.eth.sendTransaction = function(tx) {appHybrid.sendTransaction(JSON.stringify(tx))}; web3.eth.signTransaction = function(tx) {appHybrid.signTransaction(JSON.stringify(tx))};";
+    public static AppItem getAppItem() {
+        return mAppItem;
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -217,27 +218,6 @@ public class WebAppUtil {
     }
 
 
-    private final  static String HTTP = "http://";
-    private final  static  String HTTPS =  "https://";
-    public static String addPrefixUrl(String url) {
-        if (url.contains(HTTP) || url.contains(HTTPS)) {
-            return url;
-        } else if (exists(HTTPS + url)) {
-            return (HTTPS + url);
-        } else if (exists(HTTP + url)) {
-            return (HTTP + url);
-        }
-        return url;
-    }
 
-    private static boolean exists(String url) {
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-            con.setConnectTimeout(3000);
-            return (con.getResponseCode() == 200);
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
 }

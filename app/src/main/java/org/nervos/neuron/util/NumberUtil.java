@@ -1,5 +1,7 @@
 package org.nervos.neuron.util;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.web3j.utils.Numeric;
@@ -11,22 +13,12 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
-import static org.nervos.neuron.util.ConstantUtil.ETHDecimal;
+import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class NumberUtil {
 
     public static String getDecimal_6(Double value) {
         DecimalFormat fmt = new DecimalFormat("0.######");
-        return fmt.format(value);
-    }
-
-    public static String getDecimal_4(Double value) {
-        DecimalFormat fmt = new DecimalFormat("0.####");
-        return fmt.format(value);
-    }
-
-    public static String getDecimal_2(Double value) {
-        DecimalFormat fmt = new DecimalFormat("0.##");
         return fmt.format(value);
     }
 
@@ -40,6 +32,63 @@ public class NumberUtil {
         Charset cs = Charset.forName("UTF-8");
         CharBuffer cb = cs.decode(buff);
         return cb.toString();
+    }
+
+    public static int hexToInteger(String input, int def) {
+        Integer value = hexToInteger(input);
+        return value == null ? def : value;
+    }
+
+    @Nullable
+    public static Integer hexToInteger(String input) {
+        try {
+            return Integer.decode(input);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    public static long hexToLong(String input, int def) {
+        Long value = hexToLong(input);
+        return value == null ? def : value;
+    }
+
+    @Nullable
+    public static Long hexToLong(String input) {
+        try {
+            return Long.decode(input);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static BigInteger hexToBigInteger(String input) {
+        if (TextUtils.isEmpty(input)) {
+            return null;
+        }
+        try {
+            boolean isHex = Numeric.containsHexPrefix(input);
+            if (isHex) {
+                input = Numeric.cleanHexPrefix(input);
+            }
+            return new BigInteger(input, isHex ? 16 : 10);
+        } catch (NullPointerException | NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    @NonNull
+    public static BigInteger hexToBigInteger(String input, BigInteger def) {
+        BigInteger value = hexToBigInteger(input);
+        return value == null ? def : value;
+    }
+
+
+    @Nullable
+    public static String hexToDecimal(@Nullable String value) {
+        BigInteger result = hexToBigInteger(value);
+        return result == null ? null : result.toString(10);
     }
 
     public static String utf8ToHex(String value) {
@@ -56,24 +105,33 @@ public class NumberUtil {
         return sb.toString();
     }
 
-
-    public static BigInteger getBigFromDouble(double gasPrice) {
-        return BigInteger.valueOf((int)(gasPrice * 1000000))
-                .divide(BigInteger.valueOf(1000000)).multiply(ConstantUtil.ETHDecimal);
+    public static BigInteger getWeiFromEth(double value) {
+        return BigInteger.valueOf((int)(value * ConstUtil.LONG_6)).multiply(ConstUtil.ETHDecimal)
+                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
-    public static String getStringNumberFromBig(String value) {
-        if (TextUtils.isEmpty(value)) return "0";
-        BigInteger bigValue = new BigInteger(value);
-        double result = bigValue.multiply(BigInteger.valueOf(10000))
-                .divide(ETHDecimal).doubleValue()/10000.0;
-        return NumberUtil.getDecimal_6(result);
+    public static String getEthFromWeiForStringDecimal6(String value) {
+        return getDecimal_6(getEthFromWeiForDoubleDecimal6(value));
     }
 
-    public static double getDoubleFromBig(BigInteger gasPrice) {
-        return gasPrice.multiply(BigInteger.valueOf(1000000))
-                .divide(ConstantUtil.ETHDecimal).doubleValue()/1000000.0;
+    public static String getEthFromWeiForStringDecimal6(BigInteger value) {
+        return getDecimal_6(getEthFromWei(value));
     }
+
+    public static double getEthFromWeiForDoubleDecimal6(String value) {
+        if (TextUtils.isEmpty(value)) return 0.0;
+        if (Numeric.containsHexPrefix(value)) {
+            return getEthFromWei(Numeric.toBigInt(value));
+        } else {
+            return getEthFromWei(new BigInteger(value));
+        }
+    }
+
+    public static double getEthFromWei(BigInteger value) {
+        return value.multiply(BigInteger.valueOf(ConstUtil.LONG_6))
+                .divide(ETHDecimal).doubleValue()/ConstUtil.DOUBLE_6;
+    }
+
 
     public static boolean isPasswordOk(String password) {
         int len = password.length();
