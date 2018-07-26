@@ -98,7 +98,7 @@ dependencies {
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    //    implementation 'org.web3j:core:3.3.1-android'
+    implementation 'org.web3j:core:3.3.1-android'
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
     implementation 'com.github.TrustWallet:trust-web3-provider:0.2.1'
@@ -109,14 +109,7 @@ dependencies {
     implementation files('libs/core-3.3.0-android.jar')
     implementation files('libs/crypto-3.3.0-android.jar')
     implementation files('libs/protobuf-3.3.0-android.jar')
-    implementation files('libs/utils-3.3.0-android.jar')
     implementation files('libs/infura-3.3.1-android.jar')
-    implementation files('libs/abi-3.3.2-android.jar')
-    implementation files('libs/core-3.3.2-android.jar')
-    implementation files('libs/crypto-3.3.2-android.jar')
-    implementation files('libs/rlp-3.3.2-android.jar')
-    implementation files('libs/tuples-3.3.2-android.jar')
-    implementation files('libs/utils-3.3.2-android.jar')
 }
 
 def getVersionName(boolean isDebug) {

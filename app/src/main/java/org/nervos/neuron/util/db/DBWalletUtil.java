@@ -152,7 +152,6 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem){
-        LogUtil.d("addTokenToWallet: " + walletName);
         WalletItem walletItem = getWallet(context, walletName);
         if (walletItem != null) {
             if (walletItem.tokenItems == null) {
@@ -185,7 +184,6 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
-        LogUtil.d("addTokenToAllWallet");
         List<String> walletNames = getAllWalletName(context);
         for (String walletName: walletNames) {
             addTokenToWallet(context, walletName, tokenItem);

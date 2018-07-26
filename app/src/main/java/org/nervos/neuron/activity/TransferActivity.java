@@ -213,10 +213,11 @@ public class TransferActivity extends BaseActivity {
     }
 
 
+    
     private void showPasswordConfirmView(String value, ProgressBar progressBar) {
         SimpleDialog simpleDialog = new SimpleDialog(mActivity);
         simpleDialog.setTitle(R.string.input_password);
-        simpleDialog.setMessageHint("password");
+        simpleDialog.setMessageHint(R.string.input_password);
         simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
         simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
             @Override
@@ -280,6 +281,7 @@ public class TransferActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                     Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                     sheetDialog.dismiss();
+                    finish();
                 } else if (ethSendTransaction.getError() != null &&
                         !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
                     Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
