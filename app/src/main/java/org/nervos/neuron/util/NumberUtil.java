@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
@@ -106,8 +107,7 @@ public class NumberUtil {
     }
 
     public static BigInteger getWeiFromEth(double value) {
-        return BigInteger.valueOf((int)(value * ConstUtil.LONG_6)).multiply(ConstUtil.ETHDecimal)
-                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
+        return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
     public static String getEthFromWeiForStringDecimal6(String value) {
@@ -128,8 +128,7 @@ public class NumberUtil {
     }
 
     public static double getEthFromWei(BigInteger value) {
-        return value.multiply(BigInteger.valueOf(ConstUtil.LONG_6))
-                .divide(ETHDecimal).doubleValue()/ConstUtil.DOUBLE_6;
+        return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
 
 

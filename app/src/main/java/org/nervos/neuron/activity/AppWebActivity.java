@@ -327,8 +327,6 @@ public class AppWebActivity extends BaseActivity {
             }
             @Override
             public void onNext(String hexSign) {
-                LogUtil.d("hexSign: " + hexSign);
-
                 webView.onSignMessageSuccessful(message, hexSign);
             }
         });

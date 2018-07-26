@@ -34,27 +34,20 @@ import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.DialogUtil;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.web3j.protobuf.ConvertStrByte;
-import org.nervos.web3j.utils.Numeric;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.protobuf.ByteString;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Subscriber;
 
 public class WalletFragment extends BaseFragment {
 
