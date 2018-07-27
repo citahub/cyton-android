@@ -60,7 +60,6 @@ public class TransferActivity extends BaseActivity {
     private AppCompatSeekBar feeSeekBar;
     private CircleImageView photoImage;
 
-
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BottomSheetDialog sheetDialog;

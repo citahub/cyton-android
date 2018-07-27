@@ -33,14 +33,13 @@ public class ConstUtil {
     public static final String INNER_URL = "http://47.97.171.140:8866/";
 
     public static final String NERVOS_CHAIN_NAME = "Nervos Chain";
-    public static final long DEFAULT_NERVOS_DEFAULT_CHAIN_ID = 1;
     public static final long DEFAULT_QUATO = LONG_6;
     public static final String NERVOS_NODE_IP = "http://121.196.200.225:1337";
-//    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+//    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x5208");  // default eth gas limit is 21000
-    public static final BigInteger GAS_ERC20_LIMIT = Numeric.toBigInt("0x23280");  // default eth gas limit is 21000
+    public static final BigInteger GAS_ERC20_LIMIT = Numeric.toBigInt("0x23280");  // default eth gas limit is 144000
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x4E3B29200");
     public static final String RPC_RESULT_ZERO = "0x";
 

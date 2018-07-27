@@ -120,8 +120,7 @@ public class CreateWalletActivity extends BaseActivity {
      * save wallet information to database and add default eth token
      */
     private void saveWalletInfo(String password){
-        walletEntity = WalletEntity.createWithMnemonic(
-                passwordEdit.getText().toString().trim(), MnemonicPath);
+        walletEntity = WalletEntity.createWithMnemonic(MnemonicPath);
         new Thread(){
             @Override
             public void run() {
