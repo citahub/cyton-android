@@ -66,7 +66,7 @@ public class TransferActivity extends BaseActivity {
 
     private String tokenUnit = "eth";
     private BigInteger mGasPrice;
-    private double mGas;
+    private BigInteger mGasUnit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,7 +96,6 @@ public class TransferActivity extends BaseActivity {
 
         findViewById(R.id.fee_layout).setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
         feeSeekBar.setMax(MAX_FEE);
-        feeSeekBar.setProgress(DEFAULT_FEE);
 
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
@@ -119,12 +118,18 @@ public class TransferActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 mGasPrice = gasPrice;
-                if (ConstUtil.ETH.equalsIgnoreCase(tokenItem.name)) {
-                    mGas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_LIMIT));
+                mGasUnit = gasPrice.multiply(ConstUtil.GAS_MIN_LIMIT);
+                if (ConstUtil.ETH.equalsIgnoreCase(tokenItem.symbol)) {
+                    int progress = ConstUtil.GAS_LIMIT.divide(ConstUtil.GAS_MIN_LIMIT).intValue();
+                    feeSeekBar.setProgress(progress);
+                    double gas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_LIMIT));
+                    feeText.setText(NumberUtil.getDecimal_8(gas) + tokenUnit);
                 } else {
-                    mGas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_ERC20_LIMIT));
+                    int progress = ConstUtil.GAS_ERC20_LIMIT.divide(ConstUtil.GAS_MIN_LIMIT).intValue();
+                    feeSeekBar.setProgress(progress);
+                    double gas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_ERC20_LIMIT));
+                    feeText.setText(NumberUtil.getDecimal_8(gas) + tokenUnit);
                 }
-                feeText.setText(NumberUtil.getDecimal_6(mGas) + tokenUnit);
                 dismissProgressCircle();
             }
         });
@@ -160,9 +165,13 @@ public class TransferActivity extends BaseActivity {
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                feeText.setText(NumberUtil.getDecimal_6(progress*mGas/DEFAULT_FEE) + tokenUnit);
-                mGasPrice = mGasPrice.multiply(BigInteger.valueOf(progress))
-                        .divide(BigInteger.valueOf(DEFAULT_FEE));
+                if (progress <= 1) {
+                    feeText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(mGasUnit)) + tokenUnit);
+                } else {
+                    mGasPrice = mGasPrice.multiply(BigInteger.valueOf(progress));
+                    BigInteger gas = mGasUnit.multiply(BigInteger.valueOf(progress));
+                    feeText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(gas)) + tokenUnit);
+                }
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {

@@ -40,7 +40,8 @@ public class ConstUtil {
 
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x5208");  // default eth gas limit is 21000
     public static final BigInteger GAS_ERC20_LIMIT = Numeric.toBigInt("0x23280");  // default eth gas limit is 144000
-    public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x4E3B29200");
+    public static final BigInteger GAS_MIN_LIMIT = Numeric.toBigInt("0x9D8");      // default eth gas min limit is 2520
+    public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x2540BE400");
     public static final String RPC_RESULT_ZERO = "0x";
 
     public static final String ZERO_16 = "000000000000000000000000";
