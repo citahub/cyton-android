@@ -14,7 +14,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
-import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class NumberUtil {
 

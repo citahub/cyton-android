@@ -17,6 +17,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -70,7 +71,7 @@ public class TransactionDetailActivity extends BaseActivity {
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal6(gasPriceBig.multiply(gasUsedBig)) + "eth");
-            transactionGasPrice.setText(gasPriceBig.divide(BigInteger.valueOf(1000000000)).intValue() + " Gwei");
+            transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
         }
         int blockNumber = Integer.parseInt(
                 Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
