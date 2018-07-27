@@ -61,9 +61,6 @@ public class TransactionDetailActivity extends BaseActivity {
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
         transactionHashText.setText(transactionItem.hash);
-        String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
-                "-" : "+") + transactionItem.value;
-        transactionValueText.setText(value);
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);
         if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
@@ -72,10 +69,19 @@ public class TransactionDetailActivity extends BaseActivity {
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal6(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
+                    "-" : "+") + Integer.parseInt(transactionItem.value, 16);
+            transactionValueText.setText(value);
+            transactionBlockNumberText.setText(transactionItem.blockNumber);
+        } else {
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
+                    "-" : "+") + transactionItem.value;
+            transactionValueText.setText(value);
+            int blockNumber = Integer.parseInt(
+                    Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
+            transactionBlockNumberText.setText(String.valueOf(blockNumber));
         }
-        int blockNumber = Integer.parseInt(
-                Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
-        transactionBlockNumberText.setText(String.valueOf(blockNumber));
+
         transactionBlockTimeText.setText(transactionItem.getDate());
 
         transactionToText.setOnClickListener(v -> copyText(transactionItem.to));

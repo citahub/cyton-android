@@ -17,8 +17,13 @@ import java.text.DecimalFormat;
 
 public class NumberUtil {
 
-    public static String getDecimal_6(Double value) {
+    public static String getDecimal_6(double value) {
         DecimalFormat fmt = new DecimalFormat("0.######");
+        return fmt.format(value);
+    }
+
+    public static String getDecimal_8(double value) {
+        DecimalFormat fmt = new DecimalFormat("0.########");
         return fmt.format(value);
     }
 

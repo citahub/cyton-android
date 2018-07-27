@@ -7,6 +7,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -140,6 +141,8 @@ public class AppWebActivity extends BaseActivity {
         webView.setRpcUrl(ConstUtil.ETH_NODE_IP);
         webView.setWalletAddress(new Address(walletItem.address));
 
+        webView.addJavascriptInterface(new Neuron(), "neuron");
+
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
         });
@@ -161,6 +164,13 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
+    private class Neuron {
+
+        @JavascriptInterface
+        public String getAccount() {
+            return walletItem.address;
+        }
+    }
 
     private void signTxAction(Transaction transaction) {
         this.signTransaction = transaction;
