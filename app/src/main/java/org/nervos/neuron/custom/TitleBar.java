@@ -79,6 +79,9 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
         mTitle = a.getString(R.styleable.TitleBar_title);
         mTitleBarCenterDefaultView.setText(mTitle);
+        int mTitleColor = a.getResourceId(R.styleable.TitleBar_title_color, 0);
+        if (mTitleColor != 0)
+            mTitleBarCenterDefaultView.setTextColor(getResources().getColor(mTitleColor));
         mLeftText = a.getString(R.styleable.TitleBar_left_text);
         mTitleBarLeftDefaultView.setText(mLeftText);
         mRightText = a.getString(R.styleable.TitleBar_right_text);

@@ -9,10 +9,16 @@
     <color name="font_blue">#2E4AF2</color>
     <color name="button_blue">#2959CC</color>
 
+    <color name="font_title">#262a44</color>
+    <color name="font_inside">#8a8d9f</color>
+    <color name="font_annotation">#c5c5d0</color>
+    <color name="font_link">#1646ff</color>
+
+    <color name="line_form">#f7f7f7</color>
 
     <color name="navigation_tab_background_color">#fff5f5f5</color>
     <color name="warning_background">#FFFEED</color>
-    <color name="warning_font">#FE8227</color>
+    <color name="warning_font">#ff8f27</color>
 
     <color name="default_black">#333333</color>
     <color name="default_separate_gray">#E5E5E5</color>

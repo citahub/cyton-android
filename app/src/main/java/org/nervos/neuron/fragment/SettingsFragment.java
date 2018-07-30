@@ -1,5 +1,6 @@
 package org.nervos.neuron.fragment;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,74 +9,51 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
+import org.nervos.neuron.custom.SettingButtonView;
 import org.nervos.neuron.util.ConstUtil;
+
+import java.util.zip.Inflater;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends NBaseFragment {
 
     public static final String TAG = SettingsFragment.class.getName();
+    private SettingButtonView localCoinSBV, aboutUsSBV, contactUsSBV;
 
-    private TextView contactText;
-    private CircleImageView appImage;
-    private TextView versionText;
-    private TextView sourceCodeText;
-    private TextView protocolText;
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        contactText = view.findViewById(R.id.setting_contact);
-        appImage = view.findViewById(R.id.app_photo);
-        versionText = view.findViewById(R.id.app_version);
-        sourceCodeText = view.findViewById(R.id.setting_source_code);
-        protocolText = view.findViewById(R.id.service_protocol);
-        return view;
+    protected int getContentLayout() {
+        return R.layout.fragment_settings;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initListener();
+    public void initView() {
+        localCoinSBV = (SettingButtonView) findViewById(R.id.sbv_local_coin);
+        aboutUsSBV = (SettingButtonView) findViewById(R.id.sbv_about_us);
+        contactUsSBV = (SettingButtonView) findViewById(R.id.sbv_contact_us);
     }
 
-    private void initListener() {
+    @Override
+    public void initData() {
+        localCoinSBV.setOther1Text("CNY");
+    }
 
-        appImage.setImageResource(R.mipmap.ic_launcher);
-
-        try {
-            String versionName = getContext().getPackageManager()
-                    .getPackageInfo(getContext().getPackageName(), 0).versionName;
-            versionText.setText(String.format("V %s", versionName));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        sourceCodeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.SOURCE_CODE_GITHUB_URL);
-            }
+    @Override
+    public void initAction() {
+        localCoinSBV.setOpenListener(() -> {
+            Toast.makeText(getActivity(), "open", Toast.LENGTH_LONG).show();
         });
-
-        protocolText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.PRODUCT_AGREEMENT_URL);
-            }
+        aboutUsSBV.setOpenListener(() -> {
+            Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+            startActivity(intent);
         });
-
-        contactText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
-            }
+        contactUsSBV.setOpenListener(() -> {
+            SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
         });
-
     }
 }

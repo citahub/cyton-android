@@ -16,11 +16,11 @@
             android:id="@+id/title_bar_left_default"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="15sp"
+            android:layout_centerVertical="true"
             android:drawableLeft="@drawable/back"
-            android:textColor="@color/default_gray_6"
             android:paddingLeft="@dimen/default_margin"
-            android:layout_centerVertical="true" />
+            android:textColor="@color/default_gray_6"
+            android:textSize="15sp" />
 
     </RelativeLayout>
 
@@ -28,19 +28,19 @@
         android:id="@+id/title_bar_center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_centerInParent="true">
+        android:layout_marginRight="50dp">
 
         <TextView
             android:id="@+id/title_bar_center_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textSize="16sp"
-            android:textColor="@color/default_title_text_color"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:singleLine="true"
-            android:layout_centerInParent="true" />
+            android:textColor="@color/default_title_text_color"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
@@ -48,17 +48,17 @@
         android:id="@+id/title_bar_right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:layout_alignParentRight="true">
+        android:paddingRight="@dimen/default_margin">
 
         <TextView
             android:id="@+id/title_bar_right_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:layout_centerInParent="true"
             android:textColor="@color/default_gray_6"
-            android:layout_centerInParent="true" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
