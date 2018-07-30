@@ -24,6 +24,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -81,6 +82,7 @@ public class WebAppUtil {
             @Override
             public Observable<AppItem> call(String path) {
                 URI uri = URI.create(url);
+                path = path.indexOf(".") == 0? path.substring(1) : path;
                 String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
                 Request request = new Request.Builder().url(manifestUrl).build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
@@ -137,6 +139,7 @@ public class WebAppUtil {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                LogUtil.e("manifest error: " + e.getMessage());
             }
             @Override
             public void onNext(ChainItem chainItem) {
