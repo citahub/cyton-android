@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/default_gray_6"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
