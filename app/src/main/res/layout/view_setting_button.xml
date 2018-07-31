@@ -56,7 +56,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.8dp"
+        android:layout_height="1dp"
         android:layout_marginLeft="12dip"
         android:layout_marginTop="15dip"
         android:background="@color/line_form"
