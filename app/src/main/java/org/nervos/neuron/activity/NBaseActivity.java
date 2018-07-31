@@ -1,10 +1,13 @@
 package org.nervos.neuron.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.Window;
+import android.view.WindowManager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.nervos.neuron.R;
 
 /**
  * Created by 包俊 on 2018/7/30.
@@ -28,17 +31,17 @@ public abstract class NBaseActivity extends BaseActivity {
     protected abstract int getContentLayout();
 
     /**
-     * 初始化UI
+     * init ui
      */
     protected abstract void initView();
 
     /**
-     * 初始化事件
-     */
-    protected abstract void initAction();
-
-    /**
-     * 初始化数据
+     * init data
      */
     protected abstract void initData();
+
+    /**
+     * init action
+     */
+    protected abstract void initAction();
 }

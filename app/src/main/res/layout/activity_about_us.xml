@@ -12,7 +12,6 @@
         android:layout_height="48dp"
         app:isShowLeft="true"
         app:title="@string/about_us_title"
-        app:title_bg="@color/white"
         app:title_color="@color/font_title" />
 
     <LinearLayout
