@@ -80,7 +80,7 @@ public class NervosHttpService {
                         EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
                                 .body().string(), EthTransactionResponse.class);
                         for(TransactionItem item : response.result) {
-                            item.chainName = ConstUtil.ETH_MAIN_NET;
+                            item.chainName = ConstUtil.ETH_MAINNET;
                             item.value = (NumberUtil.getEthFromWeiForStringDecimal6(item.value) + ConstUtil.ETH);
                         }
                         if (list != null && list.size() != 0) {

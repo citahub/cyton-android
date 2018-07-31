@@ -17,7 +17,7 @@ public class ConstUtil {
 
 
     // transaction list page config information
-    public static final String ETH_MAIN_NET = "Ethereum Mainnet";
+    public static final String ETH_MAINNET = "Ethereum Mainnet";
     public static final long DEFAULT_QUATO = LONG_6;
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
     public static final String NERVOS_SERVER_URL = "http://47.97.171.140:4000";
