@@ -36,6 +36,11 @@ public class CurrencyActivity extends NBaseActivity {
     }
 
     @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
+    }
+
+    @Override
     protected void initData() {
         title.setLeftImage(R.drawable.ic_toptitle_back_white);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

@@ -24,6 +24,11 @@ public class AboutUsActivity extends NBaseActivity {
     }
 
     @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
+    }
+
+    @Override
     protected void initView() {
         versionText = findViewById(R.id.app_version);
         sourceCodeSBV = findViewById(R.id.sbv_source_code);

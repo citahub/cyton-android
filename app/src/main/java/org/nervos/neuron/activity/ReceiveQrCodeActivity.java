@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +32,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,11 +43,18 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
     private TextView walletAddressText;
     private CircleImageView walletPhotoImage;
     private TitleBar title;
-    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/NQrCode.png";
+    private TextView copyAddressText;
+
+    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/NQrCode.png";
 
     @Override
     protected int getContentLayout() {
         return R.layout.activity_receive_qrcode;
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.qr_receive_bg);
     }
 
     @Override
@@ -52,32 +64,7 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
         walletAddressText = findViewById(R.id.qrcode_wallet_address);
         walletPhotoImage = findViewById(R.id.wallet_photo);
         title = findViewById(R.id.title);
-        title.setOnRightClickListener(() -> {
-            showProgressBar();
-            AndPermission.with(mActivity)
-                    .runtime().permission(Permission.Group.STORAGE)
-                    .rationale(new RuntimeRationale())
-                    .onGranted(permissions -> {
-                        try {
-                            savePic();
-                            String imagePath = savePath;
-                            Uri imageUri = Uri.fromFile(new File(imagePath));
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                            shareIntent.setType("image/*");
-                            startActivity(Intent.createChooser(shareIntent, "分享到"));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    })
-                    .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
-                    .start();
-        });
-    }
-
-    @Override
-    protected void initAction() {
+        copyAddressText = findViewById(R.id.button_copy_receive_qrcode);
 
     }
 
@@ -85,7 +72,7 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
     protected void initData() {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         walletPhotoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        findViewById(R.id.button_copy_receive_qrcode).setOnClickListener((view) -> {
+        copyAddressText.setOnClickListener((view) -> {
             ClipboardManager cm = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
             if (cm != null) {
@@ -101,14 +88,59 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
         qrCodeImage.setImageBitmap(bitmap);
     }
 
+    @Override
+    protected void initAction() {
+        title.setOnRightClickListener(() -> {
+            showProgressBar();
+            AndPermission.with(mActivity)
+                    .runtime().permission(Permission.Group.STORAGE)
+                    .rationale(new RuntimeRationale())
+                    .onGranted(permissions -> {
+                        try {
+                            savePic();
+                            Uri imageUri;
+                            if (Build.VERSION.SDK_INT >= 24) {
+                                File file = new File(savePath);
+                                imageUri = FileProvider.getUriForFile(this, "org.nervos.neuron.fileprovider", file);
+                            } else {
+                                imageUri = Uri.fromFile(new File(savePath));
+                            }
+                            Intent shareIntent = new Intent();
+                            shareIntent.setAction(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                            shareIntent.setType("image/*");
+                            startActivity(Intent.createChooser(shareIntent, "分享到"));
+                            dismissProgressBar();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            dismissProgressBar();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            dismissProgressBar();
+                        }
+                    })
+                    .onDenied(permissions -> {
+                        dismissProgressBar();
+                        PermissionUtil.showSettingDialog(mActivity, permissions);
+                    })
+                    .start();
+        });
+    }
+
     //save qrcode
-    private void savePic() throws FileNotFoundException {
+    private void savePic() throws IOException {
+        copyAddressText.setVisibility(View.GONE);
         Bitmap bitmap = getCacheBitmapFromView(findViewById(R.id.ll_qrcode));
         File file = new File(savePath);
         if (file.exists())
             file.delete();
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        //if we use CompressFormat.JPEG,bitmap will have black background
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        bos.flush();
+        bos.close();
+        bitmap.recycle();
+        copyAddressText.setVisibility(View.VISIBLE);
     }
 
     //get screenShoot

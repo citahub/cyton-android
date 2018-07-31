@@ -17,6 +17,8 @@
 
     <color name="line_form">#f7f7f7</color>
 
+    <color name="qr_receive_bg">#252A3E</color>
+
     <color name="navigation_tab_background_color">#fff5f5f5</color>
     <color name="warning_background">#FFFEED</color>
     <color name="warning_font">#ff8f27</color>

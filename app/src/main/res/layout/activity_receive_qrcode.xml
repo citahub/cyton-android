@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#252A3E"
+    android:background="@color/qr_receive_bg"
     android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
@@ -72,7 +73,7 @@
                 app:layout_constraintTop_toBottomOf="@id/qrcode_wallet_name" />
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/qrcode_receipt_bottom">
@@ -81,40 +82,33 @@
                 android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dip"
                 android:text="@string/qrcode_address"
                 android:textColor="@color/font_title"
-                android:textSize="20sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/receive_qrcode_image"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                android:layout_marginTop="@dimen/default_margin"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_address"
-                app:layout_goneMarginTop="20dip" />
+                android:layout_below="@id/tv_address"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="@dimen/default_margin" />
 
             <TextView
                 android:id="@+id/button_copy_receive_qrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/receive_qrcode_image"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dip"
-                android:layout_marginTop="10dp"
                 android:text="@string/copy_address"
                 android:textColor="@color/font_title_second"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/receive_qrcode_image"
-                app:layout_goneMarginBottom="20dip" />
+                android:textSize="16sp" />
 
-        </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
