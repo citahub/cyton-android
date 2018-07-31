@@ -17,10 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/back"
+            android:drawableLeft="@drawable/black_back"
             android:paddingLeft="@dimen/default_margin"
             android:textColor="@color/default_gray_6"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
@@ -54,11 +54,12 @@
 
         <TextView
             android:id="@+id/title_bar_right_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_centerInParent="true"
-            android:textColor="@color/default_gray_6"
-            android:textSize="14sp" />
+            android:textColor="@color/default_title_right_color"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
