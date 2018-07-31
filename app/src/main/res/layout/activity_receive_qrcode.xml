@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/qr_receive_bg"
@@ -24,8 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30dip"
-        android:layout_marginRight="30dip"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
@@ -35,9 +34,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:layout_marginTop="10dip"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:background="@mipmap/ic_launcher"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -47,7 +46,7 @@
                 android:id="@+id/qrcode_wallet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dip"
+                android:layout_marginTop="3dp"
                 android:text="wallert"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -59,7 +58,7 @@
                 android:id="@+id/qrcode_wallet_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dip"
+                android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:lines="1"
@@ -83,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dip"
+                android:layout_marginTop="20dp"
                 android:text="@string/qrcode_address"
                 android:textColor="@color/font_title"
                 android:textSize="20sp" />
@@ -103,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/receive_qrcode_image"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dip"
+                android:layout_marginBottom="20dp"
                 android:text="@string/copy_address"
                 android:textColor="@color/font_title_second"
                 android:textSize="16sp" />
