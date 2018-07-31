@@ -50,7 +50,6 @@ public class CurrencyActivity extends NBaseActivity {
         Adapter adapter = new Adapter();
         currencyRecycler.setAdapter(adapter);
         title.setOnLeftClickListener(() -> {
-            setResult(RESULT_OK);
             finish();
         });
     }
@@ -109,4 +108,9 @@ public class CurrencyActivity extends NBaseActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
+    }
 }
