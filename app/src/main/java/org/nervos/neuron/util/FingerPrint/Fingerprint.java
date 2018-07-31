@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * 指纹信息类，系统的被隐藏
  * Created by 包俊 on 2018/7/30.
  */
 

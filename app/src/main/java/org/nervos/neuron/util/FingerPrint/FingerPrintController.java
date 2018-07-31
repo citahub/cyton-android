@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 指纹控制器
  * Created by 包俊 on 2018/7/30.
  */
 
@@ -45,13 +44,10 @@ public class FingerPrintController {
     @SuppressWarnings("ResourceType")
     public FingerPrintController(Activity activity) {
         this.activity = activity;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//默认6.0以下不支持指纹。包括厂商定制的5.x系统
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {
                 Class.forName("android.hardware.fingerprint.FingerprintManager");
-                //低于6.0版本，有这个类，不正常。在兼容性测试中，可以抛出异常，筛选出设备。
-//                throw new RuntimeException("低于6.0系统支持指纹模块");
             } catch (ClassNotFoundException e) {
-                // 低于6.0版本，没有这个类正常
                 e.printStackTrace();
 
             }
@@ -61,18 +57,18 @@ public class FingerPrintController {
     }
 
     /**
-     * 判断是否支持指纹
+     * check fingerprint support
      *
      * @return
      */
     public boolean isSupportFingerprint() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)//默认6.0以下不支持指纹。包括厂商定制的5.x系统
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return false;
         return fpManager == null ? false : fpManager.isHardwareDetected();
     }
 
     /**
-     * 是否录入指纹
+     *check has fingerprints
      *
      * @return
      */
@@ -89,8 +85,7 @@ public class FingerPrintController {
     }
 
     /**
-     * 发起指纹认证识别
-     *
+     * authen
      * @param callback
      */
     public void authenticate(final AuthenticateResultCallback callback) {
@@ -99,7 +94,6 @@ public class FingerPrintController {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return;
         cancellationSignal = new CancellationSignal();
-        //版本26才支持指纹
         fpManager.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
@@ -141,8 +135,7 @@ public class FingerPrintController {
     }
 
     /**
-     * 获取已经录入的指纹
-     *
+     *get fingerprints
      * @return
      */
     public List<Fingerprint> getEnrolledFingerprints() {
@@ -172,7 +165,7 @@ public class FingerPrintController {
 
     private static final String ACTION_SETTING = "android.settings.SETTINGS";
 
-    //跳转设置页面
+    //goto setting
     public static void openFingerPrintSettingPage(Context context) {
         Intent intent = new Intent(ACTION_SETTING);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

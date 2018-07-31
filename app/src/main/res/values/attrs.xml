@@ -22,6 +22,7 @@
         <attr name="icon" format="reference" />
         <attr name="name" format="string" />
         <attr name="other1" format="boolean" />
+        <attr name="switch_button" format="boolean" />
     </declare-styleable>
 
 </resources>

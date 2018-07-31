@@ -1,7 +1,6 @@
 package org.nervos.neuron.util.FingerPrint;
 
 /**
- * 不支持指纹异常
  * Created by 包俊 on 2018/7/30.
  */
 

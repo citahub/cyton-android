@@ -22,6 +22,10 @@ public class SharePrefUtil {
         return sharedPreferences.getBoolean(key, true);
     }
 
+    public static boolean getBoolean(String key,boolean def) {
+        return sharedPreferences.getBoolean(key, def);
+    }
+
     public static void putBoolean(String key, boolean value) {
         sharedPreferences.edit().putBoolean(key, value).apply();
     }
