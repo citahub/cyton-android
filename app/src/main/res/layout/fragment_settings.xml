@@ -14,28 +14,35 @@
         app:isShowLeft="false"
         app:title="@string/settings_title" />
 
-    <org.nervos.neuron.custom.SettingButtonView
-        android:id="@+id/sbv_local_coin"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_setting_localcoin"
-        app:name="本地货币"
-        app:other1="true" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dip"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-    <org.nervos.neuron.custom.SettingButtonView
-        android:id="@+id/sbv_about_us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_setting_contact_us"
-        app:name="关于我们"
-        app:other1="false" />
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_local_coin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_localcoin"
+            app:name="本地货币"
+            app:other1="true" />
 
-    <org.nervos.neuron.custom.SettingButtonView
-        android:id="@+id/sbv_contact_us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_setting_contact_us"
-        app:name="联系我们"
-        app:other1="false" />
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_about_us"
+            app:name="关于我们"
+            app:other1="false" />
 
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_contact_us"
+            app:name="联系我们"
+            app:other1="false" />
+    </LinearLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package org.nervos.neuron.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,11 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
+import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.custom.SettingButtonView;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.zip.Inflater;
 
@@ -24,7 +27,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SettingsFragment extends NBaseFragment {
 
     public static final String TAG = SettingsFragment.class.getName();
-    private SettingButtonView localCoinSBV, aboutUsSBV, contactUsSBV;
+    private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV;
+    private static final int Currency_Code = 10001;
 
     @Override
     protected int getContentLayout() {
@@ -33,20 +37,21 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initView() {
-        localCoinSBV = (SettingButtonView) findViewById(R.id.sbv_local_coin);
+        currencySBV = (SettingButtonView) findViewById(R.id.sbv_local_coin);
         aboutUsSBV = (SettingButtonView) findViewById(R.id.sbv_about_us);
         contactUsSBV = (SettingButtonView) findViewById(R.id.sbv_contact_us);
     }
 
     @Override
     public void initData() {
-        localCoinSBV.setOther1Text("CNY");
+        currencySBV.setOther1Text(SharePrefUtil.getString("Currency", "CNY"));
     }
 
     @Override
     public void initAction() {
-        localCoinSBV.setOpenListener(() -> {
-            Toast.makeText(getActivity(), "open", Toast.LENGTH_LONG).show();
+        currencySBV.setOpenListener(() -> {
+            Intent intent = new Intent(getActivity(), CurrencyActivity.class);
+            startActivityForResult(intent, Currency_Code);
         });
         aboutUsSBV.setOpenListener(() -> {
             Intent intent = new Intent(getActivity(), AboutUsActivity.class);
@@ -55,5 +60,17 @@ public class SettingsFragment extends NBaseFragment {
         contactUsSBV.setOpenListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case Currency_Code:
+                    currencySBV.setOther1Text(SharePrefUtil.getString("Currency", "CNY"));
+                    break;
+            }
+        }
     }
 }

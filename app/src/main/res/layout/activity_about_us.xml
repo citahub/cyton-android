@@ -27,7 +27,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_about_us_logo"
             app:civ_border_color="@color/default_gray_d5"
             app:civ_border_width="1dp" />
 
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="5dip"
             android:text="@string/app_name"
             android:textColor="@color/default_black"
             android:textSize="16sp" />
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginTop="5dip"
             android:textColor="@color/default_black"
             android:textSize="14sp" />
 
@@ -55,7 +55,7 @@
         android:id="@+id/sbv_source_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dip"
+        android:layout_marginTop="12dip"
         app:icon="@drawable/ic_about_us_origin_code"
         app:name="源代码"
         app:other1="false" />
@@ -72,7 +72,7 @@
         android:id="@+id/sbv_nervos_network"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dip"
+        android:layout_marginTop="12dip"
         app:icon="@drawable/ic_about_us_nervos_network"
         app:name="Nervos Network"
         app:other1="false" />
