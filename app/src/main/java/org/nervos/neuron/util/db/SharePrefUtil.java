@@ -34,7 +34,7 @@ public class SharePrefUtil {
         sharedPreferences.edit().putBoolean(KEY_FIRST, value).apply();
     }
 
-    public static void putString(String key, String value){
+    public static void putString(String key, String value) {
         sharedPreferences.edit().putString(key, value).apply();
     }
 
@@ -42,7 +42,11 @@ public class SharePrefUtil {
         return sharedPreferences.getString(key, null);
     }
 
-    public static void putCurrentWalletName(String name){
+    public static String getString(String key, String defaultStr) {
+        return sharedPreferences.getString(key, defaultStr);
+    }
+
+    public static void putCurrentWalletName(String name) {
         putString(WALLET_NAME, name);
     }
 
