@@ -16,7 +16,7 @@ public class AboutUsActivity extends NBaseActivity {
 
     private TextView versionText;
     private TitleBar title;
-    private SettingButtonView sourceCodeSBV, serverPrivateSBV, NervosSBV, InfuaSBV, openSeaSBV;
+    private SettingButtonView sourceCodeSBV, serverPrivateSBV, NervosSBV, InfuraSBV, openSeaSBV;
 
     @Override
     protected int getContentLayout() {
@@ -29,7 +29,7 @@ public class AboutUsActivity extends NBaseActivity {
         sourceCodeSBV = findViewById(R.id.sbv_source_code);
         serverPrivateSBV = findViewById(R.id.sbv_server_private);
         NervosSBV = findViewById(R.id.sbv_nervos_network);
-        InfuaSBV = findViewById(R.id.sbv_infua);
+        InfuraSBV = findViewById(R.id.sbv_infura);
         openSeaSBV = findViewById(R.id.sbv_open_sea);
         title = findViewById(R.id.title);
     }
@@ -58,6 +58,14 @@ public class AboutUsActivity extends NBaseActivity {
         serverPrivateSBV.setOpenListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.PRODUCT_AGREEMENT_URL);
         });
-
+        NervosSBV.setOpenListener(() -> {
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.NERVOS_NETWORK);
+        });
+        InfuraSBV.setOpenListener(() -> {
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.INFURA);
+        });
+        openSeaSBV.setOpenListener(() -> {
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.OPEN_SEA);
+        });
     }
 }

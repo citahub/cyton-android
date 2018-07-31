@@ -1,6 +1,7 @@
 package org.nervos.neuron.util;
 
 import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 
 public class ConstUtil {
@@ -14,7 +15,9 @@ public class ConstUtil {
     public static final String SOURCE_CODE_GITHUB_URL = "https://github.com/cryptape/Neuron-Android";
     public static final String PRODUCT_AGREEMENT_URL = "https://cryptape.github.io/Neuron-Android/#/zh-CN/product-agreement";
     public static final String CONTACT_US_RUL = "http://appchain.nervos.org//#/contact-us";
-
+    public static final String NERVOS_NETWORK = "https://www.nervos.org/";
+    public static final String OPEN_SEA = "https://opensea.io/";
+    public static final String INFURA = "https://infura.io/";
 
     // transaction list page config information
     public static final String ETH_MAINNET = "Ethereum Mainnet";
