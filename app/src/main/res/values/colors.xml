@@ -2,12 +2,16 @@
 <resources>
     <color name="colorPrimary">#2E46F0</color>
     <color name="colorPrimaryDark">#2E46F0</color>
-    <color name="default_title_bg">#2E46F0</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
     <color name="font_black">#333333</color>
     <color name="font_blue">#2E4AF2</color>
     <color name="button_blue">#2959CC</color>
+
+
+    <color name="default_title_bg">#FFFFFF</color>
+    <color name="default_title_right_color">#62678A</color>
+    <color name="default_title_text_color">#ff333333</color>
 
 
     <color name="navigation_tab_background_color">#fff5f5f5</color>
@@ -27,7 +31,6 @@
     <color name="default_white_f4">#fff4f4f4</color>
     <color name="default_gray_c">#cccccc</color>
     <color name="default_gray_a">#ffaaaaaa</color>
-    <color name="default_title_text_color">#ffffffff</color>
     <color name="white">#ffffffff</color>
     <color name="red">#ffff4d55</color>
     <color name="orange">#ff9d45</color>

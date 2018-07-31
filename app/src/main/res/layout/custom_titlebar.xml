@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:drawableLeft="@drawable/back"
+            android:drawableLeft="@drawable/black_back"
             android:textColor="@color/default_gray_6"
             android:paddingLeft="@dimen/default_margin"
             android:layout_centerVertical="true" />
@@ -36,7 +36,7 @@
             android:id="@+id/title_bar_center_default"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/default_title_text_color"
             android:gravity="center"
             android:singleLine="true"
@@ -56,8 +56,8 @@
             android:id="@+id/title_bar_right_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/default_gray_6"
+            android:textSize="16sp"
+            android:textColor="@color/default_title_right_color"
             android:layout_centerInParent="true" />
 
     </RelativeLayout>
