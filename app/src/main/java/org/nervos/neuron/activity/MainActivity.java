@@ -42,8 +42,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
-    private void initView(){
+    private void initView() {
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);
         fMgr = getSupportFragmentManager();
@@ -51,21 +50,21 @@ public class MainActivity extends BaseActivity {
         if (SharePrefUtil.getFirstIn()) {
             SharePrefUtil.putFirstIn(false);
             new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dialog_title_tip)
-                .setMessage(R.string.dialog_tip_message)
-                .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                    .setTitle(R.string.dialog_title_tip)
+                    .setMessage(R.string.dialog_tip_message)
+                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
         }
     }
@@ -82,7 +81,7 @@ public class MainActivity extends BaseActivity {
             hideFragments(transaction);
             switch (checkedId) {
                 case R.id.navigation_application:
-                    if(appFragment == null){
+                    if (appFragment == null) {
                         appFragment = new AppFragment();
                         transaction.add(R.id.fragment, appFragment);
                     } else {
@@ -93,7 +92,7 @@ public class MainActivity extends BaseActivity {
                     if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
                         startActivity(new Intent(mActivity, AddWalletActivity.class));
                     } else {
-                        if(walletFragment == null){
+                        if (walletFragment == null) {
                             walletFragment = new WalletFragment();
                             transaction.add(R.id.fragment, walletFragment);
                         } else {
@@ -102,7 +101,7 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 case R.id.navigation_settings:
-                    if(settingsFragment == null){
+                    if (settingsFragment == null) {
                         settingsFragment = new SettingsFragment();
                         transaction.add(R.id.fragment, settingsFragment);
                     } else {
@@ -110,7 +109,7 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 case R.id.navigation_transaction:
-                    if(transactionFragment == null){
+                    if (transactionFragment == null) {
                         transactionFragment = new TransactionFragment();
                         transaction.add(R.id.fragment, transactionFragment);
                     } else {
@@ -118,7 +117,7 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 default:
-                    if(appFragment == null){
+                    if (appFragment == null) {
                         appFragment = new AppFragment();
                         transaction.add(R.id.fragment, appFragment);
                     } else {
@@ -169,7 +168,6 @@ public class MainActivity extends BaseActivity {
             transaction.hide(settingsFragment);
         }
     }
-
 
 
     private long exitTime = 0;

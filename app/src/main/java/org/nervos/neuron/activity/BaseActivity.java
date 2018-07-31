@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -9,6 +10,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -26,7 +29,20 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getStatusBarColor());
+        }
+    }
 
+    /**
+     * set statusBarColor
+     */
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.colorPrimary);
     }
 
     public void onDestroy() {
@@ -56,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
             FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             fl.gravity = Gravity.CENTER;
 
-            ((ViewGroup)rootView).addView(mProgressView, 1, fl);
+            ((ViewGroup) rootView).addView(mProgressView, 1, fl);
         }
     }
 
@@ -65,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void dismissProgressBar() {
         if (rootView != null && mProgressView != null) {
-            ((ViewGroup)rootView).removeView(mProgressView);
+            ((ViewGroup) rootView).removeView(mProgressView);
         }
         mProgressView = null;
         rootView = null;
@@ -83,7 +99,7 @@ public class BaseActivity extends AppCompatActivity {
             FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             fl.gravity = Gravity.CENTER;
 
-            ((ViewGroup)rootView).addView(mProgressCircleView, 1, fl);
+            ((ViewGroup) rootView).addView(mProgressCircleView, 1, fl);
         }
     }
 
@@ -92,7 +108,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void dismissProgressCircle() {
         if (rootView != null && mProgressCircleView != null) {
-            ((ViewGroup)rootView).removeView(mProgressCircleView);
+            ((ViewGroup) rootView).removeView(mProgressCircleView);
         }
         mProgressCircleView = null;
         rootView = null;

@@ -37,6 +37,11 @@ public class CurrencyActivity extends NBaseActivity {
     }
 
     @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
+    }
+
+    @Override
     protected void initData() {
         title.setLeftImage(R.drawable.ic_toptitle_back_white);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -46,7 +51,6 @@ public class CurrencyActivity extends NBaseActivity {
         Adapter adapter = new Adapter();
         currencyRecycler.setAdapter(adapter);
         title.setOnLeftClickListener(() -> {
-            setResult(RESULT_OK);
             finish();
         });
     }
@@ -105,4 +109,9 @@ public class CurrencyActivity extends NBaseActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
+    }
 }
