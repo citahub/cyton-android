@@ -9,6 +9,7 @@
     <string name="balance">余额：</string>
     <string name="account">账号：</string>
     <string name="transfer_value">转账金额：</string>
+    <string name="token_transfer_value">转账金额</string>
     <string name="send">发送</string>
     <string name="cancel">取消</string>
     <string name="setting">设置</string>
@@ -60,6 +61,7 @@
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
     <string name="input_password">输入密码</string>
     <string name="confirm_action">确认</string>
+    <string name="confirm_send_action">确认发送</string>
     <string name="input_app_website_hint">请输入应用网址</string>
 
 
@@ -82,8 +84,8 @@
     <string name="transfer_amount">转账金额</string>
     <string name="transfer_sum">请求费用总和（含手续费）</string>
     <string name="pay_detail">支付详情</string>
-    <string name="transfer_to_address">转入地址</string>
-    <string name="pay_wallet">付款钱包</string>
+    <string name="transfer_to_address">收款地址</string>
+    <string name="pay_wallet">付款地址</string>
     <string name="transfer_fee">交易费用</string>
     <string name="update_password">修改密码</string>
     <string name="wallet_name">钱包名称</string>
@@ -163,4 +165,16 @@
     <string name="meta_data_error">Can not get MetaData from host:</string>
     <string name="contract_address_error">合约地址错误</string>
     <string name="password_hint">password</string>
+    <string name="transfer_token_type">转账币种</string>
+    <string name="input_receive_address_hint">请输入收款地址</string>
+    <string name="fee_value">矿工费用</string>
+    <string name="sum_value">费用总计（含矿工费）</string>
+    <string name="advanced_setup">高级设置</string>
+    <string name="gas_price">Gas Price</string>
+    <string name="gas_limit">Gas限制</string>
+    <string name="quota">Quota</string>
+    <string name="hex">HEX</string>
+    <string name="utf8">UTF8</string>
+    <string name="slow">慢</string>
+    <string name="fast">快</string>
 </resources>

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,47 +44,35 @@ import java.math.BigInteger;
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
 
-public class TransferActivity extends BaseActivity {
+public class TransferActivity extends NBaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
     private static final int MAX_FEE = 100;
-    private static final int DEFAULT_FEE = 20;    // default seek progress is 20
 
-    private TextView walletAddressText;
-    private TextView walletNameText;
+    private TextView walletAddressText, walletNameText, feeText;
     private ImageView scanImage;
-    private TextView feeText;
-    private AppCompatEditText receiveAddressEdit;
-    private AppCompatEditText transferValueEdit;
+    private AppCompatEditText receiveAddressEdit, transferValueEdit;
     private AppCompatButton nextActionButton;
-    private AppCompatSeekBar feeSeekBar;
     private CircleImageView photoImage;
+    private AppCompatSeekBar feeSeekBar;
+    private RelativeLayout feeLayout, feeSeekBarLayout;
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BottomSheetDialog sheetDialog;
 
     private String tokenUnit = "eth";
-    private BigInteger mGasPrice;
-    private BigInteger mGasUnit;
+    private BigInteger mGasPrice, mGasUnit;
+    private boolean isShowSeekBar = false;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transfer);
-
-        walletItem = DBWalletUtil.getCurrentWallet(this);
-        tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
-        EthRpcService.init(mActivity);
-        NervosRpcService.init(mActivity, ConstUtil.NERVOS_NODE_IP);
-        initView();
-        initListener();
-        initGasInfo();
-
+    protected int getContentLayout() {
+        return R.layout.activity_transfer;
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         scanImage = findViewById(R.id.transfer_address_scan);
         nextActionButton = findViewById(R.id.next_action_button);
         walletAddressText = findViewById(R.id.wallet_address);
@@ -93,13 +82,24 @@ public class TransferActivity extends BaseActivity {
         transferValueEdit = findViewById(R.id.transfer_value);
         feeSeekBar = findViewById(R.id.fee_seek_bar);
         photoImage = findViewById(R.id.wallet_photo);
-
-        findViewById(R.id.fee_layout).setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
+        feeLayout = findViewById(R.id.fee_layout);
+        feeSeekBarLayout = findViewById(R.id.fee_seek_bar_layout);
         feeSeekBar.setMax(MAX_FEE);
 
+    }
+
+    @Override
+    protected void initData() {
+        tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        EthRpcService.init(mActivity);
+        NervosRpcService.init(mActivity, ConstUtil.NERVOS_NODE_IP);
+        walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+        if (tokenItem.chainId < 0) {
+            initGasInfo();
+        }
     }
 
     private void initGasInfo() {
@@ -117,6 +117,7 @@ public class TransferActivity extends BaseActivity {
             }
             @Override
             public void onNext(BigInteger gasPrice) {
+                dismissProgressCircle();
                 mGasPrice = gasPrice;
                 mGasUnit = gasPrice.multiply(ConstUtil.GAS_MIN_LIMIT);
                 if (ConstUtil.ETH.equalsIgnoreCase(tokenItem.symbol)) {
@@ -130,12 +131,12 @@ public class TransferActivity extends BaseActivity {
                     double gas = NumberUtil.getEthFromWei(gasPrice.multiply(ConstUtil.GAS_ERC20_LIMIT));
                     feeText.setText(NumberUtil.getDecimal_8(gas) + tokenUnit);
                 }
-                dismissProgressCircle();
             }
         });
     }
 
-    private void initListener() {
+    @Override
+    protected void initAction() {
         scanImage.setOnClickListener((view) -> {
             AndPermission.with(mActivity)
                 .runtime().permission(Permission.Group.CAMERA)
@@ -182,6 +183,13 @@ public class TransferActivity extends BaseActivity {
 
             }
         });
+        feeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isShowSeekBar = !isShowSeekBar;
+                feeSeekBarLayout.setVisibility(isShowSeekBar? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
 
@@ -192,17 +200,13 @@ public class TransferActivity extends BaseActivity {
      */
     private View getConfirmTransferView(BottomSheetDialog sheetDialog) {
         View view = getLayoutInflater().inflate(R.layout.dialog_confirm_transfer, null);
-        TextView toAddress = view.findViewById(R.id.to_address);
-        TextView fromAddress = view.findViewById(R.id.from_address);
-        TextView valueText = view.findViewById(R.id.transfer_value);
-        TextView feeConfirmText = view.findViewById(R.id.transfer_fee);
         ProgressBar progressBar = view.findViewById(R.id.transfer_progress);
 
-        fromAddress.setText(walletItem.address);
-        toAddress.setText(receiveAddressEdit.getText().toString());
-        valueText.setText(transferValueEdit.getText().toString());
-        feeConfirmText.setText(feeText.getText().toString());
-        view.findViewById(R.id.confirm_fee_layout).setVisibility(tokenItem.chainId < 0? View.VISIBLE:View.GONE);
+        ((TextView)view.findViewById(R.id.from_address)).setText(walletItem.address);
+        ((TextView)view.findViewById(R.id.to_address)).setText(receiveAddressEdit.getText().toString());
+        ((TextView)view.findViewById(R.id.transfer_value)).setText(transferValueEdit.getText().toString());
+        ((TextView)view.findViewById(R.id.transfer_fee)).setText(feeText.getText().toString());
+        ((TextView)view.findViewById(R.id.transfer_sum)).setText(feeText.getText().toString());
 
         view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override
