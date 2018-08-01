@@ -17,6 +17,7 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletFragment;
+import org.nervos.neuron.fragment.WalletFragments;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity {
     private RadioGroup navigation;
     private AppFragment appFragment;
     private WalletFragment walletFragment;
+    private WalletFragments walletFragments;
     private SettingsFragment settingsFragment;
     private TransactionFragment transactionFragment;
     private FragmentManager fMgr;
@@ -101,11 +103,17 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 case R.id.navigation_settings:
-                    if (settingsFragment == null) {
-                        settingsFragment = new SettingsFragment();
-                        transaction.add(R.id.fragment, settingsFragment);
+//                    if (settingsFragment == null) {
+//                        settingsFragment = new SettingsFragment();
+//                        transaction.add(R.id.fragment, settingsFragment);
+//                    } else {
+//                        transaction.show(settingsFragment);
+//                    }
+                    if (walletFragments == null) {
+                        walletFragments = new WalletFragments();
+                        transaction.add(R.id.fragment, walletFragments);
                     } else {
-                        transaction.show(settingsFragment);
+                        transaction.show(walletFragments);
                     }
                     break;
                 case R.id.navigation_transaction:
@@ -163,6 +171,9 @@ public class MainActivity extends BaseActivity {
         }
         if (transactionFragment != null) {
             transaction.hide(transactionFragment);
+        }
+        if (walletFragments != null) {
+            transaction.hide(walletFragments);
         }
         if (settingsFragment != null) {
             transaction.hide(settingsFragment);
