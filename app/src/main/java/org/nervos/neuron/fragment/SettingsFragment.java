@@ -1,7 +1,10 @@
 package org.nervos.neuron.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.View;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
@@ -9,6 +12,7 @@ import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.custom.SettingButtonView;
+import org.nervos.neuron.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
@@ -20,6 +24,7 @@ public class SettingsFragment extends NBaseFragment {
     public static final String TAG = SettingsFragment.class.getName();
     private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV;
     private static final int Currency_Code = 10001;
+    private AuthFingerDialog authFingerDialog = null;
 
     @Override
     protected int getContentLayout() {
@@ -37,10 +42,16 @@ public class SettingsFragment extends NBaseFragment {
     @Override
     public void initData() {
         currencySBV.setOther1Text(SharePrefUtil.getString(SharePreConst.Currency, "CNY"));
-        if (SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
-            fingerPrintSBV.setSwitch(true);
+        if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
+            fingerPrintSBV.setVisibility(View.VISIBLE);
+            if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0 && SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
+                fingerPrintSBV.setSwitch(true);
+            } else {
+                SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
+                fingerPrintSBV.setSwitch(false);
+            }
         } else {
-            fingerPrintSBV.setSwitch(false);
+            fingerPrintSBV.setVisibility(View.GONE);
         }
     }
 
@@ -54,9 +65,24 @@ public class SettingsFragment extends NBaseFragment {
             if (is) {
                 //setting fingerprint
                 if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
-                    FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
+                    if (authFingerDialog == null)
+                        authFingerDialog = new AuthFingerDialog(getActivity(), R.style.Theme_AppCompat_Dialog);
+                    authFingerDialog.setOnShowListener((dialogInterface) -> {
+                        FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
+                    });
+                    authFingerDialog.setOnDismissListener((dialog) -> {
+                        FingerPrintController.getInstance(getActivity()).cancelAuth();
+                    });
+                    authFingerDialog.show();
                 } else {
-                    Toast.makeText(getActivity(), "您尚未设置Touch ID，请在手机系统“设置>Touch ID与密码”中添加指纹", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.dialog_title_tip));
+                    builder.setMessage(getResources().getString(R.string.dialog_finger_setting));
+                    builder.setPositiveButton(getResources().getString(R.string.ok), (view, i) -> {
+                        FingerPrintController.openFingerPrintSettingPage(getActivity());
+                        view.dismiss();
+                    });
+                    builder.show();
                 }
             } else {
                 //close fingerprint
@@ -83,12 +109,15 @@ public class SettingsFragment extends NBaseFragment {
         @Override
         public void onAuthenticationSucceeded() {
             fingerPrintSBV.setSwitch(true);
+            if (authFingerDialog != null && authFingerDialog.isShowing())
+                authFingerDialog.dismiss();
             SharePrefUtil.putBoolean(SharePreConst.FingerPrint, true);
+            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onAuthenticationFailed() {
-            Toast.makeText(getContext(), "指纹认证失败！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
     };
 
