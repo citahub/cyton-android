@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:singleLine="true"
-                        android:text="钱包名称"
+                        android:text="@string/wallet_title"
                         android:textColor="@color/font_title"
                         android:textSize="20sp"
                         android:visibility="visible" />
@@ -51,6 +51,12 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
                         android:src="@drawable/ic_wallet_exchange" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/line_form" />
                 </RelativeLayout>
             </org.nervos.neuron.custom.WalletToolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -60,6 +66,54 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:background="@color/line_form" />
+
+        <RelativeLayout
+            android:id="@+id/ll_total_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_total_money_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/wallet_token_total_money"
+                android:textColor="@color/font_title_second"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_total_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/tv_total_money_title"
+                android:textColor="@color/font_title_second"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_add"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dip"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dip"
+                android:src="@drawable/ic_wallet_token_add" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/line_form" />
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 

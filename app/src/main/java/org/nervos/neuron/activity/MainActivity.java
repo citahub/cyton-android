@@ -3,22 +3,20 @@ package org.nervos.neuron.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
-import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
-import org.nervos.neuron.fragment.WalletFragment;
-import org.nervos.neuron.fragment.WalletFragments;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -28,8 +26,7 @@ public class MainActivity extends BaseActivity {
 
     private RadioGroup navigation;
     private AppFragment appFragment;
-    private WalletFragment walletFragment;
-    private WalletFragments walletFragments;
+    private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
     private TransactionFragment transactionFragment;
     private FragmentManager fMgr;
@@ -94,26 +91,20 @@ public class MainActivity extends BaseActivity {
                     if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
                         startActivity(new Intent(mActivity, AddWalletActivity.class));
                     } else {
-                        if (walletFragment == null) {
-                            walletFragment = new WalletFragment();
-                            transaction.add(R.id.fragment, walletFragment);
+                        if (walletsFragment == null) {
+                            walletsFragment = new WalletsFragment();
+                            transaction.add(R.id.fragment, walletsFragment);
                         } else {
-                            transaction.show(walletFragment);
+                            transaction.show(walletsFragment);
                         }
                     }
                     break;
                 case R.id.navigation_settings:
-//                    if (settingsFragment == null) {
-//                        settingsFragment = new SettingsFragment();
-//                        transaction.add(R.id.fragment, settingsFragment);
-//                    } else {
-//                        transaction.show(settingsFragment);
-//                    }
-                    if (walletFragments == null) {
-                        walletFragments = new WalletFragments();
-                        transaction.add(R.id.fragment, walletFragments);
+                    if (settingsFragment == null) {
+                        settingsFragment = new SettingsFragment();
+                        transaction.add(R.id.fragment, settingsFragment);
                     } else {
-                        transaction.show(walletFragments);
+                        transaction.show(settingsFragment);
                     }
                     break;
                 case R.id.navigation_transaction:
@@ -149,7 +140,7 @@ public class MainActivity extends BaseActivity {
         if (TextUtils.isEmpty(tag)) return;
         if (TextUtils.equals(tag, AppFragment.TAG)) {
             navigation.check(R.id.navigation_application);
-        } else if (TextUtils.equals(tag, WalletFragment.TAG)) {
+        } else if (TextUtils.equals(tag, WalletsFragment.TAG)) {
             navigation.check(R.id.navigation_wallet);
         } else if (TextUtils.equals(tag, TransactionFragment.TAG)) {
             navigation.check(R.id.navigation_transaction);
@@ -166,14 +157,11 @@ public class MainActivity extends BaseActivity {
         if (appFragment != null) {
             transaction.hide(appFragment);
         }
-        if (walletFragment != null) {
-            transaction.hide(walletFragment);
-        }
         if (transactionFragment != null) {
             transaction.hide(transactionFragment);
         }
-        if (walletFragments != null) {
-            transaction.hide(walletFragments);
+        if (walletsFragment != null) {
+            transaction.hide(walletsFragment);
         }
         if (settingsFragment != null) {
             transaction.hide(settingsFragment);
