@@ -103,6 +103,13 @@
     <string name="receive_token">收款</string>
     <string name="token_manage">资产管理</string>
     <string name="settings_title">设置</string>
+    <string name="setting_currency">本地货币</string>
+    <string name="setting_fingerprint">指纹设置</string>
+    <string name="dialog_finger_msg">请验证已有指纹</string>
+    <string name="fingerprint_setting_sucess">指纹设置成功！</string>
+    <string name="fingerprint_setting_failed">指纹设置失败！</string>
+    <string name="setting_about_us">关于我们</string>
+    <string name="setting_contact_us">联系我们</string>
     <string name="about_us_title">关于</string>
     <string name="wallet_password_error">钱包密码错误</string>
     <string name="password">密码</string>
@@ -159,6 +166,7 @@
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
     <string name="dialog_title_tip">提示</string>
+    <string name="dialog_finger_setting">您尚未设置Touch ID，请在手机系统“设置>Touch ID与密码”中添加指纹</string>
     <string name="dialog_tip_message">Neuron是Nervos AppChain的开源组件，目前处于beta测试版状态，主要提供给开发者开发、测试DApp，不建议普通用户使用，更不建议您在Neuron中托管大量的数字资产。</string>
     <string name="have_known">知道了</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
