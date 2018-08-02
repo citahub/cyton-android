@@ -179,6 +179,7 @@
     <string name="fast">快</string>
     <string name="custom_gas_price">自定义 Gas Price</string>
     <string name="custom_gas">自定义 Gas</string>
+    <string name="custom_quota">自定义 Quota</string>
     <string name="input_correct_number">请输入格式正确的数字</string>
     <string name="gwei">Gwei</string>
 </resources>

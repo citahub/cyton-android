@@ -192,7 +192,7 @@
 
                 <RelativeLayout
                     android:id="@+id/fee_seek_bar_layout"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
@@ -228,50 +228,76 @@
                         android:textSize="12sp"/>
                 </RelativeLayout>
 
-
                 <LinearLayout
                     android:id="@+id/advanced_setup_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:orientation="vertical">
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp">
-                        <EditText
-                            android:id="@+id/custom_gas_price"
+
+                    <LinearLayout
+                        android:id="@+id/gas_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="40dp">
+                            <EditText
+                                android:id="@+id/custom_gas_price"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="13sp"
+                                android:textColor="@color/default_black"
+                                android:singleLine="true"
+                                android:hint="@string/custom_gas_price"
+                                android:background="@color/white"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:gravity="center_vertical"
+                                android:text="@string/gwei"
+                                android:textColor="@color/default_gray_6"
+                                android:textSize="12sp"/>
+                        </FrameLayout>
+
+
+                        <View style="@style/separateLineLong"/>
+
+                        <EditText
+                            android:id="@+id/custom_gas"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
                             android:textSize="13sp"
                             android:textColor="@color/default_black"
                             android:singleLine="true"
-                            android:hint="@string/custom_gas_price"
+                            android:hint="@string/custom_gas"
                             android:background="@color/white"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            android:gravity="center_vertical"
-                            android:text="@string/gwei"
-                            android:textColor="@color/default_gray_6"
-                            android:textSize="12sp"/>
-                    </FrameLayout>
+                        <View style="@style/separateLineLong"/>
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/quota_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <View style="@style/separateLineLong"/>
+                        <EditText
+                            android:id="@+id/custom_quota"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:textSize="13sp"
+                            android:textColor="@color/default_black"
+                            android:singleLine="true"
+                            android:hint="@string/custom_quota"
+                            android:background="@color/white"/>
 
-                    <EditText
-                        android:id="@+id/custom_gas"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="13sp"
-                        android:textColor="@color/default_black"
-                        android:singleLine="true"
-                        android:hint="@string/custom_gas"
-                        android:background="@color/white"/>
-
-                    <View style="@style/separateLineLong"/>
+                        <View style="@style/separateLineLong"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

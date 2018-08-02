@@ -55,6 +55,8 @@ public class TransferActivity extends NBaseActivity {
     private static final int REQUEST_CODE_SCAN = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
     private static final String tokenUnit = "eth";
+    private static final int MAX_QUOTA_SEEK = 1000;
+    private static final int DEFAULT_QUOTA_SEEK = 8;
     private static final int MAX_FEE = 100;
 
     private TextView walletAddressText, walletNameText, feeSeekText, feeValueText;
@@ -65,14 +67,13 @@ public class TransferActivity extends NBaseActivity {
     private CircleImageView photoImage;
     private AppCompatSeekBar feeSeekBar;
     private RelativeLayout feeSeekBarLayout;
-    private LinearLayout advancedSetupLayout;
-    private EditText customGasPriceEdit, customGasEdit;
+    private LinearLayout advancedSetupLayout, gasEditLayout, quotaEditLayout;
+    private EditText customGasPriceEdit, customGasEdit, customQuotaEdit;
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BottomSheetDialog sheetDialog;
-    private BigInteger mGasPrice, mGasUnit, mGasLimit = BigInteger.ZERO, mQuota;
-    private String transferData;
+    private BigInteger mGasPrice, mGasUnit, mGasLimit = BigInteger.ZERO, mQuota, mQuotaUnit;
     private boolean isGasPriceOk = false, isGasLimitOk = false;
 
     @Override
@@ -97,7 +98,9 @@ public class TransferActivity extends NBaseActivity {
         advancedSetupLayout = findViewById(R.id.advanced_setup_layout);
         customGasPriceEdit = findViewById(R.id.custom_gas_price);
         customGasEdit = findViewById(R.id.custom_gas);
-        feeSeekBar.setMax(MAX_FEE);
+        customQuotaEdit = findViewById(R.id.custom_quota);
+        gasEditLayout = findViewById(R.id.gas_layout);
+        quotaEditLayout = findViewById(R.id.quota_layout);
 
     }
 
@@ -111,10 +114,11 @@ public class TransferActivity extends NBaseActivity {
         walletNameText.setText(walletItem.name);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         if (isETH()) {
+            feeSeekBar.setMax(MAX_FEE);
             initGasInfo();
         } else {
-            mQuota = TextUtils.isEmpty(tokenItem.contractAddress)?
-                    ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+            feeSeekBar.setMax(MAX_QUOTA_SEEK);
+            initQuota();
         }
     }
 
@@ -145,6 +149,16 @@ public class TransferActivity extends NBaseActivity {
                 feeValueText.setText(feeSeekText.getText());
             }
         });
+    }
+
+    private void initQuota() {
+        mQuota = TextUtils.isEmpty(tokenItem.contractAddress)?
+                ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+        mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
+        feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
+
+        feeSeekText.setText(mQuota.toString());
+        feeValueText.setText(feeSeekText.getText());
     }
 
     @Override
@@ -178,13 +192,15 @@ public class TransferActivity extends NBaseActivity {
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress <= 1) {
-                    feeSeekText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(mGasUnit)) + tokenUnit);
+                progress = progress < 1? 1 : progress;
+                if (isETH()) {
+                    BigInteger gas = mGasUnit.multiply(BigInteger.valueOf(progress));
+                    mGasLimit = mGasLimit.multiply(BigInteger.valueOf(progress));
+                    feeSeekText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(gas)) + tokenUnit);
                     feeValueText.setText(feeSeekText.getText());
                 } else {
-                    mGasPrice = mGasPrice.multiply(BigInteger.valueOf(progress));
-                    BigInteger gas = mGasUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(gas)) + tokenUnit);
+                    mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
+                    feeSeekText.setText(mQuota.toString());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -203,12 +219,14 @@ public class TransferActivity extends NBaseActivity {
                 if (isChecked) {
                     feeSeekBarLayout.setVisibility(View.GONE);
                     advancedSetupLayout.setVisibility(View.VISIBLE);
-
-                    advancedSetupFeeValue();
+                    if (isETH()) {
+                        advancedSetupETHFeeValue();
+                    } else {
+                        advancedSetupNervosFeeValue();
+                    }
                 } else {
                     feeSeekBarLayout.setVisibility(View.VISIBLE);
                     advancedSetupLayout.setVisibility(View.GONE);
-
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -225,7 +243,7 @@ public class TransferActivity extends NBaseActivity {
                     double price = Double.parseDouble(s.toString());
                     isGasPriceOk = (price > 0);
                     mGasPrice = Convert.toWei(s.toString(), Convert.Unit.GWEI).toBigInteger();
-                    advancedSetupFeeValue();
+                    advancedSetupETHFeeValue();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
@@ -247,9 +265,31 @@ public class TransferActivity extends NBaseActivity {
                     double limit = Double.parseDouble(s.toString());
                     isGasLimitOk = (limit > 0);
                     mGasLimit = new BigInteger(s.toString());
-                    advancedSetupFeeValue();
+                    advancedSetupETHFeeValue();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        customQuotaEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    mQuota = new BigInteger(s.toString());
+                    advancedSetupNervosFeeValue();
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    mQuota = BigInteger.ZERO;
+                    advancedSetupNervosFeeValue();
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -264,7 +304,9 @@ public class TransferActivity extends NBaseActivity {
         return tokenItem.chainId < 0;
     }
 
-    private void advancedSetupFeeValue() {
+    private void advancedSetupETHFeeValue() {
+        gasEditLayout.setVisibility(View.VISIBLE);
+        quotaEditLayout.setVisibility(View.GONE);
         if (isGasLimitOk && isGasPriceOk) {
             feeValueText.setText(NumberUtil.getDecimal_8(
                     NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit))) + tokenUnit);
@@ -273,6 +315,16 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
+
+    private void advancedSetupNervosFeeValue() {
+        gasEditLayout.setVisibility(View.GONE);
+        quotaEditLayout.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
+            feeValueText.setText(mQuota.toString());
+        } else {
+            feeValueText.setText("0");
+        }
+    }
 
     /**
      * struct confirm transfer view
