@@ -58,10 +58,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activity.AdvancedSetupActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.WalletManageActivity"
             android:screenOrientation="portrait"

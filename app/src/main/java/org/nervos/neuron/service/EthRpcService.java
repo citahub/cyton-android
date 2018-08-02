@@ -89,7 +89,14 @@ public class EthRpcService {
     }
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,
-                                                             BigInteger gasPrice, String password) {
+                               BigInteger gasPrice, String password) {
+        return transferEth(address, value, gasPrice, ConstUtil.GAS_LIMIT, password);
+    }
+
+    public static Observable<EthSendTransaction> transferEth(String address, double value,
+                                       BigInteger gasPrice, BigInteger gasLimit, String password) {
+        gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
+        BigInteger finalGasLimit = gasLimit;
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
@@ -104,7 +111,7 @@ public class EthRpcService {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
                     RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
-                            gasPrice, ConstUtil.GAS_LIMIT, address, NumberUtil.getWeiFromEth(value));
+                            gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value));
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {
@@ -195,9 +202,17 @@ public class EthRpcService {
 
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
-                                           double value, BigInteger gasPrice, String password) {
+                           double value, BigInteger gasPrice, String password) {
+        return transferErc20(tokenItem, address, value, gasPrice, ConstUtil.GAS_ERC20_LIMIT, password);
+    }
+
+
+    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
+                    double value, BigInteger gasPrice, BigInteger gasLimit, String password) {
         BigInteger transferValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, transferValue);
+        gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_ERC20_LIMIT : gasLimit;
+        BigInteger finalGasLimit = gasLimit;
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
@@ -212,7 +227,7 @@ public class EthRpcService {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
                     RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
-                            gasPrice, ConstUtil.GAS_ERC20_LIMIT, tokenItem.contractAddress, data);
+                            gasPrice, finalGasLimit, tokenItem.contractAddress, data);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {

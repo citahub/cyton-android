@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/default_background"
@@ -13,266 +13,364 @@
         android:background="@color/colorPrimary"
         app:title="@string/title_transfer"
         app:isShowLeft="true"/>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:background="@color/white"
-        android:layout_margin="@dimen/default_margin">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/wallet_photo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/default_margin"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/default_gray_d5"/>
-
-        <TextView
-            android:id="@+id/wallet_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/wallet_photo"
-            android:layout_alignTop="@id/wallet_photo"
-            android:textSize="15sp"
-            android:textColor="@color/default_black"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"/>
-
-        <TextView
-            android:id="@+id/wallet_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@color/default_gray_9"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_toEndOf="@id/wallet_photo"
-            android:layout_alignBottom="@id/wallet_photo"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@android:color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/transfer_token_type"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/token_type_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/triangle"/>
-
-        <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/spinner_wallet_token_type"
-            android:layout_marginStart="5dp"
-            android:background="@android:color/white"
-            android:layout_toStartOf="@id/triangle_spinner"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"/>
-
-    </RelativeLayout>
-
-    <View style="@style/separateLineShort"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/token_transfer_value"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <TextView
-            android:id="@+id/wallet_balance_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/font_blue"
-            android:textSize="12sp"/>
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/transfer_value"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:inputType="numberDecimal"
-        android:hint="@string/token_transfer_value"
-        android:textSize="20sp"
-        android:background="@color/white"
-        android:gravity="start|center_vertical"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="@dimen/default_margin"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@android:color/white"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/transfer_address_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/receive_address"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/transfer_address_scan"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/scan"/>
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/transfer_address"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@color/white"
-        android:hint="@string/input_receive_address_hint"
-        android:textSize="12sp"
-        android:gravity="start|center_vertical"/>
-
-    <RelativeLayout
-        android:id="@+id/fee_layout"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_height="48dp"
-        android:background="@color/white">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/default_margin"
-            android:layout_centerVertical="true"
-            android:text="@string/fee_value"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/right_arrow"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/right_arrow"
-            android:scaleType="centerInside"
-            android:layout_alignParentEnd="true"/>
-
-        <TextView
-            android:id="@+id/fee_value_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/right_arrow"
-            android:layout_centerVertical="true"
-            android:textSize="12sp"
-            android:textColor="@color/font_blue" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/fee_seek_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp">
-
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/fee_seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="5dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fee_seek_bar"
-            android:text="@string/slow"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_6" />
-        <TextView
-            android:id="@+id/fee_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fee_seek_bar"
-            android:textColor="@color/default_gray_6"
-            android:textSize="12sp"
-            android:layout_centerHorizontal="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fee_seek_bar"
-            android:text="@string/fast"
-            android:textSize="12sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/default_gray_6" />
-
-        <ToggleButton
-            android:id="@+id/advanced_setup_toggle"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/fee_text"
-            android:layout_alignParentEnd="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:layout_alignTop="@id/advanced_setup_toggle"
-            android:layout_toStartOf="@id/advanced_setup_toggle"
-            android:text="@string/advanced_setup"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_6" />
-    </RelativeLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/next_action_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_margin="@dimen/default_margin"
         android:background="@drawable/button_corner_blue_shape"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentBottom="true"
         android:textSize="15sp"
         android:textColor="@color/white"
         android:text="@string/next_action"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_above="@id/next_action_button">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:background="@color/white"
+                android:layout_margin="@dimen/default_margin">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/wallet_photo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/default_gray_d5"/>
+
+                <TextView
+                    android:id="@+id/wallet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/wallet_photo"
+                    android:layout_alignTop="@id/wallet_photo"
+                    android:textSize="15sp"
+                    android:textColor="@color/default_black"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"/>
+
+                <TextView
+                    android:id="@+id/wallet_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/default_gray_9"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_toEndOf="@id/wallet_photo"
+                    android:layout_alignBottom="@id/wallet_photo"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/token_transfer_value"
+                    android:textColor="@color/font_black"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/wallet_balance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/font_blue"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/transfer_value"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:inputType="numberDecimal"
+                android:hint="@string/token_transfer_value"
+                android:textSize="20sp"
+                android:background="@color/white"
+                android:gravity="start|center_vertical"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/transfer_address_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/receive_address"
+                    android:textColor="@color/font_black"
+                    android:textSize="15sp"/>
+
+                <ImageView
+                    android:id="@+id/transfer_address_scan"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/scan"/>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/transfer_address"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:background="@color/white"
+                android:hint="@string/input_receive_address_hint"
+                android:textSize="12sp"
+                android:gravity="start|center_vertical"/>
+
+            <RelativeLayout
+                android:id="@+id/fee_layout"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/default_margin"
+                android:paddingLeft="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:layout_height="48dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/fee_value"
+                    android:textColor="@color/font_black"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/fee_value_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="12sp"
+                    android:textColor="@color/default_black" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@color/white"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin">
+
+                <RelativeLayout
+                    android:id="@+id/fee_seek_bar_layout"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/slow"
+                        android:textSize="12sp"
+                        android:textColor="@color/default_gray_6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fast"
+                        android:textSize="12sp"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/default_gray_6" />
+
+                    <android.support.v7.widget.AppCompatSeekBar
+                        android:id="@+id/fee_seek_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"/>
+
+                    <TextView
+                        android:id="@+id/fee_seek_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:layout_below="@id/fee_seek_bar"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:textColor="@color/default_gray_6"
+                        android:textSize="12sp"/>
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/advanced_setup_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+                        <EditText
+                            android:id="@+id/custom_gas_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="13sp"
+                            android:textColor="@color/default_black"
+                            android:singleLine="true"
+                            android:hint="@string/custom_gas_price"
+                            android:background="@color/white"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="center_vertical"
+                            android:text="@string/gwei"
+                            android:textColor="@color/default_gray_6"
+                            android:textSize="12sp"/>
+                    </FrameLayout>
+
+
+                    <View style="@style/separateLineLong"/>
+
+                    <EditText
+                        android:id="@+id/custom_gas"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/default_black"
+                        android:singleLine="true"
+                        android:hint="@string/custom_gas"
+                        android:background="@color/white"/>
+
+                    <View style="@style/separateLineLong"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:orientation="vertical">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/rectangle_border_gray_corner">
+
+                                <View
+                                    android:id="@+id/pay_separate"
+                                    android:layout_width="0.5dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/default_gray_d5"
+                                    android:layout_centerInParent="true"/>
+
+                                <LinearLayout
+                                    android:id="@+id/sign_hex_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_toStartOf="@id/pay_separate"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="37dp"
+                                        android:gravity="center"
+                                        android:text="@string/hex"
+                                        android:textColor="@color/default_black"
+                                        android:textSize="13sp"/>
+
+                                    <View
+                                        android:id="@+id/pay_data_left_line"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="3dp"
+                                        android:background="@color/colorPrimary"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/sign_utf8_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_toEndOf="@id/pay_separate"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="37dp"
+                                        android:gravity="center"
+                                        android:text="@string/utf8"
+                                        android:textColor="@color/default_black"
+                                        android:textSize="13sp"/>
+
+                                    <View
+                                        android:id="@+id/pay_data_right_line"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="3dp"
+                                        android:visibility="gone"
+                                        android:background="@color/colorPrimary"/>
+                                </LinearLayout>
+
+                            </RelativeLayout>
+
+                            <EditText
+                                android:id="@+id/pay_data"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:layout_marginTop="-1dp"
+                                android:background="@drawable/rectangle_border_gray_corner"
+                                android:padding="10dp"
+                                android:gravity="start"
+                                android:textSize="13sp"
+                                android:textColor="@color/default_black"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/advanced_setup"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/advanced_setup"
+                    android:textColor="@color/default_black"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
