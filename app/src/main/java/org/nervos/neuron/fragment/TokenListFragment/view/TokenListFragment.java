@@ -179,7 +179,7 @@ public class TokenListFragment extends NBaseFragment {
                             TokenCurrencyManager.getTokenCurrency(item.currencyID, currencyItem.getName()).subscribe(new Subscriber<String>() {
                                 @Override
                                 public void onCompleted() {
-                                    LogUtil.e("Token", item.symbol + ">>" + item.currencyPrice);
+//                                    LogUtil.e("Token", item.symbol + ">>" + item.currencyPrice);
                                     adapter.notifyDataSetChanged();
                                     moneyText.setText(presenter.getTotalMoney(tokenItemList));
                                 }

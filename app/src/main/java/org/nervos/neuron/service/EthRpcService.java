@@ -62,7 +62,7 @@ public class EthRpcService {
     public static double getEthBalance(String address) {
         try {
             EthGetBalance ethGetBalance = service.ethGetBalance(address,
-                    DefaultBlockParameterName.EARLIEST).send();
+                    DefaultBlockParameterName.LATEST).send();
             if (ethGetBalance != null) {
                 return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
             }
