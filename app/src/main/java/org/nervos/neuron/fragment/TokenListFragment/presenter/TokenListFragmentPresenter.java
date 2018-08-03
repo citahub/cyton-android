@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.SharePreConst;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.List;
@@ -29,6 +30,19 @@ public class TokenListFragmentPresenter {
             }
             return money + "";
         }
+    }
+
+    public String getTotalMoneyTitle() {
+        String str = activity.getResources().getString(R.string.wallet_token_unit_CNY);
+        switch (SharePrefUtil.getString(SharePreConst.Currency, "CNY")) {
+            case "CNY":
+                str = activity.getResources().getString(R.string.wallet_token_unit_CNY);
+                break;
+            case "USD":
+                str = activity.getResources().getString(R.string.wallet_token_unit_USD);
+                break;
+        }
+        return "（" + str + "）";
     }
 
 }

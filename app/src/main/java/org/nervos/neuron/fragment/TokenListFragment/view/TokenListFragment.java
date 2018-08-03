@@ -1,13 +1,18 @@
 package org.nervos.neuron.fragment.TokenListFragment.view;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.TokenListFragment.model.TokenAdapter;
@@ -15,6 +20,7 @@ import org.nervos.neuron.fragment.TokenListFragment.presenter.TokenListFragmentP
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.util.ArrayList;
@@ -30,7 +36,9 @@ public class TokenListFragment extends NBaseFragment {
     private List<TokenItem> tokenItemList = new ArrayList<>();
     private TokenAdapter adapter;
     private LinearLayout noTokenRoot;
-    private TokenListFragmentImpl listener = null;
+    private RelativeLayout totalMoneyRoot;
+    private TextView totalText, moneyText;
+    private ImageView addImage;
 
     @Override
     protected int getContentLayout() {
@@ -41,6 +49,10 @@ public class TokenListFragment extends NBaseFragment {
     protected void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.rv_token);
         noTokenRoot = (LinearLayout) findViewById(R.id.ll_no_token);
+        totalMoneyRoot = (RelativeLayout) findViewById(R.id.ll_total_money);
+        totalText = (TextView) findViewById(R.id.tv_total_money_title);
+        moneyText = (TextView) findViewById(R.id.tv_total_money);
+        addImage = (ImageView) findViewById(R.id.iv_add);
     }
 
     @Override
@@ -49,24 +61,27 @@ public class TokenListFragment extends NBaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new TokenAdapter(getActivity(), this.tokenItemList);
         recyclerView.setAdapter(adapter);
+        LogUtil.e("Token", "initData");
         initWalletData(true);
+        totalText.setText(getResources().getString(R.string.wallet_total_money) + presenter.getTotalMoneyTitle());
     }
 
     @Override
     protected void initAction() {
-    }
-
-    public void setListener(TokenListFragmentImpl listener) {
-        this.listener = listener;
+        addImage.setOnClickListener((view) -> {
+            startActivity(new Intent(getActivity(), TokenManageActivity.class));
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
+        LogUtil.e("Token", "onWalletSaveEvent");
         initWalletData(true);
     }
 
     private void initWalletData(boolean showProgress) {
         WalletItem walletItem1 = DBWalletUtil.getCurrentWallet(getContext());
+        LogUtil.e("Token", walletItem1.tokenItems.size() + "");
         if (showProgress) showProgressBar();
         WalletService.getWalletTokenBalance(getContext(), walletItem1, walletItem ->
                 recyclerView.post(() -> {
@@ -87,13 +102,8 @@ public class TokenListFragment extends NBaseFragment {
             recyclerView.setVisibility(View.VISIBLE);
             noTokenRoot.setVisibility(View.GONE);
             adapter.refresh(this.tokenItemList);
-            if (listener != null)
-                listener.setTotalMoney(presenter.getTotalMoney(this.tokenItemList));
+            moneyText.setText(presenter.getTotalMoney(this.tokenItemList));
         }
-    }
-
-    public interface TokenListFragmentImpl {
-        void setTotalMoney(String money);
     }
 
 }

@@ -22,7 +22,7 @@ public abstract class NBaseFragment extends BaseFragment {
         } else {
             isFirstLoad = false;
             ViewGroup vp = (ViewGroup) contentView.getParent();
-            if(null != vp) {
+            if (null != vp) {
                 vp.removeView(contentView);
             }
         }
@@ -39,31 +39,17 @@ public abstract class NBaseFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 设置布局文件
-     *
-     */
     protected abstract int getContentLayout();
 
-    /**
-     * 控件初始化
-     *
-     */
-    protected void initView() {};
+    protected void initView() {
+    }
 
-    /**
-     * 事件监听
-     */
-    protected void initAction() {};
+    protected void initAction() {
+    }
 
-    /**
-     * 数据处理
-     */
-    protected void initData() {};
+    protected void initData() {
+    }
 
-    /**
-     * 查找控件
-     */
     public View findViewById(int id) {
         View v = null;
         if (contentView != null) {

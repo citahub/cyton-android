@@ -9,16 +9,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
-import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.custom.WalletToolbar;
 import org.nervos.neuron.custom.WalletTopView;
 import org.nervos.neuron.fragment.NBaseFragment;
+import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.TokenListFragment.view.TokenListFragment;
 import org.nervos.neuron.fragment.WalletsFragment.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.item.WalletItem;
@@ -39,9 +36,6 @@ public class WalletsFragment extends NBaseFragment {
     private WalletTopView walletView;
     private WalletItem walletItem;
     private TokenListFragment tokenListFragment;
-    private RelativeLayout totalMoneyRoot;
-    private TextView totalText, moneyText;
-    private ImageView addImage;
     private WalletFragmentPresenter presenter;
 
     private String[] mTitles = {"代币", "藏品"};
@@ -59,10 +53,7 @@ public class WalletsFragment extends NBaseFragment {
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         toolbar = (WalletToolbar) findViewById(R.id.toolbar);
         walletView = (WalletTopView) findViewById(R.id.wallet_view);
-        totalMoneyRoot = (RelativeLayout) findViewById(R.id.ll_total_money);
-        totalText = (TextView) findViewById(R.id.tv_total_money_title);
-        moneyText = (TextView) findViewById(R.id.tv_total_money);
-        addImage = (ImageView) findViewById(R.id.iv_add);
+
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
         mNestedScrollView.setFillViewport(true);
 
@@ -78,16 +69,8 @@ public class WalletsFragment extends NBaseFragment {
             presenter.setIndicator(mTabLayout, 70, 70);
         });
         tokenListFragment = new TokenListFragment();
-        tokenListFragment.setListener(new TokenListFragment.TokenListFragmentImpl() {
-            @Override
-            public void setTotalMoney(String money) {
-                moneyText.setText(money);
-            }
-
-        });
         presenter = new WalletFragmentPresenter(getActivity());
         initWalletData();
-        totalText.setText(getResources().getString(R.string.wallet_total_money) + presenter.getTotalMoneyTitle());
     }
 
     @Override
@@ -99,20 +82,12 @@ public class WalletsFragment extends NBaseFragment {
                 toolbar.setAlpha(0.0f);
                 toolbar.setVisibility(View.GONE);
                 walletView.setAlpha(1.0f);
-//                totalMoneyRoot.setAlpha(1.0f);
-                totalMoneyRoot.setVisibility(View.VISIBLE);
             } else {
                 float alfha = Math.round(100.0f * Math.abs(verticalOffset) / scrollRangle) / 100.0f;
                 toolbar.setAlpha(alfha);
                 toolbar.setVisibility(View.VISIBLE);
                 walletView.setAlpha(1.0f - alfha);
-//                totalMoneyRoot.setAlpha(1.0f - alfha);
-                if (alfha == 1.0f)
-                    totalMoneyRoot.setVisibility(View.GONE);
             }
-        });
-        addImage.setOnClickListener((view) -> {
-            startActivity(new Intent(getActivity(), TokenManageActivity.class));
         });
     }
 
@@ -133,10 +108,10 @@ public class WalletsFragment extends NBaseFragment {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 1:
+                case 0:
                     return tokenListFragment;
-                case 2:
-                    return new TokenListFragment();
+                case 1:
+                    return new SettingsFragment();
                 default:
                     return new TokenListFragment();
             }

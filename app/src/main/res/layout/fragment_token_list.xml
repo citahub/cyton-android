@@ -1,44 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_token"
+        <RelativeLayout
+            android:id="@+id/ll_total_money"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/ll_no_token"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="90dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/empty" />
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <TextView
-                android:id="@+id/empty_text"
+                android:id="@+id/tv_total_money_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:text="@string/empty_no_token_data"
-                android:textColor="@color/default_gray_6"
-                android:textSize="16sp" />
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/wallet_token_total_money"
+                android:textColor="@color/font_title_second"
+                android:textSize="14sp" />
 
-        </LinearLayout>
-    </FrameLayout>
+            <TextView
+                android:id="@+id/tv_total_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/tv_total_money_title"
+                android:textColor="@color/font_title_second"
+                android:textSize="14sp" />
 
+            <ImageView
+                android:id="@+id/iv_add"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dip"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dip"
+                android:src="@drawable/ic_wallet_token_add" />
 
-</LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/line_form" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_token"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ll_no_token"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="90dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/empty" />
+
+                <TextView
+                    android:id="@+id/empty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/empty_no_token_data"
+                    android:textColor="@color/default_gray_6"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
