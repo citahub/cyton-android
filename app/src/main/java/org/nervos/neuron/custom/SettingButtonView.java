@@ -15,11 +15,13 @@ import org.nervos.neuron.R;
  */
 public class SettingButtonView extends ConstraintLayout {
 
-    private ImageView iconImage, openImage;
+    private ImageView iconImage, openImage, switchImage;
     private TextView nameText, otherText;
     private TypedArray ta;
     private openListener openListener = null;
+    private switchListener switchListener = null;
     private ConstraintLayout root;
+    private boolean switchStatus = false;
 
     public SettingButtonView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +39,7 @@ public class SettingButtonView extends ConstraintLayout {
         otherText = findViewById(R.id.tv_other);
         openImage = findViewById(R.id.iv_setting_open);
         root = findViewById(R.id.root);
+        switchImage = findViewById(R.id.iv_setting_switch);
     }
 
     private void initData() {
@@ -49,6 +52,11 @@ public class SettingButtonView extends ConstraintLayout {
             otherText.setVisibility(VISIBLE);
         else
             otherText.setVisibility(GONE);
+        boolean switchButton = ta.getBoolean(R.styleable.SettingButtonView_switch_button, false);
+        if (switchButton)
+            switchImage.setVisibility(VISIBLE);
+        else
+            switchImage.setVisibility(GONE);
         ta.recycle();
     }
 
@@ -58,9 +66,21 @@ public class SettingButtonView extends ConstraintLayout {
     }
 
     public void setOpenListener(openListener openListener) {
-        if (openListener != null) {
-            this.openListener = openListener;
-            openImage.setVisibility(VISIBLE);
+        this.openListener = openListener;
+        openImage.setVisibility(VISIBLE);
+    }
+
+    public void setSwitchListener(switchListener switchListener) {
+        this.switchListener = switchListener;
+    }
+
+    public void setSwitch(boolean is) {
+        if (is) {
+            switchStatus = true;
+            switchImage.setImageResource(R.drawable.ic_setting_onoff_on);
+        } else {
+            switchStatus = false;
+            switchImage.setImageResource(R.drawable.ic_setting_onoff_off);
         }
     }
 
@@ -69,9 +89,18 @@ public class SettingButtonView extends ConstraintLayout {
             if (openListener != null)
                 openListener.open();
         });
+        switchImage.setOnClickListener((view) -> {
+            if (switchListener != null) {
+                switchListener.click(!switchStatus);
+            }
+        });
     }
 
     public interface openListener {
         void open();
+    }
+
+    public interface switchListener {
+        void click(boolean is);
     }
 }

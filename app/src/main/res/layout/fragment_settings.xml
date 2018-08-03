@@ -28,15 +28,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_localcoin"
-            app:name="本地货币"
+            app:name="@string/setting_currency"
             app:other1="true" />
+
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_fingerprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_fingerprint"
+            app:name="@string/setting_fingerprint"
+            app:other1="false"
+            app:switch_button="true" />
 
         <org.nervos.neuron.custom.SettingButtonView
             android:id="@+id/sbv_about_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_about_us"
-            app:name="关于我们"
+            app:name="@string/setting_about_us"
             app:other1="false" />
 
         <org.nervos.neuron.custom.SettingButtonView
@@ -44,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_contact_us"
-            app:name="联系我们"
+            app:name="@string/setting_contact_us"
             app:other1="false" />
     </LinearLayout>
 </LinearLayout>

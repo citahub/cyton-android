@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.util.SharePreConst;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 /**
@@ -76,14 +77,14 @@ public class CurrencyActivity extends NBaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String currency = currencyArray.get(position);
-            if (SharePrefUtil.getString("Currency", "CNY").equals(currency)) {
+            if (SharePrefUtil.getString(SharePreConst.Currency, "CNY").equals(currency)) {
                 holder.chosenImage.setVisibility(View.VISIBLE);
             } else {
                 holder.chosenImage.setVisibility(View.GONE);
             }
             holder.currencyText.setText(currency);
             holder.root.setOnClickListener((view) -> {
-                SharePrefUtil.putString("Currency", currency);
+                SharePrefUtil.putString(SharePreConst.Currency, currency);
                 notifyDataSetChanged();
             });
         }
