@@ -62,7 +62,7 @@ public class EthRpcService {
     public static double getEthBalance(String address) {
         try {
             EthGetBalance ethGetBalance = service.ethGetBalance(address,
-                    DefaultBlockParameterName.LATEST).send();
+                    DefaultBlockParameterName.EARLIEST).send();
             if (ethGetBalance != null) {
                 return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
             }
@@ -85,7 +85,7 @@ public class EthRpcService {
                 return gasPrice;
             }
         }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,
@@ -114,7 +114,7 @@ public class EthRpcService {
             }
         }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
             @Override
-            public Observable<EthSendTransaction> call(String hexValue){
+            public Observable<EthSendTransaction> call(String hexValue) {
                 try {
                     EthSendTransaction ethSendTransaction =
                             service.ethSendRawTransaction(hexValue).sendAsync().get();
@@ -125,8 +125,8 @@ public class EthRpcService {
                 return Observable.just(null);
             }
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -142,21 +142,23 @@ public class EthRpcService {
                 return null;
             }
         }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<EthGetTransactionReceipt>() {
-            @Override
-            public void onCompleted() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<EthGetTransactionReceipt>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                LogUtil.d("transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
+                        LogUtil.d("transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
+                    }
+                });
     }
 
 
@@ -180,12 +182,12 @@ public class EthRpcService {
             Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
                     ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
             String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-            if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+            if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
                 initIntTypes();
                 Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
                 double balances = balance.getValue().doubleValue();
                 if (decimal == 0) return balances;
-                else return balances/(Math.pow(10, decimal));
+                else return balances / (Math.pow(10, decimal));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,7 +197,7 @@ public class EthRpcService {
 
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
-                                           double value, BigInteger gasPrice, String password) {
+                                                               double value, BigInteger gasPrice, String password) {
         BigInteger transferValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, transferValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -222,7 +224,7 @@ public class EthRpcService {
             }
         }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
             @Override
-            public Observable<EthSendTransaction> call(String hexValue){
+            public Observable<EthSendTransaction> call(String hexValue) {
                 try {
                     EthSendTransaction ethSendTransaction =
                             service.ethSendRawTransaction(hexValue).sendAsync().get();
@@ -233,24 +235,25 @@ public class EthRpcService {
                 return Observable.just(null);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
     private static BigInteger getTransferValue(TokenItem tokenItem, double value) {
         StringBuilder sb = new StringBuilder("1");
-        for(int i = 0; i < tokenItem.decimals; i++) {
+        for (int i = 0; i < tokenItem.decimals; i++) {
             sb.append("0");
         }
         BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long)(ConstUtil.LONG_6*value)))
+        return ERC20Decimal.multiply(BigInteger.valueOf((long) (ConstUtil.LONG_6 * value)))
                 .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
 
     private static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
-        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+        });
         Function function = new Function("transfer", params, returnTypes);
         return FunctionEncoder.encode(function);
     }
@@ -284,6 +287,7 @@ public class EthRpcService {
 
 
     private static List<TypeReference<Type>> intTypes = new ArrayList<>();
+
     private static void initIntTypes() {
         intTypes.clear();
         intTypes.add(new TypeReference<Type>() {
@@ -295,6 +299,7 @@ public class EthRpcService {
     }
 
     private static List<TypeReference<Type>> stringTypes = new ArrayList<>();
+
     private static void initStringTypes() {
         stringTypes.clear();
         stringTypes.add(new TypeReference<Type>() {
@@ -304,7 +309,6 @@ public class EthRpcService {
             }
         });
     }
-
 
 
 }

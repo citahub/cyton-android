@@ -55,4 +55,8 @@ public class ConstUtil {
     public static final String DECIMALS_HASH = "313ce567";
     public static final String BALANCEOF_HASH = "70a08231";
 
+
+    //Token Currency ID Price
+    public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";
+    public static final String Token_CURRENCY = "https://api.coinmarketcap.com/v2/ticker/@ID/?convert=@Currency";
 }

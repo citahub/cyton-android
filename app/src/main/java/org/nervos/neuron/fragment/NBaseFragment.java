@@ -34,8 +34,8 @@ public abstract class NBaseFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if (isFirstLoad) {
             initView();
-            initAction();
             initData();
+            initAction();
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dip"
     android:layout_marginLeft="20dp">
@@ -43,8 +44,8 @@
             app:layout_constraintTop_toBottomOf="@id/token_name" />
 
         <TextView
-            android:id="@+id/token_amount"
-            android:layout_width="wrap_content"
+            android:id="@+id/token_balance"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="1000"
             android:textColor="@color/font_title"
@@ -60,7 +61,7 @@
             android:textColor="@color/font_title_second"
             android:textSize="14sp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/token_amount" />
+            app:layout_constraintTop_toBottomOf="@id/token_balance" />
 
     </android.support.constraint.ConstraintLayout>
 

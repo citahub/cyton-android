@@ -3,10 +3,14 @@ package org.nervos.neuron.fragment.TokenListFragment.presenter;
 import android.app.Activity;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.CurrencyActivity;
+import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.SharePreConst;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,25 +28,28 @@ public class TokenListFragmentPresenter {
         if (tokenItemList.size() == 0) {
             return "0";
         } else {
-            int money = 0;
+            double money = 0;
             for (TokenItem tokenItem : tokenItemList) {
-                money += tokenItem.balance;
+                money += tokenItem.currencyPrice;
             }
-            return money + "";
+            DecimalFormat df = new DecimalFormat("######0.00");
+            return df.format(money);
         }
     }
 
-    public String getTotalMoneyTitle() {
-        String str = activity.getResources().getString(R.string.wallet_token_unit_CNY);
-        switch (SharePrefUtil.getString(SharePreConst.Currency, "CNY")) {
-            case "CNY":
-                str = activity.getResources().getString(R.string.wallet_token_unit_CNY);
+    public CurrencyItem getCurrencyItem() {
+        CurrencyItem currencyItem = null;
+        ArrayList<CurrencyItem> list = CurrencyActivity.setArray(activity);
+        String currencyName = SharePrefUtil.getString(SharePreConst.Currency, "CNY");
+        for (CurrencyItem item : list) {
+            if (item.getName().equals(currencyName)) {
+                currencyItem = item;
                 break;
-            case "USD":
-                str = activity.getResources().getString(R.string.wallet_token_unit_USD);
-                break;
+            }
         }
-        return "（" + str + "）";
+        if (currencyItem == null)
+            currencyItem = list.get(0);
+        return currencyItem;
     }
 
 }

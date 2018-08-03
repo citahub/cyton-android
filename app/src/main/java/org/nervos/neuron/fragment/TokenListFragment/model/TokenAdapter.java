@@ -13,14 +13,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.CurrencyActivity;
+import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.List;
 
 public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> {
 
-    public OnItemClickListener onItemClickListener;
+    public TokenAdapterListener listener;
     private Activity activity;
     private List<TokenItem> tokenItemList;
 
@@ -34,8 +37,8 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public void setTokenAdapterListener(TokenAdapterListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -65,15 +68,19 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         }
         if (tokenItem != null) {
             holder.tokenName.setText(tokenItem.symbol);
-            holder.tokenAmount.setText(NumberUtil.getDecimal_6(tokenItem.balance));
+            holder.tokenBalance.setText(NumberUtil.getDecimal_6(tokenItem.balance));
         }
         if (!TextUtils.isEmpty(tokenItem.chainName)) {
             holder.tokenNetworkText.setText(tokenItem.chainName);
         } else {
             if (tokenItem.chainId < 0) {
                 holder.tokenNetworkText.setText(activity.getString(R.string.ethereum_mainnet));
-            } else {
             }
+        }
+        if (tokenItem.currencyPrice == 0.00) {
+            holder.tokenCurrencyText.setText("");
+        } else {
+            holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() + tokenItem.currencyPrice);
         }
     }
 
@@ -85,27 +92,29 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     class TokenViewHolder extends RecyclerView.ViewHolder {
         ImageView tokenImage;
         TextView tokenName;
-        TextView tokenAmount;
+        TextView tokenBalance;
         TextView tokenNetworkText;
         TextView tokenCurrencyText;
 
         public TokenViewHolder(View view) {
             super(view);
             view.setOnClickListener((v) -> {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, (int) v.getTag());
+                if (listener != null) {
+                    listener.onItemClick(v, (int) v.getTag());
                 }
             });
             tokenImage = view.findViewById(R.id.token_image);
             tokenName = view.findViewById(R.id.token_name);
-            tokenAmount = view.findViewById(R.id.token_amount);
+            tokenBalance = view.findViewById(R.id.token_balance);
             tokenNetworkText = view.findViewById(R.id.token_network);
             tokenCurrencyText = view.findViewById(R.id.token_currency);
         }
     }
 
-    private interface OnItemClickListener {
+    public interface TokenAdapterListener {
         void onItemClick(View view, int position);
+
+        CurrencyItem getCurrency();
     }
 
 }

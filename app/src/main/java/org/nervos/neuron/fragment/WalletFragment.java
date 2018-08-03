@@ -265,7 +265,7 @@ public class WalletFragment extends BaseFragment {
                 });
                 tokenImage = view.findViewById(R.id.token_image);
                 tokenName = view.findViewById(R.id.token_name);
-                tokenAmount = view.findViewById(R.id.token_amount);
+                tokenAmount = view.findViewById(R.id.token_balance);
             }
         }
     }
