@@ -1,7 +1,6 @@
 package org.nervos.neuron.fragment.TokenListFragment.model;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,9 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
@@ -74,7 +70,10 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         if (!TextUtils.isEmpty(tokenItem.chainName)) {
             holder.tokenNetworkText.setText(tokenItem.chainName);
         } else {
-            holder.tokenNetworkText.setText("");
+            if (tokenItem.chainId < 0) {
+                holder.tokenNetworkText.setText(activity.getString(R.string.ethereum_mainnet));
+            } else {
+            }
         }
     }
 

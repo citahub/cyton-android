@@ -75,13 +75,11 @@ public class TokenListFragment extends NBaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
-        LogUtil.e("Token", "onWalletSaveEvent");
         initWalletData(true);
     }
 
     private void initWalletData(boolean showProgress) {
         WalletItem walletItem1 = DBWalletUtil.getCurrentWallet(getContext());
-        LogUtil.e("Token", walletItem1.tokenItems.size() + "");
         if (showProgress) showProgressBar();
         WalletService.getWalletTokenBalance(getContext(), walletItem1, walletItem ->
                 recyclerView.post(() -> {
