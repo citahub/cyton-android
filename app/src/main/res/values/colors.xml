@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
     <color name="font_black">#333333</color>
-    <color name="font_blue">#2E4AF2</color>
+    <color name="font_blue">#1646FF</color>
     <color name="button_blue">#2959CC</color>
 
     <color name="default_title_bg">#FFFFFF</color>
@@ -29,9 +29,10 @@
     <color name="default_black">#333333</color>
     <color name="default_separate_gray">#E5E5E5</color>
     <color name="default_gray_e1">#ffe1e1e1</color>
+    <color name="default_gray_e">#ffeeeeee</color>
     <color name="default_gray_9">#ff999999</color>
     <color name="default_gray_6">#ff666666</color>
-    <color name="default_background">#fffcfcfc</color>
+    <color name="default_background">#FFF8F8FA</color>
     <color name="default_gray_c9">#ffc9c9c9</color>
     <color name="default_gray_d5">#ffd5d5d5</color>
     <color name="default_title">#f9f9f9</color>

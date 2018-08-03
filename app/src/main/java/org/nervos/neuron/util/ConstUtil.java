@@ -36,8 +36,8 @@ public class ConstUtil {
 
     // node host
     public static final String NERVOS_NODE_IP = "http://121.196.200.225:1337";
-    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-//    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+//    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
 
     // gas constant data
@@ -46,6 +46,8 @@ public class ConstUtil {
     public static final BigInteger GAS_MIN_LIMIT = Numeric.toBigInt("0x9D8");      // default eth gas min limit is 2520
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x2540BE400");
     public static final String RPC_RESULT_ZERO = "0x";
+    public static final BigInteger QUOTA_TOKEN = new BigInteger("1000000");
+    public static final BigInteger QUOTA_ERC20 = new BigInteger("100000000");
 
 
     // ERC20 method hashes

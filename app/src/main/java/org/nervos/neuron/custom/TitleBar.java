@@ -97,7 +97,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             drawable = mContext.getResources().getDrawable(mTitleImg);
             mTitleBarCenterDefaultView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         }
-        mLeftImg = a.getResourceId(R.styleable.TitleBar_left_img, R.drawable.back);
+        mLeftImg = a.getResourceId(R.styleable.TitleBar_left_img, R.drawable.black_back);
         drawable = mContext.getResources().getDrawable(mLeftImg);
         mTitleBarLeftDefaultView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         mRightImg = a.getResourceId(R.styleable.TitleBar_right_img, 0);
