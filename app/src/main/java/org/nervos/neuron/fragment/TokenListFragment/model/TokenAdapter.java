@@ -8,16 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.List;
 
@@ -82,6 +81,9 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         } else {
             holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() + tokenItem.currencyPrice);
         }
+        holder.root.setOnClickListener((view) -> {
+            listener.onItemClick(view, position);
+        });
     }
 
     @Override
@@ -95,19 +97,16 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         TextView tokenBalance;
         TextView tokenNetworkText;
         TextView tokenCurrencyText;
+        RelativeLayout root;
 
         public TokenViewHolder(View view) {
             super(view);
-            view.setOnClickListener((v) -> {
-                if (listener != null) {
-                    listener.onItemClick(v, (int) v.getTag());
-                }
-            });
             tokenImage = view.findViewById(R.id.token_image);
             tokenName = view.findViewById(R.id.token_name);
             tokenBalance = view.findViewById(R.id.token_balance);
             tokenNetworkText = view.findViewById(R.id.token_network);
             tokenCurrencyText = view.findViewById(R.id.token_currency);
+            root = view.findViewById(R.id.root);
         }
     }
 

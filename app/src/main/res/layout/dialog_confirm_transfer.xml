@@ -5,24 +5,22 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="420dp"
         android:paddingBottom="@dimen/default_margin"
         android:background="@color/white"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">
-            <FrameLayout
+            <ImageView
                 android:id="@+id/close_layout"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true">
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/delete"/>
-            </FrameLayout>
+                android:gravity="center"
+                android:scaleType="centerInside"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/delete"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +35,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/default_gray_c"/>
+            android:background="@color/default_gray_e"/>
 
         <TextView
             android:id="@+id/transfer_value"
@@ -45,7 +43,7 @@
             android:layout_height="80dp"
             android:gravity="center"
             android:textColor="@color/default_black"
-            android:textSize="20sp"
+            android:textSize="35sp"
             android:text="1 ETH"/>
 
         <RelativeLayout
@@ -60,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/transfer_to_address"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textColor="@color/default_gray_6"/>
 
             <TextView
@@ -70,19 +68,15 @@
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
                 android:layout_toEndOf="@id/to_address_text"
-                android:text="123456667774453454232434353545465656576766767674545453"
-                android:textSize="14sp"
+                android:layout_marginStart="@dimen/default_margin"
+                android:textSize="15sp"
                 android:textColor="@color/default_black"/>
 
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/default_gray_c"/>
+        <View style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,7 +89,7 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:text="@string/pay_wallet"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textColor="@color/default_gray_6"/>
 
             <TextView
@@ -104,20 +98,15 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
-                android:text="123456667774453454"
                 android:maxEms="16"
                 android:lines="1"
                 android:ellipsize="end"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"/>
+                android:textSize="15sp"
+                android:textColor="@color/default_gray_6"/>
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/default_gray_c"/>
+        <View style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin"/>
 
         <RelativeLayout
             android:id="@+id/confirm_fee_layout"
@@ -130,8 +119,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:text="@string/transfer_fee"
-                android:textSize="14sp"
+                android:text="@string/fee_value"
+                android:textSize="15sp"
                 android:textColor="@color/default_gray_6"/>
 
             <TextView
@@ -140,20 +129,46 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
-                android:text="1200"
                 android:maxEms="16"
                 android:lines="1"
                 android:ellipsize="end"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"/>
+                android:textSize="15sp"
+                android:textColor="@color/default_gray_6"/>
         </RelativeLayout>
 
-        <View
+        <View style="@style/separateLineLong"
+            android:layout_marginStart="@dimen/default_margin"/>
+
+        <RelativeLayout
+            android:id="@+id/confirm_sum_layout"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/default_gray_c"/>
+            android:layout_height="48dp"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="@string/sum_value"
+                android:textSize="15sp"
+                android:textColor="@color/default_gray_6"/>
+
+            <TextView
+                android:id="@+id/transfer_sum"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentEnd="true"
+                android:maxEms="16"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="15sp"
+                android:textColor="@color/default_gray_6"/>
+        </RelativeLayout>
+
+        <View style="@style/separateLineLong"
+            android:layout_marginStart="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/transfer_confirm_button"
@@ -163,10 +178,10 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/button_corner_blue_shape"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:textSize="15sp"
             android:textColor="@color/white"
-            android:text="@string/confirm_action"/>
+            android:text="@string/confirm_transfer_action"/>
 
     </LinearLayout>
 

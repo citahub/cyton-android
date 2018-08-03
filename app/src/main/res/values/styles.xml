@@ -66,7 +66,7 @@
     <style name="separateLineLong">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">@color/default_gray_d5</item>
+        <item name="android:background">@color/default_gray_e</item>
     </style>
 
     <style name="separateLineShort">
@@ -75,6 +75,16 @@
         <item name="android:layout_marginStart">@dimen/default_margin</item>
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
         <item name="android:background">@color/default_gray_d5</item>
+    </style>
+
+    <style name="ConfirmDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_confirm_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_confirm_anim_out</item>
+    </style>
+
+    <style name="PasswordDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_password_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_password_anim_out</item>
     </style>
 
 </resources>

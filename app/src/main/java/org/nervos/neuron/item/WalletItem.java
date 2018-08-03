@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
+import org.json.JSONObject;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.crypto.WalletEntity;
 

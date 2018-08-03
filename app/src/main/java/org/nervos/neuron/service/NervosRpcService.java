@@ -156,7 +156,6 @@ public class NervosRpcService {
 
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value,
                                                                 String data, String password) {
-        LogUtil.d("transfer value: " + NumberUtil.getWeiFromEth(value));
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
