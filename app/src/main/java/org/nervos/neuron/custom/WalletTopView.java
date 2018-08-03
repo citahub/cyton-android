@@ -1,5 +1,6 @@
 package org.nervos.neuron.custom;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -12,9 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.ChangeWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 
@@ -28,15 +33,18 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
     private ImageView leftImage, centerImage, rightImage, copyImage;
     private CircleImageView walletPhoto;
     private TextView walletName, walletAddress;
-    private Context context;
+    private Activity context;
     private WalletItem walletItem;
 
     public WalletTopView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         LayoutInflater.from(context).inflate(R.layout.view_wallet_top, this);
         initView();
         initAction();
+    }
+
+    public void setActivity(Activity activity) {
+        this.context = activity;
     }
 
     private void initView() {
@@ -80,6 +88,9 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                 context.startActivity(intent1);
                 break;
             case R.id.iv_center:
+                Intent intent2 = new Intent(context, ChangeWalletActivity.class);
+                context.startActivity(intent2);
+                context.overridePendingTransition(R.anim.wallet_activity_in, 0);
                 break;
             case R.id.iv_copy:
                 ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

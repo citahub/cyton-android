@@ -50,14 +50,14 @@ public class DBWalletUtil extends DBUtil {
             DB db = DBFactory.open(context, DB_WALLET);
             String[] keys = db.findKeys(DB_PREFIX);
             List<WalletItem> walletItems = new ArrayList<>();
-            for(String key: keys) {
+            for (String key : keys) {
                 walletItems.add(db.getObject(key, WalletItem.class));
             }
             db.close();
             Collections.sort(walletItems, new Comparator<WalletItem>() {
                 @Override
                 public int compare(WalletItem o1, WalletItem o2) {
-                    return (int)(o2.timestamp - o1.timestamp);
+                    return (int) (o2.timestamp - o1.timestamp);
                 }
             });
             for (WalletItem walletItem : walletItems) {
@@ -69,7 +69,28 @@ public class DBWalletUtil extends DBUtil {
         return walletList;
     }
 
-    public static void saveWallet(Context context, WalletItem walletItem){
+    public static List<WalletItem> getAllWallet(Context context) {
+        List<WalletItem> walletItems = new ArrayList<>();
+        try {
+            DB db = DBFactory.open(context, DB_WALLET);
+            String[] keys = db.findKeys(DB_PREFIX);
+            for (String key : keys) {
+                walletItems.add(db.getObject(key, WalletItem.class));
+            }
+            db.close();
+            Collections.sort(walletItems, new Comparator<WalletItem>() {
+                @Override
+                public int compare(WalletItem o1, WalletItem o2) {
+                    return (int) (o2.timestamp - o1.timestamp);
+                }
+            });
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+        return walletItems;
+    }
+
+    public static void saveWallet(Context context, WalletItem walletItem) {
         try {
             DB db = DBFactory.open(context, DB_WALLET);
             db.put(getDbKey(walletItem.name), walletItem);
@@ -129,7 +150,7 @@ public class DBWalletUtil extends DBUtil {
         try {
             DB db = DBFactory.open(context, DB_WALLET);
             List<String> names = getAllWalletName(context);
-            for(String name: names) {
+            for (String name : names) {
                 WalletItem walletItem = getWallet(context, name);
                 isKeyExist = (walletItem != null && walletItem.address.equals(address));
             }
@@ -151,7 +172,7 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem){
+    public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem) {
         WalletItem walletItem = getWallet(context, walletName);
         if (walletItem != null) {
             if (walletItem.tokenItems == null) {
@@ -183,28 +204,28 @@ public class DBWalletUtil extends DBUtil {
         return false;
     }
 
-    public static void addTokenToAllWallet(Context context, TokenItem tokenItem){
+    public static void addTokenToAllWallet(Context context, TokenItem tokenItem) {
         List<String> walletNames = getAllWalletName(context);
-        for (String walletName: walletNames) {
+        for (String walletName : walletNames) {
             addTokenToWallet(context, walletName, tokenItem);
         }
     }
 
-    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem){
+    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
         WalletItem walletItem = getCurrentWallet(context);
         addTokenToWallet(context, walletItem.name, tokenItem);
     }
 
-    public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem){
+    public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem) {
         WalletItem walletItem = getWallet(context, walletName);
         if (walletItem != null) {
             if (walletItem.tokenItems == null) {
                 walletItem.tokenItems = new ArrayList<>();
             }
             Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 TokenItem item = iterator.next();
-                if(tokenItem.symbol.equals(item.symbol)){
+                if (tokenItem.symbol.equals(item.symbol)) {
                     iterator.remove();
                 }
             }
@@ -212,7 +233,7 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem){
+    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem) {
         WalletItem walletItem = getCurrentWallet(context);
         deleteTokenFromWallet(context, walletItem.name, tokenItem);
     }
@@ -225,6 +246,7 @@ public class DBWalletUtil extends DBUtil {
 
     /**
      * add origin token of ethereum and cita to wallet
+     *
      * @param context
      * @param walletItem
      * @return

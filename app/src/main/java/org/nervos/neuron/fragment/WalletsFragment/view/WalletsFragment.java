@@ -9,11 +9,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.view.View;
+import android.widget.ImageView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
+import org.nervos.neuron.activity.ChangeWalletActivity;
 import org.nervos.neuron.custom.WalletToolbar;
 import org.nervos.neuron.custom.WalletTopView;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.TokenListFragment.view.TokenListFragment;
@@ -37,6 +42,7 @@ public class WalletsFragment extends NBaseFragment {
     private WalletItem walletItem;
     private TokenListFragment tokenListFragment;
     private WalletFragmentPresenter presenter;
+    private ImageView rightImage;
 
     private String[] mTitles = {"代币", "藏品"};
 
@@ -53,6 +59,7 @@ public class WalletsFragment extends NBaseFragment {
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         toolbar = (WalletToolbar) findViewById(R.id.toolbar);
         walletView = (WalletTopView) findViewById(R.id.wallet_view);
+        rightImage = (ImageView) findViewById(R.id.iv_right);
 
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
         mNestedScrollView.setFillViewport(true);
@@ -65,6 +72,7 @@ public class WalletsFragment extends NBaseFragment {
     @Override
     protected void initData() {
         super.initData();
+        walletView.setActivity(getActivity());
         mTabLayout.post(() -> {
             presenter.setIndicator(mTabLayout, 70, 70);
         });
@@ -89,6 +97,16 @@ public class WalletsFragment extends NBaseFragment {
                 walletView.setAlpha(1.0f - alfha);
             }
         });
+        toolbar.setRightTitleClickListener((view) -> {
+            Intent intent2 = new Intent(getActivity(), ChangeWalletActivity.class);
+            startActivity(intent2);
+            getActivity().overridePendingTransition(R.anim.wallet_activity_in, 0);
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWalletSaveEvent(TokenRefreshEvent event) {
+        initWalletData();
     }
 
     private void initWalletData() {
