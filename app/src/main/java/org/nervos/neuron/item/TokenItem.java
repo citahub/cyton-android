@@ -51,6 +51,7 @@ public class TokenItem implements Parcelable{
         this.decimals = NERVOS_DECIMAL;
         this.avatar = chainItem.tokenAvatar;
         this.chainId = chainItem.chainId;
+        this.chainName = chainItem.name;
     }
 
     public TokenItem(TokenEntity tokenEntity) {

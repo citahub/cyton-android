@@ -90,11 +90,11 @@ public class EthRpcService {
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,
                                BigInteger gasPrice, String password) {
-        return transferEth(address, value, gasPrice, ConstUtil.GAS_LIMIT, password);
+        return transferEth(address, value, gasPrice, ConstUtil.GAS_LIMIT, "", password);
     }
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,
-                                       BigInteger gasPrice, BigInteger gasLimit, String password) {
+                                       BigInteger gasPrice, BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
         BigInteger finalGasLimit = gasLimit;
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -110,8 +110,8 @@ public class EthRpcService {
                 try {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
-                    RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce,
-                            gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value));
+                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
+                            gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value), data);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {

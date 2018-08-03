@@ -62,6 +62,7 @@
     <string name="input_password">输入密码</string>
     <string name="confirm_action">确认</string>
     <string name="confirm_send_action">确认发送</string>
+    <string name="confirm_transfer_action">确认发送</string>
     <string name="input_app_website_hint">请输入应用网址</string>
 
 
@@ -90,6 +91,7 @@
     <string name="update_password">修改密码</string>
     <string name="wallet_name">钱包名称</string>
     <string name="input_wallet_name">请输入钱包名称</string>
+    <string name="title_wallet_password">请输入钱包密码</string>
     <string name="title_transaction">交易</string>
     <string name="input_password_hint">请输入密码</string>
     <string name="input_new_password_hint">请输入新密码</string>
@@ -182,4 +184,5 @@
     <string name="custom_quota">自定义 Quota</string>
     <string name="input_correct_number">请输入格式正确的数字</string>
     <string name="gwei">Gwei</string>
+    <string name="hint_hex_data">十六进制数据</string>
 </resources>

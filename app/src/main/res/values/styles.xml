@@ -77,4 +77,14 @@
         <item name="android:background">@color/default_gray_d5</item>
     </style>
 
+    <style name="ConfirmDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_confirm_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_confirm_anim_out</item>
+    </style>
+
+    <style name="PasswordDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_password_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_password_anim_out</item>
+    </style>
+
 </resources>

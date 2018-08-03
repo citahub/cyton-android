@@ -5,7 +5,7 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="420dp"
         android:paddingBottom="@dimen/default_margin"
         android:background="@color/white"
         android:orientation="vertical">
@@ -178,10 +178,10 @@
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/button_corner_blue_shape"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:textSize="15sp"
             android:textColor="@color/white"
-            android:text="@string/confirm_send_action"/>
+            android:text="@string/confirm_transfer_action"/>
 
     </LinearLayout>
 

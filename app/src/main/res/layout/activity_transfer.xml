@@ -185,14 +185,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="200dp"
                 android:background="@color/white"
                 android:paddingStart="@dimen/default_margin"
                 android:paddingEnd="@dimen/default_margin">
 
                 <RelativeLayout
                     android:id="@+id/fee_seek_bar_layout"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
@@ -232,14 +232,14 @@
                     android:id="@+id/advanced_setup_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/gas_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:orientation="vertical">
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -299,87 +299,18 @@
                         <View style="@style/separateLineLong"/>
                     </LinearLayout>
 
-                    <LinearLayout
+                    <EditText
+                        android:id="@+id/pay_hex_data"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="60dp"
                         android:layout_marginTop="8dp"
-                        android:background="@color/white">
+                        android:hint="@string/hint_hex_data"
+                        android:background="@drawable/rectangle_border_gray_corner"
+                        android:padding="10dp"
+                        android:gravity="start"
+                        android:textSize="13sp"
+                        android:textColor="@color/default_black"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="130dp"
-                            android:orientation="vertical">
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:background="@drawable/rectangle_border_gray_corner">
-
-                                <View
-                                    android:id="@+id/pay_separate"
-                                    android:layout_width="0.5dp"
-                                    android:layout_height="match_parent"
-                                    android:background="@color/default_gray_d5"
-                                    android:layout_centerInParent="true"/>
-
-                                <LinearLayout
-                                    android:id="@+id/sign_hex_layout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toStartOf="@id/pay_separate"
-                                    android:orientation="vertical">
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="37dp"
-                                        android:gravity="center"
-                                        android:text="@string/hex"
-                                        android:textColor="@color/default_black"
-                                        android:textSize="13sp"/>
-
-                                    <View
-                                        android:id="@+id/pay_data_left_line"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="3dp"
-                                        android:background="@color/colorPrimary"/>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/sign_utf8_layout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toEndOf="@id/pay_separate"
-                                    android:orientation="vertical">
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="37dp"
-                                        android:gravity="center"
-                                        android:text="@string/utf8"
-                                        android:textColor="@color/default_black"
-                                        android:textSize="13sp"/>
-
-                                    <View
-                                        android:id="@+id/pay_data_right_line"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="3dp"
-                                        android:visibility="gone"
-                                        android:background="@color/colorPrimary"/>
-                                </LinearLayout>
-
-                            </RelativeLayout>
-
-                            <EditText
-                                android:id="@+id/pay_data"
-                                android:layout_width="match_parent"
-                                android:layout_height="60dp"
-                                android:layout_marginTop="-1dp"
-                                android:background="@drawable/rectangle_border_gray_corner"
-                                android:padding="10dp"
-                                android:gravity="start"
-                                android:textSize="13sp"
-                                android:textColor="@color/default_black"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
