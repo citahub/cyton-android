@@ -1,17 +1,19 @@
 package org.nervos.neuron.fragment.TokenListFragment.model;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
@@ -50,20 +52,20 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     @Override
     public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
         TokenItem tokenItem = tokenItemList.get(position);
+        Uri uri = null;
         if (TextUtils.isEmpty(tokenItem.avatar)) {
             if (tokenItem.chainId < 0) {
-                Glide.with(activity)
-                        .load(R.drawable.ether_small)
-                        .into(holder.tokenImage);
+                holder.tokenImage.setImageResource(R.drawable.ether_big);
             } else {
-                Glide.with(activity)
-                        .load(R.mipmap.ic_launcher)
-                        .into(holder.tokenImage);
+                holder.tokenImage.setImageResource(R.mipmap.ic_launcher);
             }
         } else {
-            Glide.with(activity)
-                    .load(tokenItem.avatar)
-                    .into(holder.tokenImage);
+            uri = Uri.parse(tokenItem.avatar);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(uri)
+                    .setAutoPlayAnimations(true)
+                    .build();
+            holder.tokenImage.setController(controller);
         }
         if (tokenItem != null) {
             holder.tokenName.setText(tokenItem.symbol);
@@ -92,7 +94,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     }
 
     class TokenViewHolder extends RecyclerView.ViewHolder {
-        ImageView tokenImage;
+        SimpleDraweeView tokenImage;
         TextView tokenName;
         TextView tokenBalance;
         TextView tokenNetworkText;

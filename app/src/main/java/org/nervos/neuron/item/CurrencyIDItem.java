@@ -5,7 +5,7 @@ package org.nervos.neuron.item;
  */
 public class CurrencyIDItem {
 
-    private String id, name, symbol, website_slug;
+    private String id, name, symbol, websiteSlug;
 
     public String getId() {
         return id;
@@ -31,11 +31,11 @@ public class CurrencyIDItem {
         this.symbol = symbol;
     }
 
-    public String getWebsite_slug() {
-        return website_slug;
+    public String getWebsiteSlug() {
+        return websiteSlug;
     }
 
-    public void setWebsite_slug(String website_slug) {
-        this.website_slug = website_slug;
+    public void setWebsiteSlug(String websiteSlug) {
+        this.websiteSlug = websiteSlug;
     }
 }

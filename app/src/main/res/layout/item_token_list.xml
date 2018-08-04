@@ -6,13 +6,13 @@
     android:layout_height="80dip"
     android:layout_marginLeft="20dp">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/token_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerInside" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

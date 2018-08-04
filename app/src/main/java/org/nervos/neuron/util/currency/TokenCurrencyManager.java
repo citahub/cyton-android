@@ -1,7 +1,10 @@
 package org.nervos.neuron.util.currency;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.item.CurrencyIDItem;
 import org.nervos.neuron.item.CurrencyIDList;
@@ -25,6 +28,39 @@ import rx.schedulers.Schedulers;
 public class TokenCurrencyManager {
 
     private static ArrayList<CurrencyIDItem> list = null;
+
+    public static Observable<String> getCurrency(String symbol, String currency) {
+        return getTokenID(symbol)
+                .subscribeOn(Schedulers.newThread())
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(String ID) {
+                        if (!TextUtils.isEmpty(ID)) {
+                            String url = ConstUtil.Token_CURRENCY.replace("@ID", ID).replace("@Currency", currency);
+                            Request request = new Request.Builder().url(url).build();
+                            Call call = NervosHttpService.getHttpClient().newCall(request);
+                            String response = "";
+                            try {
+                                response = call.execute().body().string();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                JSONObject data = object.optJSONObject("data");
+                                JSONObject quotes = data.optJSONObject("quotes");
+                                JSONObject quote = quotes.optJSONObject(currency);
+                                if (quote != null) {
+                                    return Observable.just(quote.optString("price"));
+                                }
+                            } catch (JSONException e) {
+                            }
+                        }
+                        return Observable.just(null);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
     public static Observable<String> getTokenCurrency(String ID, String currency) {
         return Observable.fromCallable(() -> {
@@ -66,7 +102,8 @@ public class TokenCurrencyManager {
                 list = gson.fromJson(response, CurrencyIDList.class).getList();
             }
             return list;
-        }).subscribeOn(Schedulers.newThread())
+        })
+                .subscribeOn(Schedulers.newThread())
                 .flatMap(new Func1<ArrayList<CurrencyIDItem>, Observable<String>>() {
                     @Override
                     public Observable<String> call(ArrayList<CurrencyIDItem> currencyIDItems) {
