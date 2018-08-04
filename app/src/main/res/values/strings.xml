@@ -97,7 +97,7 @@
     <string name="wallet_name">钱包名称</string>
     <string name="input_wallet_name">请输入钱包名称</string>
     <string name="title_wallet_password">请输入钱包密码</string>
-    <string name="title_transaction">交易</string>
+    <string name="title_transaction">交易列表</string>
     <string name="input_password_hint">请输入密码</string>
     <string name="input_new_password_hint">请输入新密码</string>
     <string name="input_new_password_again_hint">请再次输入新密码</string>

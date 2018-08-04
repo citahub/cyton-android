@@ -74,6 +74,11 @@
                 android:text="Ethereum Mainnet"/>
         </LinearLayout>
 
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/margin_30dp"/>
+
     </RelativeLayout>
 </FrameLayout>
 

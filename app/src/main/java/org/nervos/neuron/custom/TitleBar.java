@@ -22,11 +22,12 @@ import java.io.IOException;
 public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private RelativeLayout mTitleBarView, mTitleBarLeftView, mTitleBarCenterView, mTitleBarRightView;
     private TextView mTitleBarLeftDefaultView, mTitleBarCenterDefaultView, mTitleBarRightDefaultView;
+    private View bottomLine;
     private String mTitle, mLeftText, mRightText;
     private Context mContext;
     private OnRightClickListener mOnRightClickListener;
     private OnLeftClickListener mOnLeftClickListener;
-    private boolean mIsShowLeft, mIsShowRight;
+    private boolean mIsShowLeft, mIsShowRight, mIsShowBottom;
     private int mTitleImg, mLeftImg, mRightImg, mTitleBg;
 
 
@@ -55,6 +56,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         mTitleBarLeftDefaultView = findViewById(R.id.title_bar_left_default);
         mTitleBarCenterDefaultView = findViewById(R.id.title_bar_center_default);
         mTitleBarRightDefaultView = findViewById(R.id.title_bar_right_default);
+        bottomLine = findViewById(R.id.bottom_line);
     }
 
     private void initListener() {
@@ -66,6 +68,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.TitleBar);
         mIsShowLeft = a.getBoolean(R.styleable.TitleBar_isShowLeft, true);
         mIsShowRight = a.getBoolean(R.styleable.TitleBar_isShowRight, false);
+        mIsShowBottom = a.getBoolean(R.styleable.TitleBar_isShowBottomLine, true);
 
         if (mIsShowRight)
             showRight();
@@ -76,6 +79,12 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             showLeft();
         else
             hideLeft();
+
+        if (mIsShowBottom) {
+            showBottomLine();
+        } else {
+            hideBottomLine();
+        }
 
         mTitle = a.getString(R.styleable.TitleBar_title);
         mTitleBarCenterDefaultView.setText(mTitle);
@@ -246,6 +255,16 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         mIsShowRight = true;
         mTitleBarRightView.setEnabled(true);
         mTitleBarRightView.setVisibility(View.VISIBLE);
+    }
+
+    public void showBottomLine() {
+        mIsShowBottom = true;
+        bottomLine.setVisibility(VISIBLE);
+    }
+
+    public void hideBottomLine() {
+        mIsShowBottom = false;
+        bottomLine.setVisibility(GONE);
     }
 
 

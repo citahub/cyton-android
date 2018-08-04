@@ -28,7 +28,6 @@ public class MainActivity extends BaseActivity {
     private AppFragment appFragment;
     private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
-    private TransactionFragment transactionFragment;
     private FragmentManager fMgr;
 
     @Override
@@ -107,14 +106,6 @@ public class MainActivity extends BaseActivity {
                         transaction.show(settingsFragment);
                     }
                     break;
-                case R.id.navigation_transaction:
-                    if (transactionFragment == null) {
-                        transactionFragment = new TransactionFragment();
-                        transaction.add(R.id.fragment, transactionFragment);
-                    } else {
-                        transaction.show(transactionFragment);
-                    }
-                    break;
                 default:
                     if (appFragment == null) {
                         appFragment = new AppFragment();
@@ -142,8 +133,6 @@ public class MainActivity extends BaseActivity {
             navigation.check(R.id.navigation_application);
         } else if (TextUtils.equals(tag, WalletsFragment.TAG)) {
             navigation.check(R.id.navigation_wallet);
-        } else if (TextUtils.equals(tag, TransactionFragment.TAG)) {
-            navigation.check(R.id.navigation_transaction);
         } else if (TextUtils.equals(tag, SettingsFragment.TAG)) {
             navigation.check(R.id.navigation_settings);
         }
@@ -156,9 +145,6 @@ public class MainActivity extends BaseActivity {
     private void hideFragments(FragmentTransaction transaction) {
         if (appFragment != null) {
             transaction.hide(appFragment);
-        }
-        if (transactionFragment != null) {
-            transaction.hide(transactionFragment);
         }
         if (walletsFragment != null) {
             transaction.hide(walletsFragment);

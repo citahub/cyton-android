@@ -25,6 +25,7 @@
     <color name="navigation_tab_background_color">#fff5f5f5</color>
     <color name="warning_background">#FFFEED</color>
     <color name="warning_font">#ff8f27</color>
+    <color name="receive_token_color">#FF8C36</color>
 
     <color name="default_black">#333333</color>
     <color name="default_separate_gray">#E5E5E5</color>
