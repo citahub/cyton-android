@@ -22,7 +22,7 @@ public class DBChainUtil extends DBUtil {
     public static List<ChainItem> getAllChain(Context context) {
         List<ChainItem> chainItemList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_CHAIN);
+            DB db = DBFactory.open(context, DB_CHAIN, kryo);
             String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 ChainItem chainItem = db.getObject(key, ChainItem.class);

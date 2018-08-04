@@ -16,7 +16,7 @@ public class DBHistoryUtil extends DBUtil {
     public static List<String> getAllHistory(Context context) {
         List<String> historyList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_HISTORY);
+            DB db = DBFactory.open(context, DB_HISTORY, kryo);
             String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 historyList.add(db.get(key));

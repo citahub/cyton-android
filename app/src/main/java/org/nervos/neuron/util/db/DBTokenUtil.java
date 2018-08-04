@@ -17,7 +17,7 @@ public class DBTokenUtil extends DBUtil {
 
     public static void saveToken(Context context, TokenItem tokenItem){
         try {
-            DB db = DBFactory.open(context, DB_TOKEN);
+            DB db = DBFactory.open(context, DB_TOKEN, kryo);
             db.put(getDbKey(tokenItem.name), tokenItem);
             db.close();
         } catch (SnappydbException e) {
