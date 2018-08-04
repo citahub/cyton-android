@@ -36,8 +36,8 @@ public class ConstUtil {
 
     // node host
     public static final String NERVOS_NODE_IP = "http://121.196.200.225:1337";
-//    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+//    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
 
     // gas constant data
@@ -57,4 +57,8 @@ public class ConstUtil {
     public static final String DECIMALS_HASH = "313ce567";
     public static final String BALANCEOF_HASH = "70a08231";
 
+
+    //Token Currency ID Price
+    public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";
+    public static final String Token_CURRENCY = "https://api.coinmarketcap.com/v2/ticker/@ID/?convert=@Currency";
 }

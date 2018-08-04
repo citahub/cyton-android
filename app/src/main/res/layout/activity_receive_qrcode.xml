@@ -37,7 +37,6 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@mipmap/ic_launcher"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,9 +59,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
-                android:ellipsize="end"
-                android:lines="1"
+                android:ellipsize="middle"
                 android:maxEms="12"
+                android:singleLine="true"
                 android:text="0x12345454645342422334343534343"
                 android:textColor="@color/white"
                 android:textSize="14sp"
@@ -108,7 +107,5 @@
                 android:textSize="16sp" />
 
         </RelativeLayout>
-
     </LinearLayout>
-
 </RelativeLayout>

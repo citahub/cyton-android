@@ -16,7 +16,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -25,8 +25,7 @@ public class SplashActivity extends BaseActivity {
                     if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
                         startActivity(new Intent(mActivity, MainActivity.class));
                     } else {
-                        Intent intent = new Intent(mActivity, CreateWalletActivity.class);
-                        intent.putExtra(EXTRA_FIRST, true);
+                        Intent intent = new Intent(mActivity, AddWalletActivity.class);
                         startActivity(intent);
                     }
                     finish();

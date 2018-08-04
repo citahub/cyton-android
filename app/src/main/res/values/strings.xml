@@ -17,6 +17,7 @@
     <string name="select_wallet">请选择钱包</string>
     <string name="title_add_token">添加新资产</string>
     <string name="title_add_wallet">新增钱包</string>
+    <string name="add_wallet">添加钱包</string>
     <string name="title_token_management">资产管理</string>
     <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>
@@ -51,6 +52,9 @@
     <string name="tab_wallet">钱包</string>
     <string name="tab_settings">设置</string>
     <string name="tab_transaction">交易</string>
+    <string name="wallet_token_total_money">总资产</string>
+    <string name="wallet_token_unit_CNY">元</string>
+    <string name="wallet_token_unit_USD">美元</string>
     <string name="add_custom_token">添加自定义资产</string>
     <string name="qrcode_transfer">扫一扫向我付款</string>
     <string name="qrcode_address">收款地址</string>
@@ -124,6 +128,7 @@
     <string name="wallet_export_success">钱包导入成功</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="wallet_importing">钱包导入中...</string>
+    <string name="wallet_total_money">总资产</string>
     <string name="generating">正在生成</string>
     <string name="password_use_protect_private_key">此密码将被用于保护私钥和交易授权</string>
     <string name="no_wallet_suggestion">您还没有钱包，请先创建或者导入钱包</string>

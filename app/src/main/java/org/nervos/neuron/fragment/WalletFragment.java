@@ -87,7 +87,6 @@ public class WalletFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
         initWalletData(true);
         initAdapter();
         initListener();
@@ -103,25 +102,18 @@ public class WalletFragment extends BaseFragment {
             addressText.setText(walletItem.address);
             photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
             WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
-                walletNameText.post(() -> {
-                    if (showProgress) dismissProgressBar();
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (walletItem.tokenItems != null) {
-                        tokenItemList = walletItem.tokenItems;
-                        tokenAdapter.notifyDataSetChanged();
-                    }
-                })
+                    walletNameText.post(() -> {
+                        if (showProgress) dismissProgressBar();
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (walletItem.tokenItems != null) {
+                            tokenItemList = walletItem.tokenItems;
+                            tokenAdapter.notifyDataSetChanged();
+                        }
+                    })
             );
         } else {
             startActivity(new Intent(getActivity(), AddWalletActivity.class));
         }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -191,9 +183,9 @@ public class WalletFragment extends BaseFragment {
 
         titleBar.setOnLeftClickListener(() -> DialogUtil.showListDialog(getContext(),
                 R.string.switch_current_wallet, walletNameList, walletItem.name, which -> {
-            SharePrefUtil.putCurrentWalletName(walletNameList.get(which));
-            initWalletData(true);
-        }));
+                    SharePrefUtil.putCurrentWalletName(walletNameList.get(which));
+                    initWalletData(true);
+                }));
     }
 
 
@@ -209,11 +201,12 @@ public class WalletFragment extends BaseFragment {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == VIEW_TYPE_EMPTY) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
-                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
-                return new RecyclerView.ViewHolder(view){};
+                ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
+                return new RecyclerView.ViewHolder(view) {
+                };
             }
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(
                     getActivity()).inflate(R.layout.item_token_list, parent,
@@ -224,9 +217,9 @@ public class WalletFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
-                TokenViewHolder viewHolder = (TokenViewHolder)holder;
+                TokenViewHolder viewHolder = (TokenViewHolder) holder;
                 if (TextUtils.isEmpty(tokenItemList.get(position).avatar)) {
-                    viewHolder.tokenImage.setImageResource(tokenItemList.get(position).chainId < 0?
+                    viewHolder.tokenImage.setImageResource(tokenItemList.get(position).chainId < 0 ?
                             R.drawable.ether_small : R.mipmap.ic_launcher);
                 } else {
                     viewHolder.tokenImage.setImageURI(tokenItemList.get(position).avatar);
@@ -255,29 +248,29 @@ public class WalletFragment extends BaseFragment {
             return VIEW_TYPE_ITEM;
         }
 
-        class  TokenViewHolder extends RecyclerView.ViewHolder {
+        class TokenViewHolder extends RecyclerView.ViewHolder {
             SimpleDraweeView tokenImage;
             TextView tokenName;
             TextView tokenAmount;
 
-            public TokenViewHolder (View view) {
+            public TokenViewHolder(View view) {
                 super(view);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(v, (int)v.getTag());
+                            onItemClickListener.onItemClick(v, (int) v.getTag());
                         }
                     }
                 });
                 tokenImage = view.findViewById(R.id.token_image);
                 tokenName = view.findViewById(R.id.token_name);
-                tokenAmount = view.findViewById(R.id.token_amount);
+                tokenAmount = view.findViewById(R.id.token_balance);
             }
         }
     }
 
-    private interface OnItemClickListener{
+    private interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
 

@@ -1,0 +1,34 @@
+{
+  "currency": [
+    {
+      "name": "CNY",
+      "unit": "元",
+      "symbol": "¥"
+    },
+    {
+      "name": "USD",
+      "unit": "美元",
+      "symbol": "$"
+    },
+    {
+      "name": "TWD",
+      "unit": "新台币",
+      "symbol": "NT$"
+    },
+    {
+      "name": "HKD",
+      "unit": "港元",
+      "symbol": "HK$"
+    },
+    {
+      "name": "EUR",
+      "unit": "欧元",
+      "symbol": "€"
+    },
+    {
+      "name": "RUB",
+      "unit": "俄罗斯卢布",
+      "symbol": "₽"
+    }
+  ]
+}

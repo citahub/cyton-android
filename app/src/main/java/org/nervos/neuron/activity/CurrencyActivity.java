@@ -1,20 +1,27 @@
 package org.nervos.neuron.activity;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.item.CurrencyItem;
+import org.nervos.neuron.item.CurrencyListItem;
 import org.nervos.neuron.util.SharePreConst;
+import org.nervos.neuron.util.StreamUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
+
+import java.util.ArrayList;
 
 /**
  * Created by 包俊 on 2018/7/31.
@@ -22,7 +29,7 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 public class CurrencyActivity extends NBaseActivity {
 
     private RecyclerView currencyRecycler;
-    private SparseArray<String> currencyArray = new SparseArray<>();
+    private ArrayList<CurrencyItem> currencyArray;
     private TitleBar title;
 
     @Override
@@ -47,7 +54,7 @@ public class CurrencyActivity extends NBaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         currencyRecycler.setLayoutManager(linearLayoutManager);
-        setArray();
+        currencyArray = setArray(this);
         Adapter adapter = new Adapter();
         currencyRecycler.setAdapter(adapter);
         title.setOnLeftClickListener(() -> {
@@ -58,11 +65,6 @@ public class CurrencyActivity extends NBaseActivity {
     @Override
     protected void initAction() {
 
-    }
-
-    private void setArray() {
-        currencyArray.put(0, "CNY");
-        currencyArray.put(1, "USD");
     }
 
     class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
@@ -76,15 +78,15 @@ public class CurrencyActivity extends NBaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String currency = currencyArray.get(position);
-            if (SharePrefUtil.getString(SharePreConst.Currency, "CNY").equals(currency)) {
+            CurrencyItem currency = currencyArray.get(position);
+            if (SharePrefUtil.getString(SharePreConst.Currency, "CNY").equals(currency.getName())) {
                 holder.chosenImage.setVisibility(View.VISIBLE);
             } else {
                 holder.chosenImage.setVisibility(View.GONE);
             }
-            holder.currencyText.setText(currency);
+            holder.currencyText.setText(currency.getName());
             holder.root.setOnClickListener((view) -> {
-                SharePrefUtil.putString(SharePreConst.Currency, currency);
+                SharePrefUtil.putString(SharePreConst.Currency, currency.getName());
                 notifyDataSetChanged();
             });
         }
@@ -114,4 +116,11 @@ public class CurrencyActivity extends NBaseActivity {
         setResult(RESULT_OK);
         super.finish();
     }
+
+    public static ArrayList<CurrencyItem> setArray(Context context) {
+        String data = StreamUtils.get(context, R.raw.currency);
+        Gson gson = new Gson();
+        return gson.fromJson(data, CurrencyListItem.class).getCurrency();
+    }
+
 }

@@ -1,6 +1,8 @@
 package org.nervos.neuron.fragment;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -10,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
 
 public class BaseFragment extends Fragment {
@@ -17,10 +21,17 @@ public class BaseFragment extends Fragment {
     private View rootView;
     private View mProgressView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
     public void onDestroy() {
         super.onDestroy();
         rootView = null;
         mProgressView = null;
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -44,7 +55,7 @@ public class BaseFragment extends Fragment {
             FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             fl.gravity = Gravity.CENTER;
 
-            ((ViewGroup)rootView).addView(mProgressView, 1, fl);
+            ((ViewGroup) rootView).addView(mProgressView, 1, fl);
         }
     }
 
@@ -53,10 +64,13 @@ public class BaseFragment extends Fragment {
      */
     protected void dismissProgressBar() {
         if (rootView != null && mProgressView != null) {
-            ((ViewGroup)rootView).removeView(mProgressView);
+            ((ViewGroup) rootView).removeView(mProgressView);
         }
         mProgressView = null;
         rootView = null;
     }
 
+    @Subscribe
+    public void onEvent(Object object) {
+    }
 }
