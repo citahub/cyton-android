@@ -70,7 +70,7 @@ public class TransactionDetailActivity extends BaseActivity {
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal6(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
-                    "-" : "+") + Integer.parseInt(transactionItem.value, 16);
+                    "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {

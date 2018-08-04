@@ -30,17 +30,10 @@
                 android:text="@string/tab_wallet" />
 
             <RadioButton
-                android:id="@+id/navigation_transaction"
-                style="@style/tab_bottom_radio_button_style"
-                android:drawableTop="@drawable/tab_transaction"
-                android:text="@string/tab_transaction" />
-
-            <RadioButton
                 android:id="@+id/navigation_settings"
                 style="@style/tab_bottom_radio_button_style"
                 android:drawableTop="@drawable/tab_settings"
                 android:text="@string/tab_settings" />
-
 
         </RadioGroup>
 
