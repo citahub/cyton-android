@@ -17,7 +17,7 @@ public class DBAppUtil extends DBUtil {
 
     public static void saveDbApp(Context context, AppItem appItem) {
         try {
-            DB db = DBFactory.open(context, DB_APP);
+            DB db = DBFactory.open(context, DB_APP, kryo);
             db.put(getDbKey(appItem.entry), appItem);
             db.close();
         } catch (SnappydbException e) {
