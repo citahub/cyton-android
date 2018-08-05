@@ -17,6 +17,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TokenManageActivity;
+import org.nervos.neuron.activity.TransactionListActivity;
 import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
@@ -91,18 +92,9 @@ public class TokenListFragment extends NBaseFragment {
         adapter.setTokenAdapterListener(new TokenAdapter.TokenAdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TokenTransferDialog dialog = new TokenTransferDialog(getContext(), tokenItemList.get(position));
-                dialog.setOnReceiveClickListener(v -> {
-                    startActivity(new Intent(getActivity(), ReceiveQrCodeActivity.class));
-                    dialog.dismiss();
-                });
-                dialog.setOnTransferClickListener(v -> {
-                    Intent intent = new Intent(getActivity(), TransferActivity.class);
-                    intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItemList.get(position));
-                    startActivity(intent);
-                    dialog.dismiss();
-                });
-                dialog.show();
+                Intent intent = new Intent(getActivity(), TransactionListActivity.class);
+                intent.putExtra(TransactionListActivity.EXTRA_TOKEN, tokenItemList.get(position));
+                startActivity(intent);
             }
 
             @Override
@@ -172,7 +164,7 @@ public class TokenListFragment extends NBaseFragment {
     private void getPrice() {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
-                TokenCurrencyManager.getCurrency(item.symbol,currencyItem.getName()).subscribe(new Subscriber<String>() {
+                TokenCurrencyManager.getCurrency(item.symbol, currencyItem.getName()).subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
                         adapter.notifyDataSetChanged();

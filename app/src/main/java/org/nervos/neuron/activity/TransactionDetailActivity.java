@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
@@ -29,11 +30,12 @@ public class TransactionDetailActivity extends BaseActivity {
     public static final String EXTRA_TRANSACTION = "extra_transaction";
     private WalletItem walletItem;
     private TransactionItem transactionItem;
+    private TitleBar title;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction_detail);
+        setContentView(R.layout.activity_transac_detail);
 
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
@@ -42,24 +44,21 @@ public class TransactionDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        CircleImageView photoImage = findViewById(R.id.wallet_photo);
-        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
 
-        TextView walletNameText = findViewById(R.id.wallet_name);
-        TextView walletAddressText = findViewById(R.id.wallet_address);
-        TextView transactionHashText = findViewById(R.id.transaction_hash);
+        TextView transactionHashText = findViewById(R.id.tv_transaction_number);
         TextView transactionValueText = findViewById(R.id.transaction_amount);
-        TextView transactionFromText = findViewById(R.id.transaction_from_address);
-        TextView transactionToText = findViewById(R.id.transaction_to_address);
-        TextView transactionBlockNumberText = findViewById(R.id.transaction_block_number);
-        TextView transactionBlockTimeText = findViewById(R.id.transaction_block_time);
-        TextView transactionGas = findViewById(R.id.transaction_gas);
-        TextView transactionGasPrice = findViewById(R.id.transaction_gas_price);
-        TextView transactionChainName = findViewById(R.id.chain_name);
+        TextView transactionFromText = findViewById(R.id.tv_transaction_sender);
+        TextView transactionToText = findViewById(R.id.tv_transaction_receiver);
+        TextView transactionBlockNumberText = findViewById(R.id.tv_transaction_blockchain_no);
+        TextView transactionBlockTimeText = findViewById(R.id.tv_transaction_blockchain_time);
+        TextView transactionGas = findViewById(R.id.tv_transaction_gas);
+        TextView transactionGasPrice = findViewById(R.id.tv_transaction_gas_price);
+        TextView transactionChainName = findViewById(R.id.tv_chain_name);
+        title = findViewById(R.id.title);
+        title.setOnRightClickListener(() -> {
 
+        });
 
-        walletNameText.setText(walletItem.name);
-        walletAddressText.setText(walletItem.address);
         transactionHashText.setText(transactionItem.hash);
         transactionFromText.setText(transactionItem.from);
         transactionToText.setText(transactionItem.to);
@@ -69,16 +68,16 @@ public class TransactionDetailActivity extends BaseActivity {
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal6(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
-            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
-            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)?
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             int blockNumber = Integer.parseInt(
-                    Numeric.cleanHexPrefix(transactionItem.blockNumber), 16 );
+                    Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
             transactionBlockNumberText.setText(String.valueOf(blockNumber));
         }
 
