@@ -15,6 +15,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
 
 public class BaseActivity extends AppCompatActivity {
@@ -50,6 +52,7 @@ public class BaseActivity extends AppCompatActivity {
         rootView = null;
         mProgressView = null;
         mProgressCircleView = null;
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -114,4 +117,7 @@ public class BaseActivity extends AppCompatActivity {
         rootView = null;
     }
 
+    @Subscribe
+    public void onEvent(Object object) {
+    }
 }
