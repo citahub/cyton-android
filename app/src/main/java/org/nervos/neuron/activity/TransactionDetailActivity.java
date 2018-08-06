@@ -4,12 +4,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
@@ -17,47 +22,52 @@ import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TransactionDetailActivity extends BaseActivity {
+public class TransactionDetailActivity extends NBaseActivity {
 
     public static final String EXTRA_TRANSACTION = "extra_transaction";
     private WalletItem walletItem;
     private TransactionItem transactionItem;
     private TitleBar title;
+    private TextView transactionHashText, transactionValueText, transactionFromText, transactionToText, transactionBlockNumberText,
+            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName;
+    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transac_detail);
-
-        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
-
-        initView();
+    protected int getContentLayout() {
+        return R.layout.activity_transac_detail;
     }
 
-    private void initView() {
-
-        TextView transactionHashText = findViewById(R.id.tv_transaction_number);
-        TextView transactionValueText = findViewById(R.id.transaction_amount);
-        TextView transactionFromText = findViewById(R.id.tv_transaction_sender);
-        TextView transactionToText = findViewById(R.id.tv_transaction_receiver);
-        TextView transactionBlockNumberText = findViewById(R.id.tv_transaction_blockchain_no);
-        TextView transactionBlockTimeText = findViewById(R.id.tv_transaction_blockchain_time);
-        TextView transactionGas = findViewById(R.id.tv_transaction_gas);
-        TextView transactionGasPrice = findViewById(R.id.tv_transaction_gas_price);
-        TextView transactionChainName = findViewById(R.id.tv_chain_name);
+    @Override
+    protected void initView() {
         title = findViewById(R.id.title);
-        title.setOnRightClickListener(() -> {
+        transactionHashText = findViewById(R.id.tv_transaction_number);
+        transactionValueText = findViewById(R.id.transaction_amount);
+        transactionFromText = findViewById(R.id.tv_transaction_sender);
+        transactionToText = findViewById(R.id.tv_transaction_receiver);
+        transactionBlockNumberText = findViewById(R.id.tv_transaction_blockchain_no);
+        transactionBlockTimeText = findViewById(R.id.tv_transaction_blockchain_time);
+        transactionGas = findViewById(R.id.tv_transaction_gas);
+        transactionGasPrice = findViewById(R.id.tv_transaction_gas_price);
+        transactionChainName = findViewById(R.id.tv_chain_name);
+    }
 
-        });
+    @Override
+    protected void initData() {
+        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
+        transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
 
         transactionHashText.setText(transactionItem.hash);
         transactionFromText.setText(transactionItem.from);
@@ -76,8 +86,7 @@ public class TransactionDetailActivity extends BaseActivity {
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-            int blockNumber = Integer.parseInt(
-                    Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
+            int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
             transactionBlockNumberText.setText(String.valueOf(blockNumber));
         }
 
@@ -86,6 +95,28 @@ public class TransactionDetailActivity extends BaseActivity {
         transactionToText.setOnClickListener(v -> copyText(transactionItem.to));
         transactionFromText.setOnClickListener(v -> copyText(transactionItem.from));
         transactionHashText.setOnClickListener(v -> copyText(transactionItem.hash));
+    }
+
+    @Override
+    protected void initAction() {
+        title.setOnRightClickListener(() -> {
+            AndPermission.with(mActivity)
+                    .runtime().permission(Permission.Group.STORAGE)
+                    .rationale(new RuntimeRationale())
+                    .onGranted(permissions -> {
+                        try {
+                            SharePicUtils.savePic(savePath + transactionItem.blockNumber + ".png", SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_screenshot)));
+                            SharePicUtils.SharePic(this, savePath + transactionItem.blockNumber + ".png");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    })
+                    .onDenied(permissions -> {
+                        dismissProgressBar();
+                        PermissionUtil.showSettingDialog(mActivity, permissions);
+                    })
+                    .start();
+        });
     }
 
     private void copyText(String value) {
