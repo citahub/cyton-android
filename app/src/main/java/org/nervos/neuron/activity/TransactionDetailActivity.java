@@ -3,13 +3,8 @@ package org.nervos.neuron.activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +15,6 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -29,11 +23,8 @@ import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TransactionDetailActivity extends NBaseActivity {
 
@@ -47,7 +38,7 @@ public class TransactionDetailActivity extends NBaseActivity {
 
     @Override
     protected int getContentLayout() {
-        return R.layout.activity_transac_detail;
+        return R.layout.activity_transaction_detail;
     }
 
     @Override
