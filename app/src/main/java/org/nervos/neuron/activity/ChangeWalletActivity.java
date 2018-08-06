@@ -66,13 +66,18 @@ public class ChangeWalletActivity extends NBaseActivity {
     protected void initAction() {
         pullImage.setOnClickListener((view) -> {
             finish();
-            overridePendingTransition(0, R.anim.wallet_activity_out);
         });
     }
 
     @Override
     protected int getStatusBarColor() {
         return getResources().getColor(R.color.qr_receive_bg);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.wallet_activity_out);
     }
 
     class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

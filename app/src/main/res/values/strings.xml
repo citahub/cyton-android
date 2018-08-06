@@ -199,4 +199,13 @@
     <string name="input_correct_number">请输入格式正确的数字</string>
     <string name="gwei">Gwei</string>
     <string name="hint_hex_data">十六进制数据</string>
+    
+    <string name="transaction_network">区块链网络：</string>
+    <string name="transaction_receiver">接收方：</string>
+    <string name="transaction_sender">发送方：</string>
+    <string name="transaction_gas">手续费：</string>
+    <string name="transaction_gas_price">Gas价格</string>
+    <string name="transaction_number">交易流水号：</string>
+    <string name="transaction_blockchain_no">所在区块：</string>
+    <string name="transaction_blockchain_time">入块时间：</string>
 </resources>

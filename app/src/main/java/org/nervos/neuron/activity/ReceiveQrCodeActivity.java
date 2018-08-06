@@ -24,6 +24,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -97,19 +98,10 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
                         try {
-                            savePic();
-                            Uri imageUri;
-                            if (Build.VERSION.SDK_INT >= 24) {
-                                File file = new File(savePath);
-                                imageUri = FileProvider.getUriForFile(this, "org.nervos.neuron.fileprovider", file);
-                            } else {
-                                imageUri = Uri.fromFile(new File(savePath));
-                            }
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                            shareIntent.setType("image/*");
-                            startActivity(Intent.createChooser(shareIntent, "分享到"));
+                            copyAddressText.setVisibility(View.GONE);
+                            SharePicUtils.savePic(savePath, SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_qrcode)));
+                            copyAddressText.setVisibility(View.VISIBLE);
+                            SharePicUtils.SharePic(this, savePath);
                             dismissProgressBar();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
@@ -127,35 +119,5 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
         });
     }
 
-    //save qrcode
-    private void savePic() throws IOException {
-        copyAddressText.setVisibility(View.GONE);
-        Bitmap bitmap = getCacheBitmapFromView(findViewById(R.id.ll_qrcode));
-        File file = new File(savePath);
-        if (file.exists())
-            file.delete();
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-        //if we use CompressFormat.JPEG,bitmap will have black background
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        bos.flush();
-        bos.close();
-        bitmap.recycle();
-        copyAddressText.setVisibility(View.VISIBLE);
-    }
 
-    //get screenShoot
-    private Bitmap getCacheBitmapFromView(View view) {
-        final boolean drawingCacheEnabled = true;
-        view.setDrawingCacheEnabled(drawingCacheEnabled);
-        view.buildDrawingCache(drawingCacheEnabled);
-        final Bitmap drawingCache = view.getDrawingCache();
-        Bitmap bitmap;
-        if (drawingCache != null) {
-            bitmap = Bitmap.createBitmap(drawingCache);
-            view.setDrawingCacheEnabled(false);
-        } else {
-            bitmap = null;
-        }
-        return bitmap;
-    }
 }
