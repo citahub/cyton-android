@@ -102,13 +102,6 @@
         android:singleLine="true"
         android:textSize="14sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:background="@color/line_input" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

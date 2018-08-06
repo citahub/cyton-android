@@ -117,6 +117,11 @@ public class CreateWalletActivity extends NBaseActivity {
         });
     }
 
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
+    }
+
     /**
      * save wallet information to database and add default eth token
      */

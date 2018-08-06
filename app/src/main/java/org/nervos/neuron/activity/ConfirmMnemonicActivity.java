@@ -66,12 +66,14 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                 mnemonicView.setText(s);
                 return mnemonicView;
             }
+
             @Override
             public void onSelected(int position, View view) {
                 super.onSelected(position, view);
                 confirmList.add(shuffleList.get(position));
                 selectedAdapter.notifyDataChanged();
             }
+
             @Override
             public void unSelected(int position, View view) {
                 super.unSelected(position, view);
@@ -107,6 +109,11 @@ public class ConfirmMnemonicActivity extends BaseActivity {
         unselectTagLayout.setAdapter(unselectAdapter);
         selectedTagLayout.setAdapter(selectedAdapter);
 
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
     }
 
     private void backupComplete() {
