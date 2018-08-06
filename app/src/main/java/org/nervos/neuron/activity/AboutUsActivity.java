@@ -2,12 +2,11 @@ package org.nervos.neuron.activity;
 
 import android.content.pm.PackageManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.SettingButtonView;
 import org.nervos.neuron.custom.TitleBar;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.service.HttpUrls;
 
 /**
  * Created by 包俊 on 2018/7/30.
@@ -58,19 +57,19 @@ public class AboutUsActivity extends NBaseActivity {
 
     private void initListener() {
         sourceCodeSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.SOURCE_CODE_GITHUB_URL);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.SOURCE_CODE_GITHUB_URL);
         });
         serverPrivateSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.PRODUCT_AGREEMENT_URL);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PRODUCT_AGREEMENT_URL);
         });
         NervosSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.NERVOS_NETWORK);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.NERVOS_NETWORK);
         });
         InfuraSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.INFURA);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.INFURA);
         });
         openSeaSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, ConstUtil.OPEN_SEA);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.OPEN_SEA);
         });
     }
 }

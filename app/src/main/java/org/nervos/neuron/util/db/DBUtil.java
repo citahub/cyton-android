@@ -1,7 +1,12 @@
 package org.nervos.neuron.util.db;
 
+import android.content.Context;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.snappydb.DB;
+import com.snappydb.DBFactory;
+import com.snappydb.SnappydbException;
 
 public class DBUtil {
 
@@ -11,6 +16,10 @@ public class DBUtil {
 
     static {
         kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+    }
+
+    static DB openDB(Context context, String dbName) throws SnappydbException {
+        return DBFactory.open(context, dbName, kryo);
     }
 
     static String getDbKey(String origin) {

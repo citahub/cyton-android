@@ -45,7 +45,7 @@ public class NervosHttpService {
         return Observable.fromCallable(new Callable<EthMetaData.EthMetaDataResult>() {
                 @Override
                 public EthMetaData.EthMetaDataResult call() {
-                    NervosRpcService.init(context, ConstUtil.NERVOS_NODE_IP);
+                    NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
                     return NervosRpcService.getMetaData().getEthMetaDataResult();
                 }
             }).flatMap(new Func1<EthMetaData.EthMetaDataResult, Observable<List<TransactionItem>>>() {
@@ -53,7 +53,7 @@ public class NervosHttpService {
                 public Observable<List<TransactionItem>> call(EthMetaData.EthMetaDataResult result) {
                     ethMetaDataResult = result;
                     try {
-                        String nervosUrl = ConstUtil.NERVOS_TRANSACTION_URL + walletItem.address;
+                        String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
                         final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
                         Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
 
@@ -74,7 +74,7 @@ public class NervosHttpService {
                 @Override
                 public Observable<List<TransactionItem>> call(List<TransactionItem> list) {
                     try {
-                        String ethUrl = ConstUtil.ETH_TRANSACTION_URL + walletItem.address;
+                        String ethUrl = HttpUrls.ETH_TRANSACTION_URL + walletItem.address;
                         final Request ethRequest = new Request.Builder().url(ethUrl).build();
                         Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
                         EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
@@ -105,7 +105,7 @@ public class NervosHttpService {
                     @Override
                     public Observable<List<TransactionItem>> call(WalletItem walletItem) {
                         try {
-                            String ethUrl = ConstUtil.ETH_TRANSACTION_URL + walletItem.address;
+                            String ethUrl = HttpUrls.ETH_TRANSACTION_URL + walletItem.address;
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
                             Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
@@ -131,14 +131,14 @@ public class NervosHttpService {
         return Observable.fromCallable(new Callable<EthMetaData.EthMetaDataResult>() {
                     @Override
                     public EthMetaData.EthMetaDataResult call() {
-                        NervosRpcService.init(context, ConstUtil.NERVOS_NODE_IP);
+                        NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
                         return NervosRpcService.getMetaData().getEthMetaDataResult();
                     }
                 }).flatMap(new Func1<EthMetaData.EthMetaDataResult, Observable<List<TransactionItem>>>() {
                     @Override
                     public Observable<List<TransactionItem>> call(EthMetaData.EthMetaDataResult result) {
                         try {
-                            String nervosUrl = ConstUtil.NERVOS_TRANSACTION_URL + walletItem.address;
+                            String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
                             final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
                             Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
 

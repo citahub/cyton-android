@@ -14,12 +14,9 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.CurrencyActivity;
-import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.activity.TransactionListActivity;
 import org.nervos.neuron.activity.TransferActivity;
-import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.TokenListFragment.model.TokenAdapter;
@@ -28,11 +25,8 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.util.LogUtil;
-import org.nervos.neuron.util.SharePreConst;
-import org.nervos.neuron.util.currency.TokenCurrencyManager;
+import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -164,7 +158,7 @@ public class TokenListFragment extends NBaseFragment {
     private void getPrice() {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
-                TokenCurrencyManager.getCurrency(item.symbol, currencyItem.getName()).subscribe(new Subscriber<String>() {
+                TokenService.getCurrency(item.symbol,currencyItem.getName()).subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
                         adapter.notifyDataSetChanged();

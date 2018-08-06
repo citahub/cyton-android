@@ -70,6 +70,8 @@
     <string name="confirm_transfer_action">确认发送</string>
     <string name="input_app_website_hint">请输入应用网址</string>
 
+    <string name="collection_id_place_holder">ID:%s</string>
+
 
     <string name="message_permission_always_failed">请允许我们使用权限:\n\n%1$s</string>
     <string name="resume">恢复</string>

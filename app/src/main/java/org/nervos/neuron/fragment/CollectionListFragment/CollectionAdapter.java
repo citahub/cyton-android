@@ -1,0 +1,105 @@
+package org.nervos.neuron.fragment.CollectionListFragment;
+
+import android.app.Activity;
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import org.nervos.neuron.R;
+import org.nervos.neuron.item.CollectionItem;
+
+import java.util.List;
+
+public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder> {
+
+    public static final int VIEW_TYPE_ITEM = 1;
+    public static final int VIEW_TYPE_EMPTY = 0;
+
+    public OnItemClickListener listener;
+    private Context context;
+    private List<CollectionItem> collectionItemList;
+
+    public CollectionAdapter(Context context, List<CollectionItem> collectionItemList) {
+        this.context = context;
+        this.collectionItemList = collectionItemList;
+        notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void refresh(List<CollectionItem> collectionItemList) {
+        this.collectionItemList = collectionItemList;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public CollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_EMPTY) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
+            ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
+            return new CollectionViewHolder(view) {
+            };
+        }
+        CollectionViewHolder holder = new CollectionViewHolder(
+                LayoutInflater.from(context).inflate(R.layout.item_collection, parent,
+                false));
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CollectionViewHolder holder, int position) {
+        CollectionItem collectionItem = collectionItemList.get(position);
+        holder.collectionName.setText(collectionItem.name);
+        holder.collectionImage.setImageURI(collectionItem.imageUrl);
+        holder.collectionId.setText(String.format(
+                context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
+    }
+
+    @Override
+    public int getItemCount() {
+        return collectionItemList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (collectionItemList.size() == 0) {
+            return VIEW_TYPE_EMPTY;
+        }
+        return VIEW_TYPE_ITEM;
+    }
+
+    class CollectionViewHolder extends RecyclerView.ViewHolder {
+        SimpleDraweeView collectionImage;
+        TextView collectionName;
+        TextView collectionNetwork;
+        TextView collectionId;
+        RelativeLayout root;
+
+        public CollectionViewHolder(View view) {
+            super(view);
+            collectionImage = view.findViewById(R.id.collection_image);
+            collectionName = view.findViewById(R.id.collection_name);
+            collectionNetwork = view.findViewById(R.id.collection_network);
+            collectionId = view.findViewById(R.id.collection_id);
+            root = view.findViewById(R.id.root);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+}

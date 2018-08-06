@@ -22,8 +22,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
-import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
@@ -46,7 +45,7 @@ public class AppFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        webView.loadUrl(ConstUtil.DISCOVER_URL);
+        webView.loadUrl(HttpUrls.DISCOVER_URL);
         initWebSettings();
         initWebView();
     }
@@ -70,7 +69,7 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(ConstUtil.INNER_URL)) {
+                if (url.contains(HttpUrls.INNER_URL)) {
                     return false;
                 } else {
                     Intent intent = new Intent(getContext(), AppWebActivity.class);

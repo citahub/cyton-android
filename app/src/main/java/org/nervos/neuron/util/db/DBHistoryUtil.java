@@ -16,7 +16,7 @@ public class DBHistoryUtil extends DBUtil {
     public static List<String> getAllHistory(Context context) {
         List<String> historyList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_HISTORY, kryo);
+            DB db = openDB(context, DB_HISTORY);
             String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 historyList.add(db.get(key));
@@ -31,7 +31,7 @@ public class DBHistoryUtil extends DBUtil {
 
     public static void saveHistory(Context context, String url){
         try {
-            DB db = DBFactory.open(context, DB_HISTORY);
+            DB db = openDB(context, DB_HISTORY);
             db.put(getDbKey(url), url);
             db.close();
         } catch (SnappydbException e) {
