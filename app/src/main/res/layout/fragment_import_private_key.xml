@@ -33,7 +33,7 @@
             android:gravity="start"
             android:hint="请输入私钥原文"
             android:padding="5dp"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title"
             android:textSize="12sp" />
 
         <ImageView
@@ -61,6 +61,7 @@
         android:hint="@string/input_wallet_name"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColor="@color/font_title"
         android:textSize="14sp" />
 
     <View
@@ -80,6 +81,7 @@
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColor="@color/font_title"
         android:textSize="14sp" />
 
     <View
@@ -100,7 +102,13 @@
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColor="@color/font_title"
         android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_input" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -112,12 +120,6 @@
         android:textColor="#FF0000"
         android:textSize="12sp"
         android:visibility="gone" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="@dimen/default_margin"
-        android:background="@color/line_input" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/import_private_key_button"

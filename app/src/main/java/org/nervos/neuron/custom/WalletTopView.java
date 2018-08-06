@@ -13,13 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ChangeWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
-import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 
@@ -66,6 +64,7 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
         rightImage.setOnClickListener(this);
         copyImage.setOnClickListener(this);
         centerImage.setOnClickListener(this);
+        walletPhoto.setOnClickListener(this);
     }
 
     public void setWalletItem(WalletItem walletItem) {
@@ -99,6 +98,9 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                     cm.setPrimaryClip(mClipData);
                     Toast.makeText(context, R.string.copy_success, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.wallet_photo:
+                context.startActivity(new Intent(context, WalletManageActivity.class));
                 break;
         }
     }

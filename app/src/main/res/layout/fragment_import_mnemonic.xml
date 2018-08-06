@@ -29,8 +29,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_margin"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:padding="@dimen/default_margin">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_wallet_mnemonic"
@@ -40,7 +40,7 @@
                 android:gravity="start"
                 android:hint="@string/import_mnemonic_input_hint"
                 android:padding="5dp"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:textSize="12sp" />
 
             <ImageView
@@ -76,7 +76,7 @@
                 android:layout_centerVertical="true"
                 android:background="@color/white"
                 android:text="格式"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:textSize="14sp" />
 
             <android.support.v7.widget.AppCompatSpinner
@@ -107,6 +107,7 @@
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
+            android:textColor="@color/font_title"
             android:textSize="12sp" />
 
         <View
@@ -122,11 +123,12 @@
             android:layout_height="48dp"
             android:background="@android:color/white"
             android:gravity="left|center_vertical"
-            android:hint="@string/input_password_hint"
+            android:hint="@string/set_password"
             android:inputType="textPassword"
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
+            android:textColor="@color/font_title"
             android:textSize="12sp" />
 
         <View
@@ -146,6 +148,7 @@
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
+            android:textColor="@color/font_title"
             android:textSize="12sp" />
 
         <View
