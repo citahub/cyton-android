@@ -19,6 +19,7 @@
     <color name="font_link">#1646ff</color>
 
     <color name="line_form">#f7f7f7</color>
+    <color name="line_input">#eaeaea</color>
 
     <color name="qr_receive_bg">#252A3E</color>
 

@@ -44,10 +44,9 @@ public class SettingsFragment extends NBaseFragment {
         currencySBV.setOther1Text(SharePrefUtil.getString(SharePreConst.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
-            if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0 && SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
+            if (SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
-                SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
                 fingerPrintSBV.setSwitch(false);
             }
         } else {
