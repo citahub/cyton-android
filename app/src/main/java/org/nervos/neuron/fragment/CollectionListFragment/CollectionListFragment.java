@@ -10,6 +10,7 @@ import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.response.CollectionResponse;
 import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,7 @@ public class CollectionListFragment extends NBaseFragment {
                 @Override
                 public void onNext(CollectionResponse collectionResponse) {
                     collectionItemList = collectionResponse.assets;
+                    LogUtil.d("collectionItemList size: " + collectionItemList.size());
                     adapter.refresh(collectionItemList);
                 }
             });

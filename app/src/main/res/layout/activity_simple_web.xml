@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:isShowLeft="true"
-        app:title_bg="@color/colorPrimary"
-        app:title_color="@color/white" />
+        app:title_bg="@color/white"
+        app:title_color="@color/default_black" />
 
     <ProgressBar
         android:id="@+id/progressBar"

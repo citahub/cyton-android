@@ -105,4 +105,16 @@
         <item name="android:textColor">@color/font_title</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+
+    <style name="WalletTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/WalletTabTextAppearance</item>
+    </style>
+
+    <style name="WalletTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/default_black</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
 </resources>

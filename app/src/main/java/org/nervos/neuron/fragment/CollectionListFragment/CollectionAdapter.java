@@ -16,7 +16,7 @@ import org.nervos.neuron.item.CollectionItem;
 
 import java.util.List;
 
-public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder> {
+public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 1;
     public static final int VIEW_TYPE_EMPTY = 0;
@@ -41,11 +41,11 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     }
 
     @Override
-    public CollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
-            ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_token_data);
-            return new CollectionViewHolder(view) {
+            ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_collection_data);
+            return new RecyclerView.ViewHolder(view) {
             };
         }
         CollectionViewHolder holder = new CollectionViewHolder(
@@ -55,22 +55,28 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CollectionViewHolder holder, int position) {
-        CollectionItem collectionItem = collectionItemList.get(position);
-        holder.collectionName.setText(collectionItem.name);
-        holder.collectionImage.setImageURI(collectionItem.imageUrl);
-        holder.collectionId.setText(String.format(
-                context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof CollectionViewHolder) {
+            CollectionViewHolder holder = (CollectionViewHolder) viewHolder;
+            CollectionItem collectionItem = collectionItemList.get(position);
+            holder.collectionName.setText(collectionItem.name);
+            holder.collectionImage.setImageURI(collectionItem.imageUrl);
+            holder.collectionId.setText(String.format(
+                    context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (collectionItemList.size() == 0) {
+            return 1;
+        }
         return collectionItemList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (collectionItemList.size() == 0) {
+        if (collectionItemList == null || collectionItemList.size() == 0) {
             return VIEW_TYPE_EMPTY;
         }
         return VIEW_TYPE_ITEM;

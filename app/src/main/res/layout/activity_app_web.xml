@@ -37,6 +37,10 @@
             android:singleLine="true"
             android:layout_centerInParent="true" />
 
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
     <ProgressBar

@@ -17,7 +17,6 @@ import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
-import org.nervos.neuron.util.SharePreConst;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class SettingsFragment extends NBaseFragment {
@@ -42,13 +41,13 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
-        currencySBV.setOther1Text(SharePrefUtil.getString(SharePreConst.Currency, "CNY"));
+        currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
-            if (SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
+            if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
-                SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
+                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
                 fingerPrintSBV.setSwitch(false);
             }
         } else {
@@ -87,7 +86,7 @@ public class SettingsFragment extends NBaseFragment {
                 }
             } else {
                 //close fingerprint
-                SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
+                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
                 fingerPrintSBV.setSwitch(false);
             }
 
@@ -112,7 +111,7 @@ public class SettingsFragment extends NBaseFragment {
             fingerPrintSBV.setSwitch(true);
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(SharePreConst.FingerPrint, true);
+            SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
 
@@ -128,7 +127,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    currencySBV.setOther1Text(SharePrefUtil.getString(SharePreConst.Currency, "CNY"));
+                    currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
                     break;
             }
         }

@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -100,6 +101,16 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected int getStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            return getResources().getColor(R.color.white, null);
+        } else {
+            return super.getStatusBarColor();
+        }
+    }
+
     private void initMenuView() {
         findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
@@ -190,6 +201,7 @@ public class AppWebActivity extends BaseActivity {
         }
     }
 
+
     private void signTxAction(Transaction transaction) {
         this.signTransaction = transaction;
         if (walletItem == null) {
@@ -232,8 +244,14 @@ public class AppWebActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 initCollectView();
+                addHistory();
             }
         });
+    }
+
+    private void addHistory() {
+        String app = new Gson().toJson(WebAppUtil.getAppItem());
+        webView.loadUrl("javascript:__myhistory.add("+ app + ")");
     }
 
     @Override

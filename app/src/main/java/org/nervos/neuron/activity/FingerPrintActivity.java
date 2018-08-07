@@ -11,8 +11,6 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
-import org.nervos.neuron.util.SharePreConst;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 /**
  * Created by BaojunCZ on 2018/8/6.

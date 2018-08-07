@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
-import org.nervos.neuron.util.SharePreConst;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class SplashActivity extends BaseActivity {
@@ -26,7 +24,7 @@ public class SplashActivity extends BaseActivity {
                 try {
                     sleep(1000);
                     if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                        if (SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
+                        if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
                             startActivity(new Intent(mActivity, FingerPrintActivity.class));
                         } else {
                             startActivity(new Intent(mActivity, MainActivity.class));

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_white_f9"
+    android:background="@color/default_background"
     android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
@@ -91,4 +91,36 @@
         app:icon="@drawable/ic_about_us_open_sea"
         app:name="Open Sea"
         app:other1="false" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="3dp"
+            android:text="@string/neuron_is_a"
+            android:textSize="12sp"
+            android:textColor="@color/default_gray_9"/>
+        
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="20dp"
+            android:src="@drawable/neuron_logo"
+            android:scaleType="centerInside"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginStart="3dp"
+            android:text="@string/product"
+            android:textSize="12sp"
+            android:textColor="@color/default_gray_9"/>
+    </LinearLayout>
 </LinearLayout>
