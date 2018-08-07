@@ -201,6 +201,7 @@ public class AppWebActivity extends BaseActivity {
         }
     }
 
+
     private void signTxAction(Transaction transaction) {
         this.signTransaction = transaction;
         if (walletItem == null) {
@@ -243,8 +244,14 @@ public class AppWebActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 initCollectView();
+                addHistory();
             }
         });
+    }
+
+    private void addHistory() {
+        String app = new Gson().toJson(WebAppUtil.getAppItem());
+        webView.loadUrl("javascript:__myhistory.add("+ app + ")");
     }
 
     @Override
