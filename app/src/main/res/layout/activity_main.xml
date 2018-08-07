@@ -12,7 +12,7 @@
         <RadioGroup
             android:id="@+id/navigation"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="49dp"
             android:background="@color/white"
             android:orientation="horizontal">
 

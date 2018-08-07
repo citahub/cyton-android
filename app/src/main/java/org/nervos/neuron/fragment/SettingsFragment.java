@@ -2,7 +2,6 @@ package org.nervos.neuron.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
@@ -13,7 +12,7 @@ import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.custom.SettingButtonView;
 import org.nervos.neuron.dialog.AuthFingerDialog;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.SharePreConst;
@@ -44,7 +43,9 @@ public class SettingsFragment extends NBaseFragment {
         currencySBV.setOther1Text(SharePrefUtil.getString(SharePreConst.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
-            if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0 && SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
+            if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints()
+                    && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0
+                    && SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
                 SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
@@ -64,7 +65,8 @@ public class SettingsFragment extends NBaseFragment {
         fingerPrintSBV.setSwitchListener((is) -> {
             if (is) {
                 //setting fingerprint
-                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
+                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints()
+                        && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
                         authFingerDialog = new AuthFingerDialog(getActivity(), R.style.Theme_AppCompat_Dialog);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
@@ -96,7 +98,7 @@ public class SettingsFragment extends NBaseFragment {
             startActivity(intent);
         });
         contactUsSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
+            SimpleWebActivity.gotoSimpleWeb(getContext(), HttpUrls.CONTACT_US_RUL);
         });
     }
 

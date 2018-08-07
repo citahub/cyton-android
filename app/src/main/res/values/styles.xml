@@ -25,7 +25,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingBottom">3dp</item>
-        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:drawablePadding">2dp</item>
         <item name="android:textColor">@color/tab_text_color</item>
         <item name="android:textSize">10sp</item>
     </style>

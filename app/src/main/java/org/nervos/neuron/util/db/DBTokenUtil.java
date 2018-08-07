@@ -17,7 +17,7 @@ public class DBTokenUtil extends DBUtil {
 
     public static void saveToken(Context context, TokenItem tokenItem){
         try {
-            DB db = DBFactory.open(context, DB_TOKEN, kryo);
+            DB db = openDB(context, DB_TOKEN);
             db.put(getDbKey(tokenItem.name), tokenItem);
             db.close();
         } catch (SnappydbException e) {
@@ -27,7 +27,7 @@ public class DBTokenUtil extends DBUtil {
 
     public static boolean checkTokenExist(Context context, TokenItem tokenItem) {
         try {
-            DB db = DBFactory.open(context, DB_TOKEN);
+            DB db = openDB(context, DB_TOKEN);
             String[] keys = db.findKeys(getDbKey(tokenItem.name));
             db.close();
             return keys.length > 0;
@@ -40,7 +40,7 @@ public class DBTokenUtil extends DBUtil {
     public static List<TokenItem> getAllTokens(Context context) {
         List<TokenItem> tokenList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_TOKEN);
+            DB db = openDB(context, DB_TOKEN);
             String[] keys = db.findKeys(DB_PREFIX);
             for (String key: keys) {
                 tokenList.add(db.getObject(key, TokenItem.class));
