@@ -46,8 +46,9 @@
     <ImageView
         android:id="@+id/iv_setting_switch"
         android:layout_width="38dip"
-        android:layout_height="18dip"
+        android:layout_height="24dip"
         android:layout_marginRight="12dip"
+        android:background="@color/transparent"
         android:scaleType="fitXY"
         android:src="@drawable/ic_setting_onoff_off"
         android:visibility="gone"
