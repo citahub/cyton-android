@@ -95,6 +95,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                 break;
             case R.id.iv_other:
                 startActivity(new Intent(this, PwdUnlockActivity.class));
+                finish();
                 break;
         }
     }

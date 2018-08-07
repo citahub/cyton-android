@@ -117,6 +117,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:background="@drawable/button_corner_gray_shape"
+        android:enabled="false"
         android:text="@string/pwd_auth_button"
         android:textColor="@color/white"
         android:textSize="18sp"

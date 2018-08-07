@@ -56,6 +56,7 @@ public class SelectWalletPopupwWindow extends PopupWindow {
             holder.nameTv.setText(walletItems.get(position).name);
             holder.nameTv.setOnClickListener((view) -> {
                 listener.click(walletItems.get(position));
+                dismiss();
             });
         }
 

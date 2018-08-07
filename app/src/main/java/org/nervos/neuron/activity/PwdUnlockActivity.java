@@ -1,12 +1,18 @@
 package org.nervos.neuron.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.custom.SelectWalletPopupwWindow;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -69,6 +75,28 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         authBtn.setOnClickListener(this);
         arrowImg.setOnClickListener(this);
         walletNameTv.setOnClickListener(this);
+        walletPwdEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!TextUtils.isEmpty(walletPwdEt.getText().toString().trim()) && walletPwdEt.getText().toString().length() >= 8) {
+                    authBtn.setBackgroundResource(R.drawable.button_corner_blue_shape);
+                    authBtn.setEnabled(true);
+                } else {
+                    authBtn.setBackgroundResource(R.drawable.button_corner_gray_shape);
+                    authBtn.setEnabled(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -87,6 +115,21 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                     walletNameTv.setText(walletItem.name);
                 });
                 popupwWindow.showAsDropDown(walletNameTv, 0, 10);
+                break;
+            case R.id.iv_other:
+                startActivity(new Intent(this, FingerPrintActivity.class));
+                finish();
+                break;
+            case R.id.tv_cancel:
+                finish();
+                break;
+            case R.id.password_button:
+                if (!AESCrypt.checkPassword(walletPwdEt.getText().toString().trim(), walletItem)) {
+                    Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
+                } else {
+                    startActivity(new Intent(mActivity, MainActivity.class));
+                    Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }

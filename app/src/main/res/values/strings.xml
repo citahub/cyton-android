@@ -224,4 +224,6 @@
     <string name="fingerprint_lock_failed">指纹解锁失败！</string>
     <string name="finger_print_no_touchID">对不起，没有可用TouchID，请用其他方式解锁</string>
     <string name="pwd_auth_button">验证</string>
+    <string name="pwd_auth_failed">密码错误,请重试</string>
+    <string name="pwd_auth_success">解锁成功</string>
 </resources>
