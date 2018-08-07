@@ -1,161 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/default_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/default_background"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/title_create_wallet"
-        app:isShowLeft="true"/>
+        app:isShowLeft="true"
+        app:title="@string/title_create_wallet" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:background="@color/warning_background"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/warning"
         android:gravity="center_vertical"
         android:paddingStart="15dp"
-        android:background="#FFFEED"
-        android:drawableStart="@drawable/warning"
-        android:drawablePadding="5dp"
         android:text="@string/password_use_protect_private_key"
-        android:textColor="#F97C00"
-        android:textSize="12sp"/>
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
 
-    <LinearLayout
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_wallet_name"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:gravity="center_vertical"
         android:background="@android:color/white"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:text="钱包名称"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_name"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="20dp"
-            android:background="@android:color/white"
-            android:gravity="end|center_vertical"
-            android:hint="请输入钱包名称"
-            android:textSize="14sp"
-            android:singleLine="true"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/default_gray_d5"
-        android:layout_marginStart="@dimen/default_margin"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="0.5dp"
+        android:gravity="start|center_vertical"
+        android:hint="@string/create_wallet_name"
         android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="20dp"
-        android:gravity="center_vertical"
-        android:background="@android:color/white"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_password"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_password"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@android:color/white"
-            android:hint="@string/input_password"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:gravity="end|center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-    </LinearLayout>
+        android:singleLine="true"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/default_gray_d5"
-        android:layout_marginStart="@dimen/default_margin"/>
+        android:layout_marginStart="@dimen/default_margin"
+        android:background="@color/line_input" />
 
-    <LinearLayout
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_wallet_password"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="0.5dp"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="20dp"
-        android:gravity="center_vertical"
         android:background="@android:color/white"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/password_again"
-            android:textColor="@color/font_black"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_password_repeat"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@android:color/white"
-            android:gravity="end|center_vertical"
-            android:hint="@string/input_new_password_again_hint"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-    </LinearLayout>
+        android:gravity="start|center_vertical"
+        android:hint="@string/input_password"
+        android:inputType="textPassword"
+        android:paddingStart="@dimen/default_margin"
+        android:singleLine="true"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/default_gray_d5"
-        android:layout_marginStart="@dimen/default_margin"/>
+        android:layout_marginStart="@dimen/default_margin"
+        android:background="@color/line_input" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_wallet_password_repeat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:color/white"
+        android:gravity="start|center_vertical"
+        android:hint="@string/input_new_password_again_hint"
+        android:inputType="textPassword"
+        android:paddingStart="@dimen/default_margin"
+        android:singleLine="true"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_input" />
 
     <TextView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginTop="8dp"
         android:text="@string/password_suggestion"
-        android:textSize="12sp"
-        android:textColor="#FF0000"/>
+        android:textColor="#FF0000"
+        android:textSize="12sp" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:enabled="false"
-        android:background="@drawable/button_corner_gray_shape"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:textSize="15sp"
+        android:background="@drawable/button_corner_gray_shape"
+        android:enabled="false"
+        android:text="@string/next_action"
         android:textColor="@color/white"
-        android:text="@string/next_action"/>
+        android:textSize="15sp" />
 
 </LinearLayout>

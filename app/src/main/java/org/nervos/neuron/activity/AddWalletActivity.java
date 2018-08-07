@@ -11,13 +11,20 @@ import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
-public class AddWalletActivity extends BaseActivity {
+public class AddWalletActivity extends NBaseActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_wallet);
+    protected int getContentLayout() {
+        return R.layout.activity_add_wallet;
+    }
 
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
         findViewById(R.id.create_wallet_button).setOnClickListener(v -> {
             startActivity(new Intent(mActivity, CreateWalletActivity.class));
         });
@@ -25,8 +32,17 @@ public class AddWalletActivity extends BaseActivity {
         findViewById(R.id.import_wallet_button).setOnClickListener(v ->
                 startActivity(new Intent(mActivity, ImportWalletActivity.class)));
 
-        ((TitleBar)findViewById(R.id.title)).setOnLeftClickListener(() -> goBack());
+        ((TitleBar) findViewById(R.id.title)).setOnLeftClickListener(() -> goBack());
+    }
 
+    @Override
+    protected void initAction() {
+
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.white);
     }
 
     private void goBack() {

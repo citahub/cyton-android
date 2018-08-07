@@ -31,6 +31,7 @@
     <string name="next_action">下一步</string>
     <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
+    <string name="create_wallet_name">钱包名称</string>
     <string name="quick_backup_button">一键备份</string>
     <string name="quick_backup_restore">一键恢复</string>
     <string name="change_password">修改密码</string>
@@ -43,10 +44,12 @@
     <string name="transaction_list_description">最近交易记录（默认十笔）</string>
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
-    <string name="import_wallet_content">将备份好的keystore文件内容拷贝到输入框，或扫描二维码，导入密钥数据</string>
+    <string name="import_wallet_content">将以太坊官方钱包KeyStore文件内容粘贴至输入框，或通过扫描二维码输入。</string>
+    <string name="import_wallet_content_hint">请导入KeyStore文本</string>
     <string name="quick_backup_content">本软件不会在云端保存您的任何信息，包括私钥、应用列表以及区块链配置。因此，您的数字资产完全依赖于您自己的保管，请妥善对您的本地数据进行保存</string>
-    <string name="change_password_warning">再次提示密码不能找回</string>
+    <string name="change_password_warning">钱包密码如丢失将无法找回，请您妥善保管密码</string>
     <string name="import_mnemonic_warning">请输入钱包助记词并选择助记词模式</string>
+    <string name="import_mnemonic_input_hint">助记词输入+空格</string>
     <string name="import_private_key_warning">请将私钥粘贴至输入框，或通过二维码输入</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
     <string name="tab_application">应用</string>
@@ -65,7 +68,7 @@
     <string name="backup_mnemonic_warning3">- 不要截图或传送给他人</string>
     <string name="backup_mnemonic_warning4">- 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
-    <string name="input_password">输入密码</string>
+    <string name="input_password">设置密码</string>
     <string name="confirm_action">确认</string>
     <string name="confirm_send_action">确认发送</string>
     <string name="confirm_transfer_action">确认发送</string>
@@ -77,6 +80,7 @@
     <string name="message_permission_rationale">申请下列权限以保证应用可以正常运行:\n\n%1$s</string>
     <string name="scan_qrcode">扫描二维码</string>
     <string name="share_keystore">分享Keystore</string>
+    <string name="change_password_suggestion">密码必须至少8个字符，而且同时包含字母和数字</string>
     <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度在8到50之间</string>
     <string name="empty_no_token_data">您还没有Token数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
@@ -96,12 +100,13 @@
     <string name="transfer_fee">交易费用</string>
     <string name="update_password">修改密码</string>
     <string name="wallet_name">钱包名称</string>
-    <string name="input_wallet_name">请输入钱包名称</string>
+    <string name="input_wallet_name">输入钱包名称</string>
     <string name="title_wallet_password">请输入钱包密码</string>
     <string name="title_transaction">交易列表</string>
-    <string name="input_password_hint">请输入密码</string>
-    <string name="input_new_password_hint">请输入新密码</string>
-    <string name="input_new_password_again_hint">请再次输入新密码</string>
+    <string name="input_password_hint">输入密码</string>
+    <string name="input_new_password_hint">输入新密码</string>
+    <string name="input_new_password_hint_again">再次输入新密码</string>
+    <string name="input_new_password_again_hint">重复密码</string>
     <string name="copy_success">复制成功</string>
     <string name="password_fail">密码错误</string>
     <string name="transfer_success">转账成功</string>
@@ -151,7 +156,7 @@
     <string name="old_password_error">原密码不正确</string>
     <string name="update_password_success">密码修改成功</string>
     <string name="update_wallet_name">修改钱包名称</string>
-    <string name="input_wallet_name_hint">请输入钱包名称</string>
+    <string name="input_wallet_name_hint">输入钱包名称</string>
     <string name="delete_success">删除成功</string>
     <string name="qrcode_handle_fail">解析二维码失败</string>
     <string name="wallet_manage_title">钱包管理</string>

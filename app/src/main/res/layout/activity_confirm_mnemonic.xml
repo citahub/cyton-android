@@ -2,59 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:zhy="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/confirm_mnemonic"
-        app:isShowLeft="true"/>
+        app:isShowLeft="true"
+        app:title="@string/confirm_mnemonic" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/warning_background"
-        android:textColor="@color/warning_font"
-        android:drawableStart="@drawable/warning"
         android:drawablePadding="5dp"
-        android:textSize="12sp"
+        android:drawableStart="@drawable/warning"
+        android:padding="10dp"
         android:text="@string/confirm_mnemonic_warning"
-        android:padding="10dp" />
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
 
     <com.zhy.view.flowlayout.TagFlowLayout
         android:id="@+id/mnemonic_text_layout"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        zhy:max_select="-1"
         android:layout_margin="@dimen/default_margin"
-        android:background="@color/default_white_f4"
-        android:padding="5dp">
-    </com.zhy.view.flowlayout.TagFlowLayout>
+        android:background="@drawable/add_wallet_log_corner_shape"
+        android:padding="5dp"
+        zhy:max_select="-1" />
 
     <com.zhy.view.flowlayout.TagFlowLayout
         android:id="@+id/mnemonic_tag_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        zhy:max_select="-1"
-        android:layout_margin="@dimen/default_margin">
-    </com.zhy.view.flowlayout.TagFlowLayout>
+        android:layout_margin="@dimen/default_margin"
+        zhy:max_select="-1" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/backup_complete"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
-        android:background="@drawable/button_corner_blue_shape"
+        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="30dp"
-        android:textSize="15sp"
+        android:background="@drawable/button_corner_blue_shape"
+        android:text="@string/backup_complete"
         android:textColor="@color/white"
-        android:text="@string/backup_complete"/>
+        android:textSize="15sp" />
 
 
 </LinearLayout>

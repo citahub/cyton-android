@@ -68,6 +68,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         otherImg.setOnClickListener(this);
         authBtn.setOnClickListener(this);
         arrowImg.setOnClickListener(this);
+        walletNameTv.setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +81,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.iv_down_arrow:
             case R.id.tv_select_hint:
+            case R.id.tv_wallet_name:
                 SelectWalletPopupwWindow popupwWindow = new SelectWalletPopupwWindow(this, walletItems, walletItem -> {
                     this.walletItem = walletItem;
                     walletNameTv.setText(walletItem.name);
