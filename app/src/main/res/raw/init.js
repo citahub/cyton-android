@@ -28,12 +28,12 @@ window.Neuron.init(rpcURL, {
     if (tx.chainType == "ETH") {
         var gasLimit = tx.gasLimit || tx.gas || null;
         var gasPrice = tx.gasPrice || null;
-        neuron.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
+        neuronSign.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
                         data, chainId, version, chainType);
     } else {
         var quota = tx.quota || null;
         var validUntilBlock = tx.validUntilBlock || 0;
-        neuron.signTransaction(id, tx.to || null, value, nonce, quota, validUntilBlock,
+        neuronSign.signTransaction(id, tx.to || null, value, nonce, quota, validUntilBlock,
                         data, chainId, version, chainType);
     }
   },
@@ -42,21 +42,21 @@ window.Neuron.init(rpcURL, {
     const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
     Neuron.addCallback(id, cb)
-    neuron.signMessage(id, data, chainType);
+    neuronSign.signMessage(id, data, chainType);
   },
   signPersonalMessage: function (msgParams, cb) {
     console.log('signPersonalMessage', msgParams)
     const { data, chainType } = msgParams
     const { id = 8888 } = msgParams
     Neuron.addCallback(id, cb)
-    neuron.signPersonalMessage(id, data, chainType);
+    neuronSign.signPersonalMessage(id, data, chainType);
   },
   signTypedMessage: function (msgParams, cb) {
     console.log('signTypedMessage ', msgParams)
     const { data } = msgParams
     const { id = 8888 } = msgParams
     Neuron.addCallback(id, cb)
-    neuron.signTypedMessage(id, JSON.stringify(data))
+    neuronSign.signTypedMessage(id, JSON.stringify(data))
   }
 }, {
     address: addressHex,
@@ -65,7 +65,7 @@ window.Neuron.init(rpcURL, {
 window.web3.setProvider = function () {
   console.debug('Neuron Wallet - overrode web3.setProvider')
 }
-window.web3.eth.defaultAccount = addressHex
+
 window.web3.version.getNetwork = function(cb) {
     cb(null, chainID)
 }

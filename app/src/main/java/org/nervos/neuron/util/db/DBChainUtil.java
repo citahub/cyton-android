@@ -22,7 +22,7 @@ public class DBChainUtil extends DBUtil {
     public static List<ChainItem> getAllChain(Context context) {
         List<ChainItem> chainItemList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_CHAIN, kryo);
+            DB db = openDB(context, DB_CHAIN);
             String[] keys = db.findKeys(DB_PREFIX);
             for(String key: keys) {
                 ChainItem chainItem = db.getObject(key, ChainItem.class);
@@ -38,7 +38,7 @@ public class DBChainUtil extends DBUtil {
 
     public static ChainItem getChain(Context context, int chainId) {
         try {
-            DB db = DBFactory.open(context, DB_CHAIN);
+            DB db = openDB(context, DB_CHAIN);
             ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
             db.close();
             return chainItem;
@@ -62,7 +62,7 @@ public class DBChainUtil extends DBUtil {
 
     public static void saveChain(Context context, ChainItem chainItem){
         try {
-            DB db = DBFactory.open(context, DB_CHAIN);
+            DB db = openDB(context, DB_CHAIN);
             db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
             db.close();
         } catch (SnappydbException e) {

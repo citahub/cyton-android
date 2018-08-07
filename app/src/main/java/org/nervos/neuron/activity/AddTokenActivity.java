@@ -16,11 +16,11 @@ import android.widget.Toast;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
-import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -61,7 +61,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        NervosRpcService.init(this, ConstUtil.NERVOS_NODE_IP);
+        NervosRpcService.init(this, HttpUrls.NERVOS_NODE_IP);
     }
 
     private void initView() {

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 
@@ -111,7 +112,7 @@ public class TransferActivity extends NBaseActivity {
     protected void initData() {
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
         EthRpcService.init(mActivity);
-        NervosRpcService.init(mActivity, ConstUtil.NERVOS_NODE_IP);
+        NervosRpcService.init(mActivity, HttpUrls.NERVOS_NODE_IP);
         walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);

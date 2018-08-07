@@ -83,7 +83,7 @@ public class Web3View extends WebView {
                 innerOnSignTransactionListener,
                 innerOnSignMessageListener,
                 innerOnSignPersonalMessageListener,
-                innerOnSignTypedMessageListener), "neuron");
+                innerOnSignTypedMessageListener), "neuronSign");
 
         super.setWebViewClient(webViewClient);
     }

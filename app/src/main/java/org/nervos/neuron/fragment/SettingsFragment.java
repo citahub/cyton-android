@@ -47,6 +47,7 @@ public class SettingsFragment extends NBaseFragment {
             if (SharePrefUtil.getBoolean(SharePreConst.FingerPrint, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
+                SharePrefUtil.putBoolean(SharePreConst.FingerPrint, false);
                 fingerPrintSBV.setSwitch(false);
             }
         } else {

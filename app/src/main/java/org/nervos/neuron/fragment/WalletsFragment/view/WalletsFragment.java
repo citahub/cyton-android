@@ -19,6 +19,7 @@ import org.nervos.neuron.activity.ChangeWalletActivity;
 import org.nervos.neuron.custom.WalletToolbar;
 import org.nervos.neuron.custom.WalletTopView;
 import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.fragment.CollectionListFragment.CollectionListFragment;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.TokenListFragment.view.TokenListFragment;
@@ -41,6 +42,7 @@ public class WalletsFragment extends NBaseFragment {
     private WalletTopView walletView;
     private WalletItem walletItem;
     private TokenListFragment tokenListFragment;
+    private CollectionListFragment collectionListFragment;
     private WalletFragmentPresenter presenter;
     private ImageView rightImage;
 
@@ -77,6 +79,7 @@ public class WalletsFragment extends NBaseFragment {
             presenter.setIndicator(mTabLayout, 70, 70);
         });
         tokenListFragment = new TokenListFragment();
+        collectionListFragment = new CollectionListFragment();
         presenter = new WalletFragmentPresenter(getActivity());
         initWalletData();
     }
@@ -85,16 +88,16 @@ public class WalletsFragment extends NBaseFragment {
     protected void initAction() {
         super.initAction();
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            int scrollRangle = appBarLayout.getTotalScrollRange();
+            int scrollRange = appBarLayout.getTotalScrollRange();
             if (verticalOffset == 0) {
                 toolbar.setAlpha(0.0f);
                 toolbar.setVisibility(View.GONE);
                 walletView.setAlpha(1.0f);
             } else {
-                float alfha = Math.round(100.0f * Math.abs(verticalOffset) / scrollRangle) / 100.0f;
-                toolbar.setAlpha(alfha);
+                float alpha = Math.round(100.0f * Math.abs(verticalOffset) / scrollRange) / 100.0f;
+                toolbar.setAlpha(alpha);
                 toolbar.setVisibility(View.VISIBLE);
-                walletView.setAlpha(1.0f - alfha);
+                walletView.setAlpha(1.0f - alpha);
             }
         });
         toolbar.setRightTitleClickListener((view) -> {
@@ -129,9 +132,9 @@ public class WalletsFragment extends NBaseFragment {
                 case 0:
                     return tokenListFragment;
                 case 1:
-                    return new SettingsFragment();
+                    return collectionListFragment;
                 default:
-                    return new TokenListFragment();
+                    return tokenListFragment;
             }
         }
 

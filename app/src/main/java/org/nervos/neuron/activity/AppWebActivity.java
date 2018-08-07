@@ -21,6 +21,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.SignService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
@@ -41,6 +42,9 @@ import org.nervos.neuron.webview.OnSignMessageListener;
 import org.nervos.neuron.webview.Web3View;
 import org.nervos.neuron.webview.item.Message;
 import org.nervos.neuron.webview.item.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppWebActivity extends BaseActivity {
 
@@ -138,10 +142,12 @@ public class AppWebActivity extends BaseActivity {
     private void initInjectWebView() {
 
         webView.setChainId(1);
-        webView.setRpcUrl(ConstUtil.ETH_NODE_IP);
+        webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
         webView.setWalletAddress(new Address(walletItem.address));
 
         webView.addJavascriptInterface(new NeuronAccount(), "neuronAccount");
+
+        webView.addJavascriptInterface(new Neuron(), "neuron");
 
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
@@ -169,6 +175,18 @@ public class AppWebActivity extends BaseActivity {
         @JavascriptInterface
         public String getAccount() {
             return walletItem.address;
+        }
+    }
+
+    private class Neuron {
+        @JavascriptInterface
+        public String getAccounts() {
+            List<WalletItem> walletItems = DBWalletUtil.getAllWallet(mActivity);
+            List<String> walletNames = new ArrayList<>();
+            for (WalletItem item : walletItems) {
+                walletNames.add(item.address);
+            }
+            return new Gson().toJson(walletNames);
         }
     }
 

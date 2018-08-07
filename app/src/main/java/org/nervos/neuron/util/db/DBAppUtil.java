@@ -17,7 +17,7 @@ public class DBAppUtil extends DBUtil {
 
     public static void saveDbApp(Context context, AppItem appItem) {
         try {
-            DB db = DBFactory.open(context, DB_APP, kryo);
+            DB db = openDB(context, DB_APP);
             db.put(getDbKey(appItem.entry), appItem);
             db.close();
         } catch (SnappydbException e) {
@@ -27,7 +27,7 @@ public class DBAppUtil extends DBUtil {
 
     public static void deleteApp(Context context, String entry) {
         try {
-            DB db = DBFactory.open(context, DB_APP);
+            DB db = openDB(context, DB_APP);
             db.del(getDbKey(entry));
             db.close();
         } catch (SnappydbException e) {
@@ -38,7 +38,7 @@ public class DBAppUtil extends DBUtil {
     public static List<AppItem> getAllApp(Context context) {
         List<AppItem> walletList = new ArrayList<>();
         try {
-            DB db = DBFactory.open(context, DB_APP);
+            DB db = openDB(context, DB_APP);
             String[] keys = db.findKeys(DB_PREFIX);
             db.close();
             for(String key: keys) {
@@ -52,7 +52,7 @@ public class DBAppUtil extends DBUtil {
 
     public static boolean findApp(Context context, String entry) {
         try {
-            DB db = DBFactory.open(context, DB_APP);
+            DB db = openDB(context, DB_APP);
             String[] keys = db.findKeys(getDbKey(entry));
             db.close();
             return keys.length > 0;
@@ -65,7 +65,7 @@ public class DBAppUtil extends DBUtil {
 
     public static AppItem getApp(Context context, String entry) {
         try {
-            DB db = DBFactory.open(context, DB_APP);
+            DB db = openDB(context, DB_APP);
             AppItem appItem = db.getObject(getDbKey(entry), AppItem.class);
             db.close();
             return appItem;
