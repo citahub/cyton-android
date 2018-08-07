@@ -23,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -84,6 +85,7 @@ public class TransferActivity extends NBaseActivity {
     private String transactionHexData;
     private double mPrice = 0.0f;
     private CurrencyItem currencyItem;
+    private TitleBar titleBar;
 
     @Override
     protected int getContentLayout() {
@@ -112,12 +114,14 @@ public class TransferActivity extends NBaseActivity {
         payHexDataEdit = findViewById(R.id.pay_hex_data);
         gasEditLayout = findViewById(R.id.gas_layout);
         quotaEditLayout = findViewById(R.id.quota_layout);
+        titleBar = findViewById(R.id.title);
 
     }
 
     @Override
     protected void initData() {
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        titleBar.setTitle(tokenItem.symbol + getString(R.string.title_transfer));
         EthRpcService.init(mActivity);
         NervosRpcService.init(mActivity, HttpUrls.NERVOS_NODE_IP);
         walletItem = DBWalletUtil.getCurrentWallet(this);
