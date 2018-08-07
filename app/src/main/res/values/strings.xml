@@ -15,6 +15,7 @@
     <string name="setting">设置</string>
     <string name="sending">发送中...</string>
     <string name="select_wallet">请选择钱包</string>
+    <string name="select_wallet_unlock">选择钱包</string>
     <string name="title_add_token">添加新资产</string>
     <string name="title_add_wallet">新增钱包</string>
     <string name="add_wallet">添加钱包</string>
@@ -128,6 +129,7 @@
     <string name="wallet_export_success">钱包导入成功</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="wallet_importing">钱包导入中...</string>
+    <string name="wallet_pwd_hint">钱包密码</string>
     <string name="wallet_total_money">总资产</string>
     <string name="generating">正在生成</string>
     <string name="password_use_protect_private_key">此密码将被用于保护私钥和交易授权</string>
@@ -214,4 +216,5 @@
     <string name="fingerprint_lock_success">指纹解锁成功！</string>
     <string name="fingerprint_lock_failed">指纹解锁失败！</string>
     <string name="finger_print_no_touchID">对不起，没有可用TouchID，请用其他方式解锁</string>
+    <string name="pwd_auth_button">验证</string>
 </resources>
