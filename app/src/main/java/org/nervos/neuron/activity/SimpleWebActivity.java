@@ -2,6 +2,7 @@ package org.nervos.neuron.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -30,6 +31,16 @@ public class SimpleWebActivity extends BaseActivity {
         String url = getIntent().getStringExtra(EXTRA_URL);
         initWebView();
         webView.loadUrl(url);
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            return getResources().getColor(R.color.white, null);
+        } else {
+            return super.getStatusBarColor();
+        }
     }
 
     public static void gotoSimpleWeb(Context context, String url) {

@@ -31,4 +31,7 @@ public class ConstUtil {
     public static final String DECIMALS_HASH = "313ce567";
     public static final String BALANCEOF_HASH = "70a08231";
 
+
+    public static final String FingerPrint = "FingerPrint";
+    public static final String Currency = "Currency";
 }

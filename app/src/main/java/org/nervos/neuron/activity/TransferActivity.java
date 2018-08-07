@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
@@ -22,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
@@ -33,9 +35,11 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
@@ -47,6 +51,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
@@ -77,6 +82,8 @@ public class TransferActivity extends NBaseActivity {
     private BigInteger mGasPrice, mGasUnit, mGasLimit = BigInteger.ZERO, mQuota, mQuotaUnit, mGas;
     private boolean isGasPriceOk = false, isGasLimitOk = false;
     private String transactionHexData;
+    private double mPrice = 0.0f;
+    private CurrencyItem currencyItem;
 
     @Override
     protected int getContentLayout() {
@@ -120,6 +127,7 @@ public class TransferActivity extends NBaseActivity {
         if (isETH()) {
             feeSeekBar.setMax(MAX_FEE);
             initGasInfo();
+            initPrice();
         } else {
             feeSeekBar.setMax(MAX_QUOTA_SEEK);
             initQuota();
@@ -147,12 +155,48 @@ public class TransferActivity extends NBaseActivity {
                 mGasLimit = ConstUtil.ETH.equalsIgnoreCase(tokenItem.symbol)?
                         ConstUtil.GAS_LIMIT : ConstUtil.GAS_ERC20_LIMIT;
                 mGas = mGasLimit.multiply(mGasPrice);
-
                 feeSeekBar.setProgress(mGasLimit.divide(ConstUtil.GAS_MIN_LIMIT).intValue());
-                feeSeekText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(mGas)) + tokenUnit);
-                feeValueText.setText(feeSeekText.getText());
+
+                initFeeText();
             }
         });
+    }
+
+    private void initPrice() {
+        currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
+        TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
+            .subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+                @Override
+                public void onNext(String price) {
+                    if (TextUtils.isEmpty(price)) return;
+                    try {
+                        mPrice = Double.parseDouble(price);
+                        initFeeText();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void initFeeText() {
+        double fee = NumberUtil.getEthFromWei(mGas);
+        if (fee > 0) {
+            feeSeekText.setText(NumberUtil.getDecimal_8(fee) + tokenUnit);
+            if (mPrice > 0 && currencyItem != null) {
+                feeValueText.setText(feeSeekText.getText() + "=" +
+                        currencyItem.getSymbol() + NumberUtil.getDecimal_6(fee*mPrice));
+            }
+        }
     }
 
     private void initQuota() {
@@ -199,10 +243,9 @@ public class TransferActivity extends NBaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progress = progress < 1? 1 : progress;
                 if (isETH()) {
-                    BigInteger gas = mGasUnit.multiply(BigInteger.valueOf(progress));
+                    mGas = mGasUnit.multiply(BigInteger.valueOf(progress));
                     mGasLimit = mGasLimit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getDecimal_8(NumberUtil.getEthFromWei(gas)) + tokenUnit);
-                    feeValueText.setText(feeSeekText.getText());
+                    initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
                     feeSeekText.setText(String.valueOf(NumberUtil.getEthFromWei(mQuota)));

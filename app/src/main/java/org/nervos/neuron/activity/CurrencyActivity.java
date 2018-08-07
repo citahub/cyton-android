@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +18,13 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.CurrencyListItem;
-import org.nervos.neuron.util.SharePreConst;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.StreamUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 包俊 on 2018/7/31.
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 public class CurrencyActivity extends NBaseActivity {
 
     private RecyclerView currencyRecycler;
-    private ArrayList<CurrencyItem> currencyArray;
+    private List<CurrencyItem> currencyArray;
     private TitleBar title;
 
     @Override
@@ -45,7 +48,12 @@ public class CurrencyActivity extends NBaseActivity {
 
     @Override
     protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            return getResources().getColor(R.color.white, null);
+        } else {
+            return super.getStatusBarColor();
+        }
     }
 
     @Override
@@ -54,7 +62,7 @@ public class CurrencyActivity extends NBaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         currencyRecycler.setLayoutManager(linearLayoutManager);
-        currencyArray = setArray(this);
+        currencyArray = CurrencyUtil.getCurrencyList(this);
         Adapter adapter = new Adapter();
         currencyRecycler.setAdapter(adapter);
         title.setOnLeftClickListener(() -> {
@@ -79,14 +87,14 @@ public class CurrencyActivity extends NBaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CurrencyItem currency = currencyArray.get(position);
-            if (SharePrefUtil.getString(SharePreConst.Currency, "CNY").equals(currency.getName())) {
+            if (SharePrefUtil.getString(ConstUtil.Currency, "CNY").equals(currency.getName())) {
                 holder.chosenImage.setVisibility(View.VISIBLE);
             } else {
                 holder.chosenImage.setVisibility(View.GONE);
             }
             holder.currencyText.setText(currency.getName());
             holder.root.setOnClickListener((view) -> {
-                SharePrefUtil.putString(SharePreConst.Currency, currency.getName());
+                SharePrefUtil.putString(ConstUtil.Currency, currency.getName());
                 notifyDataSetChanged();
             });
         }
@@ -115,12 +123,6 @@ public class CurrencyActivity extends NBaseActivity {
     public void finish() {
         setResult(RESULT_OK);
         super.finish();
-    }
-
-    public static ArrayList<CurrencyItem> setArray(Context context) {
-        String data = StreamUtils.get(context, R.raw.currency);
-        Gson gson = new Gson();
-        return gson.fromJson(data, CurrencyListItem.class).getCurrency();
     }
 
 }

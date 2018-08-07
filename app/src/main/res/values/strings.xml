@@ -85,6 +85,7 @@
     <string name="change_password_suggestion">密码必须至少8个字符，而且同时包含字母和数字</string>
     <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度在8到50之间</string>
     <string name="empty_no_token_data">您还没有Token数据</string>
+    <string name="empty_no_collection_data">您还没有藏品数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
     <string name="empty_no_history_data">您还没有历史浏览记录</string>
     <string name="ethereum_main_net">Ethereum Mainnet</string>
@@ -126,7 +127,7 @@
     <string name="fingerprint_setting_failed">指纹设置失败！</string>
     <string name="setting_about_us">关于我们</string>
     <string name="setting_contact_us">联系我们</string>
-    <string name="about_us_title">关于</string>
+    <string name="about_us_title">关于我们</string>
     <string name="wallet_password_error">钱包密码错误</string>
     <string name="password">密码</string>
     <string name="ask_confirm_delete_wallet">确认删除钱包吗？</string>
@@ -217,7 +218,6 @@
     <string name="transaction_number">交易流水号：</string>
     <string name="transaction_blockchain_no">所在区块：</string>
     <string name="transaction_blockchain_time">入块时间：</string>
-
     <string name="finger_print_des">点击进行指纹验证</string>
     <string name="finger_print_other_login">其它方式验证</string>
     <string name="fingerprint_lock_success">指纹解锁成功！</string>
@@ -226,4 +226,7 @@
     <string name="pwd_auth_button">验证</string>
     <string name="pwd_auth_failed">密码错误,请重试</string>
     <string name="pwd_auth_success">解锁成功</string>
+
+    <string name="neuron_is_a">Neuron is a</string>
+    <string name="product">product</string>
 </resources>

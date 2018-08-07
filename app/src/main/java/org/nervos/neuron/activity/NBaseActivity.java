@@ -15,8 +15,8 @@ import org.nervos.neuron.R;
 public abstract class NBaseActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedactivityState) {
-        super.onCreate(savedactivityState);
+    protected void onCreate(Bundle savedActivityState) {
+        super.onCreate(savedActivityState);
         if (getContentLayout() != 0) {
             setContentView(getContentLayout());
         }

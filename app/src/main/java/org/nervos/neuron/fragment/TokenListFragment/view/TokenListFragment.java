@@ -26,13 +26,16 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by BaojunCZ on 2018/8/2.
@@ -90,7 +93,6 @@ public class TokenListFragment extends NBaseFragment {
                 intent.putExtra(TransactionListActivity.EXTRA_TOKEN, tokenItemList.get(position));
                 startActivity(intent);
             }
-
             @Override
             public CurrencyItem getCurrency() {
                 return currencyItem;
@@ -106,8 +108,9 @@ public class TokenListFragment extends NBaseFragment {
     }
 
     private void setCurrency() {
-        if (currencyItem == null || !currencyItem.getName().equals(presenter.getCurrencyItem().getName())) {
-            currencyItem = presenter.getCurrencyItem();
+        if (currencyItem == null ||
+                !currencyItem.getName().equals(CurrencyUtil.getCurrencyItem(getContext()).getName())) {
+            currencyItem = CurrencyUtil.getCurrencyItem(getContext());
             totalText.setText(getResources().getString(R.string.wallet_total_money) + "(" + currencyItem.getUnit() + ")");
             getPrice();
         }
@@ -128,9 +131,9 @@ public class TokenListFragment extends NBaseFragment {
     }
 
     private void initWalletData(boolean showProgress) {
-        WalletItem walletItem1 = DBWalletUtil.getCurrentWallet(getContext());
+        walletItem = DBWalletUtil.getCurrentWallet(getContext());
         if (showProgress) showProgressBar();
-        WalletService.getWalletTokenBalance(getContext(), walletItem1, walletItem ->
+        WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
                 recyclerView.post(() -> {
                     if (showProgress) dismissProgressBar();
                     swipeRefreshLayout.setRefreshing(false);
@@ -158,29 +161,27 @@ public class TokenListFragment extends NBaseFragment {
     private void getPrice() {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
-                TokenService.getCurrency(item.symbol,currencyItem.getName()).subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                        adapter.notifyDataSetChanged();
-                        moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        if (!TextUtils.isEmpty(s)) {
-                            double price = Double.parseDouble(s.trim());
-                            DecimalFormat df = new DecimalFormat("######0.00");
-//                                        item.currencyPrice = Double.parseDouble(df.format(price * 0.155));
-                            item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                        } else
-                            item.currencyPrice = 0.00;
-                    }
-                });
+                TokenService.getCurrency(item.symbol, currencyItem.getName())
+                    .subscribe(new Subscriber<String>() {
+                        @Override
+                        public void onCompleted() {
+                            adapter.notifyDataSetChanged();
+                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+                        @Override
+                        public void onNext(String s) {
+                            if (!TextUtils.isEmpty(s)) {
+                                double price = Double.parseDouble(s.trim());
+                                DecimalFormat df = new DecimalFormat("######0.00");
+                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                            } else
+                                item.currencyPrice = 0.00;
+                        }
+                    });
         }
     }
 

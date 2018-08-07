@@ -102,6 +102,8 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
             case R.id.wallet_photo:
                 context.startActivity(new Intent(context, WalletManageActivity.class));
                 break;
+            default:
+                break;
         }
     }
 }

@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
+import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.custom.WalletToolbar;
 import org.nervos.neuron.custom.WalletTopView;
 import org.nervos.neuron.event.TokenRefreshEvent;
@@ -82,6 +83,7 @@ public class WalletsFragment extends NBaseFragment {
         collectionListFragment = new CollectionListFragment();
         presenter = new WalletFragmentPresenter(getActivity());
         initWalletData();
+
     }
 
     @Override
