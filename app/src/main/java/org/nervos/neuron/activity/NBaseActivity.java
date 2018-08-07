@@ -20,6 +20,7 @@ public abstract class NBaseActivity extends BaseActivity {
         if (getContentLayout() != 0) {
             setContentView(getContentLayout());
         }
+        EventBus.getDefault().register(this);
         initView();
         initData();
         initAction();
