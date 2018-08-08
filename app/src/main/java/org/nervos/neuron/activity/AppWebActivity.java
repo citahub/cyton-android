@@ -146,8 +146,6 @@ public class AppWebActivity extends BaseActivity {
         webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
         webView.setWalletAddress(new Address(walletItem.address));
 
-        webView.addJavascriptInterface(new NeuronAccount(), "neuronAccount");
-
         webView.addJavascriptInterface(new Neuron(), "neuron");
 
         webView.setOnSignTransactionListener(transaction -> {
@@ -171,15 +169,13 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
-    private class NeuronAccount {
+    private class Neuron {
 
         @JavascriptInterface
         public String getAccount() {
             return walletItem.address;
         }
-    }
 
-    private class Neuron {
         @JavascriptInterface
         public String getAccounts() {
             List<WalletItem> walletItems = DBWalletUtil.getAllWallet(mActivity);

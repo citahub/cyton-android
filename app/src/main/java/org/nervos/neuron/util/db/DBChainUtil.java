@@ -1,10 +1,8 @@
 package org.nervos.neuron.util.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.snappydb.DB;
-import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.ChainItem;
