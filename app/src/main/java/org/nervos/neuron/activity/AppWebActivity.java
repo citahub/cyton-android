@@ -101,16 +101,6 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            return getResources().getColor(R.color.white, null);
-        } else {
-            return super.getStatusBarColor();
-        }
-    }
-
     private void initMenuView() {
         findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.menu_background).setVisibility(View.VISIBLE);

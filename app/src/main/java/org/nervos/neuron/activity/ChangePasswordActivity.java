@@ -74,11 +74,6 @@ public class ChangePasswordActivity extends NBaseActivity {
         });
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
     private boolean isWalletValid() {
         return check1 && check2 && check3;
     }

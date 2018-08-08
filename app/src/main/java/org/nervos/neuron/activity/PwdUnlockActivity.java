@@ -100,11 +100,6 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     }
 
     @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_down_arrow:

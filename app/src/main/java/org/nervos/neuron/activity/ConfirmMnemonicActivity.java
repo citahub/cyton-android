@@ -111,11 +111,6 @@ public class ConfirmMnemonicActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
     private void backupComplete() {
         findViewById(R.id.backup_complete).setOnClickListener(new View.OnClickListener() {
             @Override
