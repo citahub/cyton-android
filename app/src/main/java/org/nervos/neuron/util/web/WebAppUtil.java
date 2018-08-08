@@ -67,6 +67,9 @@ public class WebAppUtil {
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByTag("link");
                 for(Element element: elements) {
+                    if ("manifest".equals(element.attr("rel"))) {
+                        return element.attr("href");
+                    }
                     if ("manifest".equals(element.attr("ref"))) {
                         return element.attr("href");
                     }
