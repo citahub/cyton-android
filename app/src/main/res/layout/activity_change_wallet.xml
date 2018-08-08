@@ -11,7 +11,7 @@
         android:id="@+id/iv_pull"
         android:layout_width="100dp"
         android:layout_height="34dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="11dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_wallet_change_pull"/>
 
