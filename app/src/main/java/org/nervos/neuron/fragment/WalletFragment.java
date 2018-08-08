@@ -102,7 +102,7 @@ public class WalletFragment extends BaseFragment {
             walletNameText.setText(walletItem.name);
             addressText.setText(walletItem.address);
             photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-            WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
+            WalletService.getWalletTokenBalance(getContext(), walletItem ->
                     walletNameText.post(() -> {
                         if (showProgress) dismissProgressBar();
                         swipeRefreshLayout.setRefreshing(false);

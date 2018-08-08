@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:isShowLeft="true"
-        app:title="@string/title_transaction" />
+        app:isShowLeft="true"/>
 
     <RelativeLayout
         android:id="@+id/transfer_layout"

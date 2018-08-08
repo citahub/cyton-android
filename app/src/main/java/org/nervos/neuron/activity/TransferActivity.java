@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -38,6 +39,7 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
@@ -45,6 +47,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -54,6 +57,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
@@ -62,7 +66,6 @@ public class TransferActivity extends NBaseActivity {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
-    private static final String tokenUnit = "eth";
     private static final int MAX_QUOTA_SEEK = 1000;
     private static final int DEFAULT_QUOTA_SEEK = 8;
     private static final int MAX_FEE = 100;
@@ -129,6 +132,7 @@ public class TransferActivity extends NBaseActivity {
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+        initBalance();
         if (isETH()) {
             feeSeekBar.setMax(MAX_FEE);
             initGasInfo();
@@ -139,6 +143,25 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private void initBalance() {
+        WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new Subscriber<Double>() {
+            @Override
+            public void onCompleted() {
+
+            }
+            @Override
+            public void onError(Throwable e) {
+
+            }
+            @Override
+            public void onNext(Double balance) {
+                balanceText.setText(String.format(
+                        getString(R.string.transfer_balance_place_holder), balance + tokenItem.symbol));
+            }
+        });
+    }
+
     private void initGasInfo() {
         showProgressCircle();
         EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
@@ -146,14 +169,12 @@ public class TransferActivity extends NBaseActivity {
             public void onCompleted() {
 
             }
-
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 dismissProgressCircle();
             }
-
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
@@ -172,27 +193,26 @@ public class TransferActivity extends NBaseActivity {
     private void initPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+            .subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
+                @Override
+                public void onNext(String price) {
+                    if (TextUtils.isEmpty(price)) return;
+                    try {
+                        mPrice = Double.parseDouble(price);
+                        initFeeText();
+                    } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
-
-                    @Override
-                    public void onNext(String price) {
-                        if (TextUtils.isEmpty(price)) return;
-                        try {
-                            mPrice = Double.parseDouble(price);
-                            initFeeText();
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                }
+            });
     }
 
 
@@ -200,21 +220,22 @@ public class TransferActivity extends NBaseActivity {
     private void initFeeText() {
         double fee = NumberUtil.getEthFromWei(mGas);
         if (fee > 0) {
-            feeSeekText.setText(NumberUtil.getDecimal_8(fee) + tokenUnit);
+            feeSeekText.setText(fee + getTokenUnit());
             if (mPrice > 0 && currencyItem != null) {
                 feeValueText.setText(feeSeekText.getText() + "=" +
-                        currencyItem.getSymbol() + NumberUtil.getDecimal_6(fee * mPrice));
+                        currencyItem.getSymbol() + NumberUtil.getDecimal_8(fee * mPrice));
             }
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void initQuota() {
         mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
                 ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
         mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
         feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
 
-        feeSeekText.setText(String.valueOf(NumberUtil.getEthFromWei(mQuota)));
+        feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
         feeValueText.setText(feeSeekText.getText());
     }
 
@@ -257,7 +278,7 @@ public class TransferActivity extends NBaseActivity {
                     initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(String.valueOf(NumberUtil.getEthFromWei(mQuota)));
+                    feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -369,23 +390,33 @@ public class TransferActivity extends NBaseActivity {
         return tokenItem.chainId < 0;
     }
 
+    private String getTokenUnit() {
+        if (isETH()) {
+            return "ETH";
+        } else {
+            return Objects.requireNonNull(DBChainUtil.getChain(mActivity, tokenItem.chainId)).tokenSymbol;
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private void advancedSetupETHFeeValue() {
         gasEditLayout.setVisibility(View.VISIBLE);
         quotaEditLayout.setVisibility(View.GONE);
         if (isGasLimitOk && isGasPriceOk) {
-            feeValueText.setText(NumberUtil.getDecimal_8(
-                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit))) + tokenUnit);
+            feeValueText.setText(
+                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit)) + getTokenUnit());
         } else {
             feeValueText.setText("0");
         }
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void advancedSetupNervosFeeValue() {
         gasEditLayout.setVisibility(View.GONE);
         quotaEditLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
-            feeValueText.setText(String.valueOf(NumberUtil.getEthFromWei(mQuota)));
+            feeValueText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
         } else {
             feeValueText.setText("0");
         }
@@ -490,7 +521,6 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onCompleted() {
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();

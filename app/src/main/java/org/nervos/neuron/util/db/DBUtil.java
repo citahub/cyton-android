@@ -12,6 +12,8 @@ public class DBUtil {
 
     static final String DB_PREFIX = "neuron-";
 
+    static final Object dbObject = new Object();
+
     static final Kryo kryo = new Kryo();
 
     static {
