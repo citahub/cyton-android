@@ -15,22 +15,25 @@
         app:right_img="@drawable/ic_transaction_share"
         app:title="@string/transaction_detail_title" />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/ll_screenshot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_top"
             android:layout_width="match_parent"
-            android:layout_height="115dp"
-            android:background="@color/white">
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,375:130"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_success"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_transaction_success"
+                android:contentDescription="TODO"
                 app:layout_constraintBottom_toTopOf="@id/transaction_amount"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -56,9 +59,11 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="12dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/cl_top">
 
             <TextView
                 android:id="@+id/tv_chain_name_title"
@@ -186,6 +191,6 @@
                 app:layout_constraintTop_toTopOf="@id/tv_transaction_blockchain_time_title" />
 
         </android.support.constraint.ConstraintLayout>
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
