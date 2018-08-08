@@ -79,9 +79,4 @@ public class ImportWalletActivity extends NBaseActivity {
 
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
 }

@@ -56,7 +56,8 @@ public class TokenManageActivity extends BaseActivity {
     private void initData() {
         tokenNames = DBWalletUtil.getAllWalletName(mActivity);
         String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
-        Type type = new TypeToken<List<TokenEntity>>() {}.getType();
+        Type type = new TypeToken<List<TokenEntity>>() {
+        }.getType();
         tokenList = new Gson().fromJson(tokens, type);
         addCustomToken();
         adapter.notifyDataSetChanged();
@@ -98,16 +99,17 @@ public class TokenManageActivity extends BaseActivity {
 
     class TokenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(
                     mActivity).inflate(R.layout.item_token_info, parent,
                     false));
             return holder;
         }
+
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
-                TokenViewHolder viewHolder = (TokenViewHolder)holder;
+                TokenViewHolder viewHolder = (TokenViewHolder) holder;
                 if (tokenList.get(position).logo == null ||
                         TextUtils.isEmpty(tokenList.get(position).logo.src)) {
                     viewHolder.tokenImage.setImageResource(R.drawable.ether_big);
@@ -119,14 +121,14 @@ public class TokenManageActivity extends BaseActivity {
                 viewHolder.tokenContractAddress.setText(tokenList.get(position).address);
                 tokenList.get(position).isSelected =
                         DBWalletUtil.checkTokenInCurrentWallet(mActivity, tokenList.get(position).symbol);
-                viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected?
-                        R.drawable.circle_selected:R.drawable.circle_unselect);
+                viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
+                        R.drawable.circle_selected : R.drawable.circle_unselect);
                 viewHolder.tokenSelectImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         tokenList.get(position).isSelected = !tokenList.get(position).isSelected;
-                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected?
-                                R.drawable.circle_selected:R.drawable.circle_unselect);
+                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
+                                R.drawable.circle_selected : R.drawable.circle_unselect);
                         if (tokenList.get(position).isSelected) {
                             DBWalletUtil.addTokenToCurrentWallet(mActivity,
                                     new TokenItem(tokenList.get(position)));
@@ -146,14 +148,14 @@ public class TokenManageActivity extends BaseActivity {
         }
 
 
-        class  TokenViewHolder extends RecyclerView.ViewHolder {
+        class TokenViewHolder extends RecyclerView.ViewHolder {
             SimpleDraweeView tokenImage;
             TextView tokenName;
             TextView tokenSymbol;
             TextView tokenContractAddress;
             ImageView tokenSelectImage;
 
-            public TokenViewHolder (View view) {
+            public TokenViewHolder(View view) {
                 super(view);
                 tokenImage = view.findViewById(R.id.token_image);
                 tokenName = view.findViewById(R.id.token_name_text);

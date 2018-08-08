@@ -33,16 +33,6 @@ public class SimpleWebActivity extends BaseActivity {
         webView.loadUrl(url);
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            return getResources().getColor(R.color.white, null);
-        } else {
-            return super.getStatusBarColor();
-        }
-    }
-
     public static void gotoSimpleWeb(Context context, String url) {
         Intent intent = new Intent(context, SimpleWebActivity.class);
         intent.putExtra(SimpleWebActivity.EXTRA_URL, url);
@@ -54,7 +44,7 @@ public class SimpleWebActivity extends BaseActivity {
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
         WebAppUtil.initWebSettings(webView.getSettings());
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
                 if (newProgress == 100) {
@@ -64,13 +54,14 @@ public class SimpleWebActivity extends BaseActivity {
                     progressBar.setProgress(newProgress);
                 }
             }
+
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 titleBar.setTitle(title);
             }
         });
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;

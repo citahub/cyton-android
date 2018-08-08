@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/iv_left"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dip"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="15dip"
             android:src="@drawable/ic_wallet_top_left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/iv_center"
-            android:layout_width="100dip"
-            android:layout_height="30dip"
+            android:layout_width="95dip"
+            android:layout_height="26dip"
             android:src="@drawable/ic_wallet_top_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -33,9 +33,9 @@
 
         <ImageView
             android:id="@+id/iv_right"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="10dip"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginRight="15dip"
             android:src="@drawable/ic_wallet_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -45,15 +45,16 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/qrcode_receipt_top"
+        app:layout_constraintDimensionRatio="388:122"
         app:layout_constraintTop_toBottomOf="@id/cl_title">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wallet_photo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
             android:src="@mipmap/ic_launcher"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -63,6 +64,7 @@
             android:id="@+id/qrcode_wallet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:text="wallet"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -71,6 +73,7 @@
             app:layout_constraintTop_toBottomOf="@id/wallet_photo" />
 
         <TextView
+            android:layout_marginTop="3dp"
             android:id="@+id/qrcode_wallet_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

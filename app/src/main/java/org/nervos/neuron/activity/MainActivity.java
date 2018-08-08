@@ -40,6 +40,11 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.colorPrimary);
+    }
+
     private void initView() {
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);

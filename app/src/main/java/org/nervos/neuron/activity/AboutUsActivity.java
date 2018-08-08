@@ -25,16 +25,6 @@ public class AboutUsActivity extends NBaseActivity {
     }
 
     @Override
-    protected int getStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            return getResources().getColor(R.color.white, null);
-        } else {
-            return super.getStatusBarColor();
-        }
-    }
-
-    @Override
     protected void initView() {
         versionText = findViewById(R.id.app_version);
         sourceCodeSBV = findViewById(R.id.sbv_source_code);

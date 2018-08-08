@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/iv_pull"
-        android:layout_width="100dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="15dp"
+        android:layout_width="70dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="11dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_wallet_change_pull"/>
 
@@ -19,8 +19,8 @@
         android:id="@+id/wallet_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="30dip"
-        android:layout_marginRight="30dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
         android:layout_marginTop="15dp"
         android:background="@color/transparent"
         app:layout_constraintTop_toBottomOf="@id/iv_pull" />

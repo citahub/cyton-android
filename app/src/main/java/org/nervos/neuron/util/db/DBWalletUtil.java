@@ -3,18 +3,14 @@ package org.nervos.neuron.util.db;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.snappydb.DB;
-import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.LogUtil;
-import org.nervos.neuron.crypto.AESCrypt;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;

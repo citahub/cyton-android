@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
@@ -115,7 +116,7 @@ public class TransactionListActivity extends NBaseActivity {
 
     private void getTransactionList() {
         if (!isNativeToken(tokenItem)) return;
-        Observable<List<TransactionItem>> observable = isETH(tokenItem)?
+        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
                 NervosHttpService.getETHTransactionList(mActivity)
                 : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
@@ -124,12 +125,14 @@ public class TransactionListActivity extends NBaseActivity {
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
+
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
+
             @Override
             public void onNext(List<TransactionItem> list) {
                 if (list == null) {
@@ -161,11 +164,12 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == VIEW_TYPE_EMPTY) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
-                ((TextView)view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
-                return new RecyclerView.ViewHolder(view){};
+                ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
+                return new RecyclerView.ViewHolder(view) {
+                };
             }
             TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(
                     mActivity).inflate(R.layout.item_transaction_list, parent,
@@ -177,12 +181,12 @@ public class TransactionListActivity extends NBaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
-                TransactionViewHolder viewHolder = (TransactionViewHolder)holder;
+                TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
                 if (walletItem != null) {
                     viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 }
                 viewHolder.transactionIdText.setText(transactionItem.hash);
-                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address)? "-" : "+")
+                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
                 viewHolder.transactionChainNameText.setText(transactionItem.chainName);
@@ -207,18 +211,18 @@ public class TransactionListActivity extends NBaseActivity {
             return VIEW_TYPE_ITEM;
         }
 
-        class  TransactionViewHolder extends RecyclerView.ViewHolder {
+        class TransactionViewHolder extends RecyclerView.ViewHolder {
             CircleImageView walletImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
             TextView transactionChainNameText;
 
-            public TransactionViewHolder (View view) {
+            public TransactionViewHolder(View view) {
                 super(view);
                 view.setOnClickListener(v -> {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(v, (int)v.getTag());
+                        onItemClickListener.onItemClick(v, (int) v.getTag());
                     }
                 });
                 walletImage = view.findViewById(R.id.wallet_photo);
@@ -230,7 +234,7 @@ public class TransactionListActivity extends NBaseActivity {
         }
     }
 
-    private interface OnItemClickListener{
+    private interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
 

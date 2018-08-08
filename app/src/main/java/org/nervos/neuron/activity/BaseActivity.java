@@ -35,6 +35,10 @@ public class BaseActivity extends AppCompatActivity {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && getStatusBarColor() == getResources().getColor(R.color.white)) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getStatusBarColor());
         }
@@ -44,7 +48,7 @@ public class BaseActivity extends AppCompatActivity {
      * set statusBarColor
      */
     protected int getStatusBarColor() {
-        return getResources().getColor(R.color.colorPrimary);
+        return getResources().getColor(R.color.white);
     }
 
     public void onDestroy() {

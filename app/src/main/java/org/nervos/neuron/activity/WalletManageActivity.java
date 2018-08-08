@@ -156,11 +156,6 @@ public class WalletManageActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
     private void generateKeystore(String password) {
         showProgressBar(R.string.generating);
         new Thread() {

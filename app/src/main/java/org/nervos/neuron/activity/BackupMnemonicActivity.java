@@ -43,11 +43,6 @@ public class BackupMnemonicActivity extends NBaseActivity {
         });
     }
 
-    @Override
-    protected int getStatusBarColor() {
-        return getResources().getColor(R.color.white);
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCloseWalletEvent(CloseWalletInfoEvent event) {
         finish();
