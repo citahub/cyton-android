@@ -18,14 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
             android:src="@drawable/ic_about_us_logo"
             app:civ_border_color="@color/default_gray_d5"
             app:civ_border_width="1dp" />
@@ -36,7 +35,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dip"
             android:text="@string/app_name"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title"
             android:textSize="16sp" />
 
         <TextView
@@ -44,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dip"
-            android:textColor="@color/default_black"
+            android:layout_marginBottom="17dp"
+            android:textColor="@color/font_inside"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -91,28 +90,29 @@
         app:icon="@drawable/ic_about_us_open_sea"
         app:name="Open Sea"
         app:other1="false" />
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/default_margin"
         android:layout_weight="1"
         android:gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/default_margin"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
             android:layout_marginEnd="3dp"
             android:text="@string/neuron_is_a"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_9"/>
-        
+            android:textColor="@color/default_gray_9"
+            android:textSize="12sp" />
+
         <ImageView
             android:layout_width="60dp"
             android:layout_height="20dp"
-            android:src="@drawable/neuron_logo"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            android:src="@drawable/neuron_logo" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginStart="3dp"
             android:text="@string/product"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_9"/>
+            android:textColor="@color/default_gray_9"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>
