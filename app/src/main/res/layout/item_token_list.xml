@@ -7,8 +7,8 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp"
         app:layout_constraintDimensionRatio="h,375:68">
 
         <com.facebook.drawee.view.SimpleDraweeView
