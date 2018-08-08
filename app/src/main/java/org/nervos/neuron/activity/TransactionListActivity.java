@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
@@ -115,8 +114,11 @@ public class TransactionListActivity extends NBaseActivity {
 
 
     private void getTransactionList() {
-        if (!isNativeToken(tokenItem)) return;
-        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
+        if (!isNativeToken(tokenItem)) {
+            dismissProgressBar();
+            return;
+        }
+        Observable<List<TransactionItem>> observable = isETH(tokenItem)?
                 NervosHttpService.getETHTransactionList(mActivity)
                 : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
