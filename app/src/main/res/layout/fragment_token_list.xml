@@ -25,7 +25,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="15dp"
                     android:text="@string/wallet_token_total_money"
                     android:textColor="@color/font_title_second"
                     android:textSize="14sp" />
@@ -47,7 +47,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="10dip"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="15dp"
                     android:layout_marginTop="10dip"
                     android:src="@drawable/ic_wallet_token_add" />
 
