@@ -3,6 +3,7 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -140,7 +141,7 @@ public class ChangeWalletActivity extends NBaseActivity {
         class WalletHolder extends RecyclerView.ViewHolder {
             ImageView photoImage, defaultImage;
             TextView nameText, addressText;
-            RelativeLayout root;
+            ConstraintLayout root;
 
             public WalletHolder(View itemView) {
                 super(itemView);
@@ -153,7 +154,7 @@ public class ChangeWalletActivity extends NBaseActivity {
         }
 
         class AddHolder extends RecyclerView.ViewHolder {
-            RelativeLayout root;
+            ConstraintLayout root;
 
             public AddHolder(View itemView) {
                 super(itemView);
