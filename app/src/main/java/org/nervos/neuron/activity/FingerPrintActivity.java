@@ -53,15 +53,17 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     AuthenticateResultCallback authenticateResultCallback = new AuthenticateResultCallback() {
         @Override
         public void onAuthenticationError(String errorMsg) {
-            Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
+            if (!errorMsg.contains("取消"))
+                Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-            Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_lock_success), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_lock_success), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, MainActivity.class));
+            finish();
         }
 
         @Override
