@@ -87,7 +87,7 @@
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
             android:layout_marginTop="5dp"
-            android:background="@color/line_input"
+            android:background="@color/button_unclick"
             app:layout_constraintTop_toBottomOf="@id/tv_wallet_name" />
 
         <android.support.v7.widget.AppCompatEditText
@@ -112,7 +112,7 @@
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
             android:layout_marginTop="5dp"
-            android:background="@color/line_input"
+            android:background="@color/button_unclick"
             app:layout_constraintTop_toBottomOf="@id/et_pwd" />
 
         <android.support.v7.widget.AppCompatButton
@@ -149,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_weight="1000"
-                android:background="@color/line_input" />
+                android:background="@color/line_form" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_weight="1000"
-                android:background="@color/line_input" />
+                android:background="@color/line_form" />
         </LinearLayout>
 
         <ImageView
