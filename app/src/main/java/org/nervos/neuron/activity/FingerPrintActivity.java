@@ -17,7 +17,6 @@ import org.nervos.neuron.util.FingerPrint.FingerPrintController;
  */
 public class FingerPrintActivity extends NBaseActivity implements View.OnClickListener {
 
-    private TextView cancelText;
     private ImageView fingerImg, otherImg;
     private AuthFingerDialog authFingerDialog = null;
 
@@ -28,14 +27,12 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     @Override
     protected void initView() {
-        cancelText = findViewById(R.id.tv_cancel);
         fingerImg = findViewById(R.id.iv_finger_print);
         otherImg = findViewById(R.id.iv_other);
     }
 
     @Override
     protected void initData() {
-        cancelText.setOnClickListener(this);
         fingerImg.setOnClickListener(this);
         otherImg.setOnClickListener(this);
     }
@@ -75,9 +72,6 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_cancel:
-                finish();
-                break;
             case R.id.iv_finger_print:
                 if (FingerPrintController.getInstance(mActivity).hasEnrolledFingerprints() && FingerPrintController.getInstance(mActivity).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
