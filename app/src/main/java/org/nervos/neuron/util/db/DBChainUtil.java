@@ -1,10 +1,8 @@
 package org.nervos.neuron.util.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.snappydb.DB;
-import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.ChainItem;
@@ -20,53 +18,61 @@ public class DBChainUtil extends DBUtil {
 
 
     public static List<ChainItem> getAllChain(Context context) {
-        List<ChainItem> chainItemList = new ArrayList<>();
-        try {
-            DB db = openDB(context, DB_CHAIN);
-            String[] keys = db.findKeys(DB_PREFIX);
-            for(String key: keys) {
-                ChainItem chainItem = db.getObject(key, ChainItem.class);
-                chainItem.chainId = Integer.parseInt(getDbOrigin(key));
-                chainItemList.add(chainItem);
+        synchronized (dbObject) {
+            List<ChainItem> chainItemList = new ArrayList<>();
+            try {
+                DB db = openDB(context, DB_CHAIN);
+                String[] keys = db.findKeys(DB_PREFIX);
+                for(String key: keys) {
+                    ChainItem chainItem = db.getObject(key, ChainItem.class);
+                    chainItem.chainId = Integer.parseInt(getDbOrigin(key));
+                    chainItemList.add(chainItem);
+                }
+                db.close();
+            } catch (SnappydbException e) {
+                e.printStackTrace();
             }
-            db.close();
-        } catch (SnappydbException e) {
-            e.printStackTrace();
+            return chainItemList;
         }
-        return chainItemList;
     }
 
     public static ChainItem getChain(Context context, int chainId) {
-        try {
-            DB db = openDB(context, DB_CHAIN);
-            ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
-            db.close();
-            return chainItem;
-        } catch (SnappydbException e) {
-            e.printStackTrace();
+        synchronized (dbObject) {
+            try {
+                DB db = openDB(context, DB_CHAIN);
+                ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
+                db.close();
+                return chainItem;
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-        return null;
     }
 
 
     public static List<String> getAllChainName(Context context) {
-        List<String> chainNameList = new ArrayList<>();
-        List<ChainItem> chainItemList = getAllChain(context);
+        synchronized (dbObject) {
+            List<String> chainNameList = new ArrayList<>();
+            List<ChainItem> chainItemList = getAllChain(context);
 
-        for(ChainItem chainItem : chainItemList) {
-            chainNameList.add(chainItem.name);
+            for(ChainItem chainItem : chainItemList) {
+                chainNameList.add(chainItem.name);
+            }
+            return chainNameList;
         }
-        return chainNameList;
     }
 
 
     public static void saveChain(Context context, ChainItem chainItem){
-        try {
-            DB db = openDB(context, DB_CHAIN);
-            db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
-            db.close();
-        } catch (SnappydbException e) {
-            e.printStackTrace();
+        synchronized (dbObject) {
+            try {
+                DB db = openDB(context, DB_CHAIN);
+                db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
+                db.close();
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+            }
         }
     }
 

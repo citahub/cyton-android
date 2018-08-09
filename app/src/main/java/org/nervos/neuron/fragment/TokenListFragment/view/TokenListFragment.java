@@ -16,7 +16,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.activity.TransactionListActivity;
-import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.TokenListFragment.model.TokenAdapter;
@@ -27,15 +26,12 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * Created by BaojunCZ on 2018/8/2.
@@ -51,7 +47,6 @@ public class TokenListFragment extends NBaseFragment {
     private TextView totalText, moneyText;
     private ImageView addImage;
     private CurrencyItem currencyItem;
-    private WalletItem walletItem = null;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -131,14 +126,12 @@ public class TokenListFragment extends NBaseFragment {
     }
 
     private void initWalletData(boolean showProgress) {
-        walletItem = DBWalletUtil.getCurrentWallet(getContext());
         if (showProgress) showProgressBar();
-        WalletService.getWalletTokenBalance(getContext(), walletItem, walletItem ->
+        WalletService.getWalletTokenBalance(getContext(), walletItem ->
                 recyclerView.post(() -> {
                     if (showProgress) dismissProgressBar();
                     swipeRefreshLayout.setRefreshing(false);
                     if (walletItem.tokenItems != null) {
-                        this.walletItem = walletItem;
                         this.tokenItemList = walletItem.tokenItems;
                         setData();
                     }

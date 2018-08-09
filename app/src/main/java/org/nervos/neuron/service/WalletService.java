@@ -8,19 +8,26 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class WalletService {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-    public static void getWalletTokenBalance(Context context, WalletItem walletItem,
+    public static void getWalletTokenBalance(Context context,
                                              OnGetWalletTokenListener listener) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         if (walletItem == null || walletItem.tokenItems.size() == 0) return;
         List<TokenItem> tokenItemList = new ArrayList<>();
         executorService.execute(() -> {
@@ -63,6 +70,38 @@ public class WalletService {
 
     public interface OnGetWalletTokenListener {
         void onGetWalletToken(WalletItem walletItem);
+    }
+
+
+    public static Observable<Double> getBalanceWithToken(Context context, TokenItem tokenItem) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        return Observable.fromCallable(new Callable<Double>() {
+            @Override
+            public Double call() {
+                if (tokenItem.chainId < 0) {                // ethereum
+                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                        return EthRpcService.getEthBalance(walletItem.address);
+                    } else {
+                        return EthRpcService.getERC20Balance(
+                                tokenItem.contractAddress, walletItem.address);
+                    }
+                } else {                                    // CITA
+                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                    if (chainItem != null) {
+                        String httpProvider = chainItem.httpProvider;
+                        NervosRpcService.init(context, httpProvider);
+                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                            return NervosRpcService.getErc20Balance(
+                                    tokenItem, walletItem.address);
+                        } else {
+                            return NervosRpcService.getBalance(walletItem.address);
+                        }
+                    }
+                }
+                return 0.0;
+            }
+        }).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

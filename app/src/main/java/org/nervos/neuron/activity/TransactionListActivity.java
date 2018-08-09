@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
@@ -44,6 +45,8 @@ public class TransactionListActivity extends NBaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TransactionAdapter adapter = new TransactionAdapter();
 
+    private TitleBar titleBar;
+
     private AppCompatButton receiveButton, transferButton;
     private TokenItem tokenItem;
 
@@ -58,12 +61,14 @@ public class TransactionListActivity extends NBaseActivity {
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         receiveButton = findViewById(R.id.receive_token);
         transferButton = findViewById(R.id.transfer_token);
+        titleBar = findViewById(R.id.title);
     }
 
     @Override
     protected void initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        titleBar.setTitle(tokenItem.symbol);
         initAdapter();
         showProgressBar();
         getTransactionList();

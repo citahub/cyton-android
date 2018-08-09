@@ -25,6 +25,7 @@ import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -202,7 +203,6 @@ public class WebAppUtil {
 
     @SuppressLint("SetJavaScriptEnabled")
     public static void initWebSettings(WebSettings webSettings) {
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setLoadsImagesAutomatically(true);
@@ -218,6 +218,11 @@ public class WebAppUtil {
     }
 
     public static void initWebViewCache(Context context, WebSettings webSettings) {
+        if (NetworkUtil.isNetworkAvailable(context)) {
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        } else {
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
         String cacheDirPath = context.getFilesDir().getAbsolutePath()+"cache/";
         webSettings.setAppCachePath(cacheDirPath);
         webSettings.setAppCacheEnabled(true);

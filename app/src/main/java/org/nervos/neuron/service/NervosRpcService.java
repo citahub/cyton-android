@@ -7,7 +7,6 @@ import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
