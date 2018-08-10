@@ -38,17 +38,17 @@
                 android:background="@drawable/edit_input_shape"
                 android:gravity="start"
                 android:hint="@string/import_mnemonic_input_hint"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textColor="@color/font_title"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/wallet_scan"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="end|bottom"
-                android:layout_marginBottom="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
                 android:src="@drawable/scan" />
         </FrameLayout>
 
