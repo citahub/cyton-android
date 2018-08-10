@@ -13,7 +13,7 @@
         android:lines="1"
         android:maxLines="1"
         android:ellipsize="end"
-        android:textSize="14sp"
-        android:textColor="@color/default_gray_6"/>
+        android:textSize="15sp"
+        android:textColor="@color/font_title_second"/>
 
 </FrameLayout>

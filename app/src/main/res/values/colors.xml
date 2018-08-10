@@ -12,11 +12,12 @@
     <color name="default_title_text_color">#FF333333</color>
     <color name="default_title_right_color">#62678A</color>
 
-    <color name="font_title">#242B43</color>
-    <color name="font_title_second">#525461</color>
+    <color name="font_title">#2E313E</color>
+    <color name="font_title_second">#9196A6</color>
     <color name="font_inside">#9196A6</color>
     <color name="font_annotation">#c5c5d0</color>
     <color name="font_link">#1646ff</color>
+    <color name="font_hint">#DBDCE3</color>
 
     <color name="line_form">#f7f7f7</color>
     <color name="line_input">#eaeaea</color>

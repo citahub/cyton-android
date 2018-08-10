@@ -47,8 +47,11 @@
                 android:singleLine="true"
                 android:ellipsize="none"
                 android:background="@drawable/rectangle_border_gray_corner"
+                android:drawableLeft="@drawable/add_website_hint_image"
+                android:drawablePadding="5dp"
                 android:imeOptions="actionDone"
                 android:hint="@string/input_app_website_hint"
+                android:textColorHint="@color/font_hint"
                 android:textColor="@color/default_black"
                 android:textSize="14sp"/>
 

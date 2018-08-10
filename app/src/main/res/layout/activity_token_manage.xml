@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
@@ -13,10 +14,12 @@
         app:title="@string/title_token_management"
         app:isShowLeft="true"
         app:isShowRight="true"
-        app:right_img="@drawable/add"/>
+        app:right_img="@drawable/add"
+        app:isShowBottomLine="true"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/token_recycler"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
