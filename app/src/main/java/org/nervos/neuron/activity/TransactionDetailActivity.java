@@ -123,20 +123,22 @@ public class TransactionDetailActivity extends NBaseActivity {
     }
 
     private String lineFeedAddress(String address) {
+        int singleLine = address.length() / 2;
         StringBuffer buffer = new StringBuffer();
-        buffer.append(address.substring(0, 21));
+        buffer.append(address.substring(0, singleLine));
         buffer.append("\n");
-        buffer.append(address.substring(21));
+        buffer.append(address.substring(singleLine));
         return buffer.toString();
     }
 
     private String lineFeedHex(String hex) {
+        int singleLine = hex.length() / 3;
         StringBuffer buffer = new StringBuffer();
-        buffer.append(hex.substring(0, 22));
+        buffer.append(hex.substring(0, singleLine));
         buffer.append("\n");
-        buffer.append(hex.substring(22, 44));
+        buffer.append(hex.substring(singleLine, singleLine * 2));
         buffer.append("\n");
-        buffer.append(hex.substring(44));
+        buffer.append(hex.substring(singleLine * 2));
         return buffer.toString();
     }
 
