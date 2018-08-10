@@ -69,7 +69,7 @@ public class Web3View extends WebView {
     private void init() {
         jsInjectorClient = new JsInjectorClient(getContext());
         webViewClient = new Web3ViewClient(jsInjectorClient, new UrlHandlerManager());
-        WebSettings webSettings = super.getSettings();
+        WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(true);
@@ -87,12 +87,6 @@ public class Web3View extends WebView {
 
         super.setWebViewClient(webViewClient);
     }
-
-    @Override
-    public WebSettings getSettings() {
-        return new WrapWebSettings(super.getSettings());
-    }
-
 
     public void setWalletAddress(@NonNull Address address) {
         jsInjectorClient.setWalletAddress(address);
