@@ -38,7 +38,8 @@
             app:civ_border_color="@color/default_gray_d5"/>
     </RelativeLayout>
 
-    <View style="@style/separateLineLong"/>
+    <View style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin"/>
 
     <RelativeLayout
         android:id="@+id/wallet_name_layout"
@@ -60,7 +61,7 @@
             android:id="@+id/wallet_name_text"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:drawableEnd="@drawable/arrow"
+            android:drawableEnd="@drawable/right_arrow"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:layout_alignParentEnd="true"
@@ -69,7 +70,8 @@
             android:textColor="@color/default_gray_9"/>
     </RelativeLayout>
 
-    <View style="@style/separateLineShort"/>
+    <View style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,25 +96,20 @@
             android:gravity="center_vertical"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@id/wallet_address_text"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="85dp"
             android:maxEms="16"
-            android:lines="1"
-            android:ellipsize="end"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:textSize="16sp"
             android:textColor="@color/default_gray_9"/>
     </RelativeLayout>
-
-    <View style="@style/separateLineLong"/>
-
-    <View
-        style="@style/separateLineLong"
-        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/change_password"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:drawableEnd="@drawable/arrow"
+        android:layout_marginTop="10dp"
+        android:drawableEnd="@drawable/right_arrow"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
@@ -121,13 +118,14 @@
         android:textSize="16sp"
         android:textColor="@color/font_black"/>
 
-    <View style="@style/separateLineShort"/>
+    <View style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin"/>
 
     <TextView
         android:id="@+id/export_keystore"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:drawableEnd="@drawable/arrow"
+        android:drawableEnd="@drawable/right_arrow"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"

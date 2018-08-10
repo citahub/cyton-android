@@ -5,7 +5,7 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="440dp"
         android:paddingBottom="@dimen/default_margin"
         android:background="@color/white"
         android:orientation="vertical">
@@ -40,21 +40,20 @@
         <TextView
             android:id="@+id/transfer_value"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:gravity="center"
             android:textColor="@color/default_black"
-            android:textSize="35sp"
-            android:text="1 ETH"/>
+            android:textSize="35sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
                 android:id="@+id/to_address_text"
-                android:layout_width="70dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/transfer_to_address"
@@ -80,13 +79,13 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/pay_wallet"
                 android:textSize="15sp"
@@ -95,7 +94,7 @@
             <TextView
                 android:id="@+id/from_address"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
                 android:maxEms="16"
@@ -111,13 +110,13 @@
         <RelativeLayout
             android:id="@+id/confirm_fee_layout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/fee_value"
                 android:textSize="15sp"
@@ -126,7 +125,7 @@
             <TextView
                 android:id="@+id/transfer_fee"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
                 android:maxEms="16"
@@ -142,13 +141,13 @@
         <RelativeLayout
             android:id="@+id/confirm_sum_layout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/sum_value"
                 android:textSize="15sp"
@@ -157,7 +156,7 @@
             <TextView
                 android:id="@+id/transfer_sum"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
                 android:maxEms="16"
@@ -173,7 +172,7 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/transfer_confirm_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/button_corner_blue_shape"

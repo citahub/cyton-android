@@ -12,7 +12,8 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:isShowLeft="true"
-        app:title="@string/backup_mnemonic" />
+        app:title="@string/backup_mnemonic"
+        app:isShowBottomLine="true"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -33,7 +34,7 @@
         android:background="@color/warning_background"
         android:drawablePadding="3dp"
         android:paddingEnd="@dimen/default_margin"
-        android:paddingStart="30dp"
+        android:paddingStart="35dp"
         android:text="@string/backup_mnemonic_warning2"
         android:textColor="@color/warning_font"
         android:textSize="12sp" />
@@ -44,7 +45,7 @@
         android:background="@color/warning_background"
         android:drawablePadding="3dp"
         android:paddingEnd="@dimen/default_margin"
-        android:paddingStart="30dp"
+        android:paddingStart="35dp"
         android:text="@string/backup_mnemonic_warning3"
         android:textColor="@color/warning_font"
         android:textSize="12sp" />
@@ -56,7 +57,7 @@
         android:drawablePadding="3dp"
         android:paddingBottom="@dimen/default_margin"
         android:paddingEnd="@dimen/default_margin"
-        android:paddingStart="30dp"
+        android:paddingStart="35dp"
         android:text="@string/backup_mnemonic_warning4"
         android:textColor="@color/warning_font"
         android:textSize="12sp" />

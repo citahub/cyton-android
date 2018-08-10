@@ -65,9 +65,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/qrcode_receipt_top"
-        app:layout_constraintDimensionRatio="388:122"
         app:layout_constraintTop_toBottomOf="@id/cl_title">
 
         <de.hdodenhof.circleimageview.CircleImageView

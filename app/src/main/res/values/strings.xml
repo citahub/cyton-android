@@ -93,7 +93,7 @@
     <string name="confirm_pay">确认支付</string>
     <string name="loading">正在加载</string>
     <string name="reject">拒绝</string>
-    <string name="approve">接受</string>
+    <string name="approve">同意</string>
     <string name="requester">请求人</string>
     <string name="receive_address">接收地址</string>
     <string name="transfer_amount">转账金额</string>

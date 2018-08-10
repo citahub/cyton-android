@@ -14,14 +14,13 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:background="@color/warning_background"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/warning"
-            android:paddingBottom="@dimen/default_margin"
-            android:paddingEnd="@dimen/default_margin"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin"
-            android:paddingTop="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:text="@string/import_mnemonic_warning"
             android:textColor="@color/warning_font"
             android:textSize="12sp" />
@@ -53,15 +52,10 @@
                 android:src="@drawable/scan" />
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@color/line_input" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_marginTop="@dimen/default_margin"
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -77,7 +71,7 @@
                 android:background="@color/white"
                 android:text="格式"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinner_format"
@@ -92,10 +86,8 @@
         </RelativeLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/line_input" />
+            style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_name"
@@ -108,20 +100,18 @@
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/line_input" />
+            style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin"/>
 
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/set_password"
             android:inputType="textPassword"
@@ -129,13 +119,11 @@
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/line_input" />
+            style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_repassword"
@@ -149,12 +137,7 @@
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
-            android:textSize="12sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/line_input" />
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -171,9 +154,11 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/import_mnemonic_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="30dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginTop="@dimen/margin_30dp"
             android:background="@drawable/button_corner_gray_shape"
             android:text="@string/import_wallet"
             android:textColor="@color/white"

@@ -36,7 +36,7 @@
         android:layout_width="6dip"
         android:layout_height="12dip"
         android:layout_marginRight="15dip"
-        android:src="@drawable/arrow_right"
+        android:src="@drawable/right_arrow"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"

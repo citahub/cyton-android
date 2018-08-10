@@ -11,7 +11,8 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:isShowLeft="true"
-        app:title="@string/title_import_wallet" />
+        app:title="@string/title_import_wallet"
+        app:isShowBottomLine="true"/>
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/viewpager_tab"
@@ -23,10 +24,10 @@
         app:stl_defaultTabTextSize="15sp"
         app:stl_distributeEvenly="true"
         app:stl_dividerThickness="0dp"
-        app:stl_indicatorColor="@color/font_blue"
+        app:stl_indicatorColor="@color/colorPrimary"
         app:stl_indicatorInterpolation="linear"
-        app:stl_indicatorThickness="3dp"
-        app:stl_underlineThickness="1dp" />
+        app:stl_indicatorThickness="2dp"
+        app:stl_underlineThickness="0.5dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

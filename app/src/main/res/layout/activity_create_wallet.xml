@@ -12,7 +12,8 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:isShowLeft="true"
-        app:title="@string/title_create_wallet" />
+        app:title="@string/title_create_wallet"
+        app:isShowBottomLine="true"/>
 
     <TextView
         android:layout_width="match_parent"
