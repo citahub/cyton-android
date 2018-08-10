@@ -117,7 +117,7 @@ public class SettingsFragment extends NBaseFragment {
 
         @Override
         public void onAuthenticationFailed() {
-            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_failed), Toast.LENGTH_SHORT).show();
         }
     };
 

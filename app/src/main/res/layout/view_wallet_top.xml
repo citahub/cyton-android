@@ -11,36 +11,56 @@
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_left"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginLeft="15dip"
-            android:src="@drawable/ic_wallet_top_left"
+        <RelativeLayout
+            android:id="@+id/rl_left"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_center"
-            android:layout_width="95dip"
-            android:layout_height="26dip"
-            android:src="@drawable/ic_wallet_top_title"
+            <ImageView
+                android:id="@+id/iv_left"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="15dip"
+                android:src="@drawable/ic_wallet_top_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_center"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_right"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginRight="15dip"
-            android:src="@drawable/ic_wallet_right"
+            <ImageView
+                android:id="@+id/iv_center"
+                android:layout_width="95dip"
+                android:layout_height="26dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_wallet_top_title" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_right"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/iv_right"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="15dip"
+                android:src="@drawable/ic_wallet_right" />
+        </RelativeLayout>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -73,11 +93,11 @@
             app:layout_constraintTop_toBottomOf="@id/wallet_photo" />
 
         <TextView
-            android:layout_marginTop="3dp"
             android:id="@+id/qrcode_wallet_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="3dp"
             android:ellipsize="middle"
             android:maxEms="12"
             android:singleLine="true"
@@ -90,15 +110,22 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/qrcode_wallet_name" />
 
-        <ImageView
-            android:id="@+id/iv_copy"
-            android:layout_width="12dp"
-            android:layout_height="15dip"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/ic_wallet_top_copy"
+        <RelativeLayout
+            android:id="@+id/rl_copy"
+            android:layout_width="15dp"
+            android:layout_height="30dp"
             app:layout_constraintBottom_toBottomOf="@+id/qrcode_wallet_address"
             app:layout_constraintLeft_toRightOf="@id/qrcode_wallet_address"
-            app:layout_constraintTop_toTopOf="@id/qrcode_wallet_address" />
+            app:layout_constraintTop_toTopOf="@id/qrcode_wallet_address">
+
+            <ImageView
+                android:id="@+id/iv_copy"
+                android:layout_width="12dp"
+                android:layout_height="15dip"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_wallet_top_copy" />
+        </RelativeLayout>
 
     </android.support.constraint.ConstraintLayout>
 

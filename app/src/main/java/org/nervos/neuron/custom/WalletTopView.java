@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class WalletTopView extends ConstraintLayout implements View.OnClickListener {
 
-    private ImageView leftImage, centerImage, rightImage, copyImage;
+    private RelativeLayout leftRl, centerRl, rightRl, copyRl;
     private CircleImageView walletPhoto;
     private TextView walletName, walletAddress;
     private Activity context;
@@ -46,10 +47,10 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
     }
 
     private void initView() {
-        leftImage = findViewById(R.id.iv_left);
-        centerImage = findViewById(R.id.iv_center);
-        rightImage = findViewById(R.id.iv_right);
-        copyImage = findViewById(R.id.iv_copy);
+        leftRl = findViewById(R.id.rl_left);
+        centerRl = findViewById(R.id.rl_center);
+        rightRl = findViewById(R.id.rl_right);
+        copyRl = findViewById(R.id.rl_copy);
         walletPhoto = findViewById(R.id.wallet_photo);
         walletName = findViewById(R.id.qrcode_wallet_name);
         walletAddress = findViewById(R.id.qrcode_wallet_address);
@@ -60,11 +61,12 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
     }
 
     private void initAction() {
-        leftImage.setOnClickListener(this);
-        rightImage.setOnClickListener(this);
-        copyImage.setOnClickListener(this);
-        centerImage.setOnClickListener(this);
+        leftRl.setOnClickListener(this);
+        rightRl.setOnClickListener(this);
+        copyRl.setOnClickListener(this);
+        centerRl.setOnClickListener(this);
         walletPhoto.setOnClickListener(this);
+        walletAddress.setOnClickListener(this);
     }
 
     public void setWalletItem(WalletItem walletItem) {
@@ -78,20 +80,21 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_left:
+            case R.id.rl_left:
                 Intent intent = new Intent(context, ReceiveQrCodeActivity.class);
                 context.startActivity(intent);
                 break;
-            case R.id.iv_right:
+            case R.id.rl_right:
                 Intent intent1 = new Intent(context, QrCodeActivity.class);
                 context.startActivity(intent1);
                 break;
-            case R.id.iv_center:
+            case R.id.rl_center:
                 Intent intent2 = new Intent(context, ChangeWalletActivity.class);
                 context.startActivity(intent2);
                 context.overridePendingTransition(R.anim.wallet_activity_in, 0);
                 break;
-            case R.id.iv_copy:
+            case R.id.rl_copy:
+            case R.id.qrcode_wallet_address:
                 ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData mClipData = ClipData.newPlainText("qrCode", walletItem.address);
                 if (cm != null) {
