@@ -91,7 +91,7 @@
     <style name="TransactionDetailTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginTop">7dp</item>
         <item name="android:textColor">@color/font_inside</item>
         <item name="android:textSize">14sp</item>
@@ -101,7 +101,7 @@
         <item name="android:gravity">right</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginRight">15dp</item>
         <item name="android:textColor">@color/font_title</item>
         <item name="android:textSize">14sp</item>
     </style>

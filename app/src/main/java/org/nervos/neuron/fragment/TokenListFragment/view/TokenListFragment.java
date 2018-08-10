@@ -88,6 +88,7 @@ public class TokenListFragment extends NBaseFragment {
                 intent.putExtra(TransactionListActivity.EXTRA_TOKEN, tokenItemList.get(position));
                 startActivity(intent);
             }
+
             @Override
             public CurrencyItem getCurrency() {
                 return currencyItem;
@@ -114,6 +115,7 @@ public class TokenListFragment extends NBaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
         initWalletData(true);
+        moneyText.setText("");
     }
 
     private void initRefresh() {
@@ -155,26 +157,28 @@ public class TokenListFragment extends NBaseFragment {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
                 TokenService.getCurrency(item.symbol, currencyItem.getName())
-                    .subscribe(new Subscriber<String>() {
-                        @Override
-                        public void onCompleted() {
-                            adapter.notifyDataSetChanged();
-                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                        }
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-                        @Override
-                        public void onNext(String s) {
-                            if (!TextUtils.isEmpty(s)) {
-                                double price = Double.parseDouble(s.trim());
-                                DecimalFormat df = new DecimalFormat("######0.00");
-                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                            } else
-                                item.currencyPrice = 0.00;
-                        }
-                    });
+                        .subscribe(new Subscriber<String>() {
+                            @Override
+                            public void onCompleted() {
+                                adapter.notifyDataSetChanged();
+                                moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onNext(String s) {
+                                if (!TextUtils.isEmpty(s)) {
+                                    double price = Double.parseDouble(s.trim());
+                                    DecimalFormat df = new DecimalFormat("######0.00");
+                                    item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                                } else
+                                    item.currencyPrice = 0.00;
+                            }
+                        });
         }
     }
 

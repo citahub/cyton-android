@@ -60,9 +60,9 @@ public class TransactionDetailActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
 
-        transactionHashText.setText(transactionItem.hash);
-        transactionFromText.setText(transactionItem.from);
-        transactionToText.setText(transactionItem.to);
+        transactionHashText.setText(lineFeedHex(transactionItem.hash));
+        transactionFromText.setText(lineFeedAddress(transactionItem.from));
+        transactionToText.setText(lineFeedAddress(transactionItem.to));
         if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
             transactionChainName.setText(R.string.ethereum_main_net);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
@@ -108,6 +108,9 @@ public class TransactionDetailActivity extends NBaseActivity {
                     })
                     .start();
         });
+        title.setOnLeftClickListener(() -> {
+            finish();
+        });
     }
 
     private void copyText(String value) {
@@ -117,6 +120,26 @@ public class TransactionDetailActivity extends NBaseActivity {
             cm.setPrimaryClip(mClipData);
             Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String lineFeedAddress(String address) {
+        int singleLine = address.length() / 2;
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(address.substring(0, singleLine));
+        buffer.append("\n");
+        buffer.append(address.substring(singleLine));
+        return buffer.toString();
+    }
+
+    private String lineFeedHex(String hex) {
+        int singleLine = hex.length() / 3;
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(hex.substring(0, singleLine));
+        buffer.append("\n");
+        buffer.append(hex.substring(singleLine, singleLine * 2));
+        buffer.append("\n");
+        buffer.append(hex.substring(singleLine * 2));
+        return buffer.toString();
     }
 
 }
