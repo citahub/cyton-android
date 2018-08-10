@@ -9,7 +9,9 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,6 +102,24 @@ public class AddWebsiteActivity extends BaseActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+        websiteEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length() > 0) {
+                    websiteEdit.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else {
+                    websiteEdit.setCompoundDrawablesWithIntrinsicBounds(R.drawable.add_website_hint_image, 0, 0, 0);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }

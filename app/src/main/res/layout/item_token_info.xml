@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:text="Cryptape CITA Dapp"/>
             <TextView
                 android:id="@+id/token_symbol_text"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:textSize="15sp"
-                android:textColor="@color/default_gray_6"
+                android:textColor="@color/font_title_second"
                 android:text="ADT"/>
 
             <TextView
@@ -51,7 +51,7 @@
                 android:ellipsize="middle"
                 android:maxEms="16"
                 android:textSize="13sp"
-                android:textColor="@color/default_gray_6"
+                android:textColor="@color/font_title_second"
                 android:text="0x12243sdsdsdsdsdfadfsdad342323"/>
 
         </LinearLayout>
@@ -68,7 +68,7 @@
         <View
             style="@style/separateLineLong"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="55dp"/>
+            android:layout_marginStart="@dimen/default_margin"/>
 
     </RelativeLayout>
 
