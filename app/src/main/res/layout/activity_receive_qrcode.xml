@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/qrcode_address"
                 android:textColor="@color/font_title"
                 android:textSize="20sp" />
@@ -105,8 +105,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"
                 android:text="@string/copy_address"
-                android:textColor="@color/font_title_second"
-                android:textSize="16sp" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
 
         </RelativeLayout>
     </LinearLayout>

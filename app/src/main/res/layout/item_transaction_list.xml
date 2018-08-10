@@ -32,16 +32,16 @@
                 android:maxEms="8"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textSize="14sp"
-                android:textColor="@color/font_black"/>
+                android:textSize="16sp"
+                android:textColor="@color/font_title"/>
 
             <TextView
                 android:id="@+id/transaction_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:textColor="@color/font_black"
+                android:textSize="13sp"
+                android:textColor="@color/font_title_third"
                 android:text="2018/2/3 11:12"/>
         </LinearLayout>
 
@@ -58,9 +58,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:text="+21.15eth"/>
 
             <TextView
@@ -69,8 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="end"
-                android:textSize="14sp"
-                android:textColor="@color/default_gray_6"
+                android:textSize="13sp"
+                android:textColor="@color/font_title_third"
                 android:text="Ethereum Mainnet"/>
         </LinearLayout>
 
