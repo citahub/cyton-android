@@ -6,73 +6,77 @@
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingEnd="15dp"
-        android:paddingStart="15dp"
-        app:layout_constraintDimensionRatio="h,375:68">
+        android:layout_height="80dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/token_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:scaleType="centerInside" />
-
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/token_image">
+            android:layout_height="79dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/token_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:background="@drawable/token_image_circle_border"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside" />
 
-            <TextView
-                android:id="@+id/token_name"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ETH"
-                android:textColor="@color/font_title"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/token_image">
 
-            <TextView
-                android:id="@+id/token_network"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ethereum_mainnet"
-                android:textColor="@color/font_title_second"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/token_name" />
+                <TextView
+                    android:id="@+id/token_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ETH"
+                    android:textColor="@color/font_title"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/token_balance"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="1000"
-                android:textColor="@color/font_title"
-                android:textSize="18sp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/token_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ethereum_mainnet"
+                    android:textColor="@color/font_inside"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/token_name" />
 
-            <TextView
-                android:id="@+id/token_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1000"
-                android:textColor="@color/font_title_second"
-                android:textSize="14sp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/token_balance" />
+                <TextView
+                    android:id="@+id/token_balance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textColor="@color/font_title"
+                    android:textSize="16sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/token_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textColor="@color/font_inside"
+                    android:textSize="13sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/token_balance" />
+
+            </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
+            style="@style/separateLineLong"
             android:layout_alignParentBottom="true"
-            android:background="@color/line_form" />
+            android:layout_marginStart="@dimen/default_margin"/>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

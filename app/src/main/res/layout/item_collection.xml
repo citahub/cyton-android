@@ -8,8 +8,10 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/collection_image"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/token_image_circle_border"
+        android:padding="5dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:scaleType="centerInside" />
@@ -37,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ethereum_mainnet"
-            android:textColor="@color/font_title_second"
+            android:textColor="@color/font_inside"
             android:textSize="14sp"
             android:layout_below="@id/collection_name" />
 
@@ -46,8 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ID：1000"
-            android:textColor="@color/font_title_second"
-            android:textSize="14sp"
+            android:textColor="@color/font_title"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>
 
@@ -55,6 +57,5 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginEnd="@dimen/default_margin"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

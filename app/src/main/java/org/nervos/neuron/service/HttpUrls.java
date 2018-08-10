@@ -25,8 +25,13 @@ public class HttpUrls {
 
 
     // discover page config information
-    public static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
-    public static final String INNER_URL = "http://47.97.171.140:8866/";
+//    public static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
+//    public static final String INNER_URL = "http://47.97.171.140:8866/";
+
+    public static final String DISCOVER_URL = "http://192.168.2.93:3000/dapps";
+    public static final String INNER_URL = "http://192.168.2.93:3000/";
+
+
 
 
     //Token Currency ID Price
