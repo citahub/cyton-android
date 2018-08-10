@@ -130,7 +130,7 @@
                         android:id="@+id/pay_data_left_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
-                        android:background="#FE8227"/>
+                        android:background="@color/selected_color"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -152,7 +152,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:visibility="gone"
-                        android:background="#FE8227"/>
+                        android:background="@color/selected_color"/>
                 </LinearLayout>
 
             </RelativeLayout>

@@ -30,13 +30,13 @@
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_name"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:background="@android:color/white"
         android:gravity="start|center_vertical"
         android:hint="@string/create_wallet_name"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="15sp" />
 
     <View
         android:layout_width="match_parent"
@@ -47,14 +47,14 @@
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_password"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:background="@android:color/white"
         android:gravity="start|center_vertical"
         android:hint="@string/input_password"
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="15sp" />
 
     <View
         android:layout_width="match_parent"
@@ -65,14 +65,14 @@
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_password_repeat"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:background="@android:color/white"
         android:gravity="start|center_vertical"
         android:hint="@string/input_new_password_again_hint"
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="15sp" />
 
     <View
         android:layout_width="match_parent"
@@ -93,14 +93,14 @@
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="30dp"
         android:background="@drawable/button_corner_gray_shape"
         android:enabled="false"
         android:text="@string/next_action"
         android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>

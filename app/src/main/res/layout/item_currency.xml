@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:text="CNY"
-        android:textColor="@color/font_title_second"
+        android:textColor="@color/font_title_third"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

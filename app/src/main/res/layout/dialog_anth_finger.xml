@@ -20,7 +20,7 @@
         android:layout_marginTop="11dip"
         android:gravity="center"
         android:text="@string/dialog_finger_msg"
-        android:textColor="@color/font_title_second"
+        android:textColor="@color/font_title_third"
         android:textSize="17sp" />
 
     <View
@@ -37,7 +37,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/cancel"
-        android:textColor="@color/font_title_second"
+        android:textColor="@color/font_title_third"
         android:textSize="17sp" />
 
 </LinearLayout>

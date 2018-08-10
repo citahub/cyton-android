@@ -12,7 +12,8 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:isShowLeft="true"
-        app:title="@string/title_add_wallet" />
+        app:title="@string/title_add_wallet"
+        app:isShowBottomLine="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginBottom="17dp"
+            android:layout_marginTop="27dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_add_wallet_logo" />
 
@@ -38,17 +39,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/no_find_password_content"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title"
             android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/save_password_careful"
             android:textAlignment="center"
-            android:textColor="@color/default_gray_9"
+            android:textColor="@color/font_title_third"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -56,25 +58,25 @@
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginTop="30dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_corner_blue_shape"
         android:text="@string/generate_wallet"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 
     <TextView
         android:id="@+id/import_wallet_button"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/import_wallet"
         android:textColor="@color/font_link"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>
