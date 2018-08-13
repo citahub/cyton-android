@@ -164,35 +164,64 @@
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp"/>
 
-            <TextView
-                android:id="@+id/pay_amount"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="6dp"
-                android:paddingStart="@dimen/default_margin"
-                android:textSize="15sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/pay_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingStart="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/font_title"
+                    android:background="@drawable/rectangle_border_gray_corner"/>
+
+                <TextView
+                    android:id="@+id/pay_amount_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical|end"
+                    android:textColor="@color/font_title_third"/>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/transfer_sum"
+                android:text="@string/transfer_fee"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp"/>
 
-            <TextView
-                android:id="@+id/pay_sum"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="6dp"
-                android:paddingStart="@dimen/default_margin"
-                android:textSize="15sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:layout_marginTop="6dp">
+                <TextView
+                    android:id="@+id/pay_fee"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingStart="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/font_title"
+                    android:background="@drawable/rectangle_border_gray_corner"/>
+
+                <TextView
+                    android:id="@+id/pay_fee_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical|end"
+                    android:textColor="@color/font_title_third"/>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -270,9 +299,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
                     android:padding="10dp"
-                    android:text="data"
-                    android:textSize="13sp"
-                    android:textColor="@color/default_black"/>
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="false"
+                    android:lines="60"
+                    android:textSize="15sp"
+                    android:textColor="@color/font_title"/>
 
             </LinearLayout>
             

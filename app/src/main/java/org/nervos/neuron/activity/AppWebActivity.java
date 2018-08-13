@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.WalletItem;
@@ -263,6 +264,7 @@ public class AppWebActivity extends BaseActivity {
         TextView payDataText = view.findViewById(R.id.pay_data);
         CircleImageView photoImage = view.findViewById(R.id.wallet_photo);
         ProgressBar progressBar = view.findViewById(R.id.sign_progress);
+        TitleBar titleBar = view.findViewById(R.id.title);
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);

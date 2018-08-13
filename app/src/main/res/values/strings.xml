@@ -230,4 +230,5 @@
 
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
+    <string name="sign_title">消息签名</string>
 </resources>
