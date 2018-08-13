@@ -20,7 +20,7 @@
         android:layout_marginTop="11dip"
         android:gravity="center"
         android:text="@string/dialog_finger_msg"
-        android:textColor="@color/font_title_third"
+        android:textColor="@color/font_title"
         android:textSize="17sp" />
 
     <View

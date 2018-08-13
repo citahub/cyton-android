@@ -9,6 +9,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        app:isShowBottomLine="true"
         app:isShowLeft="true"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/about_us_title"
@@ -18,7 +19,6 @@
         android:id="@+id/rv_currency"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dip"
         android:background="@color/white" />
 
 </LinearLayout>
