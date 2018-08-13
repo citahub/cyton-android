@@ -23,6 +23,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.crypto.WalletEntity;
+import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -112,7 +113,7 @@ public class ImportKeystoreFragment extends BaseFragment {
         SharePrefUtil.putCurrentWalletName(walletItem.name);
         passwordEdit.post(() -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
             startActivity(intent);
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();

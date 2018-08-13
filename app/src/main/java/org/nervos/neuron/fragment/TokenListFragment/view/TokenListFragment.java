@@ -26,6 +26,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.LogUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class TokenListFragment extends NBaseFragment {
     protected void initData() {
         presenter = new TokenListFragmentPresenter(getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new TokenAdapter(getActivity(), this.tokenItemList);
+        adapter = new TokenAdapter(getActivity(), tokenItemList);
         recyclerView.setAdapter(adapter);
         initWalletData(true);
         setCurrency();
@@ -114,6 +115,8 @@ public class TokenListFragment extends NBaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
+        tokenItemList.clear();
+        adapter.notifyDataSetChanged();
         initWalletData(true);
         moneyText.setText("");
     }
@@ -134,7 +137,7 @@ public class TokenListFragment extends NBaseFragment {
                     if (showProgress) dismissProgressBar();
                     swipeRefreshLayout.setRefreshing(false);
                     if (walletItem.tokenItems != null) {
-                        this.tokenItemList = walletItem.tokenItems;
+                        tokenItemList = walletItem.tokenItems;
                         setData();
                     }
                 })
@@ -148,7 +151,7 @@ public class TokenListFragment extends NBaseFragment {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noTokenRoot.setVisibility(View.GONE);
-            adapter.refresh(this.tokenItemList);
+            adapter.refresh(tokenItemList);
             getPrice();
         }
     }
