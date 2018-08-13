@@ -26,7 +26,6 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.LogUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class TokenListFragment extends NBaseFragment {
     private LinearLayout noTokenRoot;
     private RelativeLayout totalMoneyRoot;
     private TextView totalText, moneyText;
-    private ImageView addImage;
+    private RelativeLayout addImageRl;
     private CurrencyItem currencyItem;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -62,7 +61,7 @@ public class TokenListFragment extends NBaseFragment {
         totalMoneyRoot = (RelativeLayout) findViewById(R.id.ll_total_money);
         totalText = (TextView) findViewById(R.id.tv_total_money_title);
         moneyText = (TextView) findViewById(R.id.tv_total_money);
-        addImage = (ImageView) findViewById(R.id.iv_add);
+        addImageRl = (RelativeLayout) findViewById(R.id.rl_add_image);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
     }
 
@@ -79,7 +78,7 @@ public class TokenListFragment extends NBaseFragment {
 
     @Override
     protected void initAction() {
-        addImage.setOnClickListener((view) -> {
+        addImageRl.setOnClickListener((view) -> {
             startActivity(new Intent(getActivity(), TokenManageActivity.class));
         });
         adapter.setTokenAdapterListener(new TokenAdapter.TokenAdapterListener() {
