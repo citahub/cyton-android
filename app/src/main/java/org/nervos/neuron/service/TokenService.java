@@ -124,14 +124,14 @@ public class TokenService {
     }
 
 
-    // 0x0239769a1adf4def9f07da824b80b9c4fcb59593  ERC721测试地址
+    // 0x50b74E19631f9D723Cd06F643BfEd5D140D1D1d4  ERC721测试地址
     public static Observable<CollectionResponse> getCollectionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<CollectionResponse>() {
             @Override
             public CollectionResponse call() throws Exception {
                 Request request = new Request.Builder()
-                        .url(HttpUrls.COLLECTION_LIST_URL + walletItem.address).build();
+                        .url(HttpUrls.COLLECTION_LIST_URL + "0x50b74E19631f9D723Cd06F643BfEd5D140D1D1d4").build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {

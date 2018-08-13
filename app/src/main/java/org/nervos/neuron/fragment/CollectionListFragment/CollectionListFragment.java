@@ -83,7 +83,6 @@ public class CollectionListFragment extends NBaseFragment {
                 @Override
                 public void onNext(CollectionResponse collectionResponse) {
                     collectionItemList = collectionResponse.assets;
-                    LogUtil.d("collectionItemList size: " + collectionItemList.size());
                     adapter.refresh(collectionItemList);
                 }
             });
