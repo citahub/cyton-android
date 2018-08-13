@@ -95,6 +95,7 @@ public class WebAppUtil {
                     response = call.execute().body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return Observable.error(new Throwable(e.getMessage()));
                 }
                 mAppItem = new Gson().fromJson(response, AppItem.class);
                 return Observable.just(mAppItem);
@@ -109,6 +110,10 @@ public class WebAppUtil {
             public Observable<ChainItem> call(AppItem appItem) {
                 Map<String, String> chainSet = appItem.chainSet;
                 List<ChainItem> chainItemList = new ArrayList<>();
+                if (chainSet.size() == 0) {
+                    return Observable.error(new Throwable(
+                            "Manifest chain set is null, please provide chain id and host"));
+                }
                 for(Map.Entry<String, String> entry : chainSet.entrySet()) {
                     ChainItem item = new ChainItem();
                     item.chainId = Integer.parseInt(entry.getKey());
