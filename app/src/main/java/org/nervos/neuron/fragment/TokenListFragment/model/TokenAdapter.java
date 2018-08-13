@@ -1,5 +1,6 @@
 package org.nervos.neuron.fragment.TokenListFragment.model;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -49,6 +50,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         return holder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
         TokenItem tokenItem = tokenItemList.get(position);
@@ -69,7 +71,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         }
         if (tokenItem != null) {
             holder.tokenName.setText(tokenItem.symbol);
-            holder.tokenBalance.setText(NumberUtil.getDecimal_10(tokenItem.balance));
+            holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
         }
         if (!TextUtils.isEmpty(tokenItem.chainName)) {
             holder.tokenNetworkText.setText(tokenItem.chainName);
@@ -81,7 +83,8 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         if (tokenItem.currencyPrice == 0.00) {
             holder.tokenCurrencyText.setText("");
         } else {
-            holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() + tokenItem.currencyPrice);
+            holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() +
+                    NumberUtil.getDecimalValid_2(tokenItem.currencyPrice));
         }
         holder.root.setOnClickListener((view) -> {
             listener.onItemClick(view, position);

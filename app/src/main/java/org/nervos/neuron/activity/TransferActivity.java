@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -84,7 +85,7 @@ public class TransferActivity extends NBaseActivity {
     private BigInteger mGasPrice, mGasUnit, mGasLimit = BigInteger.ZERO, mQuota, mQuotaUnit, mGas;
     private boolean isGasPriceOk = false, isGasLimitOk = false;
     private String transactionHexData;
-    private double mPrice = 0.0f;
+    private double mPrice = 0.0f, mBalance;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
 
@@ -153,8 +154,10 @@ public class TransferActivity extends NBaseActivity {
             }
             @Override
             public void onNext(Double balance) {
+                mBalance = balance;
                 balanceText.setText(String.format(
-                        getString(R.string.transfer_balance_place_holder), balance + tokenItem.symbol));
+                        getString(R.string.transfer_balance_place_holder),
+                        NumberUtil.getDecimal8ENotation(balance) + " " + tokenItem.symbol));
             }
         });
     }
@@ -217,12 +220,13 @@ public class TransferActivity extends NBaseActivity {
     private void initFeeText() {
         double fee = NumberUtil.getEthFromWei(mGas);
         if (fee > 0) {
-            feeSeekText.setText(fee + getFeeTokenUnit());
+            feeSeekText.setText(NumberUtil.getDecimal8ENotation(fee) + getFeeTokenUnit());
             if (mPrice > 0 && currencyItem != null) {
-                feeValueText.setText(feeSeekText.getText() + "=" +
-                        currencyItem.getSymbol() + NumberUtil.getDecimal_10(fee * mPrice));
+                feeValueText.setText(feeSeekText.getText() + " = " +
+                        currencyItem.getSymbol() + NumberUtil.getDecimalValid_2(fee * mPrice));
             }
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -232,7 +236,8 @@ public class TransferActivity extends NBaseActivity {
         mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
         feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
 
-        feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
+        feeSeekText.setText(NumberUtil.getDecimal8ENotation(
+                NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
         feeValueText.setText(feeSeekText.getText());
     }
 
@@ -257,6 +262,9 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
+            } else if (mBalance < Double.parseDouble(transferValueEdit.getText().toString().trim())) {
+                Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
+                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else {
                 confirmDialog = new BottomSheetDialog(mActivity);
                 confirmDialog.setCancelable(false);
@@ -266,6 +274,7 @@ public class TransferActivity extends NBaseActivity {
             }
         });
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progress = progress < 1 ? 1 : progress;
@@ -275,16 +284,15 @@ public class TransferActivity extends NBaseActivity {
                     initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
+                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(
+                            NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -389,9 +397,10 @@ public class TransferActivity extends NBaseActivity {
 
     private String getFeeTokenUnit() {
         if (isETH()) {
-            return "ETH";
+            return " ETH";
         } else {
-            return Objects.requireNonNull(DBChainUtil.getChain(mActivity, tokenItem.chainId)).tokenSymbol;
+            ChainItem chainItem = DBChainUtil.getChain(mActivity, tokenItem.chainId);
+            return chainItem == null? "" : " " + chainItem.tokenSymbol;
         }
     }
 
@@ -434,7 +443,7 @@ public class TransferActivity extends NBaseActivity {
         ((TextView) view.findViewById(R.id.from_address)).setText(walletItem.address);
         ((TextView) view.findViewById(R.id.to_address)).setText(receiveAddressEdit.getText().toString());
         ((TextView) view.findViewById(R.id.transfer_value)).setText(value + tokenItem.symbol);
-        ((TextView) view.findViewById(R.id.transfer_fee)).setText(feeSeekText.getText().toString() + getFeeTokenUnit());
+        ((TextView) view.findViewById(R.id.transfer_fee)).setText(feeSeekText.getText().toString());
 
         view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,7 +467,7 @@ public class TransferActivity extends NBaseActivity {
         passwordDialog.setCancelable(false);
         passwordDialog.getWindow().setWindowAnimations(R.style.PasswordDialog);
         View view = LayoutInflater.from(mActivity).inflate(R.layout.dialog_transfer_password, null);
-        EditText passwordEdit = view.findViewById(R.id.wallet_password_edit);
+        AppCompatEditText passwordEdit = view.findViewById(R.id.wallet_password_edit);
         view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

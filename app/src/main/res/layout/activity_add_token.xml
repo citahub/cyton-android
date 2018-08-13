@@ -92,7 +92,7 @@
                 android:layout_toLeftOf="@id/add_token_contract_address_scan"
                 android:layout_toRightOf="@id/add_token_contract_address_text"
                 android:background="@null"
-                android:hint="请输入ERC20代币合约地址"
+                android:hint="@string/input_erc20_address"
                 android:lines="1"
                 android:singleLine="true"
                 android:maxEms="20"
@@ -120,7 +120,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="代币名称"
+                android:text="@string/token_name_hint"
                 android:textColor="@color/font_black"
                 android:textSize="15sp"/>
 
@@ -129,6 +129,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
                 android:gravity="end|center_vertical"
+                android:enabled="false"
                 android:textSize="14sp"
                 android:textColor="@color/default_black"
                 android:layout_width="match_parent"
@@ -151,7 +152,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="代币缩写"
+                android:text="@string/token_symbol_hint"
                 android:textColor="@color/font_black"
                 android:textSize="15sp"/>
 
@@ -160,6 +161,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
                 android:gravity="end|center_vertical"
+                android:enabled="false"
                 android:textSize="14sp"
                 android:textColor="@color/default_black"
                 android:layout_width="match_parent"
@@ -182,7 +184,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="小数位数"
+                android:text="@string/token_decimal_hint"
                 android:textColor="@color/font_black"
                 android:textSize="15sp"/>
 
@@ -191,6 +193,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
                 android:gravity="end|center_vertical"
+                android:enabled="false"
                 android:textSize="14sp"
                 android:textColor="@color/default_black"
                 android:layout_width="match_parent"
