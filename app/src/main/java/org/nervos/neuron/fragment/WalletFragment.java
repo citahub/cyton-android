@@ -17,11 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
@@ -29,17 +27,14 @@ import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TokenManageActivity;
 import org.nervos.neuron.activity.TransactionListActivity;
-import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.DialogUtil;
-import org.nervos.neuron.dialog.TokenTransferDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -218,7 +213,7 @@ public class WalletFragment extends BaseFragment {
                 }
                 if (tokenItemList.get(position) != null) {
                     viewHolder.tokenName.setText(tokenItemList.get(position).symbol);
-                    viewHolder.tokenAmount.setText(NumberUtil.getDecimal_6(tokenItemList.get(position).balance));
+                    viewHolder.tokenAmount.setText(NumberUtil.getDecimal_10(tokenItemList.get(position).balance));
                 }
                 viewHolder.itemView.setTag(position);
             }

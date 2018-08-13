@@ -54,7 +54,6 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -218,10 +217,10 @@ public class TransferActivity extends NBaseActivity {
     private void initFeeText() {
         double fee = NumberUtil.getEthFromWei(mGas);
         if (fee > 0) {
-            feeSeekText.setText(fee + getTokenUnit());
+            feeSeekText.setText(fee + getFeeTokenUnit());
             if (mPrice > 0 && currencyItem != null) {
                 feeValueText.setText(feeSeekText.getText() + "=" +
-                        currencyItem.getSymbol() + NumberUtil.getDecimal_8(fee * mPrice));
+                        currencyItem.getSymbol() + NumberUtil.getDecimal_10(fee * mPrice));
             }
         }
     }
@@ -233,7 +232,7 @@ public class TransferActivity extends NBaseActivity {
         mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
         feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
 
-        feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
+        feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
         feeValueText.setText(feeSeekText.getText());
     }
 
@@ -276,7 +275,7 @@ public class TransferActivity extends NBaseActivity {
                     initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
+                    feeSeekText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -388,7 +387,7 @@ public class TransferActivity extends NBaseActivity {
         return tokenItem.chainId < 0;
     }
 
-    private String getTokenUnit() {
+    private String getFeeTokenUnit() {
         if (isETH()) {
             return "ETH";
         } else {
@@ -402,7 +401,7 @@ public class TransferActivity extends NBaseActivity {
         quotaEditLayout.setVisibility(View.GONE);
         if (isGasLimitOk && isGasPriceOk) {
             feeValueText.setText(
-                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit)) + getTokenUnit());
+                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit)) + getFeeTokenUnit());
         } else {
             feeValueText.setText("0");
         }
@@ -414,7 +413,7 @@ public class TransferActivity extends NBaseActivity {
         gasEditLayout.setVisibility(View.GONE);
         quotaEditLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
-            feeValueText.setText(NumberUtil.getEthFromWei(mQuota) + getTokenUnit());
+            feeValueText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
         } else {
             feeValueText.setText("0");
         }
@@ -425,18 +424,17 @@ public class TransferActivity extends NBaseActivity {
      *
      * @return
      */
+    @SuppressLint("SetTextI18n")
     private View getConfirmTransferView() {
         View view = getLayoutInflater().inflate(R.layout.dialog_confirm_transfer, null);
         ProgressBar progressBar = view.findViewById(R.id.transfer_progress);
 
         String value = transferValueEdit.getText().toString().trim();
-        double sum = Double.parseDouble(value) + NumberUtil.getEthFromWei(isETH() ? mGas : mQuota);
 
         ((TextView) view.findViewById(R.id.from_address)).setText(walletItem.address);
         ((TextView) view.findViewById(R.id.to_address)).setText(receiveAddressEdit.getText().toString());
-        ((TextView) view.findViewById(R.id.transfer_value)).setText(transferValueEdit.getText().toString());
-        ((TextView) view.findViewById(R.id.transfer_fee)).setText(feeSeekText.getText().toString());
-        ((TextView) view.findViewById(R.id.transfer_sum)).setText(String.valueOf(sum));
+        ((TextView) view.findViewById(R.id.transfer_value)).setText(value + tokenItem.symbol);
+        ((TextView) view.findViewById(R.id.transfer_fee)).setText(feeSeekText.getText().toString() + getFeeTokenUnit());
 
         view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override

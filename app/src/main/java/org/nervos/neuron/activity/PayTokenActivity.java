@@ -20,6 +20,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -85,8 +86,8 @@ public class PayTokenActivity extends BaseActivity {
         payDataText.setText(transactionInfo.data);
         payAddressText.setText(transactionInfo.to);
         if (transactionInfo.isEthereum()) {
-            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            paySumText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()
                     + transactionInfo.getGas()));
             if (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice)) {
                 showProgressCircle();
@@ -101,18 +102,17 @@ public class PayTokenActivity extends BaseActivity {
                         e.printStackTrace();
                         dismissProgressCircle();
                     }
-
                     @Override
                     public void onNext(BigInteger gasPrice) {
                         transactionInfo.gasPrice = gasPrice.toString(16);
-                        paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
+                        paySumText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()
                                 + transactionInfo.getGas()));
                     }
                 });
             }
         } else {
-            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            paySumText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()
                     + transactionInfo.getQuota()));
         }
 
@@ -168,9 +168,9 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-        feeConfirmText.setText(NumberUtil.getDecimal_6(transactionInfo.isEthereum() ?
-                transactionInfo.getGas() : transactionInfo.getQuota()));
+        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+        feeConfirmText.setText(transactionInfo.isEthereum() ?
+                transactionInfo.getGas() + ConstUtil.ETH : transactionInfo.getQuota());
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
                 showPasswordConfirmView(progressBar));

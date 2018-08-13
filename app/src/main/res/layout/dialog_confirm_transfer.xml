@@ -5,7 +5,7 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="440dp"
+        android:layout_height="400dp"
         android:paddingBottom="@dimen/default_margin"
         android:background="@color/white"
         android:orientation="vertical">
@@ -45,9 +45,10 @@
             android:textColor="@color/default_black"
             android:textSize="35sp"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
@@ -65,21 +66,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@id/to_address_text"
                 android:layout_marginStart="@dimen/default_margin"
+                android:maxEms="16"
+                android:singleLine="true"
+                android:ellipsize="middle"
                 android:textSize="15sp"
                 android:textColor="@color/font_title"/>
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <View style="@style/separateLineLong"
             android:layout_marginLeft="@dimen/default_margin"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
@@ -93,16 +96,16 @@
 
             <TextView
                 android:id="@+id/from_address"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/default_margin"
                 android:maxEms="16"
                 android:singleLine="true"
                 android:ellipsize="middle"
                 android:textSize="15sp"
                 android:textColor="@color/font_title"/>
-        </RelativeLayout>
+        </LinearLayout>
 
         <View style="@style/separateLineLong"
             android:layout_marginLeft="@dimen/default_margin"/>
@@ -124,37 +127,6 @@
 
             <TextView
                 android:id="@+id/transfer_fee"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_alignParentEnd="true"
-                android:maxEms="16"
-                android:lines="1"
-                android:ellipsize="end"
-                android:textSize="15sp"
-                android:textColor="@color/font_title"/>
-        </RelativeLayout>
-
-        <View style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin"/>
-
-        <RelativeLayout
-            android:id="@+id/confirm_sum_layout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingRight="@dimen/default_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/sum_value"
-                android:textSize="15sp"
-                android:textColor="@color/font_title_second"/>
-
-            <TextView
-                android:id="@+id/transfer_sum"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
