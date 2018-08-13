@@ -38,6 +38,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/tv_total_money_title"
+                    android:text="0"
                     android:textColor="@color/font_title_third"
                     android:textSize="14sp" />
 
