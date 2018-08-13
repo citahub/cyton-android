@@ -1,7 +1,9 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,9 @@ public class ChangeWalletActivity extends NBaseActivity {
 
     @Override
     protected void initView() {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         pullImage = findViewById(R.id.iv_pull);
         recyclerView = findViewById(R.id.wallet_recycler);
     }
