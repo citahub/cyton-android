@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="400dp">
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,11 +63,10 @@
 
             <TextView
                 android:id="@+id/to_address"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/default_margin"
-                android:maxEms="16"
                 android:singleLine="true"
                 android:ellipsize="middle"
                 android:textSize="15sp"
@@ -100,7 +99,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/default_margin"
-                android:maxEms="16"
                 android:singleLine="true"
                 android:ellipsize="middle"
                 android:textSize="15sp"
@@ -110,10 +108,11 @@
         <View style="@style/separateLineLong"
             android:layout_marginLeft="@dimen/default_margin"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/confirm_fee_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
@@ -127,16 +126,15 @@
 
             <TextView
                 android:id="@+id/transfer_fee"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_alignParentEnd="true"
-                android:maxEms="16"
-                android:lines="1"
-                android:ellipsize="end"
+                android:layout_marginStart="@dimen/default_margin"
+                android:singleLine="true"
+                android:ellipsize="middle"
                 android:textSize="15sp"
                 android:textColor="@color/font_title"/>
-        </RelativeLayout>
+        </LinearLayout>
 
         <View style="@style/separateLineLong"
             android:layout_marginStart="@dimen/default_margin"/>

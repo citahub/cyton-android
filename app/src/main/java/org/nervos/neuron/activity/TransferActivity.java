@@ -11,6 +11,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -258,6 +259,8 @@ public class TransferActivity extends NBaseActivity {
         nextActionButton.setOnClickListener(v -> {
             if (TextUtils.isEmpty(receiveAddressEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_address_not_null, Toast.LENGTH_SHORT).show();
+            } else if (receiveAddressEdit.getText().toString().trim().equals(walletItem.address)) {
+                Toast.makeText(mActivity, R.string.address_from_equal_to, Toast.LENGTH_LONG).show();
             } else if (!AddressUtil.isAddressValid(receiveAddressEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
@@ -271,6 +274,7 @@ public class TransferActivity extends NBaseActivity {
                 confirmDialog.getWindow().setWindowAnimations(R.style.ConfirmDialog);
                 confirmDialog.setContentView(getConfirmTransferView());
                 confirmDialog.show();
+                confirmDialog.getWindow().setGravity(Gravity.BOTTOM);
             }
         });
         feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -507,6 +511,7 @@ public class TransferActivity extends NBaseActivity {
         });
         passwordDialog.setContentView(view);
         passwordDialog.show();
+        passwordDialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
 

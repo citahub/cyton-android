@@ -131,7 +131,7 @@ public class TokenService {
             @Override
             public CollectionResponse call() throws Exception {
                 Request request = new Request.Builder()
-                        .url(HttpUrls.COLLECTION_LIST_URL + "0x50b74E19631f9D723Cd06F643BfEd5D140D1D1d4").build();
+                        .url(HttpUrls.COLLECTION_LIST_URL + walletItem.address).build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {
