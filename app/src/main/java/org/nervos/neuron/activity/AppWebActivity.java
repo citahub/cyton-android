@@ -251,10 +251,15 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void showSignMessageDialog(Message<Transaction> message) {
-        sheetDialog = new BottomSheetDialog(mActivity);
-        sheetDialog.setCanceledOnTouchOutside(true);
-        sheetDialog.setContentView(getSignMessageView(message));
-        sheetDialog.show();
+        if (walletItem == null) {
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(mActivity, AddWalletActivity.class));
+        } else {
+            sheetDialog = new BottomSheetDialog(mActivity);
+            sheetDialog.setCanceledOnTouchOutside(true);
+            sheetDialog.setContentView(getSignMessageView(message));
+            sheetDialog.show();
+        }
     }
 
     private View getSignMessageView(Message<Transaction> message) {
