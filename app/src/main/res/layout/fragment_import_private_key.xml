@@ -33,7 +33,7 @@
                 android:layout_height="100dp"
                 android:background="@drawable/edit_input_shape"
                 android:gravity="start"
-                android:hint="请输入私钥原文"
+                android:hint="@string/input_private_key_hint"
                 android:padding="5dp"
                 android:textColor="@color/font_title"
                 android:textSize="12sp" />

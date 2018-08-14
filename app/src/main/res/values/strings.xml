@@ -237,4 +237,5 @@
     <string name="token_name_hint">代币名称</string>
     <string name="token_symbol_hint">代币符合</string>
     <string name="token_decimal_hint">小数位数</string>
+    <string name="input_private_key_hint">请输入私钥原文</string>
 </resources>
