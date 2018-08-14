@@ -1,10 +1,12 @@
 package org.nervos.neuron.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,13 +17,16 @@ import com.google.gson.Gson;
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -45,20 +50,23 @@ public class PayTokenActivity extends BaseActivity {
     private WalletItem walletItem;
     private BottomSheetDialog sheetDialog;
     private AppItem appItem;
+    private TextView walletNameText, walletAddressText, payNameText, payAmountUnitText;
+    private TextView payAddressText, payAmountText, payFeeText, payDataText, payFeeUnitText;
+    private CircleImageView photoImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_token);
 
-        EthRpcService.init(this);
-
         initData();
         initView();
-        initListener();
+        initAction();
     }
 
     private void initData() {
+        EthRpcService.init(this);
+
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         if (!TextUtils.isEmpty(payload)) {
             transactionInfo = new Gson().fromJson(payload, TransactionInfo.class);
@@ -68,53 +76,81 @@ public class PayTokenActivity extends BaseActivity {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void initView() {
-        TextView walletNameText = findViewById(R.id.wallet_name);
-        TextView walletAddressText = findViewById(R.id.wallet_address);
-        TextView payNameText = findViewById(R.id.pay_owner);
-        TextView payAddressText = findViewById(R.id.pay_address);
-        TextView payAmountText = findViewById(R.id.pay_amount);
-        TextView paySumText = findViewById(R.id.pay_sum);
-        TextView payDataText = findViewById(R.id.pay_data);
-        CircleImageView photoImage = findViewById(R.id.wallet_photo);
+        walletNameText = findViewById(R.id.wallet_name);
+        walletAddressText = findViewById(R.id.wallet_address);
+        payNameText = findViewById(R.id.pay_owner);
+        payAddressText = findViewById(R.id.pay_address);
+        payAmountText = findViewById(R.id.pay_amount);
+        payFeeText = findViewById(R.id.pay_fee);
+        payDataText = findViewById(R.id.pay_data);
+        photoImage = findViewById(R.id.wallet_photo);
+        payAmountUnitText = findViewById(R.id.pay_amount_unit);
+        payFeeUnitText = findViewById(R.id.pay_fee_unit);
 
+        payDataText.setMovementMethod(ScrollingMovementMethod.getInstance());
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         payNameText.setText(appItem.entry);
         payDataText.setText(transactionInfo.data);
         payAddressText.setText(transactionInfo.to);
+
+        payAmountUnitText.setText(getNativeToken());
+        payFeeUnitText.setText(getNativeToken());
+
         if (transactionInfo.isEthereum()) {
-            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
-                    + transactionInfo.getGas()));
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            payFeeText.setText(String.valueOf(transactionInfo.getGas()));
             if (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice)) {
-                showProgressCircle();
-                EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
-                    @Override
-                    public void onCompleted() {
-                        dismissProgressCircle();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        dismissProgressCircle();
-                    }
-
-                    @Override
-                    public void onNext(BigInteger gasPrice) {
-                        transactionInfo.gasPrice = gasPrice.toString(16);
-                        paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
-                                + transactionInfo.getGas()));
-                    }
-                });
+                showEtherGas();
             }
         } else {
-            payAmountText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-            paySumText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()
-                    + transactionInfo.getQuota()));
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            payFeeText.setText(String.valueOf(transactionInfo.getQuota()));
         }
+
+    }
+
+    private void showEtherGas() {
+        showProgressCircle();
+        EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
+            @Override
+            public void onCompleted() {
+                dismissProgressCircle();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                dismissProgressCircle();
+            }
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onNext(BigInteger gasPrice) {
+                transactionInfo.gasPrice = gasPrice.toString(16);
+                payFeeText.setText(String.valueOf(transactionInfo.getGas()));
+            }
+        });
+    }
+
+    private void initAction() {
+        findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(AppWebActivity.RESULT_CODE_CANCEL);
+                finish();
+            }
+        });
+        findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sheetDialog = new BottomSheetDialog(mActivity);
+                sheetDialog.setCancelable(false);
+                sheetDialog.setContentView(getConfirmTransferView(sheetDialog));
+                sheetDialog.show();
+            }
+        });
 
         findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,28 +172,9 @@ public class PayTokenActivity extends BaseActivity {
                 }
             }
         });
-
     }
 
-    private void initListener() {
-        findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(AppWebActivity.RESULT_CODE_CANCEL);
-                finish();
-            }
-        });
-        findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sheetDialog = new BottomSheetDialog(mActivity);
-                sheetDialog.setCancelable(false);
-                sheetDialog.setContentView(getConfirmTransferView(sheetDialog));
-                sheetDialog.show();
-            }
-        });
-    }
-
+    @SuppressLint("SetTextI18n")
     private View getConfirmTransferView(BottomSheetDialog sheetDialog) {
         View view = getLayoutInflater().inflate(R.layout.dialog_confirm_transfer, null);
         TextView toAddress = view.findViewById(R.id.to_address);
@@ -168,9 +185,12 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_6(transactionInfo.getValue()));
-        feeConfirmText.setText(NumberUtil.getDecimal_6(transactionInfo.isEthereum() ?
-                transactionInfo.getGas() : transactionInfo.getQuota()));
+        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()) + getNativeToken());
+        if (transactionInfo.isEthereum()) {
+            feeConfirmText.setText(transactionInfo.getGas() + getNativeToken());
+        } else {
+            feeConfirmText.setText(transactionInfo.getQuota() + getNativeToken());
+        }
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
                 showPasswordConfirmView(progressBar));
@@ -208,23 +228,23 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferEth(String password, ProgressBar progressBar) {
         Observable.just(transactionInfo.gasPrice)
-                .flatMap(new Func1<String, Observable<BigInteger>>() {
-                    @Override
-                    public Observable<BigInteger> call(String gasPrice) {
-                        if (TextUtils.isEmpty(transactionInfo.gasPrice)
-                                || "0".equals(transactionInfo.gasPrice)) {
-                            return EthRpcService.getEthGasPrice();
-                        } else {
-                            return Observable.just(Numeric.toBigInt(gasPrice));
-                        }
+            .flatMap(new Func1<String, Observable<BigInteger>>() {
+                @Override
+                public Observable<BigInteger> call(String gasPrice) {
+                    if (TextUtils.isEmpty(transactionInfo.gasPrice)
+                            || "0".equals(transactionInfo.gasPrice)) {
+                        return EthRpcService.getEthGasPrice();
+                    } else {
+                        return Observable.just(Numeric.toBigInt(gasPrice));
                     }
-                }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                return EthRpcService.transferEth(transactionInfo.to,
-                        transactionInfo.getValue(), gasPrice, password);
-            }
-        }).subscribeOn(Schedulers.io())
+                }
+            }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
+                @Override
+                public Observable<EthSendTransaction> call(BigInteger gasPrice) {
+                    return EthRpcService.transferEth(transactionInfo.to,
+                            transactionInfo.getValue(), gasPrice, password);
+                }
+            }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<EthSendTransaction>() {
                     @Override
@@ -312,6 +332,15 @@ public class PayTokenActivity extends BaseActivity {
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getString(R.string.transfer_fail));
+        }
+    }
+
+    private String getNativeToken() {
+        if (transactionInfo.isEthereum()) {
+            return ConstUtil.ETH;
+        } else {
+            ChainItem chainItem = DBChainUtil.getChain(mActivity, transactionInfo.chainId);
+            return chainItem == null? "": " " + chainItem.tokenSymbol;
         }
     }
 

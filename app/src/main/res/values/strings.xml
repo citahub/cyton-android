@@ -176,10 +176,12 @@
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
+    <string name="balance_not_enough">%s余额不足</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="generate_keystore_fail">KeyStore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络请求错误</string>
     <string name="input_token_info">请输入完整的代币信息</string>
     <string name="keystore">Keystore</string>
@@ -230,4 +232,9 @@
 
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
+    <string name="sign_title">消息签名</string>
+    <string name="input_erc20_address">请输入ERC20代币合约地址</string>
+    <string name="token_name_hint">代币名称</string>
+    <string name="token_symbol_hint">代币符合</string>
+    <string name="token_decimal_hint">小数位数</string>
 </resources>

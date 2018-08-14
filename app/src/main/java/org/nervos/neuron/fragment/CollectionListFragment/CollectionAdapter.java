@@ -60,7 +60,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             CollectionViewHolder holder = (CollectionViewHolder) viewHolder;
             CollectionItem collectionItem = collectionItemList.get(position);
             holder.collectionName.setText(collectionItem.name);
-            holder.collectionImage.setImageURI(collectionItem.imageUrl);
+            holder.collectionContractName.setText(collectionItem.assetContract.name);
+            holder.collectionImage.setImageURI(collectionItem.assetContract.imageUrl);
             holder.collectionId.setText(String.format(
                     context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
         }
@@ -85,7 +86,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     class CollectionViewHolder extends RecyclerView.ViewHolder {
         SimpleDraweeView collectionImage;
         TextView collectionName;
-        TextView collectionNetwork;
+        TextView collectionContractName;
         TextView collectionId;
         RelativeLayout root;
 
@@ -93,7 +94,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(view);
             collectionImage = view.findViewById(R.id.collection_image);
             collectionName = view.findViewById(R.id.collection_name);
-            collectionNetwork = view.findViewById(R.id.collection_network);
+            collectionContractName = view.findViewById(R.id.collection_contract_name);
             collectionId = view.findViewById(R.id.collection_id);
             root = view.findViewById(R.id.root);
         }

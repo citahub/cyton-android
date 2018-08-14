@@ -16,13 +16,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
-import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.custom.WalletToolbar;
 import org.nervos.neuron.custom.WalletTopView;
-import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.CollectionListFragment.CollectionListFragment;
 import org.nervos.neuron.fragment.NBaseFragment;
-import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.TokenListFragment.view.TokenListFragment;
 import org.nervos.neuron.fragment.WalletsFragment.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.item.WalletItem;
@@ -109,10 +106,10 @@ public class WalletsFragment extends NBaseFragment {
         });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWalletSaveEvent(TokenRefreshEvent event) {
-        initWalletData();
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onWalletSaveEvent(TokenRefreshEvent event) {
+//        initWalletData();
+//    }
 
     private void initWalletData() {
         if ((walletItem = DBWalletUtil.getCurrentWallet(getContext())) != null) {

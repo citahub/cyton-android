@@ -36,7 +36,7 @@ public class DBChainUtil extends DBUtil {
         }
     }
 
-    public static ChainItem getChain(Context context, int chainId) {
+    public static ChainItem getChain(Context context, long chainId) {
         synchronized (dbObject) {
             try {
                 DB db = openDB(context, DB_CHAIN);

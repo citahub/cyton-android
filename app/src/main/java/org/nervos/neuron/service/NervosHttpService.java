@@ -61,7 +61,7 @@ public class NervosHttpService {
                                 .body().string(), NervosTransactionResponse.class);
                         for (TransactionItem item : response.result.transactions) {
                             item.chainName = ethMetaDataResult.chainName;
-                            item.value = NumberUtil.getEthFromWeiForStringDecimal6(item.value)
+                            item.value = NumberUtil.getEthFromWeiForStringDecimal10(item.value)
                                     + ethMetaDataResult.tokenSymbol;
                         }
                         return Observable.just(response.result.transactions);
@@ -81,7 +81,7 @@ public class NervosHttpService {
                                 .body().string(), EthTransactionResponse.class);
                         for(TransactionItem item : response.result) {
                             item.chainName = ConstUtil.ETH_MAINNET;
-                            item.value = (NumberUtil.getEthFromWeiForStringDecimal6(item.value) + ConstUtil.ETH);
+                            item.value = (NumberUtil.getEthFromWeiForStringDecimal10(item.value) + ConstUtil.ETH);
                         }
                         if (list != null && list.size() != 0) {
                             response.result.addAll(list);
@@ -113,7 +113,7 @@ public class NervosHttpService {
                             List<TransactionItem> transactionItemList = response.result;
                             for(TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.getEthFromWeiForStringDecimal6(item.value) + ConstUtil.ETH);
+                                item.value = (NumberUtil.getEthFromWeiForStringDecimal10(item.value) + ConstUtil.ETH);
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {
@@ -146,7 +146,7 @@ public class NervosHttpService {
                                     .body().string(), NervosTransactionResponse.class);
                             for (TransactionItem item : response.result.transactions) {
                                 item.chainName = result.chainName;
-                                item.value = NumberUtil.getEthFromWeiForStringDecimal6(item.value)
+                                item.value = NumberUtil.getEthFromWeiForStringDecimal10(item.value)
                                         + result.tokenSymbol;
                             }
                             return Observable.just(response.result.transactions);

@@ -5,8 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
     <color name="font_black">#333333</color>
-    <color name="font_blue">#1646FF</color>
-    <color name="button_blue">#2959CC</color>
+    <color name="button_blue">#4f72ff</color>
 
     <color name="default_title_bg">#FFFFFF</color>
     <color name="default_title_text_color">#FF333333</color>

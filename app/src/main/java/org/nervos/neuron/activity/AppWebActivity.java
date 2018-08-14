@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.WalletItem;
@@ -263,6 +265,8 @@ public class AppWebActivity extends BaseActivity {
         TextView payDataText = view.findViewById(R.id.pay_data);
         CircleImageView photoImage = view.findViewById(R.id.wallet_photo);
         ProgressBar progressBar = view.findViewById(R.id.sign_progress);
+
+        payDataText.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
