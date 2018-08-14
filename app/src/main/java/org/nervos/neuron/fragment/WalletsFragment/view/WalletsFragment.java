@@ -93,7 +93,7 @@ public class WalletsFragment extends NBaseFragment {
                 toolbar.setAlpha(0.0f);
                 toolbar.setVisibility(View.GONE);
                 walletView.setAlpha(1.0f);
-            } else {
+            } else if (Math.abs(verticalOffset) > scrollRange / 4) {
                 float alpha = Math.round(100.0f * Math.abs(verticalOffset) / scrollRange) / 100.0f;
                 toolbar.setAlpha(alpha);
                 toolbar.setVisibility(View.VISIBLE);

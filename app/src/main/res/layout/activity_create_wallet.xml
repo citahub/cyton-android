@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
+        app:isShowBottomLine="true"
         app:isShowLeft="true"
-        app:title="@string/title_create_wallet"
-        app:isShowBottomLine="true"/>
+        app:title="@string/title_create_wallet" />
 
     <TextView
         android:layout_width="match_parent"
@@ -36,6 +36,7 @@
         android:hint="@string/create_wallet_name"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColorHint="@color/font_title_third"
         android:textSize="15sp" />
 
     <View
@@ -54,6 +55,7 @@
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColorHint="@color/font_title_third"
         android:textSize="15sp" />
 
     <View
@@ -72,6 +74,7 @@
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin"
         android:singleLine="true"
+        android:textColorHint="@color/font_title_third"
         android:textSize="15sp" />
 
     <View
@@ -80,7 +83,6 @@
         android:background="@color/line_input" />
 
     <TextView
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_margin"
@@ -88,7 +90,8 @@
         android:layout_marginTop="8dp"
         android:text="@string/password_suggestion"
         android:textColor="#FF0000"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/create_wallet_button"

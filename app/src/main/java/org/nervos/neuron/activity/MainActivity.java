@@ -186,4 +186,10 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void finish() {
+        System.exit(0);
+        super.finish();
+    }
 }

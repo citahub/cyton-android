@@ -50,7 +50,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activity.TransactionListActivity"
+        <activity
+            android:name=".activity.TransactionListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -148,8 +149,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ChangeWalletActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/transparent_activity" />
         <activity
             android:name=".activity.PwdUnlockActivity"
             android:screenOrientation="portrait"

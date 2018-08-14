@@ -9,10 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/ll_total_money"
@@ -24,8 +25,8 @@
                     android:id="@+id/tv_total_money_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
                     android:text="@string/wallet_token_total_money"
                     android:textColor="@color/font_title_third"
                     android:textSize="14sp" />
@@ -37,31 +38,39 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/tv_total_money_title"
+                    android:text="0"
                     android:textColor="@color/font_title_third"
                     android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/iv_add"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                <RelativeLayout
+                    android:id="@+id/rl_add_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_wallet_token_add" />
+                    android:layout_marginRight="15dp">
+
+                    <ImageView
+                        android:id="@+id/iv_add"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_wallet_token_add" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/ll_total_money">
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_token"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                <LinearLayout
                     android:id="@+id/ll_no_token"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -88,6 +97,6 @@
                 </LinearLayout>
             </FrameLayout>
 
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

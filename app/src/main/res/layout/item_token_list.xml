@@ -13,14 +13,15 @@
             android:layout_height="79dp"
             android:paddingEnd="15dp"
             android:paddingStart="15dp">
+
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/token_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:padding="5dp"
-                android:background="@drawable/token_image_circle_border"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:background="@drawable/token_image_circle_border"
+                android:padding="5dp"
                 android:scaleType="centerInside" />
 
             <android.support.constraint.ConstraintLayout
@@ -55,6 +56,7 @@
                     android:id="@+id/token_balance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:text="1000"
                     android:textColor="@color/font_title"
                     android:textSize="16sp"
@@ -65,6 +67,7 @@
                     android:id="@+id/token_currency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:text="1000"
                     android:textColor="@color/font_inside"
                     android:textSize="13sp"
@@ -77,6 +80,6 @@
         <View
             style="@style/separateLineLong"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/default_margin"/>
+            android:layout_marginStart="@dimen/default_margin" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
