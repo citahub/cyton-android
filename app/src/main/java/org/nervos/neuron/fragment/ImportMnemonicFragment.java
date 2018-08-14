@@ -42,8 +42,6 @@ import java.util.concurrent.Executors;
 
 public class ImportMnemonicFragment extends BaseFragment {
 
-    private static final int REQUEST_CODE = 0x01;
-
     List<String> formats;
     List<String> paths;
     String currentPath;
@@ -55,7 +53,6 @@ public class ImportMnemonicFragment extends BaseFragment {
     private AppCompatEditText rePasswordEdit;
     private AppCompatEditText mnemonicEdit;
     private AppCompatButton importButton;
-    private ImageView scanImage;
 
     @Nullable
     @Override
@@ -67,7 +64,6 @@ public class ImportMnemonicFragment extends BaseFragment {
         passwordEdit = view.findViewById(R.id.edit_wallet_password);
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         mnemonicEdit = view.findViewById(R.id.edit_wallet_mnemonic);
-        scanImage = view.findViewById(R.id.wallet_scan);
         return view;
     }
 
@@ -115,21 +111,6 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-
-        scanImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AndPermission.with(getActivity())
-                    .runtime().permission(Permission.Group.CAMERA)
-                    .rationale(new RuntimeRationale())
-                    .onGranted(permissions -> {
-                        Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE);
-                    })
-                    .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                    .start();
             }
         });
 
@@ -233,25 +214,6 @@ public class ImportMnemonicFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
 
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    mnemonicEdit.setText(result);
-                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
-                }
-            }
         }
     }
 
