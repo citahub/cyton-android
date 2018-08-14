@@ -10,8 +10,8 @@ public class HttpUrls {
 
 
     // setting module url list
-    public static final String SOURCE_CODE_GITHUB_URL = "https://github.com/cryptape/Neuron-Android";
-    public static final String PRODUCT_AGREEMENT_URL = "https://cryptape.github.io/Neuron-Android/#/zh-CN/product-agreement";
+    public static final String SOURCE_CODE_GITHUB_URL = "https://github.com/cryptape/neuron-android";
+    public static final String PRODUCT_AGREEMENT_URL = "https://docs.nervos.org/neuron-android/#/product-agreement";
     public static final String CONTACT_US_RUL = "http://appchain.nervos.org//#/contact-us";
     public static final String NERVOS_NETWORK = "https://www.nervos.org/";
     public static final String OPEN_SEA = "https://opensea.io/";
