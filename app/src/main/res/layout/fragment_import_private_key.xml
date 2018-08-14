@@ -47,7 +47,7 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginLeft="@dimen/default_margin"/>
+        android:layout_marginLeft="@dimen/default_margin" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_name"
@@ -63,7 +63,7 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginLeft="@dimen/default_margin"/>
+        android:layout_marginLeft="@dimen/default_margin" />
 
 
     <android.support.v7.widget.AppCompatEditText
@@ -81,7 +81,7 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginLeft="@dimen/default_margin"/>
+        android:layout_marginLeft="@dimen/default_margin" />
 
 
     <android.support.v7.widget.AppCompatEditText
@@ -104,9 +104,8 @@
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginTop="8dp"
         android:text="@string/password_suggestion"
-        android:textColor="#FF0000"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:textColor="@color/font_inside"
+        android:textSize="12sp" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/import_private_key_button"
