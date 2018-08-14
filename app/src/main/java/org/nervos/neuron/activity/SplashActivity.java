@@ -31,7 +31,6 @@ public class SplashActivity extends BaseActivity {
                         }
                     } else {
                         Intent intent = new Intent(mActivity, AddWalletActivity.class);
-                        intent.putExtra("isFirst", true);
                         startActivity(intent);
                     }
                     finish();
