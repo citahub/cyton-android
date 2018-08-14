@@ -23,10 +23,15 @@ public class SplashActivity extends BaseActivity {
                 super.run();
                 try {
                     sleep(1000);
-                    if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
-                        startActivity(new Intent(mActivity, FingerPrintActivity.class));
+                    if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
+                        if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                            startActivity(new Intent(mActivity, FingerPrintActivity.class));
+                        } else {
+                            startActivity(new Intent(mActivity, MainActivity.class));
+                        }
                     } else {
-                        startActivity(new Intent(mActivity, MainActivity.class));
+                        Intent intent = new Intent(mActivity, AddWalletActivity.class);
+                        startActivity(intent);
                     }
                     finish();
                 } catch (InterruptedException e) {

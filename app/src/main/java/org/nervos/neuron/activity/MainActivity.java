@@ -17,6 +17,7 @@ import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.TransactionFragment;
 import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -165,19 +166,28 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (fMgr.findFragmentByTag(AppFragment.TAG) != null && !fMgr.findFragmentByTag(AppFragment.TAG).isVisible()) {
+            if (appFragment.isVisible()) {
+                if (appFragment.canGoBack()) {
+                    appFragment.goBack();
+                    return true;
+                } else {
+                    if ((System.currentTimeMillis() - exitTime) > 2000) {
+                        Toast.makeText(getApplicationContext(), R.string.press_back_finish,
+                                Toast.LENGTH_SHORT).show();
+                        exitTime = System.currentTimeMillis();
+                        return false;
+                    } else {
+                        finish();
+                        return true;
+                    }
+                }
+            } else {
                 FragmentTransaction fragmentTransaction = fMgr.beginTransaction();
                 hideFragments(fragmentTransaction);
                 setNavigationItem(AppFragment.TAG);
                 return true;
-            } else if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), R.string.press_back_finish, Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-                return false;
-            } else {
-                finish();
-                return true;
             }
+
         }
         return super.onKeyDown(keyCode, event);
     }

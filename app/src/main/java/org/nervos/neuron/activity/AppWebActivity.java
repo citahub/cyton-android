@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
+import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.SignService;
@@ -31,6 +34,7 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.webview.OnSignPersonalMessageListener;
@@ -75,16 +79,18 @@ public class AppWebActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_web);
 
-        url = getIntent().getStringExtra(EXTRA_URL);
-        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-
+        initData();
         initView();
         initWebView();
         initInjectWebView();
         webView.loadUrl(url);
+        initManifest();
 
-        WebAppUtil.getHttpManifest(webView, url);
+    }
 
+    private void initData() {
+        url = getIntent().getStringExtra(EXTRA_URL);
+        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
     }
 
     private void initView() {
@@ -93,7 +99,6 @@ public class AppWebActivity extends BaseActivity {
         titleText = findViewById(R.id.title_bar_center);
         titleText.setText(R.string.dapp);
         collectText = findViewById(R.id.menu_collect);
-        initCollectView();
         findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
         findViewById(R.id.title_bar_right).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +145,34 @@ public class AppWebActivity extends BaseActivity {
     private void closeMenuWindow() {
         findViewById(R.id.menu_layout).setVisibility(View.GONE);
         findViewById(R.id.menu_background).setVisibility(View.GONE);
+    }
+
+    private void initManifest() {
+        WebAppUtil.getHttpManifest(webView, url)
+            .subscribe(new Subscriber<ChainItem>() {
+                @Override
+                public void onCompleted() {
+                    initCollectView();
+                }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    LogUtil.e("manifest error: " + e.getMessage());
+                    initCollectView();
+                }
+                @Override
+                public void onNext(ChainItem chainItem) {
+                    if (TextUtils.isEmpty(chainItem.errorMessage)) {
+                        DBChainUtil.saveChain(webView.getContext(), chainItem);
+                        if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                            TokenItem tokenItem = new TokenItem(chainItem);
+                            DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
+                        }
+                    } else {
+                        Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
     }
 
     private void initInjectWebView() {
@@ -226,6 +259,12 @@ public class AppWebActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                initCollectView();
             }
 
             @Override

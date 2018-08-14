@@ -19,25 +19,15 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
-import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +36,6 @@ import java.util.concurrent.Callable;
 import okhttp3.Call;
 import okhttp3.Request;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -61,8 +50,8 @@ public class WebAppUtil {
      * @param webView
      * @param url           the web url from the third part
      */
-    public static void getHttpManifest(WebView webView, String url) {
-        Observable.fromCallable(new Callable<String>() {
+    public static Observable<ChainItem> getHttpManifest(WebView webView, String url) {
+        return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws IOException {
                 Document doc = Jsoup.connect(url).get();
@@ -141,28 +130,7 @@ public class WebAppUtil {
                 return Observable.just(chainItem);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Subscriber<ChainItem>() {
-            @Override
-            public void onCompleted() { }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                LogUtil.e("manifest error: " + e.getMessage());
-            }
-            @Override
-            public void onNext(ChainItem chainItem) {
-                if (TextUtils.isEmpty(chainItem.errorMessage)) {
-                    DBChainUtil.saveChain(webView.getContext(), chainItem);
-                    if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                        TokenItem tokenItem = new TokenItem(chainItem);
-                        DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                    }
-                } else {
-                    Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+          .observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -177,8 +145,7 @@ public class WebAppUtil {
     public static void collectApp(WebView webView) {
         AppItem appItem;
         if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
-            appItem = new AppItem(mAppItem.entry,
-                    mAppItem.icon, mAppItem.name, mAppItem.provider);
+            appItem = mAppItem;
         } else {
             String icon = webView.getUrl() + WEB_ICON_PATH;
             appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
@@ -191,8 +158,7 @@ public class WebAppUtil {
     public static void cancelCollectApp(WebView webView) {
         AppItem appItem;
         if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
-            appItem = new AppItem(mAppItem.entry,
-                    mAppItem.icon, mAppItem.name, mAppItem.provider);
+            appItem = mAppItem;
         } else {
             String icon = webView.getUrl() + WEB_ICON_PATH;
             appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
