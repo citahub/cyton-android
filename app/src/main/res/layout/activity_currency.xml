@@ -12,7 +12,7 @@
         app:isShowBottomLine="true"
         app:isShowLeft="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/about_us_title"
+        app:title="@string/setting_currency"
         app:title_color="@color/font_title" />
 
     <android.support.v7.widget.RecyclerView
