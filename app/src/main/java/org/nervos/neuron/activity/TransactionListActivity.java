@@ -189,10 +189,13 @@ public class TransactionListActivity extends NBaseActivity {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-                if (walletItem != null) {
-                    viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+                if (!transactionItem.from.equalsIgnoreCase(walletItem.address)) {
+                    viewHolder.transactionIdText.setText(transactionItem.from);
+                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
+                } else {
+                    viewHolder.transactionIdText.setText(transactionItem.to);
+                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_out);
                 }
-                viewHolder.transactionIdText.setText(transactionItem.hash);
                 String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
