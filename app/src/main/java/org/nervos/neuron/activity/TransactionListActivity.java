@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,7 +124,7 @@ public class TransactionListActivity extends NBaseActivity {
             dismissProgressBar();
             return;
         }
-        Observable<List<TransactionItem>> observable = isETH(tokenItem)?
+        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
                 NervosHttpService.getETHTransactionList(mActivity)
                 : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
@@ -222,7 +223,7 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         class TransactionViewHolder extends RecyclerView.ViewHolder {
-            CircleImageView walletImage;
+            ImageView walletImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
