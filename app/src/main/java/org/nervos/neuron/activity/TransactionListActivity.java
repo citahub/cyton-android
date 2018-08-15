@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,7 +124,7 @@ public class TransactionListActivity extends NBaseActivity {
             dismissProgressBar();
             return;
         }
-        Observable<List<TransactionItem>> observable = isETH(tokenItem)?
+        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
                 NervosHttpService.getETHTransactionList(mActivity)
                 : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
@@ -188,11 +189,15 @@ public class TransactionListActivity extends NBaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
+                boolean in = transactionItem.from.equalsIgnoreCase(walletItem.address) ? false : true;
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-                if (walletItem != null) {
-                    viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+                if (in) {
+                    viewHolder.transactionIdText.setText(transactionItem.from);
+                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
+                } else {
+                    viewHolder.transactionIdText.setText(transactionItem.to);
+                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_out);
                 }
-                viewHolder.transactionIdText.setText(transactionItem.hash);
                 String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
@@ -219,7 +224,7 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         class TransactionViewHolder extends RecyclerView.ViewHolder {
-            CircleImageView walletImage;
+            ImageView walletImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
