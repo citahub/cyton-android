@@ -18,7 +18,7 @@ public class UrlUtil {
         return null;
     }
 
-    private static boolean exists(String url) {
+    public static boolean exists(String url) {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
             con.setConnectTimeout(3000);

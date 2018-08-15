@@ -26,27 +26,18 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.TransactionFragment;
-import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.web.UrlUtil;
-import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
 
 public class AddWebsiteActivity extends BaseActivity {
 

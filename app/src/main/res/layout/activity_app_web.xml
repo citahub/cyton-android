@@ -70,7 +70,7 @@
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="end"
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical"
             android:background="@drawable/menu_window">
 

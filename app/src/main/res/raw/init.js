@@ -72,5 +72,7 @@ window.web3.version.getNetwork = function(cb) {
 window.web3.eth.getCoinbase = function(cb) {
     return cb(null, addressHex)
 }
+window.web3.eth.defaultAccount = addressHex
+
 window.isNervosReady = true
 window.isMetaMask = true

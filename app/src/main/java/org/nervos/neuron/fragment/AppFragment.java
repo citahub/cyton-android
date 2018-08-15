@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,13 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 public class AppFragment extends Fragment {
 
     public static final String TAG = AppFragment.class.getName();
-
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -102,6 +103,12 @@ public class AppFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAppHistoryEvent(AppHistoryEvent event) {
+        String app = new Gson().toJson(event.appItem);
+        webView.loadUrl("javascript:window.__myhistory.add("+ app + ")");
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +119,14 @@ public class AppFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    public boolean canGoBack() {
+        return webView.canGoBack();
+    }
+
+    public void goBack() {
+        webView.goBack();
     }
 
 }

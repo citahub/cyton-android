@@ -17,27 +17,19 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
-import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
-import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +38,6 @@ import java.util.concurrent.Callable;
 import okhttp3.Call;
 import okhttp3.Request;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -54,15 +45,19 @@ import rx.schedulers.Schedulers;
 public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";
-    private static AppItem mAppItem;
+    private static AppItem mAppItem = null;
+
+    public static void init() {
+        mAppItem = null;
+    }
 
     /**
      * get app information from manifest.json and getMetaData from each http provider host
      * @param webView
      * @param url           the web url from the third part
      */
-    public static void getHttpManifest(WebView webView, String url) {
-        Observable.fromCallable(new Callable<String>() {
+    public static Observable<ChainItem> getHttpManifest(WebView webView, String url) {
+        return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws IOException {
                 Document doc = Jsoup.connect(url).get();
@@ -141,65 +136,37 @@ public class WebAppUtil {
                 return Observable.just(chainItem);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Subscriber<ChainItem>() {
-            @Override
-            public void onCompleted() { }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                LogUtil.e("manifest error: " + e.getMessage());
-            }
-            @Override
-            public void onNext(ChainItem chainItem) {
-                if (TextUtils.isEmpty(chainItem.errorMessage)) {
-                    DBChainUtil.saveChain(webView.getContext(), chainItem);
-                    if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                        TokenItem tokenItem = new TokenItem(chainItem);
-                        DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                    }
-                } else {
-                    Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+          .observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static boolean isCollectApp(WebView webView) {
-        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
-            return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
-        } else {
-            return DBAppUtil.findApp(webView.getContext(), webView.getUrl());
-        }
+        return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
     }
 
     public static void collectApp(WebView webView) {
-        AppItem appItem;
-        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
-            appItem = new AppItem(mAppItem.entry,
-                    mAppItem.icon, mAppItem.name, mAppItem.provider);
-        } else {
-            String icon = webView.getUrl() + WEB_ICON_PATH;
-            appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
-        }
-        DBAppUtil.saveDbApp(webView.getContext(), appItem);
-        EventBus.getDefault().post(new AppCollectEvent(true, appItem));
+        DBAppUtil.saveDbApp(webView.getContext(), mAppItem);
+        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem));
         Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
     }
 
     public static void cancelCollectApp(WebView webView) {
-        AppItem appItem;
-        if (mAppItem != null && !TextUtils.isEmpty(mAppItem.entry)) {
-            appItem = new AppItem(mAppItem.entry,
-                    mAppItem.icon, mAppItem.name, mAppItem.provider);
-        } else {
-            String icon = webView.getUrl() + WEB_ICON_PATH;
-            appItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
-        }
-        DBAppUtil.deleteApp(webView.getContext(), appItem.entry);
-        EventBus.getDefault().post(new AppCollectEvent(false, appItem));
+        DBAppUtil.deleteApp(webView.getContext(), mAppItem.entry);
+        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem));
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void addHistory() {
+        EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem()));
+    }
+
+    public static void setAppItem(WebView webView) {
+        if (mAppItem != null && mAppItem.chainSet != null && mAppItem.chainSet.size() > 0) return;
+
+        URI uri = URI.create(webView.getUrl());
+        String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
+        icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
+        mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
     }
 
     public static AppItem getAppItem() {
@@ -232,8 +199,6 @@ public class WebAppUtil {
         webSettings.setAppCachePath(cacheDirPath);
         webSettings.setAppCacheEnabled(true);
     }
-
-
 
 
 }

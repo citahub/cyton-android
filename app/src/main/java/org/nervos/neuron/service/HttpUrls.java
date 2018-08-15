@@ -28,11 +28,16 @@ public class HttpUrls {
     public static final String DISCOVER_URL = "http://47.97.171.140:8866/dapps";
     public static final String INNER_URL = "http://47.97.171.140:8866/";
 
+//    public static final String DISCOVER_URL = "http://192.168.10.24:3000/dapps";
+//    public static final String INNER_URL = "http://192.168.10.24:3000/";
 
     //Token Currency ID Price
     public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";
     public static final String Token_CURRENCY = "https://api.coinmarketcap.com/v2/ticker/@ID/?convert=@Currency";
 
     public static final String COLLECTION_LIST_URL = "https://api.opensea.io/api/v1/assets/?owner=";
+
+
+    public static final String DEFAULT_WEB_IMAGE_URL = "https://cdn.cryptape.com/neuron/default_web_icon.png";
 
 }
