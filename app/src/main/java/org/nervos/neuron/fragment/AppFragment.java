@@ -23,6 +23,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 
@@ -100,6 +101,12 @@ public class AppFragment extends Fragment {
         } else {
             webView.loadUrl("javascript:__mydapp.remove('" + event.appItem.entry + "')");
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAppHistoryEvent(AppHistoryEvent event) {
+        String app = new Gson().toJson(event.appItem);
+        webView.loadUrl("javascript:window.__myhistory.add("+ app + ")");
     }
 
     @Override

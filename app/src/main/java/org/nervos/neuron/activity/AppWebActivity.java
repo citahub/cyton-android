@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -20,9 +21,12 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.SimpleDialog;
+import org.nervos.neuron.event.AppCollectEvent;
+import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
@@ -30,7 +34,6 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.SignService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
@@ -91,6 +94,8 @@ public class AppWebActivity extends BaseActivity {
     private void initData() {
         url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
+
+        WebAppUtil.init();
     }
 
     private void initView() {
@@ -109,13 +114,12 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initMenuView() {
-        findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
-        findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
+        openMenuWindow();
+        initCollectView();
         findViewById(R.id.menu_background).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findViewById(R.id.menu_layout).setVisibility(View.GONE);
-                findViewById(R.id.menu_background).setVisibility(View.GONE);
+                closeMenuWindow();
             }
         });
         findViewById(R.id.menu_collect).setOnClickListener(new View.OnClickListener() {
@@ -127,6 +131,7 @@ public class AppWebActivity extends BaseActivity {
                     WebAppUtil.collectApp(webView);
                 }
                 initCollectView();
+                closeMenuWindow();
             }
         });
         findViewById(R.id.menu_reload).setOnClickListener(v1 -> {
@@ -138,8 +143,6 @@ public class AppWebActivity extends BaseActivity {
     private void initCollectView() {
         collectText.setText(WebAppUtil.isCollectApp(webView)?
                 getString(R.string.cancel_collect):getString(R.string.collect));
-        closeMenuWindow();
-
     }
 
     private void closeMenuWindow() {
@@ -147,22 +150,25 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
 
+    private void openMenuWindow() {
+        findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
+        findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
+    }
+
     private void initManifest() {
         WebAppUtil.getHttpManifest(webView, url)
             .subscribe(new Subscriber<ChainItem>() {
                 @Override
-                public void onCompleted() {
-                    initCollectView();
-                }
+                public void onCompleted() { }
                 @Override
                 public void onError(Throwable e) {
                     e.printStackTrace();
                     LogUtil.e("manifest error: " + e.getMessage());
-                    initCollectView();
                 }
                 @Override
                 public void onNext(ChainItem chainItem) {
                     if (TextUtils.isEmpty(chainItem.errorMessage)) {
+                        WebAppUtil.addHistory();
                         DBChainUtil.saveChain(webView.getContext(), chainItem);
                         if (!TextUtils.isEmpty(chainItem.tokenName)) {
                             TokenItem tokenItem = new TokenItem(chainItem);
@@ -174,54 +180,6 @@ public class AppWebActivity extends BaseActivity {
                 }
             });
     }
-
-    private void initInjectWebView() {
-
-        webView.setChainId(1);
-        webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
-        webView.setWalletAddress(new Address(walletItem.address));
-
-        webView.addJavascriptInterface(new Neuron(), "neuron");
-
-        webView.setOnSignTransactionListener(transaction -> {
-            signTxAction(transaction);
-        });
-
-        webView.setOnSignMessageListener(new OnSignMessageListener() {
-            @Override
-            public void onSignMessage(Message<Transaction> message) {
-                isPersonalSign = false;
-                showSignMessageDialog(message);
-            }
-        });
-
-        webView.setOnSignPersonalMessageListener(new OnSignPersonalMessageListener() {
-            @Override
-            public void onSignPersonalMessage(Message<Transaction> message) {
-                isPersonalSign = true;
-                showSignMessageDialog(message);
-            }
-        });
-    }
-
-    private class Neuron {
-
-        @JavascriptInterface
-        public String getAccount() {
-            return walletItem.address;
-        }
-
-        @JavascriptInterface
-        public String getAccounts() {
-            List<WalletItem> walletItems = DBWalletUtil.getAllWallet(mActivity);
-            List<String> walletNames = new ArrayList<>();
-            for (WalletItem item : walletItems) {
-                walletNames.add(item.address);
-            }
-            return new Gson().toJson(walletNames);
-        }
-    }
-
 
     private void signTxAction(Transaction transaction) {
         this.signTransaction = transaction;
@@ -253,6 +211,8 @@ public class AppWebActivity extends BaseActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 titleText.setText(title);
+                WebAppUtil.setAppItem(webView);
+                WebAppUtil.addHistory();
             }
         });
         webView.setWebViewClient(new WebViewClient(){
@@ -260,26 +220,52 @@ public class AppWebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
             }
+        });
+    }
 
+
+    private void initInjectWebView() {
+        webView.setChainId(1);
+        webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
+        webView.setWalletAddress(new Address(walletItem.address));
+        webView.addJavascriptInterface(new Neuron(), "neuron");
+        webView.setOnSignTransactionListener(transaction -> {
+            signTxAction(transaction);
+        });
+        webView.setOnSignMessageListener(new OnSignMessageListener() {
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                initCollectView();
+            public void onSignMessage(Message<Transaction> message) {
+                isPersonalSign = false;
+                showSignMessageDialog(message);
             }
-
+        });
+        webView.setOnSignPersonalMessageListener(new OnSignPersonalMessageListener() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                initCollectView();
-                addHistory();
+            public void onSignPersonalMessage(Message<Transaction> message) {
+                isPersonalSign = true;
+                showSignMessageDialog(message);
             }
         });
     }
 
-    private void addHistory() {
-        String app = new Gson().toJson(WebAppUtil.getAppItem());
-        webView.loadUrl("javascript:__myhistory.add("+ app + ")");
+    private class Neuron {
+
+        @JavascriptInterface
+        public String getAccount() {
+            return walletItem.address;
+        }
+
+        @JavascriptInterface
+        public String getAccounts() {
+            List<WalletItem> walletItems = DBWalletUtil.getAllWallet(mActivity);
+            List<String> walletNames = new ArrayList<>();
+            for (WalletItem item : walletItems) {
+                walletNames.add(item.address);
+            }
+            return new Gson().toJson(walletNames);
+        }
     }
+
 
     @Override
     public void onDestroy() {
