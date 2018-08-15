@@ -2,7 +2,7 @@
 
 # Neuron Walllet (Android)
 
-Welcome to Neuron's open source Android app!
+Welcome to Neuron's open source Android app! 
 
 Getting Started
 ===============
@@ -15,9 +15,9 @@ Getting Started
 Making a new build for App store (Dev only)
 ============================================
 
-1. Open app/build.gradle
-2. Increase the versionCode by 1.
-3. Optionally change the versionName to whatever you want.
+1. Clone source code to local
+2. Open app/config.gradle
+3. Increase the versionCode by 1.
 4. Build the APK however you want (in Android Studio or via gradle)
     - You'll need the release certificate, alias and password.
 5. Commit the changes to build.gradle, upload the APKs to App store
