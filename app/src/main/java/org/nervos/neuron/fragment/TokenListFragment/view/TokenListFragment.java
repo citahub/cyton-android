@@ -114,8 +114,6 @@ public class TokenListFragment extends NBaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
-//        tokenItemList.clear();
-//        adapter.notifyDataSetChanged();
         initWalletData(true);
         moneyText.setText("0");
     }

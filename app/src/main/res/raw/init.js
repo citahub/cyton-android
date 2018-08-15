@@ -2,6 +2,7 @@
 const addressHex = "%1$s";
 const rpcURL = "%2$s";
 const chainID = "%3$s";
+
 function executeCallback (id, error, value) {
   Neuron.executeCallback(id, error, value)
 }
@@ -73,6 +74,10 @@ window.web3.eth.getCoinbase = function(cb) {
     return cb(null, addressHex)
 }
 window.web3.eth.defaultAccount = addressHex
+
+window.web3.eth.getAccounts = function() {
+    return [addressHex];
+}
 
 window.isNervosReady = true
 window.isMetaMask = true
