@@ -20,6 +20,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.webview.item.Address;
 
 class JsInjectorClient {
@@ -87,7 +89,7 @@ class JsInjectorClient {
 
     String assembleJs(Context context, String template) {
         if (TextUtils.isEmpty(jsLibrary)) {
-            jsLibrary = loadFile(context, R.raw.neuron);
+            jsLibrary = loadFile(context, R.raw.neuron_min);
         }
         String initJs = loadInitJs(context);
         return String.format(template, jsLibrary, initJs);
