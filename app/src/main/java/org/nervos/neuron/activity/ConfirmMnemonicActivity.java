@@ -119,6 +119,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                     EventBus.getDefault().post(new WalletSaveEvent());
                     Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
                     startActivity(intent);
                     EventBus.getDefault().post(new CloseWalletInfoEvent());
