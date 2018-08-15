@@ -189,9 +189,8 @@ public class TransactionListActivity extends NBaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
-                boolean in = transactionItem.from.equalsIgnoreCase(walletItem.address) ? false : true;
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-                if (in) {
+                if (!transactionItem.from.equalsIgnoreCase(walletItem.address)) {
                     viewHolder.transactionIdText.setText(transactionItem.from);
                     viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
                 } else {
