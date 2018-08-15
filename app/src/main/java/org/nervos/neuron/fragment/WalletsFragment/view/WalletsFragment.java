@@ -41,7 +41,7 @@ public class WalletsFragment extends NBaseFragment {
     private WalletTopView walletView;
     private WalletItem walletItem;
     private TokenListFragment tokenListFragment;
-    private CollectionListFragment collectionListFragment;
+    private CollectionListFragment collectionListFragment = null;
     private WalletFragmentPresenter presenter;
     private ImageView rightImage;
 
@@ -78,7 +78,6 @@ public class WalletsFragment extends NBaseFragment {
             presenter.setIndicator(mTabLayout, 70, 70);
         });
         tokenListFragment = new TokenListFragment();
-        collectionListFragment = new CollectionListFragment();
         presenter = new WalletFragmentPresenter(getActivity());
         initWalletData();
 
@@ -132,6 +131,8 @@ public class WalletsFragment extends NBaseFragment {
                 case 0:
                     return tokenListFragment;
                 case 1:
+                    if (collectionListFragment == null)
+                        collectionListFragment = new CollectionListFragment();
                     return collectionListFragment;
                 default:
                     return tokenListFragment;

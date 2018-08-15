@@ -53,6 +53,7 @@ public class AddWalletActivity extends NBaseActivity {
     private void goBack() {
         if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
             Intent intent = new Intent(mActivity, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
             startActivity(intent);
             finish();

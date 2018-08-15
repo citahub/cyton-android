@@ -9,10 +9,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.crypto.WalletEntity;
 import org.nervos.neuron.dialog.SimpleDialog;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
@@ -145,8 +147,10 @@ public class WalletManageActivity extends BaseActivity {
                         deleteDialog.dismiss();
                         Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(mActivity, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra(EXTRA_TAG, AppFragment.TAG);
                         startActivity(intent);
+                        EventBus.getDefault().post(new TokenRefreshEvent());
                         finish();
                     }
                 });
