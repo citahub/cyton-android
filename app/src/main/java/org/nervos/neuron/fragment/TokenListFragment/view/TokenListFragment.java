@@ -129,8 +129,6 @@ public class TokenListFragment extends NBaseFragment {
 
     private void initWalletData(boolean showProgress) {
         if (showProgress) showProgressBar();
-        tokenItemList.clear();
-        adapter.notifyDataSetChanged();
         WalletService.getWalletTokenBalance(getContext(), walletItem ->
                 recyclerView.post(() -> {
                     if (showProgress) dismissProgressBar();
