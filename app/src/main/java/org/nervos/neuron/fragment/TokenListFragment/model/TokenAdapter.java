@@ -23,11 +23,13 @@ import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
 
-public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> {
+public class TokenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public TokenAdapterListener listener;
     private Activity activity;
     private List<TokenItem> tokenItemList;
+    public static final int VIEW_TYPE_ITEM = 1;
+    public static final int VIEW_TYPE_EMPTY = 0;
 
     public TokenAdapter(Activity activity, List<TokenItem> tokenItemList) {
         this.activity = activity;
@@ -44,55 +46,74 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     }
 
     @Override
-    public TokenViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_EMPTY) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
+            ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
+            return new RecyclerView.ViewHolder(view) {
+            };
+        }
         TokenViewHolder holder = new TokenViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_token_list, parent,
                 false));
         return holder;
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
-        TokenItem tokenItem = tokenItemList.get(position);
-        Uri uri = null;
-        if (TextUtils.isEmpty(tokenItem.avatar)) {
-            if (tokenItem.chainId < 0) {
-                holder.tokenImage.setImageResource(R.drawable.ether_big);
+    public int getItemViewType(int position) {
+        if (tokenItemList.size() == 0) {
+            return VIEW_TYPE_EMPTY;
+        }
+        return VIEW_TYPE_ITEM;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof TokenViewHolder) {
+            TokenViewHolder holder = (TokenViewHolder) viewHolder;
+            TokenItem tokenItem = tokenItemList.get(position);
+            Uri uri = null;
+            if (TextUtils.isEmpty(tokenItem.avatar)) {
+                if (tokenItem.chainId < 0) {
+                    holder.tokenImage.setImageResource(R.drawable.ether_big);
+                } else {
+                    holder.tokenImage.setImageResource(R.mipmap.ic_launcher);
+                }
             } else {
-                holder.tokenImage.setImageResource(R.mipmap.ic_launcher);
+                uri = Uri.parse(tokenItem.avatar);
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setUri(uri)
+                        .setAutoPlayAnimations(true)
+                        .build();
+                holder.tokenImage.setController(controller);
             }
-        } else {
-            uri = Uri.parse(tokenItem.avatar);
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-            holder.tokenImage.setController(controller);
-        }
-        if (tokenItem != null) {
-            holder.tokenName.setText(tokenItem.symbol);
-            holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
-        }
-        if (!TextUtils.isEmpty(tokenItem.chainName)) {
-            holder.tokenNetworkText.setText(tokenItem.chainName);
-        } else {
-            if (tokenItem.chainId < 0) {
-                holder.tokenNetworkText.setText(activity.getString(R.string.ethereum_mainnet));
+            if (tokenItem != null) {
+                holder.tokenName.setText(tokenItem.symbol);
+                holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
             }
+            if (!TextUtils.isEmpty(tokenItem.chainName)) {
+                holder.tokenNetworkText.setText(tokenItem.chainName);
+            } else {
+                if (tokenItem.chainId < 0) {
+                    holder.tokenNetworkText.setText(activity.getString(R.string.ethereum_mainnet));
+                }
+            }
+            if (tokenItem.currencyPrice == 0.00) {
+                holder.tokenCurrencyText.setText("");
+            } else {
+                holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() +
+                        NumberUtil.getDecimalValid_2(tokenItem.currencyPrice));
+            }
+            holder.root.setOnClickListener((view) -> {
+                listener.onItemClick(view, position);
+            });
         }
-        if (tokenItem.currencyPrice == 0.00) {
-            holder.tokenCurrencyText.setText("");
-        } else {
-            holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() +
-                    NumberUtil.getDecimalValid_2(tokenItem.currencyPrice));
-        }
-        holder.root.setOnClickListener((view) -> {
-            listener.onItemClick(view, position);
-        });
     }
 
     @Override
     public int getItemCount() {
+        if (tokenItemList.size() == 0) {
+            return 1;
+        }
         return tokenItemList.size();
     }
 
