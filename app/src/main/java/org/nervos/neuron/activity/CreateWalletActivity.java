@@ -29,7 +29,7 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CreateWalletActivity extends BaseActivity {
+public class CreateWalletActivity extends NBaseActivity {
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     private static final String MnemonicPath = "m/44'/60'/0'/0/0";
@@ -44,15 +44,9 @@ public class CreateWalletActivity extends BaseActivity {
     private WalletEntity walletEntity;
     private WalletItem walletItem;
 
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_wallet);
-        EventBus.getDefault().register(this);
-        initView();
-        checkWalletStatus();
-        initListener();
+    protected int getContentLayout() {
+        return R.layout.activity_create_wallet;
     }
 
     @Override
@@ -61,12 +55,18 @@ public class CreateWalletActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         walletNameEdit = findViewById(R.id.edit_wallet_name);
         passwordEdit = findViewById(R.id.edit_wallet_password);
         rePasswordEdit = findViewById(R.id.edit_wallet_password_repeat);
         createWalletButton = findViewById(R.id.create_wallet_button);
         titleBar = findViewById(R.id.title);
+    }
+
+    @Override
+    protected void initData() {
+        checkWalletStatus();
         if (getIntent() != null &&
                 getIntent().getBooleanExtra(SplashActivity.EXTRA_FIRST, false)) {
             titleBar.hideLeft();
@@ -86,7 +86,8 @@ public class CreateWalletActivity extends BaseActivity {
         }
     }
 
-    private void initListener() {
+    @Override
+    protected void initAction() {
         createWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,7 +96,7 @@ public class CreateWalletActivity extends BaseActivity {
                 } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
                     Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
-                } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())){
+                } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())) {
                     Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     final String password = rePasswordEdit.getText().toString().trim();
@@ -119,10 +120,9 @@ public class CreateWalletActivity extends BaseActivity {
     /**
      * save wallet information to database and add default eth token
      */
-    private void saveWalletInfo(String password){
-        walletEntity = WalletEntity.createWithMnemonic(
-                passwordEdit.getText().toString().trim(), MnemonicPath);
-        new Thread(){
+    private void saveWalletInfo(String password) {
+        walletEntity = WalletEntity.createWithMnemonic(MnemonicPath);
+        new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -152,15 +152,15 @@ public class CreateWalletActivity extends BaseActivity {
     }
 
     private void setCreateButtonStatus(boolean status) {
-        createWalletButton.setBackgroundResource(status?
-                R.drawable.button_corner_blue_shape:R.drawable.button_corner_gray_shape);
+        createWalletButton.setBackgroundResource(status ?
+                R.drawable.button_corner_blue_shape : R.drawable.button_corner_gray_shape);
         createWalletButton.setEnabled(status);
     }
 
-
     private boolean check1 = false, check2 = false, check3 = false;
+
     private void checkWalletStatus() {
-        walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
+        walletNameEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -168,7 +168,7 @@ public class CreateWalletActivity extends BaseActivity {
                 setCreateButtonStatus(isWalletValid());
             }
         });
-        passwordEdit.addTextChangedListener(new WalletTextWatcher(){
+        passwordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -177,7 +177,7 @@ public class CreateWalletActivity extends BaseActivity {
                 setCreateButtonStatus(isWalletValid());
             }
         });
-        rePasswordEdit.addTextChangedListener(new WalletTextWatcher(){
+        rePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -194,10 +194,12 @@ public class CreateWalletActivity extends BaseActivity {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void afterTextChanged(Editable editable) {
 

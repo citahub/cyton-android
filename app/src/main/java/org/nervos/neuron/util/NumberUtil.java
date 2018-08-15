@@ -8,18 +8,40 @@ import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
-import static org.nervos.neuron.util.ConstUtil.ETHDecimal;
 
 public class NumberUtil {
 
-    public static String getDecimal_6(Double value) {
-        DecimalFormat fmt = new DecimalFormat("0.######");
+    public static String getDecimal_10(double value) {
+        DecimalFormat fmt = new DecimalFormat("0.##########");
+        return fmt.format(value);
+    }
+
+    public static String getDecimalValid_2(double value) {
+        long integer = (long)value;
+        double decimal = value - integer;
+        BigDecimal b = new BigDecimal(decimal);
+        BigDecimal divisor = BigDecimal.ONE;
+        MathContext mc = new MathContext(2);
+        decimal = b.divide(divisor, mc).doubleValue();
+        return getDecimal8ENotation(integer + decimal);
+    }
+
+    public static String getDecimal8ENotation(double value) {
+        if (value < 1) {
+            double decimal = value - (long)value;
+            if (decimal < 0.00000001) {
+                return String.valueOf(value);
+            }
+        }
+        DecimalFormat fmt = new DecimalFormat("0.########");
         return fmt.format(value);
     }
 
@@ -110,15 +132,15 @@ public class NumberUtil {
         return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
-    public static String getEthFromWeiForStringDecimal6(String value) {
-        return getDecimal_6(getEthFromWeiForDoubleDecimal6(value));
+    public static String getEthFromWeiForStringDecimal10(String value) {
+        return getDecimal_10(getEthFromWeiForDouble(value));
     }
 
-    public static String getEthFromWeiForStringDecimal6(BigInteger value) {
-        return getDecimal_6(getEthFromWei(value));
+    public static String getEthFromWeiForStringDecimal10(BigInteger value) {
+        return getDecimal_10(getEthFromWei(value));
     }
 
-    public static double getEthFromWeiForDoubleDecimal6(String value) {
+    public static double getEthFromWeiForDouble(String value) {
         if (TextUtils.isEmpty(value)) return 0.0;
         if (Numeric.containsHexPrefix(value)) {
             return getEthFromWei(Numeric.toBigInt(value));

@@ -11,14 +11,16 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImportWalletActivity extends BaseActivity {
+public class ImportWalletActivity extends NBaseActivity {
 
     private ViewPager viewPager;
+    private SmartTabLayout tabLayout;
     private ImportMnemonicFragment importMnemonicFragment;
     private ImportPrivateKeyFragment importPrivateKeyFragment;
     private ImportKeystoreFragment importKeystoreFragment;
@@ -27,16 +29,13 @@ public class ImportWalletActivity extends BaseActivity {
     private List<String> tabTitles = new ArrayList<>();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_import_wallet);
-
-        initView();
+    protected int getContentLayout() {
+        return R.layout.activity_import_wallet;
     }
 
-
-    private void initView() {
-        SmartTabLayout tabLayout = findViewById(R.id.viewpager_tab);
+    @Override
+    protected void initView() {
+        tabLayout = findViewById(R.id.viewpager_tab);
         viewPager = findViewById(R.id.viewpager);
 
         importKeystoreFragment = new ImportKeystoreFragment();
@@ -45,11 +44,13 @@ public class ImportWalletActivity extends BaseActivity {
         importFragments.add(importKeystoreFragment);
         importFragments.add(importMnemonicFragment);
         importFragments.add(importPrivateKeyFragment);
+    }
 
+    @Override
+    protected void initData() {
         tabTitles.add(getString(R.string.keystore));
         tabTitles.add(getString(R.string.nmemonic));
         tabTitles.add(getString(R.string.private_key));
-
         FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -71,9 +72,11 @@ public class ImportWalletActivity extends BaseActivity {
 
         viewPager.setAdapter(adapter);
         tabLayout.setViewPager(viewPager);
-
     }
 
+    @Override
+    protected void initAction() {
 
+    }
 
 }

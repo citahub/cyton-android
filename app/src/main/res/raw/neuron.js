@@ -46333,6 +46333,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'sendTransaction':
+      console.log("sendTransaction")
       txParams = payload.params[0]
       txParams.chainType = "AppChain"
       waterfall([
@@ -54055,6 +54056,8 @@ var Neuron = {
     var engine = new ProviderEngine();
     var web3 = new Web3(engine);
     context.web3 = web3;
+    context.nervos = web3;
+
     globalSyncOptions = syncOptions;
 
     engine.addProvider(new CacheSubprovider());

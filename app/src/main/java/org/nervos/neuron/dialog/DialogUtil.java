@@ -14,16 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.LogUtil;
 
 import java.util.List;
 

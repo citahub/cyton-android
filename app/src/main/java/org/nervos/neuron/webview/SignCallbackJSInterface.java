@@ -7,13 +7,11 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.webview.item.Address;
 import org.nervos.neuron.webview.item.Message;
 import org.nervos.neuron.webview.item.Transaction;
 import org.nervos.neuron.webview.item.TypedData;
-import org.web3j.utils.Numeric;
 
 public class SignCallbackJSInterface {
 

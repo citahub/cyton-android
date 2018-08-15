@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
-public class TokenItem implements Parcelable{
+public class TokenItem implements Parcelable {
 
     private static int NERVOS_DECIMAL = 18;
 
@@ -19,8 +19,10 @@ public class TokenItem implements Parcelable{
     public int chainId;
     public String chainName;
     public double balance;
+    public double currencyPrice;
 
-    public TokenItem(){}
+    public TokenItem() {
+    }
 
     public TokenItem(String name, String symbol, int decimals, String contractAddress) {
         this.symbol = symbol;
@@ -51,6 +53,7 @@ public class TokenItem implements Parcelable{
         this.decimals = NERVOS_DECIMAL;
         this.avatar = chainItem.tokenAvatar;
         this.chainId = chainItem.chainId;
+        this.chainName = chainItem.name;
     }
 
     public TokenItem(TokenEntity tokenEntity) {
@@ -81,6 +84,7 @@ public class TokenItem implements Parcelable{
         dest.writeInt(this.chainId);
         dest.writeString(this.chainName);
         dest.writeDouble(this.balance);
+        dest.writeDouble(this.currencyPrice);
     }
 
     protected TokenItem(Parcel in) {
@@ -94,6 +98,7 @@ public class TokenItem implements Parcelable{
         this.chainId = in.readInt();
         this.chainName = in.readString();
         this.balance = in.readDouble();
+        this.currencyPrice = in.readDouble();
     }
 
     public static final Creator<TokenItem> CREATOR = new Creator<TokenItem>() {

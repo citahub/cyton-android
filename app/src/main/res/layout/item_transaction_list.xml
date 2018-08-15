@@ -1,55 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="70dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:gravity="center_vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/wallet_photo"
-            android:layout_width="30dp"
+            android:layout_width="26dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/default_gray_d5"/>
+            android:layout_centerVertical="true" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/wallet_photo"
             android:layout_marginStart="@dimen/default_margin"
+            android:layout_toRightOf="@id/wallet_photo"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/transaction_id_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxEms="8"
                 android:ellipsize="middle"
+                android:maxEms="8"
                 android:singleLine="true"
-                android:textSize="14sp"
-                android:textColor="@color/font_black"/>
+                android:textColor="@color/font_title"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/transaction_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:textColor="@color/font_black"
-                android:text="2018/2/3 11:12"/>
+                android:text="2018/2/3 11:12"
+                android:textColor="@color/font_title_third"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
             android:orientation="vertical">
 
@@ -58,21 +56,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/font_black"
-                android:text="+21.15eth"/>
+                android:text="+21.15eth"
+                android:textColor="@color/font_title"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/transaction_chain_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_gravity="end"
-                android:textSize="14sp"
-                android:textColor="@color/default_gray_6"
-                android:text="Ethereum Mainnet"/>
+                android:layout_marginTop="5dp"
+                android:text="Ethereum Mainnet"
+                android:textColor="@color/font_title_third"
+                android:textSize="13sp" />
         </LinearLayout>
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/margin_30dp" />
 
     </RelativeLayout>
 </FrameLayout>

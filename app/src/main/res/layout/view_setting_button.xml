@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_setting_icon"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_marginLeft="15dip"
+        android:background="@mipmap/ic_launcher"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dip"
+        android:text="本地货币"
+        android:textColor="@color/font_title"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/iv_setting_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_setting_open"
+        android:layout_width="6dip"
+        android:layout_height="12dip"
+        android:layout_marginRight="15dip"
+        android:src="@drawable/right_arrow"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_setting_switch"
+        android:layout_width="38dip"
+        android:layout_height="24dip"
+        android:layout_marginRight="15dip"
+        android:background="@color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_setting_onoff_off"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:text="CNY"
+        android:textColor="@color/font_inside"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/iv_setting_open"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="15dip"
+        android:background="@color/line_form"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_setting" />
+
+</android.support.constraint.ConstraintLayout>

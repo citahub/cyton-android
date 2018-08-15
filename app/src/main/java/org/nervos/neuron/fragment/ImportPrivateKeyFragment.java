@@ -22,6 +22,7 @@ import com.yanzhenjie.permission.Permission;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -76,8 +77,8 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
-                Toast.makeText(getContext(),R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())) {
+                Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
                 cachedThreadPool.execute(() -> generateAndSaveWallet());
             }
@@ -86,14 +87,14 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AndPermission.with(getActivity())
-                    .runtime().permission(Permission.Group.CAMERA)
-                    .rationale(new RuntimeRationale())
-                    .onGranted(permissions -> {
-                        Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE);
-                    })
-                    .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                    .start();
+                        .runtime().permission(Permission.Group.CAMERA)
+                        .rationale(new RuntimeRationale())
+                        .onGranted(permissions -> {
+                            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE);
+                        })
+                        .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
+                        .start();
             }
         });
     }
@@ -127,7 +128,8 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         SharePrefUtil.putCurrentWalletName(walletItem.name);
         passwordEdit.post(() -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
             startActivity(intent);
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
@@ -140,15 +142,16 @@ public class ImportPrivateKeyFragment extends BaseFragment {
     }
 
     private void setCreateButtonStatus(boolean status) {
-        importButton.setBackgroundResource(status?
-                R.drawable.button_corner_blue_shape:R.drawable.button_corner_gray_shape);
+        importButton.setBackgroundResource(status ?
+                R.drawable.button_corner_blue_shape : R.drawable.button_corner_gray_shape);
         importButton.setEnabled(status);
     }
 
 
     private boolean check1 = false, check2 = false, check3 = false, check4 = false;
+
     private void checkWalletStatus() {
-        walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
+        walletNameEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -156,7 +159,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
                 setCreateButtonStatus(isWalletValid());
             }
         });
-        passwordEdit.addTextChangedListener(new WalletTextWatcher(){
+        passwordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -166,7 +169,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
             }
         });
 
-        rePasswordEdit.addTextChangedListener(new WalletTextWatcher(){
+        rePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
@@ -192,10 +195,12 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void afterTextChanged(Editable editable) {
 

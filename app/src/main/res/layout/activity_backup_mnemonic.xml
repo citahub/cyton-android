@@ -1,86 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
+        app:isShowLeft="true"
         app:title="@string/backup_mnemonic"
-        app:isShowLeft="true"/>
+        app:isShowBottomLine="true"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/warning_background"
-        android:textColor="@color/warning_font"
-        android:drawableStart="@drawable/warning"
         android:drawablePadding="5dp"
+        android:drawableStart="@drawable/warning"
+        android:paddingEnd="@dimen/default_margin"
         android:paddingStart="@dimen/default_margin"
-        android:textSize="12sp"
+        android:paddingTop="@dimen/default_margin"
         android:text="@string/backup_mnemonic_warning1"
-        android:paddingEnd="@dimen/default_margin"
-        android:paddingTop="@dimen/default_margin"/>
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/warning_background"
-        android:textColor="@color/warning_font"
         android:drawablePadding="3dp"
-        android:paddingStart="30dp"
-        android:textSize="12sp"
+        android:paddingEnd="@dimen/default_margin"
+        android:paddingStart="35dp"
         android:text="@string/backup_mnemonic_warning2"
-        android:paddingEnd="@dimen/default_margin"/>
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/warning_background"
-        android:textColor="@color/warning_font"
         android:drawablePadding="3dp"
-        android:paddingStart="30dp"
-        android:textSize="12sp"
-        android:text="@string/backup_mnemonic_warning3"
-        android:paddingEnd="@dimen/default_margin"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/warning_background"
-        android:textColor="@color/warning_font"
-        android:drawablePadding="3dp"
-        android:paddingStart="30dp"
-        android:textSize="12sp"
-        android:text="@string/backup_mnemonic_warning4"
         android:paddingEnd="@dimen/default_margin"
-        android:paddingBottom="@dimen/default_margin"/>
+        android:paddingStart="35dp"
+        android:text="@string/backup_mnemonic_warning3"
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning_background"
+        android:drawablePadding="3dp"
+        android:paddingBottom="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_margin"
+        android:paddingStart="35dp"
+        android:text="@string/backup_mnemonic_warning4"
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/mnemonic_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        android:background="@color/default_white_f4"
+        android:background="@drawable/add_wallet_log_corner_shape"
         android:padding="@dimen/default_margin"
-        android:textColor="@color/default_black"
+        android:textColor="@color/font_title"
         android:textSize="16sp" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/backup_next_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/button_corner_blue_shape"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:textSize="16sp"
+        android:background="@drawable/button_corner_blue_shape"
+        android:text="@string/next_action"
         android:textColor="@color/white"
-        android:text="@string/next_action"/>
+        android:textSize="16sp" />
 
 </LinearLayout>

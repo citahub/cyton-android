@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class SplashActivity extends BaseActivity {
@@ -16,17 +17,20 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
                     sleep(1000);
                     if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                        startActivity(new Intent(mActivity, MainActivity.class));
+                        if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                            startActivity(new Intent(mActivity, FingerPrintActivity.class));
+                        } else {
+                            startActivity(new Intent(mActivity, MainActivity.class));
+                        }
                     } else {
-                        Intent intent = new Intent(mActivity, CreateWalletActivity.class);
-                        intent.putExtra(EXTRA_FIRST, true);
+                        Intent intent = new Intent(mActivity, AddWalletActivity.class);
                         startActivity(intent);
                     }
                     finish();

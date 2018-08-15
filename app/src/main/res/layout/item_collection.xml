@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="80dip"
+    android:layout_marginLeft="@dimen/default_margin">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/collection_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/token_image_circle_border"
+        android:padding="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:scaleType="centerInside" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_toRightOf="@id/collection_image">
+
+        <TextView
+            android:id="@+id/collection_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ETH"
+            android:textColor="@color/font_title"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/collection_contract_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ethereum_mainnet"
+            android:textColor="@color/font_inside"
+            android:textSize="14sp"
+            android:layout_below="@id/collection_name" />
+
+        <TextView
+            android:id="@+id/collection_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID：1000"
+            android:textColor="@color/font_title"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <View
+        style="@style/separateLineLong"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

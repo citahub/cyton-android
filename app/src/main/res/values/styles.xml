@@ -13,6 +13,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="transparent_activity" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -25,7 +30,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingBottom">3dp</item>
-        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:drawablePadding">2dp</item>
         <item name="android:textColor">@color/tab_text_color</item>
         <item name="android:textSize">10sp</item>
     </style>
@@ -66,7 +72,7 @@
     <style name="separateLineLong">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">@color/default_gray_d5</item>
+        <item name="android:background">@color/default_separate_gray</item>
     </style>
 
     <style name="separateLineShort">
@@ -74,7 +80,46 @@
         <item name="android:layout_height">0.5dp</item>
         <item name="android:layout_marginStart">@dimen/default_margin</item>
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
-        <item name="android:background">@color/default_gray_d5</item>
+        <item name="android:background">@color/default_separate_gray</item>
+    </style>
+
+    <style name="ConfirmDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_confirm_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_confirm_anim_out</item>
+    </style>
+
+    <style name="PasswordDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_password_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_password_anim_out</item>
+    </style>
+
+    <style name="TransactionDetailTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:textColor">@color/font_inside</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TransactionDetailContent">
+        <item name="android:gravity">right</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:textColor">@color/font_title</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+    <style name="WalletTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/WalletTabTextAppearance</item>
+    </style>
+
+    <style name="WalletTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/default_black</item>
+        <item name="textAllCaps">true</item>
     </style>
 
 </resources>

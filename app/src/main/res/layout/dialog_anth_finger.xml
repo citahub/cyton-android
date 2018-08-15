@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="270dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/all_corners_white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="65dip"
+        android:layout_height="65dip"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_finger_print_logo" />
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dip"
+        android:gravity="center"
+        android:text="@string/dialog_finger_msg"
+        android:textColor="@color/font_title"
+        android:textSize="17sp" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="30dip"
+        android:background="@color/line_form" />
+
+    <TextView
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/font_title_third"
+        android:textSize="17sp" />
+
+</LinearLayout>

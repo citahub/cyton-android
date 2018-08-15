@@ -25,6 +25,7 @@ import com.yanzhenjie.permission.Permission;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -41,8 +42,6 @@ import java.util.concurrent.Executors;
 
 public class ImportMnemonicFragment extends BaseFragment {
 
-    private static final int REQUEST_CODE = 0x01;
-
     List<String> formats;
     List<String> paths;
     String currentPath;
@@ -54,7 +53,6 @@ public class ImportMnemonicFragment extends BaseFragment {
     private AppCompatEditText rePasswordEdit;
     private AppCompatEditText mnemonicEdit;
     private AppCompatButton importButton;
-    private ImageView scanImage;
 
     @Nullable
     @Override
@@ -66,7 +64,6 @@ public class ImportMnemonicFragment extends BaseFragment {
         passwordEdit = view.findViewById(R.id.edit_wallet_password);
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         mnemonicEdit = view.findViewById(R.id.edit_wallet_mnemonic);
-        scanImage = view.findViewById(R.id.wallet_scan);
         return view;
     }
 
@@ -117,21 +114,6 @@ public class ImportMnemonicFragment extends BaseFragment {
             }
         });
 
-        scanImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AndPermission.with(getActivity())
-                    .runtime().permission(Permission.Group.CAMERA)
-                    .rationale(new RuntimeRationale())
-                    .onGranted(permissions -> {
-                        Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE);
-                    })
-                    .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                    .start();
-            }
-        });
-
     }
 
     private void generateAndSaveWallet() {
@@ -163,7 +145,8 @@ public class ImportMnemonicFragment extends BaseFragment {
         SharePrefUtil.putCurrentWalletName(walletItem.name);
         passwordEdit.post(() -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
             startActivity(intent);
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
@@ -232,25 +215,6 @@ public class ImportMnemonicFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
 
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    mnemonicEdit.setText(result);
-                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
-                }
-            }
         }
     }
 

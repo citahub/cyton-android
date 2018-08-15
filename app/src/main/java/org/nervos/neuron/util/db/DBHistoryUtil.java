@@ -14,28 +14,32 @@ public class DBHistoryUtil extends DBUtil {
     private static final String DB_HISTORY = "db_history";
 
     public static List<String> getAllHistory(Context context) {
-        List<String> historyList = new ArrayList<>();
-        try {
-            DB db = DBFactory.open(context, DB_HISTORY);
-            String[] keys = db.findKeys(DB_PREFIX);
-            for(String key: keys) {
-                historyList.add(db.get(key));
+        synchronized (dbObject) {
+            List<String> historyList = new ArrayList<>();
+            try {
+                DB db = openDB(context, DB_HISTORY);
+                String[] keys = db.findKeys(DB_PREFIX);
+                for(String key: keys) {
+                    historyList.add(db.get(key));
+                }
+                db.close();
+            } catch (SnappydbException e) {
+                e.printStackTrace();
             }
-            db.close();
-        } catch (SnappydbException e) {
-            e.printStackTrace();
+            return historyList;
         }
-        return historyList;
     }
 
 
     public static void saveHistory(Context context, String url){
-        try {
-            DB db = DBFactory.open(context, DB_HISTORY);
-            db.put(getDbKey(url), url);
-            db.close();
-        } catch (SnappydbException e) {
-            e.printStackTrace();
+        synchronized (dbObject) {
+            try {
+                DB db = openDB(context, DB_HISTORY);
+                db.put(getDbKey(url), url);
+                db.close();
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+            }
         }
     }
 

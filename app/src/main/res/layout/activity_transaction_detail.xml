@@ -1,273 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/default_white_f9"
     android:orientation="vertical">
 
-    <FrameLayout
+    <org.nervos.neuron.custom.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:background="@color/white">
-        <org.nervos.neuron.custom.TitleBar
-            android:id="@+id/title"
+        android:layout_height="48dp"
+        app:isShowLeft="true"
+        app:isShowRight="true"
+        app:right_img="@drawable/ic_transaction_share"
+        app:title="@string/transaction_detail_title" />
+
+    <LinearLayout
+        android:id="@+id/ll_screenshot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_top"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/colorPrimary"
-            app:title="@string/transaction_detail_title"
-            app:isShowLeft="true"/>
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="50dp"
-            android:elevation="10dp"
-            android:background="@drawable/rectangle_border_gray_corner">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/wallet_photo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/default_margin"
-                android:src="@drawable/wallet_photo"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/default_gray_d5"/>
-
-            <TextView
-                android:id="@+id/wallet_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wallet_photo"
-                android:layout_toEndOf="@id/wallet_photo"
-                android:layout_marginStart="@dimen/default_margin"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:text="Watson"
-                android:layout_marginTop="10dp"/>
-
-            <TextView
-                android:id="@+id/wallet_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:singleLine="true"
-                android:ellipsize="middle"
-                android:maxEms="8"
-                android:layout_marginTop="10dp"
-                android:layout_alignStart="@id/wallet_name"
-                android:layout_below="@id/wallet_name"/>
+            <ImageView
+                android:id="@+id/iv_success"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/ic_transaction_success"
+                app:layout_constraintBottom_toTopOf="@id/transaction_amount"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <TextView
                 android:id="@+id/transaction_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/default_black"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:layout_marginBottom="28dp"
+                android:layout_marginTop="17dp"
+                android:text="100"
+                android:textColor="@color/font_title"
+                android:textSize="26sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_success"
+                app:layout_constraintVertical_chainStyle="packed" />
 
-        </RelativeLayout>
-    </FrameLayout>
+        </android.support.constraint.ConstraintLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/default_margin"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="交易成功"
-                android:textSize="16sp"
-                android:textColor="@color/default_black"
-                android:drawablePadding="10dp"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:layout_gravity="center_horizontal"
-                android:drawableTop="@drawable/success"/>
+            android:layout_marginTop="12dp"
+            android:background="@color/white">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_top">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="区块链网络"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_chain_name_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/transaction_network"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/chain_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_chain_name"
+                    style="@style/TransactionDetailContent"
                     android:text="@string/ethereum_mainnet"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:textColor="@color/default_black"
                     android:textSize="14sp"
-                    android:layout_marginTop="10dp"/>
-
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_chain_name_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_chain_name_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="接收方"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_receiver_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_receiver"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_chain_name" />
 
                 <TextView
-                    android:id="@+id/transaction_to_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_blue"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/copy"
-                    android:drawablePadding="10dp"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="10dp"/>
+                    android:id="@+id/tv_transaction_receiver"
+                    style="@style/TransactionDetailContent"
+                    android:text="0xadlgdslfkadsflkdasfsadfasgadsgdasgadsgasdgadsgsadgsdsdfadsf"
+                    android:textColor="@color/font_link"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_receiver_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_receiver_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="发送方"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_sender_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_sender"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_receiver" />
 
                 <TextView
-                    android:id="@+id/transaction_from_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_blue"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/copy"
-                    android:drawablePadding="10dp"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="10dp"/>
+                    android:id="@+id/tv_transaction_sender"
+                    style="@style/TransactionDetailContent"
+                    android:text="0xadlgdslfkadsflkdasfsadfasdfadsf"
+                    android:textColor="@color/font_link"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_sender_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_sender_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:text="手续费"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_gas_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_gas"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_sender" />
 
                 <TextView
-                    android:id="@+id/transaction_gas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.05eth"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:textColor="@color/default_black"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:text="GasPrice"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
-
-                <TextView
-                    android:id="@+id/transaction_gas_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_transaction_gas"
+                    style="@style/TransactionDetailContent"
                     android:text="0.005eth"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:textColor="@color/default_black"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_gas_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_gas_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:text="交易流水"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_gas_price_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_gas_price"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas" />
 
                 <TextView
-                    android:id="@+id/transaction_hash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0x2343445465565677"
-                    android:textColor="@color/font_blue"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/copy"
-                    android:drawablePadding="10dp"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="10dp"/>
+                    android:id="@+id/tv_transaction_gas_price"
+                    style="@style/TransactionDetailContent"
+                    android:text="0.00012eth/gas"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_gas_price_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_gas_price_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:text="所在区块"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_number_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_number"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_price_title" />
 
                 <TextView
-                    android:id="@+id/transaction_block_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12007"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:textColor="@color/default_black"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"/>
+                    android:id="@+id/tv_transaction_number"
+                    style="@style/TransactionDetailContent"
+                    android:text="0xadlgdslfkadsflkdasfsadfasdfadsf"
+                    android:textColor="@color/font_link"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_number_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_number_title" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:text="入块时间"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp"
-                    android:drawableStart="@drawable/dot"
-                    android:drawablePadding="10dp"/>
+                    android:id="@+id/tv_transaction_blockchain_no_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_blockchain_no"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_number" />
 
                 <TextView
-                    android:id="@+id/transaction_block_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2018-3-23 12:20"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:textColor="@color/default_black"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"/>
+                    android:id="@+id/tv_transaction_blockchain_no"
+                    style="@style/TransactionDetailContent"
+                    android:text="12345"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_blockchain_no_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_blockchain_no_title" />
 
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/tv_transaction_blockchain_time_title"
+                    style="@style/TransactionDetailTitle"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/transaction_blockchain_time"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no" />
 
+                <TextView
+                    android:id="@+id/tv_transaction_blockchain_time"
+                    style="@style/TransactionDetailContent"
+                    android:text="12345"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_transaction_blockchain_time_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_blockchain_time_title" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

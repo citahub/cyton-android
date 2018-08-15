@@ -2,6 +2,7 @@ package org.nervos.neuron.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -43,7 +44,7 @@ public class SimpleWebActivity extends BaseActivity {
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
         WebAppUtil.initWebSettings(webView.getSettings());
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
                 if (newProgress == 100) {
@@ -53,13 +54,14 @@ public class SimpleWebActivity extends BaseActivity {
                     progressBar.setProgress(newProgress);
                 }
             }
+
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 titleBar.setTitle(title);
             }
         });
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;

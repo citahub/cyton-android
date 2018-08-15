@@ -13,53 +13,54 @@
         <org.nervos.neuron.custom.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/colorPrimary"
+            android:layout_height="48dp"
+            android:background="@color/white"
             app:title="@string/confirm_pay"
-            app:isShowLeft="true"/>
+            app:isShowLeft="true"
+            app:isShowBottomLine="true"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="50dp"
-            android:elevation="10dp"
-            android:background="@drawable/rectangle_border_gray_corner">
+            android:layout_marginTop="48dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/default_margin"
                 android:src="@drawable/wallet_photo"
                 app:civ_border_width="1dp"
                 app:civ_border_color="@color/default_gray_d5"/>
 
-            <TextView
-                android:id="@+id/wallet_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wallet_photo"
-                android:layout_toEndOf="@id/wallet_photo"
-                android:layout_marginStart="@dimen/default_margin"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:text="Watson"
-                android:layout_marginTop="10dp"/>
-
-            <TextView
-                android:id="@+id/wallet_address"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:lines="1"
-                android:ellipsize="end"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_alignStart="@id/wallet_name"
-                android:layout_below="@id/wallet_name"/>
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layout_toEndOf="@id/wallet_photo"
+                android:layout_marginStart="@dimen/default_margin"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/wallet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/font_title"
+                    android:text="Watson"/>
+
+                <TextView
+                    android:id="@+id/wallet_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/font_title_third"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="@dimen/default_margin"/>
+            </LinearLayout>
 
         </RelativeLayout>
     </FrameLayout>
@@ -67,7 +68,7 @@
     <RelativeLayout
         android:id="@+id/pay_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="44dp"
         android:layout_margin="@dimen/default_margin"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
@@ -119,18 +120,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/requester"
-                android:textColor="@color/default_black"
-                android:textSize="13sp"/>
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/pay_owner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/default_margin"
-                android:textSize="13sp"
-                android:textColor="@color/default_black"
+                android:textSize="15sp"
+                android:textColor="@color/font_title"
                 android:background="@drawable/rectangle_border_gray_corner"/>
 
             <TextView
@@ -138,21 +139,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/receive_address"
-                android:textColor="@color/default_black"
-                android:textSize="13sp"/>
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/pay_address"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:ellipsize="end"
                 android:lines="1"
                 android:paddingStart="@dimen/default_margin"
                 android:gravity="center_vertical"
                 android:paddingEnd="@dimen/default_margin"
-                android:textSize="13sp"
-                android:textColor="@color/default_black"
+                android:textSize="15sp"
+                android:textColor="@color/font_title"
                 android:background="@drawable/rectangle_border_gray_corner"/>
 
             <TextView
@@ -160,50 +161,80 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/transfer_amount"
-                android:textColor="@color/default_black"
-                android:textSize="13sp"/>
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"/>
 
-            <TextView
-                android:id="@+id/pay_amount"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingStart="@dimen/default_margin"
-                android:textSize="13sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/default_black"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/pay_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingStart="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/font_title"
+                    android:background="@drawable/rectangle_border_gray_corner"/>
+
+                <TextView
+                    android:id="@+id/pay_amount_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical|end"
+                    android:textColor="@color/font_title_third"/>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/transfer_sum"
-                android:textColor="@color/default_black"
-                android:textSize="13sp"/>
+                android:text="@string/transfer_fee"
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"/>
 
-            <TextView
-                android:id="@+id/pay_sum"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:paddingStart="@dimen/default_margin"
-                android:textSize="13sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/default_black"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:layout_marginTop="6dp">
+                <TextView
+                    android:id="@+id/pay_fee"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingStart="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/font_title"
+                    android:background="@drawable/rectangle_border_gray_corner"/>
+
+                <TextView
+                    android:id="@+id/pay_fee_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical|end"
+                    android:textColor="@color/font_title_third"/>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="包含数据"
-                android:textColor="@color/default_black"
-                android:textSize="13sp"/>
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"/>
             
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
+                android:layout_marginTop="6dp"
                 android:orientation="vertical"
                 android:background="@drawable/rectangle_border_gray_corner">
                 <RelativeLayout
@@ -229,14 +260,14 @@
                             android:layout_height="37dp"
                             android:gravity="center"
                             android:text="HEX"
-                            android:textColor="@color/default_black"
-                            android:textSize="13sp"/>
+                            android:textColor="@color/font_title_second"
+                            android:textSize="15sp"/>
                         
                         <View
                             android:id="@+id/pay_data_left_line"
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
-                            android:background="#FE8227"/>
+                            android:background="@color/selected_color"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -250,15 +281,15 @@
                             android:layout_height="37dp"
                             android:gravity="center"
                             android:text="UTF8"
-                            android:textColor="@color/default_black"
-                            android:textSize="13sp"/>
+                            android:textColor="@color/font_title_second"
+                            android:textSize="15sp"/>
 
                         <View
                             android:id="@+id/pay_data_right_line"
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:visibility="gone"
-                            android:background="#FE8227"/>
+                            android:background="@color/selected_color"/>
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -268,9 +299,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
                     android:padding="10dp"
-                    android:text="data"
-                    android:textSize="13sp"
-                    android:textColor="@color/default_black"/>
+                    android:scrollbars="vertical"
+                    android:fadeScrollbars="false"
+                    android:lines="60"
+                    android:textSize="15sp"
+                    android:textColor="@color/font_title"/>
 
             </LinearLayout>
             

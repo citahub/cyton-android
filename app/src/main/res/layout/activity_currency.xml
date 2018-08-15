@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <org.nervos.neuron.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:isShowBottomLine="true"
+        app:isShowLeft="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/setting_currency"
+        app:title_color="@color/font_title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_currency"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+</LinearLayout>

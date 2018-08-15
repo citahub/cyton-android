@@ -3,20 +3,20 @@ package org.nervos.neuron.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
-import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.TransactionFragment;
-import org.nervos.neuron.fragment.WalletFragment;
+import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -27,9 +27,8 @@ public class MainActivity extends BaseActivity {
 
     private RadioGroup navigation;
     private AppFragment appFragment;
-    private WalletFragment walletFragment;
+    private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
-    private TransactionFragment transactionFragment;
     private FragmentManager fMgr;
 
     @Override
@@ -42,8 +41,12 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected int getStatusBarColor() {
+        return getResources().getColor(R.color.colorPrimary);
+    }
 
-    private void initView(){
+    private void initView() {
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);
         fMgr = getSupportFragmentManager();
@@ -51,21 +54,21 @@ public class MainActivity extends BaseActivity {
         if (SharePrefUtil.getFirstIn()) {
             SharePrefUtil.putFirstIn(false);
             new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dialog_title_tip)
-                .setMessage(R.string.dialog_tip_message)
-                .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                    .setTitle(R.string.dialog_title_tip)
+                    .setMessage(R.string.dialog_tip_message)
+                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
         }
     }
@@ -82,7 +85,7 @@ public class MainActivity extends BaseActivity {
             hideFragments(transaction);
             switch (checkedId) {
                 case R.id.navigation_application:
-                    if(appFragment == null){
+                    if (appFragment == null) {
                         appFragment = new AppFragment();
                         transaction.add(R.id.fragment, appFragment);
                     } else {
@@ -93,32 +96,24 @@ public class MainActivity extends BaseActivity {
                     if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
                         startActivity(new Intent(mActivity, AddWalletActivity.class));
                     } else {
-                        if(walletFragment == null){
-                            walletFragment = new WalletFragment();
-                            transaction.add(R.id.fragment, walletFragment);
+                        if (walletsFragment == null) {
+                            walletsFragment = new WalletsFragment();
+                            transaction.add(R.id.fragment, walletsFragment);
                         } else {
-                            transaction.show(walletFragment);
+                            transaction.show(walletsFragment);
                         }
                     }
                     break;
                 case R.id.navigation_settings:
-                    if(settingsFragment == null){
+                    if (settingsFragment == null) {
                         settingsFragment = new SettingsFragment();
                         transaction.add(R.id.fragment, settingsFragment);
                     } else {
                         transaction.show(settingsFragment);
                     }
                     break;
-                case R.id.navigation_transaction:
-                    if(transactionFragment == null){
-                        transactionFragment = new TransactionFragment();
-                        transaction.add(R.id.fragment, transactionFragment);
-                    } else {
-                        transaction.show(transactionFragment);
-                    }
-                    break;
                 default:
-                    if(appFragment == null){
+                    if (appFragment == null) {
                         appFragment = new AppFragment();
                         transaction.add(R.id.fragment, appFragment);
                     } else {
@@ -142,10 +137,8 @@ public class MainActivity extends BaseActivity {
         if (TextUtils.isEmpty(tag)) return;
         if (TextUtils.equals(tag, AppFragment.TAG)) {
             navigation.check(R.id.navigation_application);
-        } else if (TextUtils.equals(tag, WalletFragment.TAG)) {
+        } else if (TextUtils.equals(tag, WalletsFragment.TAG)) {
             navigation.check(R.id.navigation_wallet);
-        } else if (TextUtils.equals(tag, TransactionFragment.TAG)) {
-            navigation.check(R.id.navigation_transaction);
         } else if (TextUtils.equals(tag, SettingsFragment.TAG)) {
             navigation.check(R.id.navigation_settings);
         }
@@ -159,11 +152,8 @@ public class MainActivity extends BaseActivity {
         if (appFragment != null) {
             transaction.hide(appFragment);
         }
-        if (walletFragment != null) {
-            transaction.hide(walletFragment);
-        }
-        if (transactionFragment != null) {
-            transaction.hide(transactionFragment);
+        if (walletsFragment != null) {
+            transaction.hide(walletsFragment);
         }
         if (settingsFragment != null) {
             transaction.hide(settingsFragment);
@@ -171,27 +161,45 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     private long exitTime = 0;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (fMgr.findFragmentByTag(AppFragment.TAG) != null && !fMgr.findFragmentByTag(AppFragment.TAG).isVisible()) {
+            if (appFragment.isVisible()) {
+                if (appFragment.canGoBack()) {
+                    appFragment.goBack();
+                    return true;
+                } else {
+                    if ((System.currentTimeMillis() - exitTime) > 2000) {
+                        Toast.makeText(getApplicationContext(), R.string.press_back_finish,
+                                Toast.LENGTH_SHORT).show();
+                        exitTime = System.currentTimeMillis();
+                        return false;
+                    } else {
+                        finish();
+                        return true;
+                    }
+                }
+            } else {
                 FragmentTransaction fragmentTransaction = fMgr.beginTransaction();
                 hideFragments(fragmentTransaction);
                 setNavigationItem(AppFragment.TAG);
                 return true;
-            } else if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), R.string.press_back_finish, Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-                return false;
-            } else {
-                finish();
-                return true;
             }
+
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void finish() {
+        System.exit(0);
+        super.finish();
+    }
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@drawable/wallet_item_corner">
+
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dip"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@id/iv_photo"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/iv_photo"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="wallet"
+            android:textColor="@color/font_title"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:maxEms="12"
+            android:singleLine="true"
+            android:text="address"
+            android:textColor="@color/font_inside"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_default"
+        android:layout_width="13dp"
+        android:layout_height="14dp"
+        android:layout_alignParentRight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/qr_receive_bg"
+        android:src="@drawable/ic_wallet_default" />
+
+    <ImageView
+        android:layout_width="12dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="17dp"
+        android:src="@drawable/right_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

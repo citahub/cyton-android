@@ -7,7 +7,6 @@ import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -156,7 +155,6 @@ public class NervosRpcService {
 
     public static Observable<EthSendTransaction> transferNervos(String toAddress, double value,
                                                                 String data, String password) {
-        LogUtil.d("transfer value: " + NumberUtil.getWeiFromEth(value));
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {

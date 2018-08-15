@@ -13,9 +13,18 @@
         <attr name="right_text" format="string" />
         <attr name="right_img" format="reference" />
 
+        <attr name="isShowBottomLine" format="boolean" />
+
         <attr name="title_bg" format="reference" />
+        <attr name="title_color" format="reference" />
 
     </declare-styleable>
 
+    <declare-styleable name="SettingButtonView">
+        <attr name="icon" format="reference" />
+        <attr name="name" format="string" />
+        <attr name="other1" format="boolean" />
+        <attr name="switch_button" format="boolean" />
+    </declare-styleable>
 
 </resources>

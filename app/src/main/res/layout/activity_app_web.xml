@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/title_left_close"
@@ -36,6 +36,10 @@
             android:gravity="center"
             android:singleLine="true"
             android:layout_centerInParent="true" />
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 
@@ -66,7 +70,7 @@
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_gravity="end"
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical"
             android:background="@drawable/menu_window">
 

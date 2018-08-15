@@ -1,43 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="80dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/token_image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/ethereum"
-            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp">
 
-        <TextView
-            android:id="@+id/token_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/token_image"
-            android:layout_marginStart="10dp"
-            android:layout_centerVertical="true"
-            android:textSize="17sp"
-            android:textColor="@color/font_black"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/token_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/token_image_circle_border"
+                android:padding="5dp"
+                android:scaleType="centerInside" />
 
-        <TextView
-            android:id="@+id/token_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="20sp"
-            android:textColor="@color/font_black"
-            android:layout_marginEnd="30dp"
-            android:layout_alignParentRight="true"/>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/token_image">
 
+                <TextView
+                    android:id="@+id/token_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ETH"
+                    android:textColor="@color/font_title"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/token_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ethereum_mainnet"
+                    android:textColor="@color/font_inside"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/token_name" />
+
+                <TextView
+                    android:id="@+id/token_balance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="1000"
+                    android:textColor="@color/font_title"
+                    android:textSize="16sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/token_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="1000"
+                    android:textColor="@color/font_inside"
+                    android:textSize="13sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/token_balance" />
+
+            </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/default_margin" />
     </RelativeLayout>
-
-
-
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

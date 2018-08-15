@@ -1,116 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/default_white_f9"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/default_white_f9"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
+        app:isShowLeft="false"
         app:title="@string/settings_title"
-        app:isShowLeft="false"/>
+        app:title_bg="@color/colorPrimary"
+        app:title_color="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_marginTop="10dp"
-        android:paddingTop="5dp">
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/app_photo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/wallet_photo"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/default_gray_d5"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_local_coin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/app_name"
-            android:textSize="24sp"
-            android:textColor="@color/default_black"
-            android:layout_gravity="center_horizontal"/>
+            app:icon="@drawable/ic_setting_localcoin"
+            app:name="@string/setting_currency"
+            app:other1="true" />
 
-        <TextView
-            android:id="@+id/app_version"
-            android:layout_width="wrap_content"
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_fingerprint"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:textSize="14sp"
-            android:textColor="@color/default_black"
-            android:layout_gravity="center_horizontal"/>
+            app:icon="@drawable/ic_setting_fingerprint"
+            app:name="@string/setting_fingerprint"
+            app:other1="false"
+            app:switch_button="true" />
 
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_about_us"
+            app:name="@string/setting_about_us"
+            app:other1="false" />
+
+        <org.nervos.neuron.custom.SettingButtonView
+            android:id="@+id/sbv_contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_contact_us"
+            app:name="@string/setting_contact_us"
+            app:other1="false" />
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/setting_source_code"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:drawableEnd="@drawable/arrow"
-        android:gravity="center_vertical"
-        android:layout_marginTop="@dimen/default_margin"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@color/white"
-        android:text="@string/source_code"
-        android:textSize="16sp"
-        android:textColor="@color/font_black"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:background="@color/default_gray_c"/>
-
-
-    <TextView
-        android:id="@+id/service_protocol"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:drawableEnd="@drawable/arrow"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:background="@color/white"
-        android:text="@string/source_and_private"
-        android:textSize="16sp"
-        android:textColor="@color/font_black"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:background="@color/default_gray_c"/>
-
-    <TextView
-        android:id="@+id/setting_contact"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:drawableEnd="@drawable/arrow"
-        android:gravity="center_vertical"
-        android:background="@color/white"
-        android:paddingStart="@dimen/default_margin"
-        android:paddingEnd="@dimen/default_margin"
-        android:text="@string/contact_us"
-        android:textSize="16sp"
-        android:textColor="@color/font_black"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/default_gray_c"/>
-
-
 </LinearLayout>

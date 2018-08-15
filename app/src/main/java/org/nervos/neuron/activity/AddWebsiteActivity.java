@@ -9,7 +9,9 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,27 +26,18 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.TransactionFragment;
-import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.web.UrlUtil;
-import org.nervos.neuron.util.web.WebAppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
 
 public class AddWebsiteActivity extends BaseActivity {
 
@@ -100,6 +93,24 @@ public class AddWebsiteActivity extends BaseActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+        websiteEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length() > 0) {
+                    websiteEdit.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else {
+                    websiteEdit.setCompoundDrawablesWithIntrinsicBounds(R.drawable.add_website_hint_image, 0, 0, 0);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="73"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="44" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="56">
+
+            <TextView
+                android:id="@+id/tv_finger_print"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/finger_print_des"
+                android:textColor="@color/font_link"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_finger_print"
+                android:layout_width="80dp"
+                android:layout_height="82dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_finger_print_logo"
+                app:layout_constraintBottom_toTopOf="@id/tv_finger_print"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="27">
+
+        <LinearLayout
+            android:id="@+id/ll_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="1000"
+                android:background="@color/line_form" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/finger_print_other_login"
+                android:textColor="@color/font_title_third"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="1000"
+                android:background="@color/line_form" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_other"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_fingerprint_locked"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_text" />
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

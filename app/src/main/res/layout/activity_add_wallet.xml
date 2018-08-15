@@ -1,80 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
+        app:isShowLeft="true"
         app:title="@string/title_add_wallet"
-        app:isShowLeft="true"/>
+        app:isShowBottomLine="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/default_margin"
-        android:background="@color/default_white_f4"
-        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@drawable/add_wallet_log_corner_shape"
+        android:orientation="vertical"
         android:padding="@dimen/default_margin">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/security"
-            android:scaleType="centerInside"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:layout_marginBottom="25dp"/>
+            android:layout_marginBottom="17dp"
+            android:layout_marginTop="27dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_add_wallet_logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="@string/no_find_password_content"
-            android:textColor="@color/default_black"
-            android:textSize="16sp"
-            android:layout_gravity="center_horizontal"/>
+            android:textColor="@color/font_title"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/save_password_careful"
             android:textAlignment="center"
-            android:textColor="@color/default_gray_9"
-            android:textSize="14sp"
-            android:layout_gravity="center_horizontal"/>
+            android:textColor="@color/font_title_third"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button_corner_blue_shape"
         android:text="@string/generate_wallet"
         android:textColor="@color/white"
-        android:textSize="14sp"/>
+        android:textSize="16sp" />
 
 
     <TextView
         android:id="@+id/import_wallet_button"
         android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_height="44dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/import_wallet"
-        android:textColor="@color/font_blue"
-        android:textSize="14sp"/>
+        android:textColor="@color/font_link"
+        android:textSize="16sp" />
 
 </LinearLayout>

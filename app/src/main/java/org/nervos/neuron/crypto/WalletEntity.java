@@ -40,10 +40,6 @@ public class WalletEntity {
      */
     private Credentials credentials;
     /**
-     * wallet password
-     */
-    private String walletPass;
-    /**
      *  KeyStore file
      */
     private WalletFile walletFile;
@@ -74,30 +70,26 @@ public class WalletEntity {
     /**
      * create a wallet with mnemonic
      *
-     * @param password mnemonic password and imToken password is null
      * @param path
      * @return
      * @throws CipherException
      */
-    public static WalletEntity createWithMnemonic(String password, String path) {
+    public static WalletEntity createWithMnemonic(String path) {
 
         WalletEntity wa = new WalletEntity();
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
         String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSWORD);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
-        if (password != null) {
-            try {
-                wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
-            } catch (CipherException e) {
-                e.printStackTrace();
-            }
+        try {
+            wa.walletFile = Wallet.create(PASSWORD, ecKeyPair, 1024, 1);
+        } catch (CipherException e) {
+            e.printStackTrace();
         }
         wa.credentials = Credentials.create(ecKeyPair);
-        wa.walletPass = password;
         wa.mnemonic = mnemonic;
-        wa.passphrase = password;
+        wa.passphrase = PASSWORD;
         wa.path = path;
         return wa;
     }
@@ -117,7 +109,6 @@ public class WalletEntity {
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         wa.walletFile = Wallet.create(PASSWORD, ecKeyPair, 1024, 1);
         wa.credentials = Credentials.create(ecKeyPair);
-        wa.walletPass = PASSWORD;
         wa.mnemonic = mnemonic;
         wa.passphrase = PASSWORD;
         wa.path = path;
@@ -205,20 +196,6 @@ public class WalletEntity {
     }
 
     /**
-     * check wallet file valid
-     *
-     * @return
-     */
-    public boolean valid() {
-        try {
-            Wallet.decrypt(walletPass, walletFile);
-        } catch (CipherException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * get a wallet file from byte content
      *
      * @param content
@@ -303,10 +280,6 @@ public class WalletEntity {
 
     public String getPassphrase() {
         return passphrase;
-    }
-
-    public String getWalletPass() {
-        return walletPass;
     }
 
     public Credentials getCredentials() {

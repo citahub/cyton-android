@@ -10,14 +10,6 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="消息签名"
-            android:textSize="18sp"
-            android:textColor="@color/default_black"
-            android:gravity="center"/>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -27,38 +19,39 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/default_margin"
                 android:src="@drawable/wallet_photo"
                 app:civ_border_width="1dp"
                 app:civ_border_color="@color/default_gray_d5"/>
 
-            <TextView
-                android:id="@+id/wallet_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wallet_photo"
-                android:layout_toEndOf="@id/wallet_photo"
-                android:layout_marginStart="@dimen/default_margin"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:text="Watson"
-                android:layout_marginTop="10dp"/>
-
-            <TextView
-                android:id="@+id/wallet_address"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/default_black"
-                android:lines="1"
-                android:ellipsize="end"
-                android:layout_marginTop="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/wallet_photo"
+                android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:layout_alignStart="@id/wallet_name"
-                android:layout_below="@id/wallet_name"/>
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/wallet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/font_title"
+                    android:text="Watson"/>
+
+                <TextView
+                    android:id="@+id/wallet_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/default_black"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -68,7 +61,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:text="请求人"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title_third"
             android:textSize="13sp"/>
 
         <TextView
@@ -87,9 +80,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:text="签名信息"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title_third"
             android:textSize="13sp"/>
 
         <LinearLayout
@@ -97,6 +92,7 @@
             android:layout_height="130dp"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginTop="5dp"
             android:orientation="vertical"
             android:background="@drawable/rectangle_border_gray_corner">
 
@@ -109,7 +105,7 @@
                     android:id="@+id/pay_separate"
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
-                    android:background="@color/default_gray_d5"
+                    android:background="@color/line_input"
                     android:layout_centerInParent="true"/>
 
                 <LinearLayout
@@ -123,14 +119,14 @@
                         android:layout_height="37dp"
                         android:gravity="center"
                         android:text="HEX"
-                        android:textColor="@color/default_black"
-                        android:textSize="13sp"/>
+                        android:textColor="@color/font_title_second"
+                        android:textSize="15sp"/>
 
                     <View
                         android:id="@+id/pay_data_left_line"
                         android:layout_width="match_parent"
-                        android:layout_height="3dp"
-                        android:background="#FE8227"/>
+                        android:layout_height="2dp"
+                        android:background="@color/selected_color"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -144,15 +140,15 @@
                         android:layout_height="37dp"
                         android:gravity="center"
                         android:text="UTF8"
-                        android:textColor="@color/default_black"
-                        android:textSize="13sp"/>
+                        android:textColor="@color/font_title_second"
+                        android:textSize="15sp"/>
 
                     <View
                         android:id="@+id/pay_data_right_line"
                         android:layout_width="match_parent"
-                        android:layout_height="3dp"
+                        android:layout_height="2dp"
                         android:visibility="gone"
-                        android:background="#FE8227"/>
+                        android:background="@color/selected_color"/>
                 </LinearLayout>
 
             </RelativeLayout>
@@ -162,16 +158,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
                 android:padding="10dp"
+                android:fadeScrollbars="false"
+                android:lines="60"
                 android:text="data"
-                android:textSize="13sp"
-                android:textColor="@color/default_black"/>
+                android:textSize="15sp"
+                android:textColor="@color/font_title"/>
 
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/pay_button_layout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_margin="@dimen/default_margin"
             android:layout_gravity="bottom"
             android:orientation="horizontal">
@@ -188,7 +186,7 @@
                 android:layout_height="match_parent"
                 android:layout_toStartOf="@id/pay_button_separate"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:text="拒绝"
+                android:text="@string/reject"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -200,7 +198,7 @@
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@id/pay_button_separate"
                 android:layout_marginStart="@dimen/default_margin"
-                android:text="接受"
+                android:text="@string/approve"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:gravity="center"

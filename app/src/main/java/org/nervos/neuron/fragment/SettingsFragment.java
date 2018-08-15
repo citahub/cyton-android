@@ -1,81 +1,135 @@
 package org.nervos.neuron.fragment;
 
-import android.content.pm.PackageManager;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.AboutUsActivity;
+import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
+import org.nervos.neuron.custom.SettingButtonView;
+import org.nervos.neuron.dialog.AuthFingerDialog;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
+import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends NBaseFragment {
 
     public static final String TAG = SettingsFragment.class.getName();
+    private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV;
+    private static final int Currency_Code = 10001;
+    private AuthFingerDialog authFingerDialog = null;
 
-    private TextView contactText;
-    private CircleImageView appImage;
-    private TextView versionText;
-    private TextView sourceCodeText;
-    private TextView protocolText;
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        contactText = view.findViewById(R.id.setting_contact);
-        appImage = view.findViewById(R.id.app_photo);
-        versionText = view.findViewById(R.id.app_version);
-        sourceCodeText = view.findViewById(R.id.setting_source_code);
-        protocolText = view.findViewById(R.id.service_protocol);
-        return view;
+    protected int getContentLayout() {
+        return R.layout.fragment_settings;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initListener();
+    public void initView() {
+        currencySBV = (SettingButtonView) findViewById(R.id.sbv_local_coin);
+        aboutUsSBV = (SettingButtonView) findViewById(R.id.sbv_about_us);
+        contactUsSBV = (SettingButtonView) findViewById(R.id.sbv_contact_us);
+        fingerPrintSBV = (SettingButtonView) findViewById(R.id.sbv_fingerprint);
     }
 
-    private void initListener() {
+    @Override
+    public void initData() {
+        currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+        if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
+            fingerPrintSBV.setVisibility(View.VISIBLE);
+            if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                fingerPrintSBV.setSwitch(true);
+            } else {
+                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
+                fingerPrintSBV.setSwitch(false);
+            }
+        } else {
+            fingerPrintSBV.setVisibility(View.GONE);
+        }
+    }
 
-        appImage.setImageResource(R.mipmap.ic_launcher);
+    @Override
+    public void initAction() {
+        currencySBV.setOpenListener(() -> {
+            Intent intent = new Intent(getActivity(), CurrencyActivity.class);
+            startActivityForResult(intent, Currency_Code);
+        });
+        fingerPrintSBV.setSwitchListener((is) -> {
+            if (is) {
+                //setting fingerprint
+                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
+                    if (authFingerDialog == null)
+                        authFingerDialog = new AuthFingerDialog(getActivity(), R.style.Theme_AppCompat_Dialog);
+                    authFingerDialog.setOnShowListener((dialogInterface) -> {
+                        FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
+                    });
+                    authFingerDialog.setOnDismissListener((dialog) -> {
+                        FingerPrintController.getInstance(getActivity()).cancelAuth();
+                    });
+                    authFingerDialog.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.dialog_title_tip));
+                    builder.setMessage(getResources().getString(R.string.dialog_finger_setting));
+                    builder.setPositiveButton(getResources().getString(R.string.ok), (view, i) -> {
+                        FingerPrintController.openFingerPrintSettingPage(getActivity());
+                        view.dismiss();
+                    });
+                    builder.show();
+                }
+            } else {
+                //close fingerprint
+                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
+                fingerPrintSBV.setSwitch(false);
+            }
 
-        try {
-            String versionName = getContext().getPackageManager()
-                    .getPackageInfo(getContext().getPackageName(), 0).versionName;
-            versionText.setText(String.format("V %s", versionName));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        });
+        aboutUsSBV.setOpenListener(() -> {
+            Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+            startActivity(intent);
+        });
+        contactUsSBV.setOpenListener(() -> {
+            SimpleWebActivity.gotoSimpleWeb(getContext(), HttpUrls.CONTACT_US_RUL);
+        });
+    }
+
+    AuthenticateResultCallback authenticateResultCallback = new AuthenticateResultCallback() {
+        @Override
+        public void onAuthenticationError(String errorMsg) {
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
         }
 
-        sourceCodeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.SOURCE_CODE_GITHUB_URL);
-            }
-        });
+        @Override
+        public void onAuthenticationSucceeded() {
+            fingerPrintSBV.setSwitch(true);
+            if (authFingerDialog != null && authFingerDialog.isShowing())
+                authFingerDialog.dismiss();
+            SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
+            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
+        }
 
-        protocolText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.PRODUCT_AGREEMENT_URL);
-            }
-        });
+        @Override
+        public void onAuthenticationFailed() {
+            Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_failed), Toast.LENGTH_SHORT).show();
+        }
+    };
 
-        contactText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleWebActivity.gotoSimpleWeb(getContext(), ConstUtil.CONTACT_US_RUL);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case Currency_Code:
+                    currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    break;
             }
-        });
-
+        }
     }
 }

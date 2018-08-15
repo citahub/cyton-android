@@ -4,10 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
@@ -37,18 +34,18 @@ public class TransactionInfo implements Parcelable {
 
     public double getValue() {
         value = TextUtils.isEmpty(value)? "0":value;
-        return NumberUtil.getEthFromWeiForDoubleDecimal6(value);
+        return NumberUtil.getEthFromWeiForDouble(value);
     }
 
     public double getQuota() {
-        return NumberUtil.getEthFromWeiForDoubleDecimal6(String.valueOf(quota));
+        return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
     }
 
     public double getGas() {
         BigInteger limitBig = TextUtils.isEmpty(gasLimit)?
                 ConstUtil.GAS_LIMIT:Numeric.toBigInt(gasLimit);
         BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO:Numeric.toBigInt(gasPrice);
-        return NumberUtil.getEthFromWeiForDoubleDecimal6(
+        return NumberUtil.getEthFromWeiForDouble(
                 limitBig.multiply(priceBig).toString());
     }
 
