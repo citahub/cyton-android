@@ -75,9 +75,5 @@ window.web3.eth.getCoinbase = function(cb) {
 }
 window.web3.eth.defaultAccount = addressHex
 
-window.web3.eth.getAccounts = function() {
-    return [addressHex];
-}
-
 window.isNervosReady = true
 window.isMetaMask = true
