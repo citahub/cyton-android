@@ -21,10 +21,11 @@ public class ChainItem implements Parcelable{
 
     public ChainItem(){}
 
-    public ChainItem(int chainId, String name) {
+    public ChainItem(int chainId, String name, String tokenName, String tokenSymbol) {
         this.chainId = chainId;
         this.name = name;
-
+        this.tokenName = tokenName;
+        this.tokenSymbol = tokenSymbol;
     }
 
     public ChainItem(int chainId, String name, String httpProvider, String tokenName,

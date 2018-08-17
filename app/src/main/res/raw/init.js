@@ -29,6 +29,7 @@ window.Neuron.init(rpcURL, {
     if (tx.chainType == "ETH") {
         var gasLimit = tx.gasLimit || tx.gas || null;
         var gasPrice = tx.gasPrice || null;
+        chainId = -1;
         neuronSign.signTransaction(id, tx.to || null, value, nonce, gasLimit, gasPrice,
                         data, chainId, version, chainType);
     } else {

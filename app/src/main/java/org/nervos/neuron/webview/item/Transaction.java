@@ -67,6 +67,7 @@ public class Transaction implements Parcelable {
         if (TYPE_ETH.equalsIgnoreCase(chainType)) {
             this.gasPrice = gasPrice;
             this.gasLimit = gasLimit;
+            this.chainId = chainId;
         } else {
             this.quota = gasLimit;
             this.validUntilBlock = gasPrice;

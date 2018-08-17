@@ -105,7 +105,7 @@ public class ImportPrivateKeyFragment extends BaseFragment {
         try {
             walletEntity = WalletEntity.fromPrivateKey(
                     Numeric.toBigInt(privateKeyEdit.getText().toString().trim()));
-        } catch (CipherException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
                 dismissProgressBar();

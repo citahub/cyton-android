@@ -18,11 +18,11 @@ public class DBTokenUtil extends DBUtil {
     public static void saveToken(Context context, TokenItem tokenItem){
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_TOKEN);
+                db = openDB(context, DB_TOKEN);
                 db.put(getDbKey(tokenItem.name), tokenItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
@@ -30,12 +30,12 @@ public class DBTokenUtil extends DBUtil {
     public static boolean checkTokenExist(Context context, TokenItem tokenItem) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_TOKEN);
+                db = openDB(context, DB_TOKEN);
                 String[] keys = db.findKeys(getDbKey(tokenItem.name));
                 db.close();
                 return keys.length > 0;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return false;
         }
@@ -45,14 +45,14 @@ public class DBTokenUtil extends DBUtil {
         synchronized (dbObject) {
             List<TokenItem> tokenList = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_TOKEN);
+                db = openDB(context, DB_TOKEN);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key: keys) {
                     tokenList.add(db.getObject(key, TokenItem.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return tokenList;
         }

@@ -29,13 +29,12 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             if (TextUtils.isEmpty(walletName)) return null;
             try {
-
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
                 db.close();
                 return walletItem;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
                 return null;
             }
         }
@@ -49,7 +48,7 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             List<String> walletList = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 String[] keys = db.findKeys(DB_PREFIX);
                 List<WalletItem> walletItems = new ArrayList<>();
                 for (String key : keys) {
@@ -66,7 +65,7 @@ public class DBWalletUtil extends DBUtil {
                     walletList.add(walletItem.name);
                 }
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return walletList;
         }
@@ -76,7 +75,7 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             List<WalletItem> walletItems = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
                     walletItems.add(db.getObject(key, WalletItem.class));
@@ -89,7 +88,7 @@ public class DBWalletUtil extends DBUtil {
                     }
                 });
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return walletItems;
         }
@@ -98,11 +97,11 @@ public class DBWalletUtil extends DBUtil {
     public static void saveWallet(Context context, WalletItem walletItem) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 db.put(getDbKey(walletItem.name), walletItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
@@ -110,7 +109,7 @@ public class DBWalletUtil extends DBUtil {
     public static boolean updateWalletPassword(Context context, String name, String oldPassword, String newPassword) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
                 try {
                     String privateKey = AESCrypt.decrypt(oldPassword, walletItem.cryptPrivateKey);
@@ -122,7 +121,7 @@ public class DBWalletUtil extends DBUtil {
                 db.put(getDbKey(name), walletItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
                 return false;
             }
             return true;
@@ -132,14 +131,14 @@ public class DBWalletUtil extends DBUtil {
     public static void updateWalletName(Context context, String name, String newName) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
                 db.del(getDbKey(name));
                 walletItem.name = newName;
                 db.put(getDbKey(newName), walletItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
@@ -147,12 +146,12 @@ public class DBWalletUtil extends DBUtil {
     public static boolean checkWalletName(Context context, String name) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 boolean isKeyExist = db.exists(getDbKey(name));
                 db.close();
                 return isKeyExist;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return false;
         }
@@ -162,7 +161,7 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             boolean isKeyExist = false;
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 List<String> names = getAllWalletName(context);
                 for (String name : names) {
                     WalletItem walletItem = getWallet(context, name);
@@ -171,7 +170,7 @@ public class DBWalletUtil extends DBUtil {
                 db.close();
                 return isKeyExist;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return isKeyExist;
         }
@@ -180,11 +179,11 @@ public class DBWalletUtil extends DBUtil {
     public static void deleteWallet(Context context, String name) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_WALLET);
+                db = openDB(context, DB_WALLET);
                 db.del(getDbKey(name));
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }

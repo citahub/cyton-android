@@ -122,7 +122,7 @@ public class ImportMnemonicFragment extends BaseFragment {
         try {
             walletEntity = WalletEntity.fromMnemonic(
                     mnemonicEdit.getText().toString().trim(), currentPath);
-        } catch (CipherException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
                 dismissProgressBar();
