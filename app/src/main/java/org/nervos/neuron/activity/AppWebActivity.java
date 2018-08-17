@@ -15,6 +15,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class AppWebActivity extends BaseActivity {
     private TextView collectText;
     private ProgressBar progressBar;
     private BottomSheetDialog sheetDialog;
+    private ImageView rightMenuView;
 
     private WalletItem walletItem;
     private Transaction signTransaction;
@@ -104,8 +106,9 @@ public class AppWebActivity extends BaseActivity {
         titleText = findViewById(R.id.title_bar_center);
         titleText.setText(R.string.dapp);
         collectText = findViewById(R.id.menu_collect);
+        rightMenuView = findViewById(R.id.title_bar_right);
         findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
-        findViewById(R.id.title_bar_right).setOnClickListener(new View.OnClickListener() {
+        rightMenuView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initMenuView();
@@ -113,8 +116,34 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
+    private void initWebView() {
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView webview, int newProgress) {
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);
+                }
+            }
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                titleText.setText(title);
+                initViewWhenWebFinish();
+            }
+        });
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });
+    }
+
     private void initMenuView() {
-        openMenuWindow();
+        showMenuWindow();
         initCollectView();
         findViewById(R.id.menu_background).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +169,16 @@ public class AppWebActivity extends BaseActivity {
         } );
     }
 
+    private void initViewWhenWebFinish() {
+        showRightMenu();
+        WebAppUtil.setAppItem(webView);
+        WebAppUtil.addHistory();
+    }
+
+    private void showRightMenu() {
+        rightMenuView.setVisibility(View.VISIBLE);
+    }
+
     private void initCollectView() {
         collectText.setText(WebAppUtil.isCollectApp(webView)?
                 getString(R.string.cancel_collect):getString(R.string.collect));
@@ -150,7 +189,7 @@ public class AppWebActivity extends BaseActivity {
         findViewById(R.id.menu_background).setVisibility(View.GONE);
     }
 
-    private void openMenuWindow() {
+    private void showMenuWindow() {
         findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
         findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
     }
@@ -194,35 +233,6 @@ public class AppWebActivity extends BaseActivity {
             startActivityForResult(intent, REQUEST_CODE);
         }
     }
-
-
-    private void initWebView() {
-        webView.setWebChromeClient(new WebChromeClient(){
-            @Override
-            public void onProgressChanged(WebView webview, int newProgress) {
-                if (newProgress == 100) {
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setProgress(newProgress);
-                }
-            }
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                titleText.setText(title);
-                WebAppUtil.setAppItem(webView);
-                WebAppUtil.addHistory();
-            }
-        });
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
-        });
-    }
-
 
     private void initInjectWebView() {
         webView.setChainId(1);
