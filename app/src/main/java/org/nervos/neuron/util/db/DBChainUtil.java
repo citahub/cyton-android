@@ -6,6 +6,7 @@ import com.snappydb.DB;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.util.ConstUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +14,12 @@ import java.util.List;
 public class DBChainUtil extends DBUtil {
 
     private static final String DB_CHAIN = "db_chain";
-    public static final int ETHEREUM_ID = -1;
-    private static final String ETHEREUM_NAME = "以太坊mainnet";
-
 
     public static List<ChainItem> getAllChain(Context context) {
         synchronized (dbObject) {
             List<ChainItem> chainItemList = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_CHAIN);
+                db = openDB(context, DB_CHAIN);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for(String key: keys) {
                     ChainItem chainItem = db.getObject(key, ChainItem.class);
@@ -30,7 +28,7 @@ public class DBChainUtil extends DBUtil {
                 }
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return chainItemList;
         }
@@ -39,12 +37,12 @@ public class DBChainUtil extends DBUtil {
     public static ChainItem getChain(Context context, long chainId) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_CHAIN);
+                db = openDB(context, DB_CHAIN);
                 ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
                 db.close();
                 return chainItem;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return null;
         }
@@ -67,17 +65,18 @@ public class DBChainUtil extends DBUtil {
     public static void saveChain(Context context, ChainItem chainItem){
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_CHAIN);
+                db = openDB(context, DB_CHAIN);
                 db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
 
     public static void initChainData(Context context) {
-        saveChain(context, new ChainItem(ETHEREUM_ID, ETHEREUM_NAME));
+        saveChain(context, new ChainItem(ConstUtil.ETHEREUM_ID,
+                ConstUtil.ETHEREUM_NAME, ConstUtil.ETH, ConstUtil.ETH));
     }
 
 }

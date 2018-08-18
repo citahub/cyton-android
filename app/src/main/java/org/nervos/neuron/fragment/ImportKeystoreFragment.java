@@ -90,7 +90,7 @@ public class ImportKeystoreFragment extends BaseFragment {
         try {
             walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(),
                     keystoreEdit.getText().toString().trim());
-        } catch (CipherException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
                 dismissProgressBar();

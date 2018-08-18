@@ -103,7 +103,7 @@ public class WalletEntity {
      * @return wallet
      * @throws CipherException
      */
-    public static WalletEntity fromMnemonic(String mnemonic, String path) throws CipherException {
+    public static WalletEntity fromMnemonic(String mnemonic, String path) throws Exception {
         WalletEntity wa = new WalletEntity();
         byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSWORD);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
@@ -139,7 +139,7 @@ public class WalletEntity {
      * @return wallet
      * @throws CipherException
      */
-    public static WalletEntity fromKeyStore(String password, String keystore) throws CipherException {
+    public static WalletEntity fromKeyStore(String password, String keystore) throws Exception {
         WalletEntity wa = new WalletEntity();
         wa.walletFile = createWalletFile(keystore);
         wa.credentials = Credentials.create(Wallet.decrypt(password, wa.walletFile));
@@ -218,15 +218,10 @@ public class WalletEntity {
      * @param content
      * @return wallet file
      */
-    public static WalletFile createWalletFile(String content) {
-        try {
-            ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
-            WalletFile walletFile = objectMapper.readValue(content, WalletFile.class);
-            return walletFile;
-        } catch (IOException ex) {
-
-        }
-        return null;
+    public static WalletFile createWalletFile(String content) throws IOException {
+        ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+        WalletFile walletFile = objectMapper.readValue(content, WalletFile.class);
+        return walletFile;
     }
 
     /**

@@ -12,6 +12,8 @@ public class DBUtil {
 
     static final String DB_PREFIX = "neuron-";
 
+    static DB db = null;
+
     static final Object dbObject = new Object();
 
     static final Kryo kryo = new Kryo();
@@ -30,6 +32,16 @@ public class DBUtil {
 
     static String getDbOrigin(String key) {
         return key.substring(DB_PREFIX.length());
+    }
+
+    static void handleException(DB db, SnappydbException e) {
+        try {
+            if (db != null && db.isOpen()) db.close();
+        } catch (SnappydbException e1) {
+            e1.printStackTrace();
+        }
+        e.printStackTrace();
+
     }
 
 }
