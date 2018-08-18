@@ -109,10 +109,10 @@ public class PayTokenActivity extends BaseActivity {
 
         if (transactionInfo.isEthereum()) {
             payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
-            payFeeText.setText(String.valueOf(transactionInfo.getGas()));
+            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
         } else {
             payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
-            payFeeText.setText(String.valueOf(transactionInfo.getQuota()));
+            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()));
         }
 
     }
@@ -141,7 +141,7 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 transactionInfo.gasPrice = gasPrice.toString(16);
-                payFeeText.setText(String.valueOf(transactionInfo.getGas()));
+                payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
             }
         });
     }
@@ -226,9 +226,9 @@ public class PayTokenActivity extends BaseActivity {
         toAddress.setText(transactionInfo.to);
         valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()) + getNativeToken());
         if (transactionInfo.isEthereum()) {
-            feeConfirmText.setText(transactionInfo.getGas() + getNativeToken());
+            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()) + getNativeToken());
         } else {
-            feeConfirmText.setText(transactionInfo.getQuota() + getNativeToken());
+            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()) + getNativeToken());
         }
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
