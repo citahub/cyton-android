@@ -18,11 +18,11 @@ public class DBAppUtil extends DBUtil {
     public static void saveDbApp(Context context, AppItem appItem) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_APP);
+                db = openDB(context, DB_APP);
                 db.put(getDbKey(appItem.entry), appItem);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
@@ -30,11 +30,11 @@ public class DBAppUtil extends DBUtil {
     public static void deleteApp(Context context, String entry) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_APP);
+                db = openDB(context, DB_APP);
                 db.del(getDbKey(entry));
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }
@@ -43,14 +43,14 @@ public class DBAppUtil extends DBUtil {
         synchronized (dbObject) {
             List<AppItem> walletList = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_APP);
+                db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(DB_PREFIX);
                 db.close();
                 for(String key: keys) {
                     walletList.add(db.getObject(key, AppItem.class));
                 }
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return walletList;
         }
@@ -59,12 +59,12 @@ public class DBAppUtil extends DBUtil {
     public static boolean findApp(Context context, String entry) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_APP);
+                db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(getDbKey(entry));
                 db.close();
                 return keys.length > 0;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return false;
         }
@@ -74,12 +74,12 @@ public class DBAppUtil extends DBUtil {
     public static AppItem getApp(Context context, String entry) {
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_APP);
+                db = openDB(context, DB_APP);
                 AppItem appItem = db.getObject(getDbKey(entry), AppItem.class);
                 db.close();
                 return appItem;
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return null;
         }

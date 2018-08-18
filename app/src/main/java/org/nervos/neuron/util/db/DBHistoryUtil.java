@@ -17,14 +17,14 @@ public class DBHistoryUtil extends DBUtil {
         synchronized (dbObject) {
             List<String> historyList = new ArrayList<>();
             try {
-                DB db = openDB(context, DB_HISTORY);
+                db = openDB(context, DB_HISTORY);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for(String key: keys) {
                     historyList.add(db.get(key));
                 }
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
             return historyList;
         }
@@ -34,11 +34,11 @@ public class DBHistoryUtil extends DBUtil {
     public static void saveHistory(Context context, String url){
         synchronized (dbObject) {
             try {
-                DB db = openDB(context, DB_HISTORY);
+                db = openDB(context, DB_HISTORY);
                 db.put(getDbKey(url), url);
                 db.close();
             } catch (SnappydbException e) {
-                e.printStackTrace();
+                handleException(db, e);
             }
         }
     }

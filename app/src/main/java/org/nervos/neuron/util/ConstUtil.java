@@ -7,6 +7,8 @@ import java.math.BigInteger;
 public class ConstUtil {
 
     public static final String ETH = "ETH";
+    public static final int ETHEREUM_ID = -1;
+    public static final String ETHEREUM_NAME = "以太坊mainnet";
     public static final long LONG_6 = 1000000;
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 

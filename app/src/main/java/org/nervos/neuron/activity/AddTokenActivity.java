@@ -21,6 +21,7 @@ import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -150,7 +151,7 @@ public class AddTokenActivity extends BaseActivity {
                 }
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
-                    if (chainItem.chainId == DBChainUtil.ETHEREUM_ID) {
+                    if (chainItem.chainId == ConstUtil.ETHEREUM_ID) {
                         tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
                         tokenItem = NervosRpcService.getErc20TokenInfo(s.toString());

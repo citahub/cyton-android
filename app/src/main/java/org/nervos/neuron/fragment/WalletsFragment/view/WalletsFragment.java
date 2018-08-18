@@ -119,6 +119,11 @@ public class WalletsFragment extends NBaseFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initWalletData();
+    }
 
     private class MyAdapter extends FragmentPagerAdapter {
         public MyAdapter(FragmentManager fm) {
