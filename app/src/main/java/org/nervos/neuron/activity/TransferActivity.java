@@ -243,10 +243,8 @@ public class TransferActivity extends NBaseActivity {
                 ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
         mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
         feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
-
-        feeSeekText.setText(NumberUtil.getDecimal8ENotation(
-                NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
         mFee = NumberUtil.getEthFromWei(mQuota);
+        feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
         feeValueText.setText(feeSeekText.getText());
     }
 
@@ -299,9 +297,8 @@ public class TransferActivity extends NBaseActivity {
                     initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(
-                            NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
                     mFee = NumberUtil.getEthFromWei(mQuota);
+                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -428,11 +425,10 @@ public class TransferActivity extends NBaseActivity {
         quotaEditLayout.setVisibility(View.GONE);
         if (isGasLimitOk && isGasPriceOk) {
             mFee = NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit));
-            feeValueText.setText(
-                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit)) + getFeeTokenUnit());
+            feeValueText.setText(mFee + getFeeTokenUnit());
         } else {
             mFee = 0;
-            feeValueText.setText("0");
+            feeValueText.setText(mFee + "");
         }
     }
 
@@ -443,10 +439,10 @@ public class TransferActivity extends NBaseActivity {
         quotaEditLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
             mFee = NumberUtil.getEthFromWei(mQuota);
-            feeValueText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
+            feeValueText.setText(mFee + getFeeTokenUnit());
         } else {
             mFee = 0;
-            feeValueText.setText("0");
+            feeValueText.setText(mFee + "");
         }
     }
 
