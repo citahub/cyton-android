@@ -481,6 +481,7 @@ public class TransferActivity extends NBaseActivity {
     }
 
 
+
     private void showPasswordConfirmView(String value, ProgressBar progressBar) {
         passwordDialog = new BottomSheetDialog(mActivity);
         passwordDialog.setCancelable(false);
