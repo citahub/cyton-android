@@ -137,7 +137,6 @@ public class TokenListFragment extends NBaseFragment {
                     }
                 });
             }
-
             @Override
             public void onGetWalletError(String message) {
                 recyclerView.post(() -> {
@@ -163,28 +162,28 @@ public class TokenListFragment extends NBaseFragment {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
                 TokenService.getCurrency(item.symbol, currencyItem.getName())
-                        .subscribe(new Subscriber<String>() {
-                            @Override
-                            public void onCompleted() {
-                                adapter.notifyDataSetChanged();
-                                moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                            }
+                    .subscribe(new Subscriber<String>() {
+                        @Override
+                        public void onCompleted() {
+                            adapter.notifyDataSetChanged();
+                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
 
-                            @Override
-                            public void onNext(String s) {
-                                if (!TextUtils.isEmpty(s)) {
-                                    double price = Double.parseDouble(s.trim());
-                                    DecimalFormat df = new DecimalFormat("######0.00");
-                                    item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                                } else
-                                    item.currencyPrice = 0.00;
-                            }
-                        });
+                        @Override
+                        public void onNext(String s) {
+                            if (!TextUtils.isEmpty(s)) {
+                                double price = Double.parseDouble(s.trim());
+                                DecimalFormat df = new DecimalFormat("######0.00");
+                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                            } else
+                                item.currencyPrice = 0.00;
+                        }
+                    });
         }
     }
 
