@@ -71,11 +71,11 @@ public class NervosRpcService {
     }
 
 
-    public static TokenItem getErc20TokenInfo(String contractAddress) {
+    public static TokenItem getErc20TokenInfo(String contractAddress){
         try {
             return new TokenItem(getErc20Name(contractAddress),
-                    getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
-                    contractAddress);
+                getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
+                contractAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +87,7 @@ public class NervosRpcService {
         Call balanceCall = new Call(address, tokenItem.contractAddress,
                 ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
         String balanceOf = service.appCall(balanceCall,
-                DefaultBlockParameterName.LATEST).send().getValue();
+                    DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
             Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
@@ -109,13 +109,11 @@ public class NervosRpcService {
     }
 
 
-    public static double getBalance(String address) {
-        try {
-            AppGetBalance ethGetBalance =
-                    service.appGetBalance(address, DefaultBlockParameterName.LATEST).send();
+    public static double getBalance(String address) throws Exception {
+        AppGetBalance ethGetBalance =
+                service.appGetBalance(address, DefaultBlockParameterName.LATEST).send();
+        if (ethGetBalance != null) {
             return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return 0.0;
     }
@@ -204,7 +202,7 @@ public class NervosRpcService {
                 .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
-    private static String getErc20Name(String contractAddress) throws IOException {
+    private static String getErc20Name(String contractAddress) throws Exception {
         Call nameCall = new Call(walletItem.address, contractAddress, ConstUtil.NAME_HASH);
         String name = service.appCall(nameCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
@@ -214,7 +212,7 @@ public class NervosRpcService {
     }
 
 
-    private static String getErc20Symbol(String contractAddress) throws IOException {
+    private static String getErc20Symbol(String contractAddress) throws Exception {
         Call symbolCall = new Call(walletItem.address, contractAddress, ConstUtil.SYMBOL_HASH);
         String symbol = service.appCall(symbolCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
@@ -223,7 +221,7 @@ public class NervosRpcService {
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
     }
 
-    private static int getErc20Decimals(String contractAddress) throws IOException {
+    private static int getErc20Decimals(String contractAddress) throws Exception {
         Call decimalsCall = new Call(walletItem.address, contractAddress, ConstUtil.DECIMALS_HASH);
         String decimals = service.appCall(decimalsCall,
                 DefaultBlockParameterName.LATEST).send().getValue();
