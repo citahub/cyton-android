@@ -1,11 +1,13 @@
 package org.nervos.neuron.fragment.CollectionListFragment;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.CollectionDetailActivity;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.response.CollectionResponse;
@@ -51,6 +53,12 @@ public class CollectionListFragment extends NBaseFragment {
                 getCollectionList();
             }
         });
+
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -67,23 +75,25 @@ public class CollectionListFragment extends NBaseFragment {
 
     private void getCollectionList() {
         TokenService.getCollectionList(getContext())
-            .subscribe(new Subscriber<CollectionResponse>() {
-                @Override
-                public void onCompleted() {
-                    swipeRefreshLayout.setRefreshing(false);
-                    dismissProgressBar();
-                }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                    swipeRefreshLayout.setRefreshing(false);
-                    dismissProgressBar();
-                }
-                @Override
-                public void onNext(CollectionResponse collectionResponse) {
-                    collectionItemList = collectionResponse.assets;
-                    adapter.refresh(collectionItemList);
-                }
-            });
+                .subscribe(new Subscriber<CollectionResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
+                    }
+
+                    @Override
+                    public void onNext(CollectionResponse collectionResponse) {
+                        collectionItemList = collectionResponse.assets;
+                        adapter.refresh(collectionItemList);
+                    }
+                });
     }
 }
