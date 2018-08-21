@@ -142,11 +142,7 @@
                 android:layout_marginTop="12dp"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="111111111111111111111111
-                111111111111111111
-                1111111111111111111111111111
-                111111111111111111111111111
-                11111111111111111111111111111111111111111"
+                android:text="11111111"
                 android:textColor="@color/font_title_third"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"

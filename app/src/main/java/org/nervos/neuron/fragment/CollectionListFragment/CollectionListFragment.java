@@ -51,6 +51,12 @@ public class CollectionListFragment extends NBaseFragment {
             intent.putExtra("collection", collectionItemList.get(position));
             startActivity(intent);
         });
+
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
+        });
     }
 
     @Override
