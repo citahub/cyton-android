@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
@@ -26,7 +27,6 @@ import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.web3j.protocol.core.methods.response.EthMetaData;
 
 import java.io.IOException;
 import java.net.URI;
@@ -122,7 +122,7 @@ public class WebAppUtil {
             @Override
             public Observable<ChainItem> call(ChainItem chainItem) {
                 NervosRpcService.init(webView.getContext(), chainItem.httpProvider);
-                EthMetaData.EthMetaDataResult ethMetaData =
+                AppMetaData.EthMetaDataResult ethMetaData =
                         NervosRpcService.getMetaData().getEthMetaDataResult();
                 if (ethMetaData != null) {
                     chainItem.name = ethMetaData.chainName;
