@@ -2,10 +2,11 @@ package org.nervos.neuron.item;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CollectionItem {
-
+public class CollectionItem implements Serializable {
+    private static final long serialVersionUID = -7060210544600464481L;
 
     /**
      * token_id : 209
@@ -43,10 +44,11 @@ public class CollectionItem {
     @SerializedName("num_sales")
     public int numSales;
     public List<String> auctions;
-    public List<Object> traits;
+    public List<TraitEntity> traits;
 
 
-    public static class AssetContractEntity {
+    public static class AssetContractEntity implements Serializable {
+        private static final long serialVersionUID = -7060210544600464481L;
         /**
          * address : 0x323a3e1693e7a0959f65972f3bf2dfcb93239dfe
          * name : DigitalArtChain
@@ -100,12 +102,14 @@ public class CollectionItem {
         @SerializedName("seller_fee_basis_points")
         public int sellerFeeBasisPoints;
 
-        public static class DisplayDataEntity {
+        public static class DisplayDataEntity implements Serializable {
             public List<String> images;
+            private static final long serialVersionUID = -7060210544600464481L;
         }
     }
 
-    public static class OwnerEntity {
+    public static class OwnerEntity implements Serializable {
+        private static final long serialVersionUID = -7060210544600464481L;
         /**
          * user : {"username":"fincho"}
          * profile_img_url : https://storage.googleapis.com/opensea-static/opensea-profile/18.png
@@ -119,12 +123,26 @@ public class CollectionItem {
         public String address;
         public String config;
 
-        public static class UserEntity {
+        public static class UserEntity implements Serializable {
+            private static final long serialVersionUID = -7060210544600464481L;
             /**
              * username : fincho
              */
 
             public String username;
         }
+    }
+
+    public static class TraitEntity implements Serializable {
+        private static final long serialVersionUID = -7060210544600464481L;
+        @SerializedName("trait_type")
+        public String traitType;
+        public String value;
+        @SerializedName("display_type")
+        public String displayType;
+        @SerializedName("max_value")
+        public String maxValue;
+        @SerializedName("trait_count")
+        public String traitCount;
     }
 }
