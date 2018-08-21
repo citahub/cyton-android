@@ -59,15 +59,11 @@ public class EthRpcService {
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
-    public static double getEthBalance(String address) {
-        try {
-            EthGetBalance ethGetBalance = service.ethGetBalance(address,
-                    DefaultBlockParameterName.LATEST).send();
-            if (ethGetBalance != null) {
-                return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static double getEthBalance(String address) throws Exception {
+        EthGetBalance ethGetBalance = service.ethGetBalance(address,
+                DefaultBlockParameterName.LATEST).send();
+        if (ethGetBalance != null) {
+            return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
         }
         return 0.0;
     }
@@ -181,21 +177,17 @@ public class EthRpcService {
         return null;
     }
 
-    public static double getERC20Balance(String contractAddress, String address) {
-        try {
-            long decimal = getErc20Decimal(address, contractAddress);
-            Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
-                    ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
-            String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-            if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
-                initIntTypes();
-                Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
-                double balances = balance.getValue().doubleValue();
-                if (decimal == 0) return balances;
-                else return balances/(Math.pow(10, decimal));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static double getERC20Balance(String contractAddress, String address) throws Exception {
+        long decimal = getErc20Decimal(address, contractAddress);
+        Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
+                ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+        String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
+        if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+            initIntTypes();
+            Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+            double balances = balance.getValue().doubleValue();
+            if (decimal == 0) return balances;
+            else return balances/(Math.pow(10, decimal));
         }
         return 0.0;
     }
