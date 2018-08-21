@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
@@ -310,7 +311,7 @@ public class PayTokenActivity extends BaseActivity {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
         NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(),
                 transactionInfo.data, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
@@ -324,8 +325,8 @@ public class PayTokenActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                        handleTransfer(ethSendTransaction);
+                    public void onNext(AppSendTransaction appSendTransaction) {
+                        handleTransfer(appSendTransaction);
                     }
                 });
     }
@@ -355,19 +356,19 @@ public class PayTokenActivity extends BaseActivity {
     /**
      * handle nervos transfer result
      *
-     * @param nervosSendTransaction result of nervos transaction
+     * @param appSendTransaction result of nervos transaction
      */
-    private void handleTransfer(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction nervosSendTransaction) {
-        if (!TextUtils.isEmpty(nervosSendTransaction.getSendTransactionResult().getHash())) {
+    private void handleTransfer(AppSendTransaction appSendTransaction) {
+        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             sheetDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(nervosSendTransaction.getSendTransactionResult().getHash());
-        } else if (nervosSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(nervosSendTransaction.getError().getMessage())) {
+            gotoSignSuccess(appSendTransaction.getSendTransactionResult().getHash());
+        } else if (appSendTransaction.getError() != null &&
+                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             sheetDialog.dismiss();
-            Toast.makeText(mActivity, nervosSendTransaction.getError().getMessage(),
+            Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(nervosSendTransaction.getError().getMessage());
+            gotoSignFail(appSendTransaction.getError().getMessage());
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getString(R.string.transfer_fail));

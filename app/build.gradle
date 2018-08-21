@@ -104,10 +104,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation files('libs/abi-3.3.0-android.jar')
-    implementation files('libs/core-3.3.0-android.jar')
-    implementation files('libs/crypto-3.3.0-android.jar')
-    implementation files('libs/protobuf-3.3.0-android.jar')
+    implementation files('libs/abi-0.17.1-android.jar')
+    implementation files('libs/core-0.17.1-android.jar')
+    implementation files('libs/crypto-0.17.1-android.jar')
+    implementation files('libs/protobuf-0.17.1-android.jar')
+    implementation files('libs/utils-0.17.1-android.jar')
     implementation files('libs/infura-3.3.1-android.jar')
 }
 

@@ -30,46 +30,54 @@ public class WalletService {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         if (walletItem == null || walletItem.tokenItems.size() == 0) return;
         List<TokenItem> tokenItemList = new ArrayList<>();
-        executorService.execute(() -> {
-            Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
-            while (iterator.hasNext()) {
-                TokenItem tokenItem = iterator.next();
-                iterator.remove();
-                if (tokenItem.chainId < 0) {                // ethereum
-                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
-                        tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
-                        tokenItemList.add(tokenItem);
-                    } else {
-                        tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
-                        tokenItemList.add(tokenItem);
-                    }
-                } else {                                    // nervos
-                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
-                    if (chainItem != null) {
-                        String httpProvider = chainItem.httpProvider;
-                        NervosRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
-                            tokenItem.chainName = chainItem.name;
+        try {
+            executorService.execute(() -> {
+                Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
+                while (iterator.hasNext()) {
+                    TokenItem tokenItem = iterator.next();
+                    iterator.remove();
+                    if (tokenItem.chainId < 0) {                // ethereum
+                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                            tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
                         } else {
-                            tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
-                            tokenItem.chainName = chainItem.name;
+                            tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(tokenItem);
+                        }
+                    } else {                                    // nervos
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        if (chainItem != null) {
+                            String httpProvider = chainItem.httpProvider;
+                            NervosRpcService.init(context, httpProvider);
+                            if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                                tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
+                                tokenItem.chainName = chainItem.name;
+                                tokenItemList.add(tokenItem);
+                            } else {
+                                tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
+                                tokenItem.chainName = chainItem.name;
+                                tokenItemList.add(tokenItem);
+                            }
                         }
                     }
                 }
-            }
 
-            walletItem.tokenItems = tokenItemList;
+                walletItem.tokenItems = tokenItemList;
+                if (listener != null) {
+                    listener.onGetWalletToken(walletItem);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
             if (listener != null) {
-                listener.onGetWalletToken(walletItem);
+                listener.onGetWalletError(e.getMessage());
             }
-        });
+        }
     }
 
     public interface OnGetWalletTokenListener {
         void onGetWalletToken(WalletItem walletItem);
+        void onGetWalletError(String message);
     }
 
 

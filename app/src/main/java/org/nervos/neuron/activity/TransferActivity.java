@@ -24,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -527,7 +528,7 @@ public class TransferActivity extends NBaseActivity {
         transactionHexData = payHexDataEdit.getText().toString().trim();
         NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value,
                 transactionHexData, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -541,7 +542,7 @@ public class TransferActivity extends NBaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    public void onNext(AppSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
                         if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
@@ -569,7 +570,7 @@ public class TransferActivity extends NBaseActivity {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -584,15 +585,15 @@ public class TransferActivity extends NBaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             passwordDialog.dismiss();
                             finish();
-                        } else if (ethSendTransaction.getError() != null &&
-                                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
-                            Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                        } else if (appSendTransaction.getError() != null &&
+                                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
+                            Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();

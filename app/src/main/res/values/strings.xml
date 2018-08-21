@@ -89,7 +89,6 @@
     <string name="empty_no_collection_data">您还没有藏品数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
     <string name="empty_no_history_data">您还没有历史浏览记录</string>
-    <string name="ethereum_main_net">Ethereum Mainnet</string>
     <string name="confirm_pay">确认支付</string>
     <string name="loading">正在加载</string>
     <string name="reject">拒绝</string>

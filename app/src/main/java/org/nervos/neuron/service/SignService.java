@@ -62,9 +62,9 @@ public class SignService {
             public String call() throws GeneralSecurityException {
                 WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
                 String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
-                org.nervos.web3j.crypto.Sign.SignatureData signatureData =
-                        org.nervos.web3j.crypto.Sign.signMessage(message.getBytes(),
-                                org.nervos.web3j.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
+                org.nervos.appchain.crypto.Sign.SignatureData signatureData =
+                        org.nervos.appchain.crypto.Sign.signMessage(message.getBytes(),
+                                org.nervos.appchain.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
 
                 return Numeric.toHexString(signatureData.get_signature());
             }

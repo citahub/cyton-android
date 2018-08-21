@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -129,7 +130,9 @@ public class TokenListFragment extends NBaseFragment {
 
     private void initWalletData(boolean showProgress) {
         if (showProgress) showProgressBar();
-        WalletService.getWalletTokenBalance(getContext(), walletItem ->
+        WalletService.getWalletTokenBalance(getContext(), new WalletService.OnGetWalletTokenListener() {
+            @Override
+            public void onGetWalletToken(WalletItem walletItem) {
                 recyclerView.post(() -> {
                     if (showProgress) dismissProgressBar();
                     swipeRefreshLayout.setRefreshing(false);
@@ -137,8 +140,15 @@ public class TokenListFragment extends NBaseFragment {
                         tokenItemList = walletItem.tokenItems;
                         setData();
                     }
-                })
-        );
+                });
+            }
+            @Override
+            public void onGetWalletError(String message) {
+                recyclerView.post(() -> {
+                    Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     public void setData() {
@@ -157,28 +167,28 @@ public class TokenListFragment extends NBaseFragment {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
                 TokenService.getCurrency(item.symbol, currencyItem.getName())
-                        .subscribe(new Subscriber<String>() {
-                            @Override
-                            public void onCompleted() {
-                                adapter.notifyDataSetChanged();
-                                moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                            }
+                    .subscribe(new Subscriber<String>() {
+                        @Override
+                        public void onCompleted() {
+                            adapter.notifyDataSetChanged();
+                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
 
-                            @Override
-                            public void onNext(String s) {
-                                if (!TextUtils.isEmpty(s)) {
-                                    double price = Double.parseDouble(s.trim());
-                                    DecimalFormat df = new DecimalFormat("######0.00");
-                                    item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                                } else
-                                    item.currencyPrice = 0.00;
-                            }
-                        });
+                        @Override
+                        public void onNext(String s) {
+                            if (!TextUtils.isEmpty(s)) {
+                                double price = Double.parseDouble(s.trim());
+                                DecimalFormat df = new DecimalFormat("######0.00");
+                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                            } else
+                                item.currencyPrice = 0.00;
+                        }
+                    });
         }
     }
 
