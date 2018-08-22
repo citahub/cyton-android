@@ -9,7 +9,7 @@ import org.web3j.utils.Numeric;
 
 public class Address implements Parcelable {
 
-    public static final Address EMPTY = new Address("0000000000000000000000000000000000000000");
+    public static final Address EMPTY = new Address("");
 
     private final String value;
 
@@ -18,9 +18,9 @@ public class Address implements Parcelable {
         if (Numeric.containsHexPrefix(value)) {
             value = Numeric.cleanHexPrefix(value);
         }
-        if (TextUtils.isEmpty(value)) {
-            throw new IllegalArgumentException("Address can't null.");
-        }
+//        if (TextUtils.isEmpty(value)) {
+//            throw new IllegalArgumentException("Address can't null.");
+//        }
         this.value = value;
     }
 
@@ -30,7 +30,7 @@ public class Address implements Parcelable {
 
     @Override
     public String toString() {
-        return "0x" + value;
+        return value;
     }
 
     @Override
