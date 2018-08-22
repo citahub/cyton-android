@@ -50,7 +50,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        collectionItem = (CollectionItem) getIntent().getSerializableExtra("collection");
+        collectionItem = getIntent().getParcelableExtra("collection");
         nameText.setText(collectionItem.name);
         tokenIdText.setText("ID:" + collectionItem.tokenId);
         contractNameText.setText(collectionItem.assetContract.name);
