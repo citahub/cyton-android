@@ -1,11 +1,15 @@
 package org.nervos.neuron.item;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionItem {
-
+public class CollectionItem implements Parcelable {
 
     /**
      * token_id : 209
@@ -38,15 +42,13 @@ public class CollectionItem {
     @SerializedName("asset_contract")
     public AssetContractEntity assetContract;
     public OwnerEntity owner;
-    @SerializedName("last_sale")
-    public Object lastSale;
     @SerializedName("num_sales")
     public int numSales;
     public List<String> auctions;
-    public List<Object> traits;
+    public List<TraitEntity> traits;
 
 
-    public static class AssetContractEntity {
+    public static class AssetContractEntity implements Parcelable {
         /**
          * address : 0x323a3e1693e7a0959f65972f3bf2dfcb93239dfe
          * name : DigitalArtChain
@@ -100,12 +102,106 @@ public class CollectionItem {
         @SerializedName("seller_fee_basis_points")
         public int sellerFeeBasisPoints;
 
-        public static class DisplayDataEntity {
+        public static class DisplayDataEntity implements Parcelable {
             public List<String> images;
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeStringList(this.images);
+            }
+
+            public DisplayDataEntity() {
+            }
+
+            protected DisplayDataEntity(Parcel in) {
+                this.images = in.createStringArrayList();
+            }
+
+            public static final Creator<DisplayDataEntity> CREATOR = new Creator<DisplayDataEntity>() {
+                @Override
+                public DisplayDataEntity createFromParcel(Parcel source) {
+                    return new DisplayDataEntity(source);
+                }
+
+                @Override
+                public DisplayDataEntity[] newArray(int size) {
+                    return new DisplayDataEntity[size];
+                }
+            };
         }
+
+        public AssetContractEntity() {
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.address);
+            dest.writeString(this.name);
+            dest.writeString(this.symbol);
+            dest.writeString(this.imageUrl);
+            dest.writeString(this.featuredImageUrl);
+            dest.writeByte(this.featured ? (byte) 1 : (byte) 0);
+            dest.writeString(this.description);
+            dest.writeString(this.externalLink);
+            dest.writeString(this.wikiLink);
+            dest.writeString(this.stats);
+            dest.writeString(this.traits);
+            dest.writeByte(this.hidden ? (byte) 1 : (byte) 0);
+            dest.writeString(this.nftVersion);
+            dest.writeString(this.schemaName);
+            dest.writeParcelable(this.displayData, flags);
+            dest.writeString(this.shortDescription);
+            dest.writeInt(this.totalSupply);
+            dest.writeInt(this.buyerFeeBasisPoints);
+            dest.writeInt(this.sellerFeeBasisPoints);
+        }
+
+        protected AssetContractEntity(Parcel in) {
+            this.address = in.readString();
+            this.name = in.readString();
+            this.symbol = in.readString();
+            this.imageUrl = in.readString();
+            this.featuredImageUrl = in.readString();
+            this.featured = in.readByte() != 0;
+            this.description = in.readString();
+            this.externalLink = in.readString();
+            this.wikiLink = in.readString();
+            this.stats = in.readString();
+            this.traits = in.readString();
+            this.hidden = in.readByte() != 0;
+            this.nftVersion = in.readString();
+            this.schemaName = in.readString();
+            this.displayData = in.readParcelable(DisplayDataEntity.class.getClassLoader());
+            this.shortDescription = in.readString();
+            this.totalSupply = in.readInt();
+            this.buyerFeeBasisPoints = in.readInt();
+            this.sellerFeeBasisPoints = in.readInt();
+        }
+
+        public static final Creator<AssetContractEntity> CREATOR = new Creator<AssetContractEntity>() {
+            @Override
+            public AssetContractEntity createFromParcel(Parcel source) {
+                return new AssetContractEntity(source);
+            }
+
+            @Override
+            public AssetContractEntity[] newArray(int size) {
+                return new AssetContractEntity[size];
+            }
+        };
     }
 
-    public static class OwnerEntity {
+    public static class OwnerEntity implements Parcelable {
         /**
          * user : {"username":"fincho"}
          * profile_img_url : https://storage.googleapis.com/opensea-static/opensea-profile/18.png
@@ -119,12 +215,177 @@ public class CollectionItem {
         public String address;
         public String config;
 
-        public static class UserEntity {
+        public static class UserEntity implements Parcelable {
             /**
              * username : fincho
              */
 
             public String username;
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.username);
+            }
+
+            public UserEntity() {
+            }
+
+            protected UserEntity(Parcel in) {
+                this.username = in.readString();
+            }
+
+            public static final Creator<UserEntity> CREATOR = new Creator<UserEntity>() {
+                @Override
+                public UserEntity createFromParcel(Parcel source) {
+                    return new UserEntity(source);
+                }
+
+                @Override
+                public UserEntity[] newArray(int size) {
+                    return new UserEntity[size];
+                }
+            };
         }
+
+        public OwnerEntity() {
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.user, flags);
+            dest.writeString(this.profileImgUrl);
+            dest.writeString(this.address);
+            dest.writeString(this.config);
+        }
+
+        protected OwnerEntity(Parcel in) {
+            this.user = in.readParcelable(UserEntity.class.getClassLoader());
+            this.profileImgUrl = in.readString();
+            this.address = in.readString();
+            this.config = in.readString();
+        }
+
+        public static final Creator<OwnerEntity> CREATOR = new Creator<OwnerEntity>() {
+            @Override
+            public OwnerEntity createFromParcel(Parcel source) {
+                return new OwnerEntity(source);
+            }
+
+            @Override
+            public OwnerEntity[] newArray(int size) {
+                return new OwnerEntity[size];
+            }
+        };
     }
+
+    public static class TraitEntity implements Parcelable {
+        @SerializedName("trait_type")
+        public String traitType;
+        public String value;
+        @SerializedName("display_type")
+        public String displayType;
+        @SerializedName("max_value")
+        public String maxValue;
+        @SerializedName("trait_count")
+        public String traitCount;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.traitType);
+            dest.writeString(this.value);
+            dest.writeString(this.displayType);
+            dest.writeString(this.maxValue);
+            dest.writeString(this.traitCount);
+        }
+
+        public TraitEntity() {
+        }
+
+        protected TraitEntity(Parcel in) {
+            this.traitType = in.readString();
+            this.value = in.readString();
+            this.displayType = in.readString();
+            this.maxValue = in.readString();
+            this.traitCount = in.readString();
+        }
+
+        public static final Creator<TraitEntity> CREATOR = new Creator<TraitEntity>() {
+            @Override
+            public TraitEntity createFromParcel(Parcel source) {
+                return new TraitEntity(source);
+            }
+
+            @Override
+            public TraitEntity[] newArray(int size) {
+                return new TraitEntity[size];
+            }
+        };
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.tokenId);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.imagePreviewUrl);
+        dest.writeString(this.backgroundColor);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.externalLink);
+        dest.writeParcelable(this.assetContract, flags);
+        dest.writeParcelable(this.owner, flags);
+        dest.writeInt(this.numSales);
+        dest.writeStringList(this.auctions);
+        dest.writeList(this.traits);
+    }
+
+    public CollectionItem() {
+    }
+
+    protected CollectionItem(Parcel in) {
+        this.tokenId = in.readString();
+        this.imageUrl = in.readString();
+        this.imagePreviewUrl = in.readString();
+        this.backgroundColor = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.externalLink = in.readString();
+        this.assetContract = in.readParcelable(AssetContractEntity.class.getClassLoader());
+        this.owner = in.readParcelable(OwnerEntity.class.getClassLoader());
+        this.numSales = in.readInt();
+        this.auctions = in.createStringArrayList();
+        this.traits = new ArrayList<TraitEntity>();
+        in.readList(this.traits, TraitEntity.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<CollectionItem> CREATOR = new Parcelable.Creator<CollectionItem>() {
+        @Override
+        public CollectionItem createFromParcel(Parcel source) {
+            return new CollectionItem(source);
+        }
+
+        @Override
+        public CollectionItem[] newArray(int size) {
+            return new CollectionItem[size];
+        }
+    };
 }

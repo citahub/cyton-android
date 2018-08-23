@@ -240,4 +240,11 @@
     <string name="token_decimal_hint">小数位数</string>
     <string name="input_private_key_hint">请输入私钥原文</string>
     <string name="token">Token</string>
+
+    <string name="collection_detail_title">藏品详情</string>
+    <string name="collection_attrs">藏品属性</string>
+    <string name="collection_desc">藏品描述</string>
+    <string name="more">更多</string>
+    <string name="rollback">收起</string>
+    <string name="check">查看</string>
 </resources>

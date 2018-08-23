@@ -16,7 +16,7 @@
     <color name="font_title_third">#9196A6</color>
     <color name="font_inside">#9196A6</color>
     <color name="font_annotation">#c5c5d0</color>
-    <color name="font_link">#1646ff</color>
+    <color name="font_link">#456cff</color>
     <color name="font_hint">#DBDCE3</color>
 
     <color name="line_form">#f7f7f7</color>
@@ -50,5 +50,6 @@
     <color name="red">#ffff4d55</color>
     <color name="orange">#ff9d45</color>
     <color name="code_yellow">#ffbd54</color>
-
+    <color name="item_collection_attr_bg">#05456cff</color>
+    <color name="item_collection_attr_border">#20456cff</color>
 </resources>

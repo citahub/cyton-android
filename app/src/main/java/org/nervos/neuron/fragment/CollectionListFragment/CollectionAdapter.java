@@ -50,7 +50,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         CollectionViewHolder holder = new CollectionViewHolder(
                 LayoutInflater.from(context).inflate(R.layout.item_collection, parent,
-                false));
+                        false));
         return holder;
     }
 
@@ -64,6 +64,10 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.collectionImage.setImageURI(collectionItem.assetContract.imageUrl);
             holder.collectionId.setText(String.format(
                     context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
+            holder.root.setOnClickListener((view) -> {
+                if (listener != null)
+                    listener.onItemClick(view, position);
+            });
         }
     }
 
