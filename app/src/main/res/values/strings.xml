@@ -51,6 +51,7 @@
     <string name="import_mnemonic_warning">请输入钱包助记词并选择助记词模式</string>
     <string name="import_mnemonic_input_hint">助记词输入+空格</string>
     <string name="import_private_key_warning">请将私钥粘贴至输入框，或通过二维码输入</string>
+    <string name="export_keystore_warning">Keystore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 Keystore 格式与以太坊官方 Keystore 格式相同。</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
     <string name="tab_application">应用</string>
     <string name="tab_wallet">钱包</string>
