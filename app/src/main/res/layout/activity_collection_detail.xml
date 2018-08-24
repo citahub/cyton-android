@@ -1,181 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <android.support.constraint.ConstraintLayout
+        <org.nervos.neuron.custom.TitleBar
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="48dp"
+            app:isShowBottomLine="true"
+            app:isShowLeft="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/collection_detail_title" />
 
-            <org.nervos.neuron.custom.TitleBar
-                android:id="@+id/title"
+        <RelativeLayout
+            android:id="@+id/rl_image"
+            android:layout_width="match_parent"
+            android:layout_height="178dp"
+            app:layout_constraintTop_toBottomOf="@id/title">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                app:isShowBottomLine="true"
-                app:isShowLeft="true"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/collection_detail_title" />
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                app:actualImageScaleType="centerInside" />
 
-            <RelativeLayout
-                android:id="@+id/rl_image"
-                android:layout_width="match_parent"
-                android:layout_height="178dp"
-                app:layout_constraintTop_toBottomOf="@id/title">
+        </RelativeLayout>
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    app:actualImageScaleType="centerInside" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="17dp"
+            android:text="CryptoKetties"
+            android:textColor="@color/font_title"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl_image" />
 
-            </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_token_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="ID:akldkl"
+            android:textColor="@color/font_title_third"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="@id/tv_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="17dp"
-                android:text="CryptoKetties"
-                android:textColor="@color/font_title"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rl_image" />
+        <TextView
+            android:id="@+id/tv_contract_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="3dp"
+            android:text="CryptoKitties"
+            android:textColor="@color/font_title_third"
+            android:textSize="15sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
-            <TextView
-                android:id="@+id/tv_token_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="ID:akldkl"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp"
-                app:layout_constraintLeft_toLeftOf="@id/tv_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_name" />
+        <View
+            android:id="@+id/view_line1"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/default_background"
+            app:layout_constraintTop_toBottomOf="@id/tv_token_id" />
 
-            <TextView
-                android:id="@+id/tv_contract_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="3dp"
-                android:text="CryptoKitties"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_name" />
+        <TextView
+            android:id="@+id/tv_collection_attrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/collection_attrs"
+            android:textColor="@color/font_title"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line1" />
 
-            <View
-                android:id="@+id/view_line1"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/default_background"
-                app:layout_constraintTop_toBottomOf="@id/tv_token_id" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_attrs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_collection_attrs" />
 
-            <TextView
-                android:id="@+id/tv_collection_attrs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/collection_attrs"
-                android:textColor="@color/font_title"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_line1" />
+        <View
+            android:id="@+id/view_line2"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/default_background"
+            app:layout_constraintTop_toBottomOf="@id/rv_attrs" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_attrs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="3dp"
-                android:layout_marginStart="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_collection_attrs" />
+        <TextView
+            android:id="@+id/tv_collection_desc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/collection_desc"
+            android:textColor="@color/font_title"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_line2" />
 
-            <View
-                android:id="@+id/view_line2"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/default_background"
-                app:layout_constraintTop_toBottomOf="@id/rv_attrs" />
+        <TextView
+            android:id="@+id/tv_desc_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:text="@string/more"
+            android:textColor="@color/font_link"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_collection_desc_title"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_collection_desc_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/collection_desc"
-                android:textColor="@color/font_title"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_line2" />
-
-            <TextView
-                android:id="@+id/tv_desc_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:text="@string/more"
-                android:textColor="@color/font_link"
-                android:textSize="13sp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_collection_desc_title"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_collection_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="12dp"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:text="111111111111111111111111
+        <TextView
+            android:id="@+id/tv_collection_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="111111111111111111111111
                 111111111111111111
                 1111111111111111111111111111
                 111111111111111111111111111
                 11111111111111111111111111111111111111111"
-                android:textColor="@color/font_title_third"
-                android:textSize="13sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_collection_desc_title" />
+            android:textColor="@color/font_title_third"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_collection_desc_title" />
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@color/default_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_collection_desc">
+
+            <Button
+                android:id="@+id/btn"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:background="@color/default_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_collection_desc">
+                android:layout_height="44dp"
+                android:layout_marginBottom="66dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_corner_blue_shape"
+                android:text="@string/check"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
 
-                <Button
-                    android:id="@+id/btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginBottom="66dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/button_corner_blue_shape"
-                    android:text="@string/check"
-                    android:textColor="@color/white"
-                    android:textSize="17sp" />
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

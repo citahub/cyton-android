@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.CollectionItem;
 
 /**
@@ -23,12 +24,13 @@ import org.nervos.neuron.item.CollectionItem;
  */
 public class CollectionDetailActivity extends NBaseActivity implements View.OnClickListener {
 
-    private TextView nameText, tokenIdText, contractNameText, describeText, moreText;
+    private TextView nameText, tokenIdText, contractNameText, describeText, moreText, collectionDescTitleText, descMoreText, collectionDescText;
     private SimpleDraweeView collectionImage;
     private Button checkBtn;
     private RelativeLayout imageRl;
     private CollectionItem collectionItem;
     private RecyclerView attrsRecycler;
+    private View line;
 
     @Override
     protected int getContentLayout() {
@@ -37,6 +39,10 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initView() {
+        TitleBar titleBar = findViewById(R.id.title);
+        titleBar.setFocusable(true);
+        titleBar.setFocusableInTouchMode(true);
+        titleBar.requestFocus();
         nameText = findViewById(R.id.tv_name);
         tokenIdText = findViewById(R.id.tv_token_id);
         contractNameText = findViewById(R.id.tv_contract_name);
@@ -46,6 +52,10 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         checkBtn = findViewById(R.id.btn);
         imageRl = findViewById(R.id.rl_image);
         attrsRecycler = findViewById(R.id.rv_attrs);
+        collectionDescTitleText = findViewById(R.id.tv_collection_desc_title);
+        descMoreText = findViewById(R.id.tv_desc_more);
+        collectionDescText = findViewById(R.id.tv_collection_desc);
+        line = findViewById(R.id.view_line2);
     }
 
     @Override
@@ -54,7 +64,14 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         nameText.setText(collectionItem.name);
         tokenIdText.setText("ID:" + collectionItem.tokenId);
         contractNameText.setText(collectionItem.assetContract.name);
-        describeText.setText(collectionItem.description);
+        if (!TextUtils.isEmpty(collectionItem.description))
+            describeText.setText(collectionItem.description);
+        else {
+            collectionDescTitleText.setVisibility(View.GONE);
+            descMoreText.setVisibility(View.GONE);
+            collectionDescText.setVisibility(View.GONE);
+            line.setVisibility(View.GONE);
+        }
         if (!TextUtils.isEmpty(collectionItem.backgroundColor))
             imageRl.setBackgroundColor(Color.parseColor("#" + collectionItem.backgroundColor));
         collectionImage.setImageURI(collectionItem.imagePreviewUrl);
