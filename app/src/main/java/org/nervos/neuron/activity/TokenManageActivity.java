@@ -119,7 +119,6 @@ public class TokenManageActivity extends BaseActivity {
                     Glide.with(mActivity)
                             .load(Uri.parse(tokenList.get(position).logo.src))
                             .into(viewHolder.tokenImage);
-                    viewHolder.tokenImage.setImageURI(Uri.parse(tokenList.get(position).logo.src));
                 }
                 viewHolder.tokenName.setText(tokenList.get(position).name);
                 viewHolder.tokenSymbol.setText(tokenList.get(position).symbol);
