@@ -2,13 +2,15 @@ package org.nervos.neuron.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
@@ -18,7 +20,7 @@ public class TokenTransferDialog extends Dialog {
 
     private TextView tokenNameText;
     private TextView tokenBalanceText;
-    private SimpleDraweeView tokenImage;
+    private ImageView tokenImage;
     private AppCompatButton transferButton;
     private AppCompatButton receiveButton;
 
@@ -51,10 +53,15 @@ public class TokenTransferDialog extends Dialog {
 
         tokenNameText.setText(tokenItem.symbol);
         if (TextUtils.isEmpty(tokenItem.avatar)) {
-            tokenImage.setImageResource(tokenItem.chainId < 0?
-                    R.drawable.ether_small:R.mipmap.ic_launcher);
+            int id = tokenItem.chainId < 0 ?
+                    R.drawable.ether_small : R.mipmap.ic_launcher;
+            Glide.with(getContext())
+                    .load(id)
+                    .into(tokenImage);
         } else {
-            tokenImage.setImageURI(tokenItem.avatar);
+            Glide.with(getContext())
+                    .load(Uri.parse(tokenItem.avatar))
+                    .into(tokenImage);
         }
         tokenBalanceText.setText(NumberUtil.getDecimal_10(tokenItem.balance));
     }
@@ -86,11 +93,11 @@ public class TokenTransferDialog extends Dialog {
         this.onTransferClickListener = onTransferClickListener;
     }
 
-    public interface OnTransferClickListener{
+    public interface OnTransferClickListener {
         void onClick(View v);
     }
 
-    public interface OnReceiveClickListener{
+    public interface OnReceiveClickListener {
         void onClick(View v);
     }
 }
