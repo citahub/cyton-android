@@ -90,6 +90,11 @@ public class EthRpcService {
     }
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,
+                               BigInteger gasPrice, BigInteger gasLimit, String password) {
+        return transferEth(address, value, gasPrice, gasLimit, "", password);
+    }
+
+    public static Observable<EthSendTransaction> transferEth(String address, double value,
                                        BigInteger gasPrice, BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
         BigInteger finalGasLimit = gasLimit;

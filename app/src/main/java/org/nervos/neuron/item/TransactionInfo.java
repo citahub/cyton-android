@@ -37,8 +37,12 @@ public class TransactionInfo implements Parcelable {
         return NumberUtil.getEthFromWeiForDouble(value);
     }
 
-    public double getQuota() {
+    public double getDoubleQuota() {
         return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
+    }
+
+    public long getLongQuota() {
+        return quota;
     }
 
     public double getGas() {

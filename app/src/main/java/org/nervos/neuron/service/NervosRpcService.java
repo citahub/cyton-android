@@ -52,7 +52,6 @@ public class NervosRpcService {
 
     private static Random random;
     private static int version = 0;
-    private static int chainId = 1;
     private static WalletItem walletItem;
 
     public static void init(Context context, String httpProvider) {
@@ -120,9 +119,9 @@ public class NervosRpcService {
 
 
     public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
-           String contractAddress, String address, double value, String password) throws Exception {
+           String contractAddress, String address, double value, int chainId, String password) throws Exception {
         BigInteger ercValue = getTransferValue(tokenItem, value);
-        String data = createTokenTransferData(address, ercValue);
+        String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
@@ -132,7 +131,7 @@ public class NervosRpcService {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(contractAddress,
-                        randomNonce(), ConstUtil.DEFAULT_QUATO, validUntilBlock.longValue(),
+                        randomNonce(), ConstUtil.DEFAULT_QUOTA, validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO.toString(), data);
                 try {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
@@ -149,7 +148,12 @@ public class NervosRpcService {
     }
 
     public static Observable<AppSendTransaction> transferNervos(String toAddress, double value,
-                                                                String data, String password) {
+                                                String data, int chainId, String password) {
+        return transferNervos(toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
+    }
+
+    public static Observable<AppSendTransaction> transferNervos(String toAddress, double value,
+                                       String data, long quota, int chainId,  String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
@@ -158,8 +162,9 @@ public class NervosRpcService {
         }).flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
-                Transaction transaction = Transaction.createFunctionCallTransaction(toAddress,
-                        randomNonce(), ConstUtil.DEFAULT_QUATO,
+                Transaction transaction = Transaction.createFunctionCallTransaction(
+                        Numeric.cleanHexPrefix(toAddress),
+                        randomNonce(), (quota == 0? ConstUtil.DEFAULT_QUOTA : quota),
                         validUntilBlock.longValue(), version, chainId,
                         NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);
                 try {

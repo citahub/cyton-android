@@ -11,7 +11,7 @@ public class ConstUtil {
     public static final String ETH_MAINNET = "Ethereum Mainnet";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
-    public static final long DEFAULT_QUATO = LONG_6;
+    public static final long DEFAULT_QUOTA = LONG_6;
 
 
     // gas constant data
