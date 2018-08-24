@@ -27,7 +27,6 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -113,7 +112,7 @@ public class PayTokenActivity extends BaseActivity {
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
         } else {
             payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
-            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()));
+            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()));
         }
 
     }
@@ -179,7 +178,7 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mBalance < (transactionInfo.isEthereum()?
-                        transactionInfo.getGas() : transactionInfo.getQuota())) {
+                        transactionInfo.getGas() : transactionInfo.getDoubleQuota())) {
                     String toastMessage = tokenItem == null ? getString(R.string.token) : tokenItem.symbol;
                     Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
                             toastMessage), Toast.LENGTH_SHORT).show();
@@ -229,7 +228,7 @@ public class PayTokenActivity extends BaseActivity {
         if (transactionInfo.isEthereum()) {
             feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()) + getNativeToken());
         } else {
-            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()) + getNativeToken());
+            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()) + getNativeToken());
         }
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
@@ -282,7 +281,7 @@ public class PayTokenActivity extends BaseActivity {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionInfo.to,
-                            transactionInfo.getValue(), gasPrice, password);
+                            transactionInfo.getValue(), gasPrice, ConstUtil.GAS_ERC20_LIMIT, password);
                 }
             }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -310,7 +309,7 @@ public class PayTokenActivity extends BaseActivity {
     private void transferNervos(String password, ProgressBar progressBar) {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
         NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(),
-                transactionInfo.data, password)
+                transactionInfo.data, transactionInfo.getLongQuota(), (int)transactionInfo.chainId, password)
                 .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
