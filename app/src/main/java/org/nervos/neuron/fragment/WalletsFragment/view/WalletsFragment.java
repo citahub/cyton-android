@@ -43,7 +43,6 @@ public class WalletsFragment extends NBaseFragment {
     private TokenListFragment tokenListFragment;
     private CollectionListFragment collectionListFragment = null;
     private WalletFragmentPresenter presenter;
-    private ImageView rightImage;
 
     private String[] mTitles = {"代币", "藏品"};
 
@@ -60,7 +59,6 @@ public class WalletsFragment extends NBaseFragment {
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         toolbar = (WalletToolbar) findViewById(R.id.toolbar);
         walletView = (WalletTopView) findViewById(R.id.wallet_view);
-        rightImage = (ImageView) findViewById(R.id.iv_right);
 
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
         mNestedScrollView.setFillViewport(true);
