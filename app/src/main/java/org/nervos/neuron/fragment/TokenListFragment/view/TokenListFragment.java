@@ -44,7 +44,6 @@ public class TokenListFragment extends NBaseFragment {
     private List<TokenItem> tokenItemList = new ArrayList<>();
     private TokenAdapter adapter;
     private LinearLayout noTokenRoot;
-    private RelativeLayout totalMoneyRoot;
     private TextView totalText, moneyText;
     private RelativeLayout addImageRl;
     private CurrencyItem currencyItem;
@@ -59,7 +58,6 @@ public class TokenListFragment extends NBaseFragment {
     protected void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.rv_token);
         noTokenRoot = (LinearLayout) findViewById(R.id.ll_no_token);
-        totalMoneyRoot = (RelativeLayout) findViewById(R.id.ll_total_money);
         totalText = (TextView) findViewById(R.id.tv_total_money_title);
         moneyText = (TextView) findViewById(R.id.tv_total_money);
         addImageRl = (RelativeLayout) findViewById(R.id.rl_add_image);
@@ -117,15 +115,12 @@ public class TokenListFragment extends NBaseFragment {
     public void onWalletSaveEvent(TokenRefreshEvent event) {
         initWalletData(true);
         moneyText.setText("0");
+        tokenItemList.clear();
+        adapter.refresh(tokenItemList);
     }
 
     private void initRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initWalletData(false);
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> initWalletData(false));
     }
 
     private void initWalletData(boolean showProgress) {
@@ -142,6 +137,7 @@ public class TokenListFragment extends NBaseFragment {
                     }
                 });
             }
+
             @Override
             public void onGetWalletError(String message) {
                 recyclerView.post(() -> {
@@ -167,28 +163,28 @@ public class TokenListFragment extends NBaseFragment {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
                 TokenService.getCurrency(item.symbol, currencyItem.getName())
-                    .subscribe(new Subscriber<String>() {
-                        @Override
-                        public void onCompleted() {
-                            adapter.notifyDataSetChanged();
-                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                        }
+                        .subscribe(new Subscriber<String>() {
+                            @Override
+                            public void onCompleted() {
+                                adapter.notifyDataSetChanged();
+                                moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                            }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
 
-                        @Override
-                        public void onNext(String s) {
-                            if (!TextUtils.isEmpty(s)) {
-                                double price = Double.parseDouble(s.trim());
-                                DecimalFormat df = new DecimalFormat("######0.00");
-                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                            } else
-                                item.currencyPrice = 0.00;
-                        }
-                    });
+                            @Override
+                            public void onNext(String s) {
+                                if (!TextUtils.isEmpty(s)) {
+                                    double price = Double.parseDouble(s.trim());
+                                    DecimalFormat df = new DecimalFormat("######0.00");
+                                    item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                                } else
+                                    item.currencyPrice = 0.00;
+                            }
+                        });
         }
     }
 
