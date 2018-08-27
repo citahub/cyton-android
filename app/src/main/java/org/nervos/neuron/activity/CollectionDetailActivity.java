@@ -10,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
@@ -25,7 +26,7 @@ import org.nervos.neuron.item.CollectionItem;
 public class CollectionDetailActivity extends NBaseActivity implements View.OnClickListener {
 
     private TextView nameText, tokenIdText, contractNameText, describeText, moreText, collectionDescTitleText, descMoreText, collectionDescText;
-    private SimpleDraweeView collectionImage;
+    private ImageView collectionImage;
     private Button checkBtn;
     private RelativeLayout imageRl;
     private CollectionItem collectionItem;
@@ -74,7 +75,9 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         }
         if (!TextUtils.isEmpty(collectionItem.backgroundColor))
             imageRl.setBackgroundColor(Color.parseColor("#" + collectionItem.backgroundColor));
-        collectionImage.setImageURI(collectionItem.imagePreviewUrl);
+        Glide.with(this)
+                .load(collectionItem.imagePreviewUrl)
+                .into(collectionImage);
         attrsRecycler.setLayoutManager(new GridLayoutManager(mActivity, 3));
         Adapter adapter = new Adapter();
         attrsRecycler.setAdapter(adapter);
