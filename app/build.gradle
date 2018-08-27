@@ -5,7 +5,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "org.nervos.neuron"
-        minSdkVersion 19
+        minSdkVersion 20
         targetSdkVersion 27
         versionCode appConfig.versionCode
         versionName getVersionName(appConfig.isDebug)
