@@ -6,8 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.CollectionDetailActivity;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.response.CollectionResponse;
@@ -41,18 +44,7 @@ public class CollectionListFragment extends NBaseFragment {
     protected void initAction() {
         super.initAction();
 
-        adapter.setOnItemClickListener(new CollectionAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getCollectionList();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> getCollectionList());
 
         adapter.setOnItemClickListener((view, position) -> {
             Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
@@ -71,6 +63,14 @@ public class CollectionListFragment extends NBaseFragment {
         showProgressBar();
         getCollectionList();
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWalletSaveEvent(TokenRefreshEvent event) {
+        getCollectionList();
+        collectionItemList.clear();
+        adapter.refresh(collectionItemList);
+        collectionRecycler.setVisibility(View.GONE);
     }
 
     private void getCollectionList() {
@@ -92,6 +92,7 @@ public class CollectionListFragment extends NBaseFragment {
                     @Override
                     public void onNext(CollectionResponse collectionResponse) {
                         collectionItemList = collectionResponse.assets;
+                        collectionRecycler.setVisibility(View.VISIBLE);
                         adapter.refresh(collectionItemList);
                     }
                 });
