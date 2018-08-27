@@ -15,12 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.db.DBWalletUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -31,7 +33,7 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
 
     private RelativeLayout leftRl, centerRl, rightRl, copyRl;
     private CircleImageView walletPhoto;
-    private TextView walletName, walletAddress;
+    private TextView walletName, walletAddress, changeWalletText;
     private Activity context;
     private WalletItem walletItem;
 
@@ -54,10 +56,15 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
         walletPhoto = findViewById(R.id.wallet_photo);
         walletName = findViewById(R.id.qrcode_wallet_name);
         walletAddress = findViewById(R.id.qrcode_wallet_address);
+        changeWalletText = findViewById(R.id.tv_change_wallet);
     }
 
     private void initData() {
-
+        if (DBWalletUtil.getAllWallet(context).size() > 1) {
+            changeWalletText.setText(R.string.wallet_top_change_wallet);
+        } else {
+            changeWalletText.setText(R.string.wallet_top_add_wallet);
+        }
     }
 
     private void initAction() {
@@ -89,9 +96,12 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                 context.startActivity(intent1);
                 break;
             case R.id.rl_center:
-                Intent intent2 = new Intent(context, ChangeWalletActivity.class);
-                context.startActivity(intent2);
-                context.overridePendingTransition(R.anim.wallet_activity_in, 0);
+                if (DBWalletUtil.getAllWallet(context).size() > 1) {
+                    context.startActivity(new Intent(context, ChangeWalletActivity.class));
+                    context.overridePendingTransition(R.anim.wallet_activity_in, 0);
+                } else {
+                    context.startActivity(new Intent(context, AddWalletActivity.class));
+                }
                 break;
             case R.id.rl_copy:
             case R.id.qrcode_wallet_address:

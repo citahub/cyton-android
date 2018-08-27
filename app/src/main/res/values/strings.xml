@@ -214,6 +214,8 @@
     <string name="input_correct_number">请输入格式正确的数字</string>
     <string name="gwei">Gwei</string>
     <string name="hint_hex_data">十六进制数据</string>
+    <string name="wallet_top_change_wallet">切换钱包</string>
+    <string name="wallet_top_add_wallet">添加钱包</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
