@@ -6,7 +6,7 @@
     android:layout_height="80dip"
     android:layout_marginLeft="@dimen/default_margin">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/collection_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
