@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -112,9 +112,13 @@ public class TokenManageActivity extends BaseActivity {
                 TokenViewHolder viewHolder = (TokenViewHolder) holder;
                 if (tokenList.get(position).logo == null ||
                         TextUtils.isEmpty(tokenList.get(position).logo.src)) {
-                    viewHolder.tokenImage.setImageResource(R.drawable.ether_big);
+                    Glide.with(mActivity)
+                            .load(R.drawable.ether_big)
+                            .into(viewHolder.tokenImage);
                 } else {
-                    viewHolder.tokenImage.setImageURI(Uri.parse(tokenList.get(position).logo.src));
+                    Glide.with(mActivity)
+                            .load(Uri.parse(tokenList.get(position).logo.src))
+                            .into(viewHolder.tokenImage);
                 }
                 viewHolder.tokenName.setText(tokenList.get(position).name);
                 viewHolder.tokenSymbol.setText(tokenList.get(position).symbol);
@@ -149,7 +153,7 @@ public class TokenManageActivity extends BaseActivity {
 
 
         class TokenViewHolder extends RecyclerView.ViewHolder {
-            SimpleDraweeView tokenImage;
+            ImageView tokenImage;
             TextView tokenName;
             TextView tokenSymbol;
             TextView tokenContractAddress;
