@@ -541,7 +541,7 @@ public class TransferActivity extends NBaseActivity {
     private void transferNervosToken(String password, double value, ProgressBar progressBar) {
         transactionHexData = payHexDataEdit.getText().toString().trim();
         NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value,
-                transactionHexData, password)
+                transactionHexData, tokenItem.chainId, password)
                 .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
@@ -584,7 +584,7 @@ public class TransferActivity extends NBaseActivity {
     private void transferNervosErc20(String password, double value, ProgressBar progressBar) throws Exception {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value, password)
+                receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
                 .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
