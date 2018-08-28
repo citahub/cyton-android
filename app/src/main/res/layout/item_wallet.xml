@@ -28,18 +28,19 @@
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:text="wallet"
             android:textColor="@color/font_title"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_address"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
-            android:maxEms="12"
             android:singleLine="true"
             android:text="address"
             android:textColor="@color/font_inside"
@@ -51,10 +52,10 @@
         android:layout_width="13dp"
         android:layout_height="14dp"
         android:layout_alignParentRight="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/qr_receive_bg"
-        android:src="@drawable/ic_wallet_default" />
+        android:src="@drawable/ic_wallet_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:layout_width="12dp"
