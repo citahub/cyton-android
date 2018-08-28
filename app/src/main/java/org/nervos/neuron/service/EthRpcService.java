@@ -4,7 +4,10 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
@@ -28,6 +31,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
@@ -82,6 +86,27 @@ public class EthRpcService {
             }
         }).subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<BigInteger> getEthGasLimit(TransactionInfo transactionInfo) {
+        Transaction transaction = new Transaction(walletItem.address, null, null,
+                null, Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(),
+                Numeric.prependHexPrefix(transactionInfo.data));
+        return Observable.fromCallable(new Callable<BigInteger>() {
+            @Override
+            public BigInteger call() {
+                BigInteger gasLimit = ConstUtil.GAS_ERC20_LIMIT;
+                try {
+                    EthEstimateGas ethEstimateGas = service.ethEstimateGas(transaction).send();
+                    LogUtil.d("ethEstimateGas: " + new Gson().toJson(ethEstimateGas));
+                    gasLimit = ethEstimateGas.getAmountUsed();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return gasLimit;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Observable<EthSendTransaction> transferEth(String address, double value,

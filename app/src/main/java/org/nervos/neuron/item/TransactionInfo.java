@@ -32,9 +32,13 @@ public class TransactionInfo implements Parcelable {
         this.value = NumberUtil.getWeiFromEth(Double.parseDouble(value)).toString();
     }
 
-    public double getValue() {
+    public double getDoubleValue() {
         value = TextUtils.isEmpty(value)? "0":value;
         return NumberUtil.getEthFromWeiForDouble(value);
+    }
+
+    public BigInteger getBigIntegerValue() {
+        return Numeric.toBigInt(value);
     }
 
     public double getDoubleQuota() {
@@ -46,11 +50,9 @@ public class TransactionInfo implements Parcelable {
     }
 
     public double getGas() {
-        BigInteger limitBig = TextUtils.isEmpty(gasLimit)?
-                ConstUtil.GAS_LIMIT:Numeric.toBigInt(gasLimit);
-        BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO:Numeric.toBigInt(gasPrice);
-        return NumberUtil.getEthFromWeiForDouble(
-                limitBig.multiply(priceBig).toString());
+        BigInteger limitBig = TextUtils.isEmpty(gasLimit)? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
+        BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
+        return NumberUtil.getEthFromWeiForDouble(limitBig.multiply(priceBig).toString());
     }
 
     public boolean isEthereum() {
