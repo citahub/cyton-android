@@ -128,7 +128,7 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void updateWalletName(Context context, String name, String newName) {
+    public static boolean updateWalletName(Context context, String name, String newName) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_WALLET);
@@ -137,8 +137,10 @@ public class DBWalletUtil extends DBUtil {
                 walletItem.name = newName;
                 db.put(getDbKey(newName), walletItem);
                 db.close();
+                return true;
             } catch (SnappydbException e) {
                 handleException(db, e);
+                return false;
             }
         }
     }
