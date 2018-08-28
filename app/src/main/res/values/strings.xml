@@ -248,4 +248,5 @@
     <string name="more">更多</string>
     <string name="rollback">收起</string>
     <string name="check">查看</string>
+    <string name="change_wallet_name_failed">修改失败，请重试</string>
 </resources>
