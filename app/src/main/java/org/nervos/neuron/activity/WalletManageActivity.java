@@ -75,8 +75,12 @@ public class WalletManageActivity extends BaseActivity {
                             Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                         } else {
                             walletNameText.setText(simpleDialog.getMessage());
-                            DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage());
-                            SharePrefUtil.putCurrentWalletName(simpleDialog.getMessage());
+                            if (DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage())) {
+                                SharePrefUtil.putCurrentWalletName(simpleDialog.getMessage());
+                                walletItem = DBWalletUtil.getCurrentWallet(WalletManageActivity.this);
+                            } else {
+                                Toast.makeText(WalletManageActivity.this, R.string.change_wallet_name_failed, Toast.LENGTH_LONG).show();
+                            }
                             simpleDialog.dismiss();
                         }
                     }
