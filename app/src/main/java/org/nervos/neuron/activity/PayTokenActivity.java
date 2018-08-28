@@ -108,10 +108,10 @@ public class PayTokenActivity extends BaseActivity {
         payFeeUnitText.setText(getNativeToken());
 
         if (transactionInfo.isEthereum()) {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()));
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
         } else {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()));
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()));
         }
 
@@ -119,13 +119,18 @@ public class PayTokenActivity extends BaseActivity {
 
     private void initRemoteData() {
         initBalance();
-        if (transactionInfo.isEthereum() &&
-                (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice))) {
-            showEtherGas();
+        if (transactionInfo.isEthereum()){
+            if (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice)) {
+                getEtherGasPrice();
+            }
+
+            if (TextUtils.isEmpty(transactionInfo.gasLimit) || "0".equals(transactionInfo.gasLimit)) {
+                getEtherGasLimit();
+            }
         }
     }
 
-    private void showEtherGas() {
+    private void getEtherGasPrice() {
         showProgressCircle();
         EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
             @Override
@@ -141,6 +146,29 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 transactionInfo.gasPrice = gasPrice.toString(16);
+                payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
+            }
+        });
+    }
+
+    private void getEtherGasLimit() {
+        showProgressCircle();
+        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new Subscriber<BigInteger>() {
+            @Override
+            public void onCompleted() {
+                dismissProgressCircle();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                dismissProgressCircle();
+                transactionInfo.gasLimit = ConstUtil.GAS_ERC20_LIMIT.toString(16);
+                payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
+            }
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onNext(BigInteger gasLimit) {
+                transactionInfo.gasLimit = gasLimit.toString(16);
                 payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
             }
         });
@@ -224,7 +252,7 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()) + getNativeToken());
+        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()) + getNativeToken());
         if (transactionInfo.isEthereum()) {
             feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()) + getNativeToken());
         } else {
@@ -281,7 +309,7 @@ public class PayTokenActivity extends BaseActivity {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionInfo.to,
-                            transactionInfo.getValue(), gasPrice, ConstUtil.GAS_ERC20_LIMIT, password);
+                            transactionInfo.getDoubleValue(), gasPrice, ConstUtil.GAS_ERC20_LIMIT, password);
                 }
             }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -308,7 +336,7 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferNervos(String password, ProgressBar progressBar) {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(),
+        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int)transactionInfo.chainId, password)
                 .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
