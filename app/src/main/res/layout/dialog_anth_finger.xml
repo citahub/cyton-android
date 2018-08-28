@@ -31,12 +31,9 @@
 
     <TextView
         android:id="@+id/btn"
-        android:layout_width="match_parent"
+        style="@style/DialogButtonCancel"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/cancel"
-        android:textColor="@color/font_title_third"
-        android:textSize="17sp" />
+        android:gravity="center" />
 
 </LinearLayout>
