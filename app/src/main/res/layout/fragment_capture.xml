@@ -37,4 +37,14 @@
         app:title="@string/qr_title"
         app:title_bg="@color/transparent"
         app:title_color="@color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="118dp"
+        android:text="@string/qr_tips"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
 </RelativeLayout>

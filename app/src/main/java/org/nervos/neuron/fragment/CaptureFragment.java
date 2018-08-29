@@ -1,5 +1,6 @@
 package org.nervos.neuron.fragment;
 
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -7,26 +8,38 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.google.zxing.client.result.ResultParser;
 import com.uuzuche.lib_zxing.camera.CameraManager;
 import com.uuzuche.lib_zxing.decoding.InactivityTimer;
 import com.uuzuche.lib_zxing.view.ViewfinderView;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.util.BitmapUtils;
+import org.nervos.neuron.util.PickPic;
+import org.nervos.neuron.util.QRUtils.BitmapDecoder;
 import org.nervos.neuron.util.QRUtils.CaptureActivityHandler;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.ScreenUtils;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 
 import java.io.IOException;
 import java.util.Vector;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 自定义实现的扫描Fragment
@@ -78,6 +91,21 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     @Override
     protected void initAction() {
         super.initAction();
+        titleBar.setOnRightClickListener(() -> {
+            AndPermission.with(getActivity())
+                    .runtime().permission(Permission.Group.STORAGE)
+                    .rationale(new RuntimeRationale())
+                    .onGranted(permissions -> {
+                        Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        openAlbumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(openAlbumIntent, 1);
+                    })
+                    .onDenied(permissions -> {
+                        dismissProgressBar();
+                        PermissionUtil.showSettingDialog(getActivity(), permissions);
+                    })
+                    .start();
+        });
     }
 
     @Override
@@ -117,6 +145,25 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         inactivityTimer.shutdown();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data.getData() != null) {
+            String path = PickPic.getPath(getActivity().getApplicationContext(), data.getData());
+            if (!TextUtils.isEmpty(path)) {
+                Bitmap img = BitmapUtils.getCompressedBitmap(path);
+                BitmapDecoder decoder = new BitmapDecoder(getActivity());
+                Result result = decoder.getRawResult(img);
+                if (result != null) {
+                    String qr = ResultParser.parseResult(result).toString();
+                    analyzeCallback.onAnalyzeSuccess(img, qr);
+                } else {
+                    Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     /**
      * Handler scan result

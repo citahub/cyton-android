@@ -251,4 +251,6 @@
     <string name="rollback">收起</string>
     <string name="check">查看</string>
     <string name="qr_title">扫描二维码</string>
+    <string name="qr_tips">放入框内自动扫描</string>
+    <string name="qr_photo_failed">扫描本地图片失败</string>
 </resources>
