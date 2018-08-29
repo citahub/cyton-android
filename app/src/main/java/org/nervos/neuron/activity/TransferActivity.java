@@ -33,7 +33,6 @@ import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.R;
 
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
@@ -47,6 +46,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -56,7 +56,6 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
@@ -149,10 +148,12 @@ public class TransferActivity extends NBaseActivity {
             public void onCompleted() {
 
             }
+
             @Override
             public void onError(Throwable e) {
 
             }
+
             @Override
             public void onNext(Double balance) {
                 mBalance = balance;
@@ -170,12 +171,14 @@ public class TransferActivity extends NBaseActivity {
             public void onCompleted() {
 
             }
+
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 dismissProgressCircle();
             }
+
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
@@ -194,26 +197,27 @@ public class TransferActivity extends NBaseActivity {
     private void initPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
-            .subscribe(new Subscriber<String>() {
-                @Override
-                public void onCompleted() {
-                }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                }
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-                @Override
-                public void onNext(String price) {
-                    if (TextUtils.isEmpty(price)) return;
-                    try {
-                        mPrice = Double.parseDouble(price);
-                        initFeeText();
-                    } catch (NumberFormatException e) {
+                    @Override
+                    public void onError(Throwable e) {
                         e.printStackTrace();
                     }
-                }
-            });
+
+                    @Override
+                    public void onNext(String price) {
+                        if (TextUtils.isEmpty(price)) return;
+                        try {
+                            mPrice = Double.parseDouble(price);
+                            initFeeText();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
 
@@ -293,10 +297,12 @@ public class TransferActivity extends NBaseActivity {
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -404,7 +410,7 @@ public class TransferActivity extends NBaseActivity {
             return " ETH";
         } else {
             ChainItem chainItem = DBChainUtil.getChain(mActivity, tokenItem.chainId);
-            return chainItem == null? "" : " " + chainItem.tokenSymbol;
+            return chainItem == null ? "" : " " + chainItem.tokenSymbol;
         }
     }
 
@@ -531,6 +537,7 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onCompleted() {
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -704,8 +711,15 @@ public class TransferActivity extends NBaseActivity {
                     Bundle bundle = data.getExtras();
                     if (bundle == null) return;
                     if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                        String result = bundle.getString(CodeUtils.RESULT_STRING);
-                        receiveAddressEdit.setText(result);
+                        switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                            case org.nervos.neuron.util.QRUtils.CodeUtils.STRING_ADDRESS:
+                                String result = bundle.getString(CodeUtils.RESULT_STRING);
+                                receiveAddressEdit.setText(result);
+                                break;
+                            default:
+                                Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                         Toast.makeText(TransferActivity.this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                     }

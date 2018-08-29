@@ -35,15 +35,21 @@ public class CodeUtils {
 
     public static final String RESULT_TYPE = "result_type";
     public static final String RESULT_STRING = "result_string";
+    public static final String STRING_TYPE = "string_type";
     public static final int RESULT_SUCCESS = 1;
     public static final int RESULT_FAILED = 2;
+    public static final int STRING_UNVALID = 0;
+    public static final int STRING_ADDRESS = 1;
+    public static final int STRING_KEYSTORE = 2;
+    public static final int STRING_WEB = 3;
+    public static final int STRING_PRIVATE_KEY = 4;
 
     public static final String LAYOUT_ID = "layout_id";
 
 
-
     /**
      * 解析二维码图片工具类
+     *
      * @param analyzeCallback
      */
     public static void analyzeBitmap(String path, AnalyzeCallback analyzeCallback) {
@@ -104,18 +110,19 @@ public class CodeUtils {
 
     /**
      * 生成二维码图片
+     *
      * @param text
      * @param w
      * @param h
      * @param logo
      * @return
      */
-    public static Bitmap createImage(String text,int w,int h,Bitmap logo) {
+    public static Bitmap createImage(String text, int w, int h, Bitmap logo) {
         if (TextUtils.isEmpty(text)) {
             return null;
         }
         try {
-            Bitmap scaleLogo = getScaleLogo(logo,w,h);
+            Bitmap scaleLogo = getScaleLogo(logo, w, h);
 
             int offsetX = w / 2;
             int offsetY = h / 2;
@@ -138,17 +145,17 @@ public class CodeUtils {
             int[] pixels = new int[w * h];
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
-                    if(x >= offsetX && x < offsetX + scaleWidth && y>= offsetY && y < offsetY + scaleHeight){
-                        int pixel = scaleLogo.getPixel(x-offsetX,y-offsetY);
-                        if(pixel == 0){
-                            if(bitMatrix.get(x, y)){
+                    if (x >= offsetX && x < offsetX + scaleWidth && y >= offsetY && y < offsetY + scaleHeight) {
+                        int pixel = scaleLogo.getPixel(x - offsetX, y - offsetY);
+                        if (pixel == 0) {
+                            if (bitMatrix.get(x, y)) {
                                 pixel = 0xff000000;
-                            }else{
+                            } else {
                                 pixel = 0xffffffff;
                             }
                         }
                         pixels[y * w + x] = pixel;
-                    }else{
+                    } else {
                         if (bitMatrix.get(x, y)) {
                             pixels[y * w + x] = 0xff000000;
                         } else {
@@ -167,28 +174,29 @@ public class CodeUtils {
         return null;
     }
 
-    private static Bitmap getScaleLogo(Bitmap logo,int w,int h){
-        if(logo == null)return null;
+    private static Bitmap getScaleLogo(Bitmap logo, int w, int h) {
+        if (logo == null) return null;
         Matrix matrix = new Matrix();
-        float scaleFactor = Math.min(w * 1.0f / 5 / logo.getWidth(), h * 1.0f / 5 /logo.getHeight());
-        matrix.postScale(scaleFactor,scaleFactor);
-        Bitmap result = Bitmap.createBitmap(logo, 0, 0, logo.getWidth(),   logo.getHeight(), matrix, true);
+        float scaleFactor = Math.min(w * 1.0f / 5 / logo.getWidth(), h * 1.0f / 5 / logo.getHeight());
+        matrix.postScale(scaleFactor, scaleFactor);
+        Bitmap result = Bitmap.createBitmap(logo, 0, 0, logo.getWidth(), logo.getHeight(), matrix, true);
         return result;
     }
 
     /**
      * 解析二维码结果
      */
-    public interface AnalyzeCallback{
+    public interface AnalyzeCallback {
 
-        public void onAnalyzeSuccess(Bitmap mBitmap, String result);
+        void onAnalyzeSuccess(Bitmap mBitmap, String result);
 
-        public void onAnalyzeFailed();
+        void onAnalyzeFailed();
     }
 
 
     /**
      * 为CaptureFragment设置layout参数
+     *
      * @param captureFragment
      * @param layoutId
      */

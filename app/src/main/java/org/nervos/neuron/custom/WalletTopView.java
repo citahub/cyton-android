@@ -17,6 +17,7 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
+import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
@@ -93,7 +94,7 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                 break;
             case R.id.rl_right:
                 Intent intent1 = new Intent(context, QrCodeActivity.class);
-                context.startActivity(intent1);
+                context.startActivityForResult(intent1, MainActivity.REQUEST_CODE_SCAN);
                 break;
             case R.id.rl_center:
                 if (DBWalletUtil.getAllWallet(context).size() > 1) {
