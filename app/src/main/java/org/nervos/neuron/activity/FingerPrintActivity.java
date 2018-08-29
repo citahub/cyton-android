@@ -75,7 +75,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
             case R.id.iv_finger_print:
                 if (FingerPrintController.getInstance(mActivity).hasEnrolledFingerprints() && FingerPrintController.getInstance(mActivity).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(mActivity, R.style.Theme_AppCompat_Dialog);
+                        authFingerDialog = new AuthFingerDialog(mActivity);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(mActivity).authenticate(authenticateResultCallback);
                     });

@@ -7,11 +7,12 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.ScreenUtils;
 
 public class SimpleDialog extends Dialog {
 
@@ -100,6 +101,10 @@ public class SimpleDialog extends Dialog {
         if (!TextUtils.isEmpty(hintStr)) {
             messageEdit.setHint(hintStr);
         }
+
+        WindowManager.LayoutParams p = getWindow().getAttributes();
+        p.width = (int)(ScreenUtils.getScreenWidth(context) * 0.8);
+        getWindow().setAttributes(p);
     }
 
     public void setTitle(String title) {

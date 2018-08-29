@@ -38,7 +38,7 @@
 
 
     <style name="DefaultDialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@color/transparent</item>
         <item name="android:background">@drawable/dialog_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
@@ -120,6 +120,23 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/default_black</item>
         <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="DialogButtonStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DialogButtonCancel" parent="DialogButtonStyle">
+        <item name="android:textColor">@color/font_title</item>
+        <item name="android:text">@string/cancel</item>
+    </style>
+
+    <style name="DialogButtonOK" parent="DialogButtonStyle">
+        <item name="android:textColor">@color/font_link</item>
+        <item name="android:text">@string/ok</item>
     </style>
 
 </resources>

@@ -66,7 +66,7 @@ public class SettingsFragment extends NBaseFragment {
                 //setting fingerprint
                 if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(getActivity(), R.style.Theme_AppCompat_Dialog);
+                        authFingerDialog = new AuthFingerDialog(getActivity());
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
                     });

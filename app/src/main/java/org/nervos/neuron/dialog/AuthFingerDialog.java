@@ -4,16 +4,20 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.ScreenUtils;
 
 
 public class AuthFingerDialog extends Dialog implements View.OnClickListener {
     private TextView btn_ok;
+    private Context context;
 
-    public AuthFingerDialog(Context context, int theme) {
-        super(context, theme);
+    public AuthFingerDialog(Context context) {
+        super(context, R.style.DefaultDialog);
+        this.context = context;
     }
 
     @Override
@@ -23,6 +27,9 @@ public class AuthFingerDialog extends Dialog implements View.OnClickListener {
         btn_ok = findViewById(R.id.btn);
         setCanceledOnTouchOutside(false);
         initAction();
+        WindowManager.LayoutParams p = getWindow().getAttributes();
+        p.width = (int) (ScreenUtils.getScreenWidth(context) * 0.8);
+        getWindow().setAttributes(p);
     }
 
     private void initAction() {
