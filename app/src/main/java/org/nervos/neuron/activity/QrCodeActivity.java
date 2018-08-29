@@ -3,25 +3,35 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-
-import com.uuzuche.lib_zxing.activity.CaptureFragment;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.CaptureFragment;
+import org.nervos.neuron.util.QRUtils.CodeUtils;
 
-public class QrCodeActivity extends BaseActivity {
+public class QrCodeActivity extends NBaseActivity {
 
     private CaptureFragment captureFragment;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_code);
+    protected int getContentLayout() {
+        return R.layout.activity_qr_code;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
         captureFragment = new CaptureFragment();
         CodeUtils.setFragmentArgs(captureFragment, R.layout.capture_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         getSupportFragmentManager().beginTransaction().replace(R.id.capture_container, captureFragment).commit();
+    }
+
+    @Override
+    protected void initAction() {
 
     }
 

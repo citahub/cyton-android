@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.uuzuche.lib_zxing.view.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:inner_corner_color="@color/white"
+            app:inner_corner_length="39dp"
+            app:inner_corner_width="1dp"
+            app:inner_height="215dp"
+            app:inner_margintop="155dp"
+            app:inner_width="215dp" />
+
+    </RelativeLayout>
+
+    <org.nervos.neuron.custom.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:isShowBottomLine="false"
+        app:isShowRight="true"
+        app:left_img="@drawable/ic_qr_back"
+        app:right_img="@drawable/ic_qr_photo"
+        app:title="@string/qr_title"
+        app:title_bg="@color/transparent"
+        app:title_color="@color/white" />
+</RelativeLayout>
