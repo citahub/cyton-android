@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/pay_detail"
                 android:textSize="18sp"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:layout_centerInParent="true"/>
 
         </RelativeLayout>
@@ -35,14 +35,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/default_gray_e"/>
+            android:background="@color/line_form"/>
 
         <TextView
             android:id="@+id/transfer_value"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:gravity="center"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title"
             android:textSize="35sp"/>
 
         <LinearLayout

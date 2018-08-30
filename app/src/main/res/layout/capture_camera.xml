@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         app:inner_width="240dp"
         app:inner_height="240dp"
-        app:inner_corner_color="@color/default_gray_6"
+        app:inner_corner_color="@color/font_title_second"
         app:inner_corner_length="30dp"
         app:inner_corner_width="5dp"
         app:inner_scan_bitmap="@drawable/scan_image"

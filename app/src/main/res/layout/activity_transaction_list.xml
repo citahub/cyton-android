@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/view_nothing"
             android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/receive_token_color"
+            android:background="@color/assist_color"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:text="@string/receive_token"/>

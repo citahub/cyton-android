@@ -34,8 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="区块链"
-                android:textColor="@color/font_black"
-                android:textSize="15sp"/>
+                android:textColor="@color/font_title"
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/triangle_spinner"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="合约地址"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:textSize="15sp"/>
 
             <ImageView
@@ -97,7 +97,7 @@
                 android:singleLine="true"
                 android:maxEms="20"
                 android:ellipsize="end"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:gravity="end|center_vertical"
                 android:textSize="14sp"
                 android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/token_name_hint"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -131,7 +131,7 @@
                 android:gravity="end|center_vertical"
                 android:enabled="false"
                 android:textSize="14sp"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/token_symbol_hint"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -163,7 +163,7 @@
                 android:gravity="end|center_vertical"
                 android:enabled="false"
                 android:textSize="14sp"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 
@@ -185,7 +185,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/token_decimal_hint"
-                android:textColor="@color/font_black"
+                android:textColor="@color/font_title"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -195,7 +195,7 @@
                 android:gravity="end|center_vertical"
                 android:enabled="false"
                 android:textSize="14sp"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 

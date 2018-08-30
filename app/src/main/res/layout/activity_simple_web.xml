@@ -11,7 +11,7 @@
         android:layout_height="48dp"
         app:isShowLeft="true"
         app:title_bg="@color/white"
-        app:title_color="@color/default_black" />
+        app:title_color="@color/font_title" />
 
     <ProgressBar
         android:id="@+id/progressBar"
