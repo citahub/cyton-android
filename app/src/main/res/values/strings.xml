@@ -19,6 +19,8 @@
     <string name="title_add_token">添加新资产</string>
     <string name="title_add_wallet">新增钱包</string>
     <string name="add_wallet">添加钱包</string>
+    <string name="add">添加</string>
+    <string name="export_more">批量导出</string>
     <string name="title_token_management">资产管理</string>
     <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>

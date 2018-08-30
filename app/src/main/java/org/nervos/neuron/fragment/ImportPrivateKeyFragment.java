@@ -31,6 +31,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.view.Button.CommonButton;
 import org.web3j.utils.Numeric;
 
 import java.util.concurrent.ExecutorService;
@@ -44,7 +45,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     private AppCompatEditText walletNameEdit;
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
-    private AppCompatButton importButton;
+    private CommonButton importButton;
     private ImageView scanImage;
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
@@ -61,7 +62,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         walletNameEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_name);
         passwordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_password);
         rePasswordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_repassword);
-        importButton = (AppCompatButton) findViewById(R.id.import_private_key_button);
+        importButton = (CommonButton) findViewById(R.id.import_private_key_button);
         scanImage = (ImageView) findViewById(R.id.wallet_scan);
     }
 
@@ -147,13 +148,6 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         return check1 && check2 && check3 && check4;
     }
 
-    private void setCreateButtonStatus(boolean status) {
-        importButton.setBackgroundResource(status ?
-                R.drawable.button_corner_blue_shape : R.drawable.button_corner_gray_shape);
-        importButton.setEnabled(status);
-    }
-
-
     private boolean check1 = false, check2 = false, check3 = false, check4 = false;
 
     private void checkWalletStatus() {
@@ -162,7 +156,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check1 = !TextUtils.isEmpty(walletNameEdit.getText().toString().trim());
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
         passwordEdit.addTextChangedListener(new WalletTextWatcher() {
@@ -171,7 +165,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
                         && passwordEdit.getText().toString().trim().length() >= 8;
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
 
@@ -181,7 +175,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
                         && rePasswordEdit.getText().toString().trim().length() >= 8;
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
         privateKeyEdit.addTextChangedListener(new WalletTextWatcher() {
@@ -189,7 +183,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check4 = !TextUtils.isEmpty(privateKeyEdit.getText().toString().trim());
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
 

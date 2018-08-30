@@ -55,18 +55,13 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.Button.CommonButton
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/button_corner_blue_shape"
-        android:text="@string/generate_wallet"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-
+        app:status="true"
+        app:text="@string/generate_wallet" />
 
     <TextView
         android:id="@+id/import_wallet_button"

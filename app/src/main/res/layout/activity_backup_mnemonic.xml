@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
+        app:isShowBottomLine="true"
         app:isShowLeft="true"
-        app:title="@string/backup_mnemonic"
-        app:isShowBottomLine="true"/>
+        app:title="@string/backup_mnemonic" />
 
     <TextView
         android:layout_width="match_parent"
@@ -72,16 +72,11 @@
         android:textColor="@color/font_title"
         android:textSize="16sp" />
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.Button.CommonButton
         android:id="@+id/backup_next_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/button_corner_blue_shape"
-        android:text="@string/next_action"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-
+        app:status="true"
+        app:text="@string/next_action" />
 </LinearLayout>

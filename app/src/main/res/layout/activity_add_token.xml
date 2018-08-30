@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background">
+    android:background="@color/default_background"
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/title_add_token"
+        app:isShowBottomLine="true"
         app:isShowLeft="true"
-        app:isShowBottomLine="true"/>
+        app:title="@string/title_add_token" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:orientation="vertical">
+        android:paddingRight="@dimen/default_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,21 +43,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/triangle"/>
+                android:src="@drawable/triangle" />
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinner_add_token_block_chain"
-                android:layout_marginStart="5dp"
-                android:background="@android:color/white"
-                android:layout_toStartOf="@id/triangle_spinner"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_toStartOf="@id/triangle_spinner"
+                android:background="@android:color/white" />
 
         </RelativeLayout>
 
-        <View style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin"/>
+        <View
+            style="@style/separateLineLong"
+            android:layout_marginStart="@dimen/default_margin" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,49 +73,49 @@
                 android:layout_centerVertical="true"
                 android:text="合约地址"
                 android:textColor="@color/font_title"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/add_token_contract_address_scan"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="5dp"
                 android:scaleType="centerInside"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/scan"/>
+                android:src="@drawable/scan" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_add_token_contract_address"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_toLeftOf="@id/add_token_contract_address_scan"
                 android:layout_toRightOf="@id/add_token_contract_address_text"
                 android:background="@null"
+                android:ellipsize="end"
+                android:gravity="end|center_vertical"
                 android:hint="@string/input_erc20_address"
                 android:lines="1"
-                android:singleLine="true"
                 android:maxEms="20"
-                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="@color/font_title"
-                android:gravity="end|center_vertical"
-                android:textSize="14sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin"/>
+            android:layout_marginStart="@dimen/default_margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
             android:background="@android:color/white"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
@@ -122,31 +123,31 @@
                 android:layout_height="wrap_content"
                 android:text="@string/token_name_hint"
                 android:textColor="@color/font_title"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_add_token_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
-                android:gravity="end|center_vertical"
                 android:enabled="false"
-                android:textSize="14sp"
+                android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin"/>
+            android:layout_marginStart="@dimen/default_margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
             android:background="@android:color/white"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
@@ -154,31 +155,31 @@
                 android:layout_height="wrap_content"
                 android:text="@string/token_symbol_hint"
                 android:textColor="@color/font_title"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_add_token_symbol"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
-                android:gravity="end|center_vertical"
                 android:enabled="false"
-                android:textSize="14sp"
+                android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin"/>
+            android:layout_marginStart="@dimen/default_margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
             android:background="@android:color/white"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
@@ -186,34 +187,30 @@
                 android:layout_height="wrap_content"
                 android:text="@string/token_decimal_hint"
                 android:textColor="@color/font_title"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_add_token_decimal"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="5dp"
                 android:background="@android:color/white"
-                android:gravity="end|center_vertical"
                 android:enabled="false"
-                android:textSize="14sp"
+                android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.Button.CommonButton
         android:id="@+id/add_token_button"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:background="@drawable/button_corner_blue_shape"
-        android:text="添加"
-        android:textColor="@color/white"
-        android:textSize="16sp"/>
+        android:layout_marginTop="40dp"
+        app:status="true"
+        app:text="@string/add" />
 
 </LinearLayout>
