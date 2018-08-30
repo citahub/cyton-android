@@ -27,4 +27,9 @@
         <attr name="switch_button" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="CommonButton">
+        <attr name="text" format="string" />
+        <attr name="status" format="boolean" />
+    </declare-styleable>
+
 </resources>

@@ -88,20 +88,17 @@ public class AddTokenActivity extends BaseActivity {
 
     private void initListener() {
         // add token data into local database
-        findViewById(R.id.add_token_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
-                        || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
-                    Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
-                } else {
-                    DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
-                    if (!DBTokenUtil.checkTokenExist(mActivity, tokenItem)) {
-                        DBTokenUtil.saveToken(mActivity, tokenItem);
-                        setResult(TokenManageActivity.RESULT_CODE);
-                    }
-                    finish();
+        findViewById(R.id.add_token_button).setOnClickListener(v -> {
+            if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
+                    || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
+                Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
+            } else {
+                DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
+                if (!DBTokenUtil.checkTokenExist(mActivity, tokenItem)) {
+                    DBTokenUtil.saveToken(mActivity, tokenItem);
+                    setResult(TokenManageActivity.RESULT_CODE);
                 }
+                finish();
             }
         });
 

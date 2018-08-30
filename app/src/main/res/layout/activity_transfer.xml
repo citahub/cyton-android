@@ -14,16 +14,15 @@
         app:isShowLeft="true"
         app:title="@string/title_transfer" />
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.Button.CommonButton
         android:id="@+id/next_action_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/default_margin"
-        android:background="@drawable/button_corner_blue_shape"
-        android:text="@string/next_action"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        app:status="true"
+        app:text="@string/next_action" />
 
     <ScrollView
         android:layout_width="match_parent"

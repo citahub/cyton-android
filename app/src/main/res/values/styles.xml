@@ -134,6 +134,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="DialogButtonCancel" parent="DialogButtonStyle">
@@ -145,5 +146,4 @@
         <item name="android:textColor">@color/font_link</item>
         <item name="android:text">@string/ok</item>
     </style>
-
 </resources>

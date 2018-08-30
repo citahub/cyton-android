@@ -13,6 +13,7 @@ import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.view.Button.CommonButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -23,7 +24,7 @@ public class ChangePasswordActivity extends NBaseActivity {
     private AppCompatEditText newRePasswordEdit;
     private TextView walletNameText;
     private CircleImageView walletPhoto;
-    private AppCompatButton button;
+    private CommonButton button;
 
     private WalletItem walletItem;
 
@@ -78,13 +79,6 @@ public class ChangePasswordActivity extends NBaseActivity {
         return check1 && check2 && check3;
     }
 
-    private void setCreateButtonStatus(boolean status) {
-        button.setBackgroundResource(status ?
-                R.drawable.button_corner_blue_shape : R.drawable.button_corner_gray_shape);
-        button.setEnabled(status);
-    }
-
-
     private boolean check1 = false, check2 = false, check3 = false;
 
     private void checkWalletStatus() {
@@ -95,7 +89,7 @@ public class ChangePasswordActivity extends NBaseActivity {
                 if (!TextUtils.isEmpty(oldPasswordEdit.getText().toString().trim()) && oldPasswordEdit.getText().toString().length() >= 8) {
                     check1 = true;
                 }
-                setCreateButtonStatus(isWalletValid());
+                button.setClickAble(isWalletValid());
             }
         });
         newPasswordEdit.addTextChangedListener(new WalletTextWatcher() {
@@ -105,7 +99,7 @@ public class ChangePasswordActivity extends NBaseActivity {
                 if (!TextUtils.isEmpty(newPasswordEdit.getText().toString().trim()) && newPasswordEdit.getText().toString().length() >= 8) {
                     check2 = true;
                 }
-                setCreateButtonStatus(isWalletValid());
+                button.setClickAble(isWalletValid());
             }
         });
         newRePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
@@ -115,7 +109,7 @@ public class ChangePasswordActivity extends NBaseActivity {
                 if (!TextUtils.isEmpty(newRePasswordEdit.getText().toString().trim()) && newRePasswordEdit.getText().toString().length() >= 8) {
                     check3 = true;
                 }
-                setCreateButtonStatus(isWalletValid());
+                button.setClickAble(isWalletValid());
             }
         });
     }
