@@ -63,7 +63,7 @@ public class TokenTransferDialog extends Dialog {
                     .load(Uri.parse(tokenItem.avatar))
                     .into(tokenImage);
         }
-        tokenBalanceText.setText(NumberUtil.getDecimal_10(tokenItem.balance));
+        tokenBalanceText.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
     }
 
     private void initListener() {

@@ -35,32 +35,38 @@ public class WalletService {
             while (iterator.hasNext()) {
                 TokenItem tokenItem = iterator.next();
                 iterator.remove();
-                if (tokenItem.chainId < 0) {                // ethereum
-                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
-                        tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
-                        tokenItemList.add(tokenItem);
-                    } else {
-                        tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
-                        tokenItemList.add(tokenItem);
-                    }
-                } else {                                    // nervos
-                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
-                    if (chainItem != null) {
-                        String httpProvider = chainItem.httpProvider;
-                        NervosRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
-                            tokenItem.chainName = chainItem.name;
+                try {
+                    if (tokenItem.chainId < 0) {                // ethereum
+                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                            tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
                         } else {
-                            tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
-                            tokenItem.chainName = chainItem.name;
+                            tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(tokenItem);
                         }
+                    } else {                                    // nervos
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        if (chainItem != null) {
+                            String httpProvider = chainItem.httpProvider;
+                            NervosRpcService.init(context, httpProvider);
+                            if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                                tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
+                                tokenItem.chainName = chainItem.name;
+                                tokenItemList.add(tokenItem);
+                            } else {
+                                tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
+                                tokenItem.chainName = chainItem.name;
+                                tokenItemList.add(tokenItem);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (listener != null) {
+                        listener.onGetWalletError(e.getMessage());
                     }
                 }
             }
-
             walletItem.tokenItems = tokenItemList;
             if (listener != null) {
                 listener.onGetWalletToken(walletItem);
@@ -70,6 +76,7 @@ public class WalletService {
 
     public interface OnGetWalletTokenListener {
         void onGetWalletToken(WalletItem walletItem);
+        void onGetWalletError(String message);
     }
 
 
@@ -78,25 +85,29 @@ public class WalletService {
         return Observable.fromCallable(new Callable<Double>() {
             @Override
             public Double call() {
-                if (tokenItem.chainId < 0) {                // ethereum
-                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
-                        return EthRpcService.getEthBalance(walletItem.address);
-                    } else {
-                        return EthRpcService.getERC20Balance(
-                                tokenItem.contractAddress, walletItem.address);
-                    }
-                } else {                                    // CITA
-                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
-                    if (chainItem != null) {
-                        String httpProvider = chainItem.httpProvider;
-                        NervosRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            return NervosRpcService.getErc20Balance(
-                                    tokenItem, walletItem.address);
+                try {
+                    if (tokenItem.chainId < 0) {                // ethereum
+                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                            return EthRpcService.getEthBalance(walletItem.address);
                         } else {
-                            return NervosRpcService.getBalance(walletItem.address);
+                            return EthRpcService.getERC20Balance(
+                                    tokenItem.contractAddress, walletItem.address);
+                        }
+                    } else {                                    // CITA
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        if (chainItem != null) {
+                            String httpProvider = chainItem.httpProvider;
+                            NervosRpcService.init(context, httpProvider);
+                            if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                                return NervosRpcService.getErc20Balance(
+                                        tokenItem, walletItem.address);
+                            } else {
+                                return NervosRpcService.getBalance(walletItem.address);
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return 0.0;
             }

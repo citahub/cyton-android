@@ -8,13 +8,11 @@ public class ConstUtil {
 
     public static final String ETH = "ETH";
     public static final int ETHEREUM_ID = -1;
-    public static final String ETHEREUM_NAME = "以太坊mainnet";
-    public static final long LONG_6 = 1000000;
-    public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
-
-    // transaction list page config information
     public static final String ETH_MAINNET = "Ethereum Mainnet";
-    public static final long DEFAULT_QUATO = LONG_6;
+    public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
+    public static final long LONG_6 = 1000000;
+    public static final long DEFAULT_QUOTA = LONG_6;
+
 
     // gas constant data
     public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x5208");  // default eth gas limit is 21000

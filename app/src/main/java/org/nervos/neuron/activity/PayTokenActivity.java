@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
@@ -26,7 +27,6 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -108,24 +108,29 @@ public class PayTokenActivity extends BaseActivity {
         payFeeUnitText.setText(getNativeToken());
 
         if (transactionInfo.isEthereum()) {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
+            payAmountText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()));
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
         } else {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()));
-            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()));
+            payAmountText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()));
+            payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()));
         }
 
     }
 
     private void initRemoteData() {
         initBalance();
-        if (transactionInfo.isEthereum() &&
-                (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice))) {
-            showEtherGas();
+        if (transactionInfo.isEthereum()){
+            if (TextUtils.isEmpty(transactionInfo.gasPrice) || "0".equals(transactionInfo.gasPrice)) {
+                getEtherGasPrice();
+            }
+
+            if (TextUtils.isEmpty(transactionInfo.gasLimit) || "0".equals(transactionInfo.gasLimit)) {
+                getEtherGasLimit();
+            }
         }
     }
 
-    private void showEtherGas() {
+    private void getEtherGasPrice() {
         showProgressCircle();
         EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
             @Override
@@ -141,6 +146,29 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 transactionInfo.gasPrice = gasPrice.toString(16);
+                payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
+            }
+        });
+    }
+
+    private void getEtherGasLimit() {
+        showProgressCircle();
+        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new Subscriber<BigInteger>() {
+            @Override
+            public void onCompleted() {
+                dismissProgressCircle();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                dismissProgressCircle();
+                transactionInfo.gasLimit = ConstUtil.GAS_ERC20_LIMIT.toString(16);
+                payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
+            }
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onNext(BigInteger gasLimit) {
+                transactionInfo.gasLimit = gasLimit.toString(16);
                 payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
             }
         });
@@ -178,7 +206,7 @@ public class PayTokenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mBalance < (transactionInfo.isEthereum()?
-                        transactionInfo.getGas() : transactionInfo.getQuota())) {
+                        transactionInfo.getGas() : transactionInfo.getDoubleQuota())) {
                     String toastMessage = tokenItem == null ? getString(R.string.token) : tokenItem.symbol;
                     Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
                             toastMessage), Toast.LENGTH_SHORT).show();
@@ -224,11 +252,11 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getValue()) + getNativeToken());
+        valueText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()) + getNativeToken());
         if (transactionInfo.isEthereum()) {
             feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()) + getNativeToken());
         } else {
-            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getQuota()) + getNativeToken());
+            feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()) + getNativeToken());
         }
         view.findViewById(R.id.close_layout).setOnClickListener(v -> sheetDialog.dismiss());
         view.findViewById(R.id.transfer_confirm_button).setOnClickListener(v ->
@@ -281,7 +309,8 @@ public class PayTokenActivity extends BaseActivity {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionInfo.to,
-                            transactionInfo.getValue(), gasPrice, password);
+                            transactionInfo.getDoubleValue(), gasPrice, ConstUtil.GAS_ERC20_LIMIT,
+                            transactionInfo.data, password);
                 }
             }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -308,9 +337,9 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferNervos(String password, ProgressBar progressBar) {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getValue(),
-                transactionInfo.data, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getDoubleValue(),
+                transactionInfo.data, transactionInfo.getLongQuota(), (int)transactionInfo.chainId, password)
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
@@ -324,8 +353,8 @@ public class PayTokenActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
-                        handleTransfer(ethSendTransaction);
+                    public void onNext(AppSendTransaction appSendTransaction) {
+                        handleTransfer(appSendTransaction);
                     }
                 });
     }
@@ -355,19 +384,19 @@ public class PayTokenActivity extends BaseActivity {
     /**
      * handle nervos transfer result
      *
-     * @param nervosSendTransaction result of nervos transaction
+     * @param appSendTransaction result of nervos transaction
      */
-    private void handleTransfer(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction nervosSendTransaction) {
-        if (!TextUtils.isEmpty(nervosSendTransaction.getSendTransactionResult().getHash())) {
+    private void handleTransfer(AppSendTransaction appSendTransaction) {
+        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             sheetDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(nervosSendTransaction.getSendTransactionResult().getHash());
-        } else if (nervosSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(nervosSendTransaction.getError().getMessage())) {
+            gotoSignSuccess(appSendTransaction.getSendTransactionResult().getHash());
+        } else if (appSendTransaction.getError() != null &&
+                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             sheetDialog.dismiss();
-            Toast.makeText(mActivity, nervosSendTransaction.getError().getMessage(),
+            Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(nervosSendTransaction.getError().getMessage());
+            gotoSignFail(appSendTransaction.getError().getMessage());
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getString(R.string.transfer_fail));

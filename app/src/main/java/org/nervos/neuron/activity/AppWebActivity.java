@@ -97,6 +97,11 @@ public class AppWebActivity extends BaseActivity {
         url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
+        if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(mActivity, AddWalletActivity.class));
+        }
+
         WebAppUtil.init();
     }
 

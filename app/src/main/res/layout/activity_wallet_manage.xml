@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/default_white_f4"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <org.nervos.neuron.custom.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/wallet_manage_title"
-        app:isShowLeft="true"/>
+        app:isShowLeft="true"
+        app:title="@string/wallet_manage_title" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/white"
         android:paddingStart="@dimen/default_margin">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/wallet_photo"
-            android:textSize="16sp"
-            android:textColor="@color/font_black"/>
+            android:textColor="@color/font_black"
+            android:textSize="16sp" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wallet_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/wallet_photo"
             android:layout_marginEnd="@dimen/default_margin"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/default_gray_d5"/>
+            android:src="@drawable/wallet_photo"
+            app:civ_border_color="@color/default_gray_d5"
+            app:civ_border_width="1dp" />
     </RelativeLayout>
 
-    <View style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin"/>
+    <View
+        style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin" />
 
     <RelativeLayout
         android:id="@+id/wallet_name_layout"
@@ -50,28 +53,34 @@
         android:paddingRight="@dimen/default_margin">
 
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:gravity="center_vertical"
             android:text="@string/wallet_name"
-            android:textSize="16sp"
-            android:textColor="@color/font_black"/>
+            android:textColor="@color/font_black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/wallet_name_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="85dp"
+            android:layout_toEndOf="@id/tv_name"
             android:drawableEnd="@drawable/right_arrow"
             android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:layout_alignParentEnd="true"
+            android:ellipsize="middle"
+            android:gravity="center_vertical|end"
+            android:singleLine="true"
             android:text="@string/wallet_name"
-            android:textSize="16sp"
-            android:textColor="@color/default_gray_9"/>
+            android:textColor="@color/default_gray_9"
+            android:textSize="16sp" />
     </RelativeLayout>
 
-    <View style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin"/>
+    <View
+        style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -86,22 +95,22 @@
             android:layout_height="48dp"
             android:gravity="center_vertical"
             android:text="@string/wallet_address"
-            android:textSize="16sp"
-            android:textColor="@color/font_black"/>
+            android:textColor="@color/font_black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/wallet_address"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:gravity="center_vertical"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/wallet_address_text"
             android:layout_marginStart="85dp"
+            android:layout_toEndOf="@id/wallet_address_text"
+            android:ellipsize="middle"
+            android:gravity="center_vertical"
             android:maxEms="16"
             android:singleLine="true"
-            android:ellipsize="middle"
-            android:textSize="16sp"
-            android:textColor="@color/default_gray_9"/>
+            android:textColor="@color/default_gray_9"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <TextView
@@ -109,44 +118,45 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
+        android:background="@color/white"
         android:drawableEnd="@drawable/right_arrow"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
-        android:background="@color/white"
         android:text="@string/change_password"
-        android:textSize="16sp"
-        android:textColor="@color/font_black"/>
+        android:textColor="@color/font_black"
+        android:textSize="16sp" />
 
-    <View style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin"/>
+    <View
+        style="@style/separateLineLong"
+        android:layout_marginStart="@dimen/default_margin" />
 
     <TextView
         android:id="@+id/export_keystore"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@color/white"
         android:drawableEnd="@drawable/right_arrow"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
-        android:background="@color/white"
         android:text="@string/export_keystore"
-        android:textSize="16sp"
-        android:textColor="@color/font_black"/>
+        android:textColor="@color/font_black"
+        android:textSize="16sp" />
 
-    <View style="@style/separateLineLong"/>
+    <View style="@style/separateLineLong" />
 
     <TextView
         android:id="@+id/delete_wallet_button"
         android:layout_width="120dp"
         android:layout_height="40dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="20dp"
-        android:textSize="15sp"
+        android:gravity="center"
+        android:text="@string/delete_wallet"
         android:textColor="@color/colorPrimary"
-        android:text="@string/delete_wallet"/>
+        android:textSize="15sp" />
 
 </LinearLayout>

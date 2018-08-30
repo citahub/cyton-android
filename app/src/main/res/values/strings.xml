@@ -90,7 +90,6 @@
     <string name="empty_no_collection_data">您还没有藏品数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
     <string name="empty_no_history_data">您还没有历史浏览记录</string>
-    <string name="ethereum_main_net">Ethereum Mainnet</string>
     <string name="confirm_pay">确认支付</string>
     <string name="loading">正在加载</string>
     <string name="reject">拒绝</string>
@@ -179,6 +178,7 @@
     <string name="cancel_collect">取消收藏</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
     <string name="balance_not_enough">您的%s余额不足支付此次交易，请获取后再试～</string>
+    <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="generate_keystore_fail">KeyStore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
@@ -187,7 +187,7 @@
     <string name="keystore_error">不是合法keystore</string>
     <string name="private_key_error">不是合法私钥</string>
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
-    <string name="network_error">网络请求错误</string>
+    <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">请输入完整的代币信息</string>
     <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
@@ -257,4 +257,6 @@
     <string name="qr_tips">放入框内自动扫描</string>
     <string name="qr_photo_failed">扫描本地图片失败</string>
     <string name="developing">正在开发中</string>
+
+    <string name="change_wallet_name_failed">修改失败，请重试</string>
 </resources>

@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.CollectionDetailActivity;
 import org.nervos.neuron.fragment.NBaseFragment;
@@ -41,17 +43,18 @@ public class CollectionListFragment extends NBaseFragment {
     protected void initAction() {
         super.initAction();
 
-        adapter.setOnItemClickListener(new CollectionAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> getCollectionList());
+
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
         });
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getCollectionList();
-            }
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
         });
 
         adapter.setOnItemClickListener((view, position) -> {

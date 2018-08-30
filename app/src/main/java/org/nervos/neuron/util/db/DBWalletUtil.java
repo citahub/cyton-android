@@ -128,7 +128,7 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void updateWalletName(Context context, String name, String newName) {
+    public static boolean updateWalletName(Context context, String name, String newName) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_WALLET);
@@ -137,8 +137,10 @@ public class DBWalletUtil extends DBUtil {
                 walletItem.name = newName;
                 db.put(getDbKey(newName), walletItem);
                 db.close();
+                return true;
             } catch (SnappydbException e) {
                 handleException(db, e);
+                return false;
             }
         }
     }
@@ -268,10 +270,6 @@ public class DBWalletUtil extends DBUtil {
      * @return
      */
     public static WalletItem addOriginTokenToWallet(Context context, WalletItem walletItem) {
-        List<TokenItem> tokenItemList = new ArrayList<>();
-        tokenItemList.add(new TokenItem(ETH, R.drawable.ether_big, 0, -1));
-        walletItem.tokenItems = tokenItemList;
-
         List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);
         for (ChainItem chainItem : chainItemList) {
             if (!TextUtils.isEmpty(chainItem.tokenName)) {

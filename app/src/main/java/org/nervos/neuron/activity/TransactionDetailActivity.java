@@ -15,6 +15,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -64,10 +65,10 @@ public class TransactionDetailActivity extends NBaseActivity {
         transactionFromText.setText(lineFeedAddress(transactionItem.from));
         transactionToText.setText(lineFeedAddress(transactionItem.to));
         if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
-            transactionChainName.setText(R.string.ethereum_main_net);
+            transactionChainName.setText(ConstUtil.ETH_MAINNET);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
-            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal10(gasPriceBig.multiply(gasUsedBig)) + "eth");
+            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;

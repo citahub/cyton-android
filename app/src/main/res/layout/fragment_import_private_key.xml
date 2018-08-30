@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="35dp"
@@ -50,7 +51,7 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin"/>
+            android:layout_marginLeft="@dimen/default_margin" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_name"
@@ -59,6 +60,7 @@
             android:background="@android:color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/input_wallet_name"
+            android:maxLength="15"
             android:paddingStart="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
@@ -66,7 +68,7 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin"/>
+            android:layout_marginLeft="@dimen/default_margin" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_password"
@@ -83,7 +85,7 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin"/>
+            android:layout_marginLeft="@dimen/default_margin" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_repassword"

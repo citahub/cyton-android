@@ -19,11 +19,6 @@ import java.text.DecimalFormat;
 
 public class NumberUtil {
 
-    public static String getDecimal_10(double value) {
-        DecimalFormat fmt = new DecimalFormat("0.##########");
-        return fmt.format(value);
-    }
-
     public static String getDecimalValid_2(double value) {
         long integer = (long)value;
         double decimal = value - integer;
@@ -132,12 +127,12 @@ public class NumberUtil {
         return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
-    public static String getEthFromWeiForStringDecimal10(String value) {
-        return getDecimal_10(getEthFromWeiForDouble(value));
+    public static String getEthFromWeiForStringDecimal8(String value) {
+        return getDecimal8ENotation(getEthFromWeiForDouble(value));
     }
 
-    public static String getEthFromWeiForStringDecimal10(BigInteger value) {
-        return getDecimal_10(getEthFromWei(value));
+    public static String getEthFromWeiForStringDecimal8(BigInteger value) {
+        return getDecimal8ENotation(getEthFromWei(value));
     }
 
     public static double getEthFromWeiForDouble(String value) {

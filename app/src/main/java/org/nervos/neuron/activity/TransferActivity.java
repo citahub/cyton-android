@@ -24,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -88,6 +89,7 @@ public class TransferActivity extends NBaseActivity {
     private double mPrice = 0.0f, mBalance;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
+    private double mFee;
 
     @Override
     protected int getContentLayout() {
@@ -225,6 +227,7 @@ public class TransferActivity extends NBaseActivity {
     private void initFeeText() {
         double fee = NumberUtil.getEthFromWei(mGas);
         if (fee > 0) {
+            mFee = NumberUtil.getEthFromWei(mGas);
             feeSeekText.setText(NumberUtil.getDecimal8ENotation(fee) + getFeeTokenUnit());
             if (mPrice > 0 && currencyItem != null) {
                 feeValueText.setText(feeSeekText.getText() + " = " +
@@ -240,9 +243,8 @@ public class TransferActivity extends NBaseActivity {
                 ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
         mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
         feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
-
-        feeSeekText.setText(NumberUtil.getDecimal8ENotation(
-                NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
+        mFee = NumberUtil.getEthFromWei(mQuota);
+        feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
         feeValueText.setText(feeSeekText.getText());
     }
 
@@ -272,6 +274,9 @@ public class TransferActivity extends NBaseActivity {
             } else if (mBalance < Double.parseDouble(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
+            } else if (mBalance < mFee) {
+                Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
+                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else {
                 confirmDialog = new BottomSheetDialog(mActivity);
                 confirmDialog.setCancelable(false);
@@ -292,8 +297,8 @@ public class TransferActivity extends NBaseActivity {
                     initFeeText();
                 } else {
                     mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(
-                            NumberUtil.getEthFromWei(mQuota)) + getFeeTokenUnit());
+                    mFee = NumberUtil.getEthFromWei(mQuota);
+                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
@@ -419,10 +424,11 @@ public class TransferActivity extends NBaseActivity {
         gasEditLayout.setVisibility(View.VISIBLE);
         quotaEditLayout.setVisibility(View.GONE);
         if (isGasLimitOk && isGasPriceOk) {
-            feeValueText.setText(
-                    NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit)) + getFeeTokenUnit());
+            mFee = NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit));
+            feeValueText.setText(mFee + getFeeTokenUnit());
         } else {
-            feeValueText.setText("0");
+            mFee = 0;
+            feeValueText.setText(mFee + "");
         }
     }
 
@@ -432,9 +438,11 @@ public class TransferActivity extends NBaseActivity {
         gasEditLayout.setVisibility(View.GONE);
         quotaEditLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
-            feeValueText.setText(NumberUtil.getEthFromWei(mQuota) + getFeeTokenUnit());
+            mFee = NumberUtil.getEthFromWei(mQuota);
+            feeValueText.setText(mFee + getFeeTokenUnit());
         } else {
-            feeValueText.setText("0");
+            mFee = 0;
+            feeValueText.setText(mFee + "");
         }
     }
 
@@ -470,6 +478,7 @@ public class TransferActivity extends NBaseActivity {
         });
         return view;
     }
+
 
 
     private void showPasswordConfirmView(String value, ProgressBar progressBar) {
@@ -532,8 +541,8 @@ public class TransferActivity extends NBaseActivity {
     private void transferNervosToken(String password, double value, ProgressBar progressBar) {
         transactionHexData = payHexDataEdit.getText().toString().trim();
         NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value,
-                transactionHexData, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                transactionHexData, tokenItem.chainId, password)
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -548,7 +557,7 @@ public class TransferActivity extends NBaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    public void onNext(AppSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
                         if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
@@ -575,8 +584,8 @@ public class TransferActivity extends NBaseActivity {
     private void transferNervosErc20(String password, double value, ProgressBar progressBar) throws Exception {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value, password)
-                .subscribe(new Subscriber<org.nervos.web3j.protocol.core.methods.response.EthSendTransaction>() {
+                receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
+                .subscribe(new Subscriber<AppSendTransaction>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -591,15 +600,15 @@ public class TransferActivity extends NBaseActivity {
                     }
 
                     @Override
-                    public void onNext(org.nervos.web3j.protocol.core.methods.response.EthSendTransaction ethSendTransaction) {
+                    public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             passwordDialog.dismiss();
                             finish();
-                        } else if (ethSendTransaction.getError() != null &&
-                                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
-                            Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                        } else if (appSendTransaction.getError() != null &&
+                                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
+                            Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
