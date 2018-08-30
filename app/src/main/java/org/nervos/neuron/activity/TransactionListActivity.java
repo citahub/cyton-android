@@ -23,6 +23,7 @@ import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.utils.Numeric;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -190,14 +191,14 @@ public class TransactionListActivity extends NBaseActivity {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-                if (!transactionItem.from.equalsIgnoreCase(walletItem.address)) {
+                if (isReceiveTransaction(transactionItem)) {
                     viewHolder.transactionIdText.setText(transactionItem.from);
                     viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
                 } else {
                     viewHolder.transactionIdText.setText(transactionItem.to);
                     viewHolder.walletImage.setImageResource(R.drawable.ic_trans_out);
                 }
-                String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
+                String value = (isReceiveTransaction(transactionItem) ? "+" : "-")
                         + transactionItem.value;
                 viewHolder.transactionAmountText.setText(value);
                 viewHolder.transactionChainNameText.setText(transactionItem.chainName);
@@ -255,5 +256,11 @@ public class TransactionListActivity extends NBaseActivity {
 
     private boolean isETH(TokenItem tokenItem) {
         return ConstUtil.ETH.equals(tokenItem.symbol);
+    }
+
+    private boolean isReceiveTransaction(TransactionItem transactionItem) {
+        String to = Numeric.cleanHexPrefix(transactionItem.to);
+        String walletAddress =  Numeric.cleanHexPrefix(walletItem.address);
+        return walletAddress.equalsIgnoreCase(to);
     }
 }

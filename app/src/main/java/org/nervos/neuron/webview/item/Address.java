@@ -14,7 +14,6 @@ public class Address implements Parcelable {
     private final String value;
 
     public Address(@NonNull String value) {
-        value = value.toLowerCase();
         if (Numeric.containsHexPrefix(value)) {
             value = Numeric.cleanHexPrefix(value);
         }

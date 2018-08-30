@@ -163,7 +163,7 @@ public class NervosRpcService {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
-                        Numeric.cleanHexPrefix(toAddress),
+                        Numeric.cleanHexPrefix(toAddress.toLowerCase()),
                         randomNonce(), (quota == 0? ConstUtil.DEFAULT_QUOTA : quota),
                         validUntilBlock.longValue(), version, chainId,
                         NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);

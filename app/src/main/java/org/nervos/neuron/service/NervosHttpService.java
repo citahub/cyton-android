@@ -69,15 +69,15 @@ public class NervosHttpService {
 
     public static Observable<List<TransactionItem>> getNervosTransactionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return Observable.fromCallable(new Callable<AppMetaData.EthMetaDataResult>() {
+        return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
                     @Override
-                    public AppMetaData.EthMetaDataResult call() {
+                    public AppMetaData.AppMetaDataResult call() {
                         NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
-                        return NervosRpcService.getMetaData().getEthMetaDataResult();
+                        return NervosRpcService.getMetaData().getAppMetaDataResult();
                     }
-                }).flatMap(new Func1<AppMetaData.EthMetaDataResult, Observable<List<TransactionItem>>>() {
+                }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
                     @Override
-                    public Observable<List<TransactionItem>> call(AppMetaData.EthMetaDataResult result) {
+                    public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
                         try {
                             String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
                             final Request nervosRequest = new Request.Builder().url(nervosUrl).build();

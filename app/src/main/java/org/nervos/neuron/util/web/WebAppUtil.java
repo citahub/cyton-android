@@ -122,13 +122,13 @@ public class WebAppUtil {
             @Override
             public Observable<ChainItem> call(ChainItem chainItem) {
                 NervosRpcService.init(webView.getContext(), chainItem.httpProvider);
-                AppMetaData.EthMetaDataResult ethMetaData =
-                        NervosRpcService.getMetaData().getEthMetaDataResult();
-                if (ethMetaData != null) {
-                    chainItem.name = ethMetaData.chainName;
-                    chainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                    chainItem.tokenSymbol = ethMetaData.tokenSymbol;
-                    chainItem.tokenName = ethMetaData.tokenName;
+                AppMetaData.AppMetaDataResult appMetaDataResult =
+                        NervosRpcService.getMetaData().getAppMetaDataResult();
+                if (appMetaDataResult != null) {
+                    chainItem.name = appMetaDataResult.chainName;
+                    chainItem.tokenAvatar = appMetaDataResult.tokenAvatar;
+                    chainItem.tokenSymbol = appMetaDataResult.tokenSymbol;
+                    chainItem.tokenName = appMetaDataResult.tokenName;
                 } else {
                     chainItem.errorMessage = webView.getContext().getString(R.string.meta_data_error)
                             + chainItem.httpProvider;
