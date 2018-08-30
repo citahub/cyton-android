@@ -183,10 +183,11 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/white"
+                android:orientation="vertical"
                 android:paddingStart="@dimen/default_margin"
                 android:paddingEnd="@dimen/default_margin">
 
@@ -318,13 +319,13 @@
                     android:id="@+id/advanced_setup"
                     android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/advanced_setup"
                     android:textColor="@color/default_black"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_gravity="end"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
