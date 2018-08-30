@@ -51,6 +51,9 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
+    <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
 
     <style name="InputDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>
