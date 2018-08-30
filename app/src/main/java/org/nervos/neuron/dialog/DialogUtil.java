@@ -103,7 +103,7 @@ public class DialogUtil {
             if (currentName.equals(list.get(position))) {
                 holder.itemText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
             } else {
-                holder.itemText.setTextColor(ContextCompat.getColor(context, R.color.default_black));
+                holder.itemText.setTextColor(ContextCompat.getColor(context, R.color.font_title));
             }
             return convertView;
         }

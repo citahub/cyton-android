@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:textSize="12sp"
-        android:textColor="@color/font_black"
+        android:textColor="@color/font_title"
         android:background="@drawable/edit_input_shape"
         android:layout_margin="@dimen/default_margin"/>
 
@@ -28,7 +28,7 @@
         android:background="@drawable/button_corner_blue_shape"
         android:layout_marginTop="60dp"
         android:text="批量导出"
-        android:textColor="@color/font_black"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:layout_gravity="center_horizontal|bottom"/>
 

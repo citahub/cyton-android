@@ -52,7 +52,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:text="Secured by"
-                    android:textColor="@color/font_inside"
+                    android:textColor="@color/font_title_third"
                     android:textSize="10sp" />
 
                 <ImageView

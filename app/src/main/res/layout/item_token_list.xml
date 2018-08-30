@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ethereum_mainnet"
-                    android:textColor="@color/font_inside"
+                    android:textColor="@color/font_title_third"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:text="1000"
-                    android:textColor="@color/font_inside"
+                    android:textColor="@color/font_title_third"
                     android:textSize="13sp"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/token_balance" />

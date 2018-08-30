@@ -55,7 +55,7 @@ public class ReceiveQrCodeActivity extends NBaseActivity {
 
     @Override
     protected int getStatusBarColor() {
-        return getResources().getColor(R.color.qr_receive_bg);
+        return getResources().getColor(R.color.transparent_color2);
     }
 
     @Override

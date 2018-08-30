@@ -43,7 +43,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="26dp"
             android:layout_marginTop="6dp"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -105,7 +105,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginEnd="3dp"
             android:text="@string/neuron_is_a"
-            android:textColor="@color/default_gray_9"
+            android:textColor="@color/font_title_third"
             android:textSize="12sp" />
 
         <ImageView
@@ -120,7 +120,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginStart="3dp"
             android:text="@string/product"
-            android:textColor="@color/default_gray_9"
+            android:textColor="@color/font_title_third"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

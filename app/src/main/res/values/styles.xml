@@ -79,7 +79,7 @@
     <style name="separateLineLong">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">@color/default_separate_gray</item>
+        <item name="android:background">@color/line_form</item>
     </style>
 
     <style name="separateLineShort">
@@ -87,7 +87,7 @@
         <item name="android:layout_height">0.5dp</item>
         <item name="android:layout_marginStart">@dimen/default_margin</item>
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
-        <item name="android:background">@color/default_separate_gray</item>
+        <item name="android:background">@color/line_form</item>
     </style>
 
     <style name="ConfirmDialog">
@@ -105,7 +105,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginTop">7dp</item>
-        <item name="android:textColor">@color/font_inside</item>
+        <item name="android:textColor">@color/font_title_third</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -125,7 +125,7 @@
 
     <style name="WalletTabTextAppearance" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/default_black</item>
+        <item name="android:textColor">@color/font_title</item>
         <item name="textAllCaps">true</item>
     </style>
 
