@@ -70,7 +70,7 @@
             android:layout_toEndOf="@id/tv_name"
             android:drawableEnd="@drawable/right_arrow"
             android:drawablePadding="5dp"
-            android:ellipsize="middle"
+            android:ellipsize="end"
             android:gravity="center_vertical|end"
             android:singleLine="true"
             android:text="@string/wallet_name"

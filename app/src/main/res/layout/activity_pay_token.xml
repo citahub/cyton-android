@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/pay_title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <org.nervos.neuron.custom.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/white"
-            app:title="@string/confirm_pay"
+            app:isShowBottomLine="true"
             app:isShowLeft="true"
-            app:isShowBottomLine="true"/>
+            app:title="@string/confirm_pay" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,35 +32,38 @@
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/wallet_photo"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/default_gray_d5"/>
+                app:civ_border_color="@color/default_gray_d5"
+                app:civ_border_width="1dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:layout_toEndOf="@id/wallet_photo"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
+                android:layout_toEndOf="@id/wallet_photo"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/wallet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:text="Watson"
                     android:textColor="@color/font_title"
-                    android:text="Watson"/>
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/wallet_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/font_title_third"
-                    android:singleLine="true"
-                    android:ellipsize="middle"
                     android:layout_marginTop="2dp"
-                    android:layout_marginEnd="@dimen/default_margin"/>
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -69,47 +73,48 @@
         android:id="@+id/pay_button_layout"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_margin="@dimen/default_margin"
         android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/default_margin"
         android:orientation="horizontal">
 
         <View
             android:id="@+id/pay_button_separate"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
 
         <Button
             android:id="@+id/pay_reject"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toStartOf="@id/pay_button_separate"
             android:layout_marginEnd="@dimen/default_margin"
+            android:layout_toStartOf="@id/pay_button_separate"
+            android:background="@drawable/button_blue_line_shape"
+            android:gravity="center"
             android:text="@string/reject"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:background="@drawable/button_blue_line_shape"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/pay_approve"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toEndOf="@id/pay_button_separate"
             android:layout_marginStart="@dimen/default_margin"
+            android:layout_toEndOf="@id/pay_button_separate"
+            android:background="@drawable/button_corner_blue_shape"
+            android:gravity="center"
             android:text="@string/approve"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:background="@drawable/button_corner_blue_shape"/>
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
     <ScrollView
-        android:layout_below="@id/pay_title_layout"
-        android:layout_above="@id/pay_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/pay_button_layout"
+        android:layout_below="@id/pay_title_layout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -121,18 +126,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/requester"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/pay_owner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="6dp"
+                android:background="@drawable/rectangle_border_gray_corner"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/default_margin"
-                android:textSize="15sp"
                 android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,21 +145,21 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/receive_address"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/pay_address"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="6dp"
+                android:background="@drawable/rectangle_border_gray_corner"
                 android:ellipsize="end"
-                android:lines="1"
-                android:paddingStart="@dimen/default_margin"
                 android:gravity="center_vertical"
+                android:lines="1"
                 android:paddingEnd="@dimen/default_margin"
-                android:textSize="15sp"
+                android:paddingStart="@dimen/default_margin"
                 android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -162,7 +167,7 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/transfer_amount"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -173,21 +178,21 @@
                     android:id="@+id/pay_amount"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:paddingStart="@dimen/default_margin"
-                    android:textSize="15sp"
+                    android:background="@drawable/rectangle_border_gray_corner"
                     android:gravity="center_vertical"
+                    android:paddingStart="@dimen/default_margin"
                     android:textColor="@color/font_title"
-                    android:background="@drawable/rectangle_border_gray_corner"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/pay_amount_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:textSize="15sp"
                     android:layout_gravity="center_vertical|end"
-                    android:textColor="@color/font_title_third"/>
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="15sp" />
             </FrameLayout>
 
             <TextView
@@ -196,31 +201,32 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="@string/transfer_fee"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="6dp">
+
                 <TextView
                     android:id="@+id/pay_fee"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:paddingStart="@dimen/default_margin"
-                    android:textSize="15sp"
+                    android:background="@drawable/rectangle_border_gray_corner"
                     android:gravity="center_vertical"
+                    android:paddingStart="@dimen/default_margin"
                     android:textColor="@color/font_title"
-                    android:background="@drawable/rectangle_border_gray_corner"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/pay_fee_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:textSize="15sp"
                     android:layout_gravity="center_vertical|end"
-                    android:textColor="@color/font_title_third"/>
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="15sp" />
             </FrameLayout>
 
             <TextView
@@ -229,14 +235,15 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="包含数据"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
-            
+                android:textSize="15sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginTop="6dp"
-                android:orientation="vertical"
-                android:background="@drawable/rectangle_border_gray_corner">
+                android:background="@drawable/rectangle_border_gray_corner"
+                android:orientation="vertical">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -246,8 +253,8 @@
                         android:id="@+id/pay_separate"
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/default_gray_d5"
-                        android:layout_centerInParent="true"/>
+                        android:layout_centerInParent="true"
+                        android:background="@color/default_gray_d5" />
 
                     <LinearLayout
                         android:id="@+id/sign_hex_layout"
@@ -255,19 +262,20 @@
                         android:layout_height="match_parent"
                         android:layout_toStartOf="@id/pay_separate"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="37dp"
                             android:gravity="center"
                             android:text="HEX"
                             android:textColor="@color/font_title_second"
-                            android:textSize="15sp"/>
-                        
+                            android:textSize="15sp" />
+
                         <View
                             android:id="@+id/pay_data_left_line"
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
-                            android:background="@color/selected_color"/>
+                            android:background="@color/selected_color" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -276,20 +284,21 @@
                         android:layout_height="match_parent"
                         android:layout_toEndOf="@id/pay_separate"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="37dp"
                             android:gravity="center"
                             android:text="UTF8"
                             android:textColor="@color/font_title_second"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <View
                             android:id="@+id/pay_data_right_line"
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
-                            android:visibility="gone"
-                            android:background="@color/selected_color"/>
+                            android:background="@color/selected_color"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -298,15 +307,15 @@
                     android:id="@+id/pay_data"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
-                    android:padding="10dp"
-                    android:scrollbars="vertical"
                     android:fadeScrollbars="false"
                     android:lines="60"
-                    android:textSize="15sp"
-                    android:textColor="@color/font_title"/>
+                    android:padding="10dp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/font_title"
+                    android:textSize="15sp" />
 
             </LinearLayout>
-            
+
         </LinearLayout>
     </ScrollView>
 
