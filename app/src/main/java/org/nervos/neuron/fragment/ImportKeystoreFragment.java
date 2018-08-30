@@ -15,26 +15,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.crypto.WalletEntity;
 import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
-import org.web3j.crypto.CipherException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImportKeystoreFragment extends BaseFragment {
+public class ImportKeystoreFragment extends NBaseFragment {
 
     private static final int REQUEST_CODE = 0x01;
     private AppCompatEditText keystoreEdit;
@@ -45,26 +45,33 @@ public class ImportKeystoreFragment extends BaseFragment {
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_import_keystore, container, false);
-        keystoreEdit = view.findViewById(R.id.edit_wallet_keystore);
-        walletNameEdit = view.findViewById(R.id.edit_wallet_name);
-        passwordEdit = view.findViewById(R.id.edit_wallet_password);
-        importButton = view.findViewById(R.id.import_keystore_button);
-        scanImage = view.findViewById(R.id.wallet_scan);
-        return view;
+    protected int getContentLayout() {
+        return R.layout.fragment_import_keystore;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initListener();
+    protected void initView() {
+        super.initView();
+        keystoreEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_keystore);
+        walletNameEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_name);
+        passwordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_password);
+        importButton = (AppCompatButton) findViewById(R.id.import_keystore_button);
+        scanImage = (ImageView) findViewById(R.id.wallet_scan);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
         checkWalletStatus();
+        if (!TextUtils.isEmpty(ImportWalletActivity.KeyStore)) {
+            keystoreEdit.setText(ImportWalletActivity.KeyStore);
+            ImportWalletActivity.KeyStore = "";
+        }
     }
 
-    private void initListener() {
+    @Override
+    protected void initAction() {
         importButton.setOnClickListener(view -> {
             if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
@@ -120,7 +127,6 @@ public class ImportKeystoreFragment extends BaseFragment {
             dismissProgressBar();
         });
     }
-
 
     private boolean isWalletValid() {
         return check1 && check2 && check3;
@@ -188,8 +194,15 @@ public class ImportKeystoreFragment extends BaseFragment {
                 Bundle bundle = data.getExtras();
                 if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    keystoreEdit.setText(result);
+                    switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                        case CodeUtils.STRING_KEYSTORE:
+                            String result = bundle.getString(CodeUtils.RESULT_STRING);
+                            keystoreEdit.setText(result);
+                            break;
+                        default:
+                            Toast.makeText(getActivity(), R.string.keystore_error, Toast.LENGTH_LONG).show();
+                            break;
+                    }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }

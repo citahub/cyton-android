@@ -127,8 +127,10 @@
 
         <activity
             android:name=".activity.QrCodeActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name=".activity.ExportKeystoreActivity"

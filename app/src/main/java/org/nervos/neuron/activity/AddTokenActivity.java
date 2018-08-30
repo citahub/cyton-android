@@ -22,13 +22,13 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
@@ -92,7 +92,7 @@ public class AddTokenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
-                    || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
+                        || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
                     Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
                 } else {
                     DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
@@ -110,14 +110,14 @@ public class AddTokenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 AndPermission.with(mActivity)
-                    .runtime().permission(Permission.Group.CAMERA)
-                    .rationale(new RuntimeRationale())
-                    .onGranted(permissions -> {
-                        Intent intent = new Intent(mActivity, QrCodeActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE);
-                    })
-                    .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
-                    .start();
+                        .runtime().permission(Permission.Group.CAMERA)
+                        .rationale(new RuntimeRationale())
+                        .onGranted(permissions -> {
+                            Intent intent = new Intent(mActivity, QrCodeActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE);
+                        })
+                        .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
+                        .start();
             }
         });
 
@@ -139,10 +139,12 @@ public class AddTokenActivity extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (!AddressUtil.isAddressValid(s.toString())) {
@@ -180,8 +182,15 @@ public class AddTokenActivity extends BaseActivity {
                 Bundle bundle = data.getExtras();
                 if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    contractAddressEdit.setText(result);
+                    switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                        case CodeUtils.STRING_ADDRESS:
+                            String result = bundle.getString(CodeUtils.RESULT_STRING);
+                            contractAddressEdit.setText(result);
+                            break;
+                        default:
+                            Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
+                            break;
+                    }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }

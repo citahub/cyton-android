@@ -183,6 +183,9 @@
     <string name="generate_keystore_fail">KeyStore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="web_url_error">不是正确网址</string>
+    <string name="keystore_error">不是合法keystore</string>
+    <string name="private_key_error">不是合法私钥</string>
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络请求错误</string>
     <string name="input_token_info">请输入完整的代币信息</string>
@@ -250,4 +253,8 @@
     <string name="more">更多</string>
     <string name="rollback">收起</string>
     <string name="check">查看</string>
+    <string name="qr_title">扫描二维码</string>
+    <string name="qr_tips">放入框内自动扫描</string>
+    <string name="qr_photo_failed">扫描本地图片失败</string>
+    <string name="developing">正在开发中</string>
 </resources>

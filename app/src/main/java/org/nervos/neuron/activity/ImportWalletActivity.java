@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,6 +12,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+import org.objectweb.asm.Handle;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -24,9 +26,12 @@ public class ImportWalletActivity extends NBaseActivity {
     private ImportMnemonicFragment importMnemonicFragment;
     private ImportPrivateKeyFragment importPrivateKeyFragment;
     private ImportKeystoreFragment importKeystoreFragment;
-
+    Handler handler = new Handler();
     private List<Fragment> importFragments = new ArrayList<>();
     private List<String> tabTitles = new ArrayList<>();
+    public static String KeyStore = "";
+    public static String PrivateKey = "";
+
 
     @Override
     protected int getContentLayout() {
@@ -71,6 +76,19 @@ public class ImportWalletActivity extends NBaseActivity {
         };
 
         viewPager.setAdapter(adapter);
+
+        if (("QR").equals(getIntent().getStringExtra("from"))) {
+            switch (getIntent().getIntExtra("type", 1)) {
+                case 1:
+                    KeyStore = getIntent().getStringExtra("value");
+                    break;
+                case 2:
+                    PrivateKey = getIntent().getStringExtra("value");
+                    viewPager.setCurrentItem(2);
+                    break;
+            }
+        }
+
         tabLayout.setViewPager(viewPager);
     }
 
@@ -78,5 +96,4 @@ public class ImportWalletActivity extends NBaseActivity {
     protected void initAction() {
 
     }
-
 }
