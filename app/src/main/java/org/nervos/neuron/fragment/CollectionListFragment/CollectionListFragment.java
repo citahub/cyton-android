@@ -1,11 +1,16 @@
 package org.nervos.neuron.fragment.CollectionListFragment;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.CollectionDetailActivity;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.response.CollectionResponse;
@@ -39,17 +44,18 @@ public class CollectionListFragment extends NBaseFragment {
     protected void initAction() {
         super.initAction();
 
-        adapter.setOnItemClickListener(new CollectionAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> getCollectionList());
+
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
         });
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getCollectionList();
-            }
+        adapter.setOnItemClickListener((view, position) -> {
+            Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
+            intent.putExtra("collection", collectionItemList.get(position));
+            startActivity(intent);
         });
     }
 
@@ -65,25 +71,36 @@ public class CollectionListFragment extends NBaseFragment {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWalletSaveEvent(TokenRefreshEvent event) {
+        getCollectionList();
+        collectionItemList.clear();
+        adapter.refresh(collectionItemList);
+        collectionRecycler.setVisibility(View.GONE);
+    }
+
     private void getCollectionList() {
         TokenService.getCollectionList(getContext())
-            .subscribe(new Subscriber<CollectionResponse>() {
-                @Override
-                public void onCompleted() {
-                    swipeRefreshLayout.setRefreshing(false);
-                    dismissProgressBar();
-                }
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                    swipeRefreshLayout.setRefreshing(false);
-                    dismissProgressBar();
-                }
-                @Override
-                public void onNext(CollectionResponse collectionResponse) {
-                    collectionItemList = collectionResponse.assets;
-                    adapter.refresh(collectionItemList);
-                }
-            });
+                .subscribe(new Subscriber<CollectionResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        swipeRefreshLayout.setRefreshing(false);
+                        dismissProgressBar();
+                    }
+
+                    @Override
+                    public void onNext(CollectionResponse collectionResponse) {
+                        collectionItemList = collectionResponse.assets;
+                        collectionRecycler.setVisibility(View.VISIBLE);
+                        adapter.refresh(collectionItemList);
+                    }
+                });
     }
 }

@@ -16,7 +16,7 @@ Making a new build for App store (Dev only)
 ============================================
 
 1. Clone source code to local
-2. Open app/config.gradle
+2. Open config.gradle
 3. Increase the versionCode by 1.
 4. Build the APK however you want (in Android Studio or via gradle)
     - You'll need the release certificate, alias and password.

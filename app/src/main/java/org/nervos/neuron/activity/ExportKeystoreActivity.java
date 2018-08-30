@@ -33,26 +33,12 @@ public class ExportKeystoreActivity extends BaseActivity {
     }
 
     private void initListener() {
-        findViewById(R.id.export_copy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("keystore", keystore);
-                if (cm != null) {
-                    cm.setPrimaryClip(mClipData);
-                    Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        findViewById(R.id.export_share).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_keystore));
-                intent.putExtra(Intent.EXTRA_TEXT, keystore);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(Intent.createChooser(intent, getString(R.string.share_keystore)));
+        findViewById(R.id.export_copy).setOnClickListener(v -> {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("keystore", keystore);
+            if (cm != null) {
+                cm.setPrimaryClip(mClipData);
+                Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
             }
         });
     }
