@@ -3,7 +3,7 @@ package org.nervos.neuron.service;
 public class HttpUrls {
 
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
-    public static final String NERVOS_SERVER_URL = "http://47.97.171.140:4000";
+    public static final String NERVOS_SERVER_URL = "https://microscope.cryptape.com:8888";
     public static final String NERVOS_TRANSACTION_URL = NERVOS_SERVER_URL + "/api/transactions?account=";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";

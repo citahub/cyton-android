@@ -108,10 +108,10 @@ public class PayTokenActivity extends BaseActivity {
         payFeeUnitText.setText(getNativeToken());
 
         if (transactionInfo.isEthereum()) {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()));
+            payAmountText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()));
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
         } else {
-            payAmountText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()));
+            payAmountText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()));
             payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()));
         }
 
@@ -252,7 +252,7 @@ public class PayTokenActivity extends BaseActivity {
 
         fromAddress.setText(walletItem.address);
         toAddress.setText(transactionInfo.to);
-        valueText.setText(NumberUtil.getDecimal_10(transactionInfo.getDoubleValue()) + getNativeToken());
+        valueText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()) + getNativeToken());
         if (transactionInfo.isEthereum()) {
             feeConfirmText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()) + getNativeToken());
         } else {

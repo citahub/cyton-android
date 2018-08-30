@@ -68,7 +68,7 @@ public class TransactionDetailActivity extends NBaseActivity {
             transactionChainName.setText(ConstUtil.ETH_MAINNET);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
-            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal10(gasPriceBig.multiply(gasUsedBig)) + "eth");
+            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + "eth");
             transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
