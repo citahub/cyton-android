@@ -122,8 +122,8 @@ public class WebAppUtil {
             @Override
             public Observable<ChainItem> call(ChainItem chainItem) {
                 NervosRpcService.init(webView.getContext(), chainItem.httpProvider);
-                AppMetaData.EthMetaDataResult ethMetaData =
-                        NervosRpcService.getMetaData().getEthMetaDataResult();
+                AppMetaData.AppMetaDataResult ethMetaData =
+                        NervosRpcService.getMetaData().getAppMetaDataResult();
                 if (ethMetaData != null) {
                     chainItem.name = ethMetaData.chainName;
                     chainItem.tokenAvatar = ethMetaData.tokenAvatar;
