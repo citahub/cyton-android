@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <org.nervos.neuron.custom.TitleBar
+        <org.nervos.neuron.view.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="48dp"

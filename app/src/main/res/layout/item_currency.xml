@@ -3,39 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_currency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:text="CNY"
-        android:textColor="@color/font_title"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_chosen"
-        android:layout_width="22dip"
-        android:layout_height="22dip"
-        android:layout_marginRight="15dip"
-        android:src="@drawable/ic_currency_selected"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <View
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/currency"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:layout_marginLeft="15dip"
-        android:layout_marginTop="13dip"
-        android:background="@color/line_form"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_currency" />
+        android:layout_height="wrap_content"
+        app:right_arrow="false"
+        app:right_image="@drawable/ic_currency_selected" />
 </android.support.constraint.ConstraintLayout>

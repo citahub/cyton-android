@@ -23,8 +23,11 @@
     <declare-styleable name="SettingButtonView">
         <attr name="icon" format="reference" />
         <attr name="name" format="string" />
-        <attr name="other1" format="boolean" />
+        <attr name="right_txt" format="string" />
+        <attr name="right_arrow" format="boolean" />
+        <attr name="right_image" format="reference" />
         <attr name="switch_button" format="boolean" />
+        <attr name="bottom_line" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="CommonButton">

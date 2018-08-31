@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -26,7 +26,7 @@
             android:gravity="center_vertical"
             android:text="@string/wallet_photo"
             android:textColor="@color/font_title"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wallet_photo"
@@ -42,12 +42,12 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin" />
+        android:layout_marginLeft="@dimen/default_margin" />
 
     <RelativeLayout
         android:id="@+id/wallet_name_layout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:background="@color/white"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin">
@@ -59,7 +59,7 @@
             android:gravity="center_vertical"
             android:text="@string/wallet_name"
             android:textColor="@color/font_title"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/wallet_name_text"
@@ -75,16 +75,18 @@
             android:singleLine="true"
             android:text="@string/wallet_name"
             android:textColor="@color/font_title_second"
-            android:textSize="16sp" />
+            android:textSize="13sp" />
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/default_margin" />
     </RelativeLayout>
 
-    <View
-        style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:background="@color/white"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin">
@@ -96,7 +98,7 @@
             android:gravity="center_vertical"
             android:text="@string/wallet_address"
             android:textColor="@color/font_title"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/wallet_address"
@@ -110,39 +112,22 @@
             android:maxEms="16"
             android:singleLine="true"
             android:textColor="@color/font_title_second"
-            android:textSize="16sp" />
+            android:textSize="13sp" />
     </RelativeLayout>
 
-    <TextView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/change_password"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:drawableEnd="@drawable/right_arrow"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:text="@string/change_password"
-        android:textColor="@color/font_title"
-        android:textSize="16sp" />
+        app:name="@string/change_password" />
 
-    <View
-        style="@style/separateLineLong"
-        android:layout_marginStart="@dimen/default_margin" />
-
-    <TextView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/export_keystore"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
-        android:drawableEnd="@drawable/right_arrow"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:text="@string/export_keystore"
-        android:textColor="@color/font_title"
-        android:textSize="16sp" />
+        android:layout_height="wrap_content"
+        app:bottom_line="false"
+        app:name="@string/export_keystore" />
 
     <View style="@style/separateLineLong" />
 

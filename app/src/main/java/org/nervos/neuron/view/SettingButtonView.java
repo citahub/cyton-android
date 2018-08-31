@@ -1,10 +1,12 @@
-package org.nervos.neuron.custom;
+package org.nervos.neuron.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.constraint.ConstraintLayout;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +17,9 @@ import org.nervos.neuron.R;
  */
 public class SettingButtonView extends ConstraintLayout {
 
-    private ImageView iconImage, openImage, switchImage;
-    private TextView nameText, otherText;
+    private ImageView iconImage, openImage, switchImage, rightImage;
+    private TextView nameText, rightText;
+    private View line;
     private TypedArray ta;
     private openListener openListener = null;
     private switchListener switchListener = null;
@@ -36,38 +39,75 @@ public class SettingButtonView extends ConstraintLayout {
     private void initView() {
         iconImage = findViewById(R.id.iv_setting_icon);
         nameText = findViewById(R.id.tv_setting);
-        otherText = findViewById(R.id.tv_other);
+        rightText = findViewById(R.id.tv_right);
         openImage = findViewById(R.id.iv_setting_open);
         root = findViewById(R.id.root);
         switchImage = findViewById(R.id.iv_setting_switch);
+        rightImage = findViewById(R.id.iv_setting_right);
+        line = findViewById(R.id.line);
     }
 
     private void initData() {
         String text = ta.getString(R.styleable.SettingButtonView_name);
         nameText.setText(text);
         int icon = ta.getResourceId(R.styleable.SettingButtonView_icon, -1);
-        iconImage.setBackgroundResource(icon);
-        boolean other1 = ta.getBoolean(R.styleable.SettingButtonView_other1, false);
-        if (other1)
-            otherText.setVisibility(VISIBLE);
-        else
-            otherText.setVisibility(GONE);
+        if (icon == -1) {
+            iconImage.setVisibility(GONE);
+        } else {
+            iconImage.setVisibility(VISIBLE);
+            iconImage.setBackgroundResource(icon);
+        }
+        String rightStr = ta.getString(R.styleable.SettingButtonView_right_txt);
+        if (!TextUtils.isEmpty(rightStr)) {
+            rightText.setVisibility(VISIBLE);
+            rightText.setText(rightStr);
+        } else
+            rightText.setVisibility(GONE);
         boolean switchButton = ta.getBoolean(R.styleable.SettingButtonView_switch_button, false);
         if (switchButton)
             switchImage.setVisibility(VISIBLE);
         else
             switchImage.setVisibility(GONE);
+        boolean rightArrow = ta.getBoolean(R.styleable.SettingButtonView_right_arrow, true);
+        if (rightArrow) {
+            openImage.setVisibility(VISIBLE);
+        } else
+            openImage.setVisibility(GONE);
+        int rightImg = ta.getResourceId(R.styleable.SettingButtonView_right_image, -1);
+        if (rightImg != -1) {
+            rightImage.setVisibility(VISIBLE);
+            rightImage.setImageResource(rightImg);
+        } else
+            rightImage.setVisibility(GONE);
+        boolean bottomLine = ta.getBoolean(R.styleable.SettingButtonView_bottom_line, true);
+        if (bottomLine)
+            line.setVisibility(VISIBLE);
+        else
+            line.setVisibility(GONE);
         ta.recycle();
     }
 
     //set other1 text
-    public void setOther1Text(String text) {
-        otherText.setText(text);
+    public void setRightText(String text) {
+        rightText.setText(text);
+        rightText.setVisibility(VISIBLE);
+    }
+
+    public void setRightImage(int res) {
+        rightImage.setImageResource(res);
+    }
+
+    public void setRightImageShow(boolean show) {
+        if (show) rightImage.setVisibility(VISIBLE);
+        else rightImage.setVisibility(GONE);
+    }
+
+    public void setNameText(String text) {
+        nameText.setText(text);
     }
 
     public void setOpenListener(openListener openListener) {
         this.openListener = openListener;
-        openImage.setVisibility(VISIBLE);
     }
 
     public void setSwitchListener(switchListener switchListener) {

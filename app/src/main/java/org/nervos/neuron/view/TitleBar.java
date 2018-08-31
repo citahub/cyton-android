@@ -1,4 +1,4 @@
-package org.nervos.neuron.custom;
+package org.nervos.neuron.view;
 
 import android.app.Activity;
 import android.content.Context;

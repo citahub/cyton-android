@@ -2,7 +2,6 @@ package org.nervos.neuron.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
@@ -11,7 +10,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
-import org.nervos.neuron.custom.SettingButtonView;
+import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.dialog.AuthFingerDialog;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
@@ -41,7 +40,7 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
-        currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+        currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
             if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
@@ -127,7 +126,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
                     break;
             }
         }

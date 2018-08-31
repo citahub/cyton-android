@@ -26,7 +26,6 @@ public class ImportWalletActivity extends NBaseActivity {
     private ImportMnemonicFragment importMnemonicFragment;
     private ImportPrivateKeyFragment importPrivateKeyFragment;
     private ImportKeystoreFragment importKeystoreFragment;
-    Handler handler = new Handler();
     private List<Fragment> importFragments = new ArrayList<>();
     private List<String> tabTitles = new ArrayList<>();
     public static String KeyStore = "";

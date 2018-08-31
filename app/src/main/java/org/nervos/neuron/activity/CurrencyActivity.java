@@ -1,7 +1,5 @@
 package org.nervos.neuron.activity;
 
-import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,21 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.item.CurrencyListItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.StreamUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.SettingButtonView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,12 +70,12 @@ public class CurrencyActivity extends NBaseActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CurrencyItem currency = currencyArray.get(position);
             if (SharePrefUtil.getString(ConstUtil.Currency, "CNY").equals(currency.getName())) {
-                holder.chosenImage.setVisibility(View.VISIBLE);
+                holder.currency.setRightImageShow(true);
             } else {
-                holder.chosenImage.setVisibility(View.GONE);
+                holder.currency.setRightImageShow(false);
             }
-            holder.currencyText.setText(currency.getName());
-            holder.root.setOnClickListener((view) -> {
+            holder.currency.setNameText(currency.getName());
+            holder.currency.setOpenListener(() -> {
                 SharePrefUtil.putString(ConstUtil.Currency, currency.getName());
                 notifyDataSetChanged();
             });
@@ -96,14 +88,12 @@ public class CurrencyActivity extends NBaseActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView currencyText;
-            ImageView chosenImage;
             ConstraintLayout root;
+            SettingButtonView currency;
 
             public ViewHolder(View view) {
                 super(view);
-                currencyText = view.findViewById(R.id.tv_currency);
-                chosenImage = view.findViewById(R.id.iv_chosen);
+                currency = view.findViewById(R.id.currency);
                 root = view.findViewById(R.id.root);
             }
         }

@@ -1,13 +1,11 @@
 package org.nervos.neuron.activity;
 
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.view.View;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.SettingButtonView;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.SettingButtonView;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.service.HttpUrls;
 
 /**

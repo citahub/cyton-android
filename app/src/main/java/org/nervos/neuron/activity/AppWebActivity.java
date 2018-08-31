@@ -1,14 +1,11 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -22,12 +19,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.dialog.SimpleDialog;
-import org.nervos.neuron.event.AppCollectEvent;
-import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
