@@ -96,6 +96,10 @@ public class NumberUtil {
         }
     }
 
+    public static String toLowerCaseWithout0x(String hex) {
+        return Numeric.cleanHexPrefix(hex).toLowerCase();
+    }
+
     @NonNull
     public static BigInteger hexToBigInteger(String input, BigInteger def) {
         BigInteger value = hexToBigInteger(input);
