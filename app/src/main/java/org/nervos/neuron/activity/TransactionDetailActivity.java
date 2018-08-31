@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import org.nervos.neuron.custom.TitleBar;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.HexUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -34,7 +36,7 @@ public class TransactionDetailActivity extends NBaseActivity {
     private TransactionItem transactionItem;
     private TitleBar title;
     private TextView transactionHashText, transactionValueText, transactionFromText, transactionToText, transactionBlockNumberText,
-            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName;
+            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName, transactionGasPriceTitle;
     private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
     @Override
@@ -54,6 +56,7 @@ public class TransactionDetailActivity extends NBaseActivity {
         transactionGas = findViewById(R.id.tv_transaction_gas);
         transactionGasPrice = findViewById(R.id.tv_transaction_gas_price);
         transactionChainName = findViewById(R.id.tv_chain_name);
+        transactionGasPriceTitle = findViewById(R.id.tv_transaction_gas_price_title);
     }
 
     @Override
@@ -78,6 +81,10 @@ public class TransactionDetailActivity extends NBaseActivity {
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
+//            int used = HexUtils.HexToInt(transactionItem.gasUsed);
+            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(transactionItem.gasUsed) + "NOS");
+            transactionGasPrice.setVisibility(View.GONE);
+            transactionGasPriceTitle.setVisibility(View.GONE);
             int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
             transactionBlockNumberText.setText(String.valueOf(blockNumber));
         }
