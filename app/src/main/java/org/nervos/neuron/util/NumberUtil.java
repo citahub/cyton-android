@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 public class NumberUtil {
 
     public static String getDecimalValid_2(double value) {
-        long integer = (long)value;
+        long integer = (long) value;
         double decimal = value - integer;
         BigDecimal b = new BigDecimal(decimal);
         BigDecimal divisor = BigDecimal.ONE;
@@ -31,7 +31,7 @@ public class NumberUtil {
 
     public static String getDecimal8ENotation(double value) {
         if (value < 1) {
-            double decimal = value - (long)value;
+            double decimal = value - (long) value;
             if (decimal < 0.00000001) {
                 return String.valueOf(value);
             }
@@ -42,9 +42,9 @@ public class NumberUtil {
 
     public static String hexToUtf8(String hex) {
         hex = Numeric.cleanHexPrefix(hex);
-        ByteBuffer buff = ByteBuffer.allocate(hex.length()/2);
-        for (int i = 0; i < hex.length(); i+=2) {
-            buff.put((byte)Integer.parseInt(hex.substring(i, i+2), 16));
+        ByteBuffer buff = ByteBuffer.allocate(hex.length() / 2);
+        for (int i = 0; i < hex.length(); i += 2) {
+            buff.put((byte) Integer.parseInt(hex.substring(i, i + 2), 16));
         }
         buff.rewind();
         Charset cs = Charset.forName("UTF-8");
@@ -96,6 +96,10 @@ public class NumberUtil {
         }
     }
 
+    public static String toLowerCaseWithout0x(String hex) {
+        return Numeric.cleanHexPrefix(hex).toLowerCase();
+    }
+
     @NonNull
     public static BigInteger hexToBigInteger(String input, BigInteger def) {
         BigInteger value = hexToBigInteger(input);
@@ -117,7 +121,7 @@ public class NumberUtil {
             e.printStackTrace();
         }
         StringBuilder sb = new StringBuilder();
-        for (byte x: bytes) {
+        for (byte x : bytes) {
             sb.append(Integer.toHexString(x & 0xFF));
         }
         return sb.toString();
@@ -138,6 +142,7 @@ public class NumberUtil {
     public static double getEthFromWeiForDouble(String value) {
         if (TextUtils.isEmpty(value)) return 0.0;
         if (Numeric.containsHexPrefix(value)) {
+            value = Numeric.cleanHexPrefix(value);
             return getEthFromWei(Numeric.toBigInt(value));
         } else {
             return getEthFromWei(new BigInteger(value));

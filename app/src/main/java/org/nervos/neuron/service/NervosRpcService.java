@@ -130,11 +130,13 @@ public class NervosRpcService {
         }).flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
-                Transaction transaction = Transaction.createFunctionCallTransaction(contractAddress,
+                Transaction transaction = Transaction.createFunctionCallTransaction(
+                        NumberUtil.toLowerCaseWithout0x(contractAddress),
                         randomNonce(), ConstUtil.DEFAULT_QUOTA, validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO.toString(), data);
                 try {
-                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    String privateKey = NumberUtil.toLowerCaseWithout0x(
+                            AESCrypt.decrypt(password, walletItem.cryptPrivateKey));
                     String rawTx = transaction.sign(privateKey, false, false);
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (GeneralSecurityException | IOException e) {
@@ -163,12 +165,13 @@ public class NervosRpcService {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
-                        Numeric.cleanHexPrefix(toAddress),
+                        NumberUtil.toLowerCaseWithout0x(toAddress),
                         randomNonce(), (quota == 0? ConstUtil.DEFAULT_QUOTA : quota),
                         validUntilBlock.longValue(), version, chainId,
                         NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);
                 try {
-                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                    String privateKey = NumberUtil.toLowerCaseWithout0x(
+                            AESCrypt.decrypt(password, walletItem.cryptPrivateKey));
                     String rawTx = transaction.sign(privateKey, false, false);
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (GeneralSecurityException | IOException e) {
