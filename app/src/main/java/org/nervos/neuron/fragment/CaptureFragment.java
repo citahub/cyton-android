@@ -26,7 +26,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.BitmapUtils;
 import org.nervos.neuron.util.PickPic;
 import org.nervos.neuron.util.QRUtils.BitmapDecoder;

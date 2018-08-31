@@ -11,7 +11,7 @@
         android:layout_height="250dp"
         android:background="@color/white">
 
-        <org.nervos.neuron.custom.TitleBar
+        <org.nervos.neuron.view.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="100dp"

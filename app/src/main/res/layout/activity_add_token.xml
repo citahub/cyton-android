@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -25,7 +25,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white">
 
@@ -57,12 +57,11 @@
         </RelativeLayout>
 
         <View
-            style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin" />
+            style="@style/separateLineLong"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white">
 
@@ -102,17 +101,16 @@
                 android:maxEms="20"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
         </RelativeLayout>
 
         <View
-            style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin" />
+            style="@style/separateLineLong" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:gravity="center_horizontal"
@@ -134,17 +132,16 @@
                 android:enabled="false"
                 android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 
         <View
-            style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin" />
+            style="@style/separateLineLong"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:gravity="center_horizontal"
@@ -166,17 +163,16 @@
                 android:enabled="false"
                 android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 
         <View
-            style="@style/separateLineLong"
-            android:layout_marginStart="@dimen/default_margin" />
+            style="@style/separateLineLong"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:gravity="center_horizontal"
@@ -198,7 +194,7 @@
                 android:enabled="false"
                 android:gravity="end|center_vertical"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 

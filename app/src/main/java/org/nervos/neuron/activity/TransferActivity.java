@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
