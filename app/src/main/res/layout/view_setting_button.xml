@@ -22,7 +22,7 @@
         android:id="@+id/tv_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
+        android:layout_marginLeft="10dip"
         android:text="本地货币"
         android:textColor="@color/font_title"
         android:textSize="15sp"

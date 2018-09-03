@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.DipUtils;
 
 /**
  * Created by 包俊 on 2018/7/30.
@@ -25,9 +26,11 @@ public class SettingButtonView extends ConstraintLayout {
     private switchListener switchListener = null;
     private ConstraintLayout root;
     private boolean switchStatus = false;
+    private Context context;
 
     public SettingButtonView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SettingButtonView);
         this.ta = ta;
         LayoutInflater.from(context).inflate(R.layout.view_setting_button, this);
@@ -53,6 +56,9 @@ public class SettingButtonView extends ConstraintLayout {
         int icon = ta.getResourceId(R.styleable.SettingButtonView_icon, -1);
         if (icon == -1) {
             iconImage.setVisibility(GONE);
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) nameText.getLayoutParams();
+            layoutParams.leftMargin = DipUtils.dip2px(context, 15);
+            nameText.setLayoutParams(layoutParams);
         } else {
             iconImage.setVisibility(VISIBLE);
             iconImage.setBackgroundResource(icon);
@@ -71,8 +77,12 @@ public class SettingButtonView extends ConstraintLayout {
         boolean rightArrow = ta.getBoolean(R.styleable.SettingButtonView_right_arrow, true);
         if (rightArrow) {
             openImage.setVisibility(VISIBLE);
-        } else
+        } else {
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) rightText.getLayoutParams();
+            layoutParams.rightMargin = DipUtils.dip2px(context, 15);
+            rightText.setLayoutParams(layoutParams);
             openImage.setVisibility(GONE);
+        }
         int rightImg = ta.getResourceId(R.styleable.SettingButtonView_right_image, -1);
         if (rightImg != -1) {
             rightImage.setVisibility(VISIBLE);
