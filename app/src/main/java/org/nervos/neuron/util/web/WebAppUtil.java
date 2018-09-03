@@ -45,6 +45,7 @@ import rx.schedulers.Schedulers;
 public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";
+    private static final String MANIFEST = "manifest";
     private static AppItem mAppItem = null;
 
     public static void init() {
@@ -63,10 +64,10 @@ public class WebAppUtil {
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByTag("link");
                 for(Element element: elements) {
-                    if ("manifest".equals(element.attr("rel"))) {
+                    if (MANIFEST.equals(element.attr("rel"))) {
                         return element.attr("href");
                     }
-                    if ("manifest".equals(element.attr("ref"))) {
+                    if (MANIFEST.equals(element.attr("ref"))) {
                         return element.attr("href");
                     }
                 }
@@ -81,8 +82,10 @@ public class WebAppUtil {
             @Override
             public Observable<AppItem> call(String path) {
                 URI uri = URI.create(url);
-                path = path.indexOf(".") == 0? path.substring(1) : path;
-                String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
+                String manifestUrl = path.startsWith("http")?
+                        path : uri.getScheme() + "://" + uri.getAuthority() +
+                        (path.indexOf(".") == 0? path.substring(1) : path);
+
                 Request request = new Request.Builder().url(manifestUrl).build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
                 String response = "";
