@@ -126,6 +126,7 @@
 
 
     <style name="WalletTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
         <item name="tabTextAppearance">@style/WalletTabTextAppearance</item>
     </style>
 
