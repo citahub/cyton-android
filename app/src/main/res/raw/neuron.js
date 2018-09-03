@@ -46333,7 +46333,6 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
     case 'sendTransaction':
-      console.log("sendTransaction")
       txParams = payload.params[0]
       txParams.chainType = "AppChain"
       waterfall([

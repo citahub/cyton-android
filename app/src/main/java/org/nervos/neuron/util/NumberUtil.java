@@ -141,12 +141,8 @@ public class NumberUtil {
 
     public static double getEthFromWeiForDouble(String value) {
         if (TextUtils.isEmpty(value)) return 0.0;
-        if (Numeric.containsHexPrefix(value)) {
-            value = Numeric.cleanHexPrefix(value);
-            return getEthFromWei(Numeric.toBigInt(value));
-        } else {
-            return getEthFromWei(new BigInteger(value));
-        }
+        value = Numeric.cleanHexPrefix(value);
+        return getEthFromWei(Numeric.toBigInt(value));
     }
 
     public static double getEthFromWei(BigInteger value) {
