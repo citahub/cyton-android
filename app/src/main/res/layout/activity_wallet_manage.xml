@@ -30,8 +30,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wallet_photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/default_margin"
