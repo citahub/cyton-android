@@ -14,26 +14,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="title"
-            android:textColor="@color/default_black"
-            android:textSize="20sp"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="5dp"/>
+            android:text="title"
+            android:textColor="@color/font_title"
+            android:textSize="20sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/default_gray_c"/>
+            android:background="@color/line_input" />
 
         <TextView
             android:id="@+id/message_text"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_margin="@dimen/default_margin"
-            android:textSize="12sp"
-            android:textColor="@color/default_gray_6"
+            android:background="@color/font_hint"
             android:padding="5dp"
-            android:background="@color/default_white_f4"/>
+            android:textColor="@color/font_title_second"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -51,39 +51,36 @@
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:background="@color/default_gray_c"/>
+                    android:background="@color/line_input" />
 
                 <TextView
                     android:id="@+id/dialog_copy"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_toStartOf="@id/separate"
+                    android:gravity="center"
                     android:text="@string/copy"
-                    android:textColor="@color/button_blue"
-                    android:textSize="14sp"
-                    />
+                    android:textColor="@color/font_link"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/dialog_share"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_toEndOf="@id/separate"
+                    android:gravity="center"
                     android:text="@string/share"
-                    android:textColor="@color/button_blue"
-                    android:textSize="14sp"
-                    />
+                    android:textColor="@color/font_link"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/default_gray_c"
-                android:layout_above="@id/dialog_button_layout"/>
+                android:layout_above="@id/dialog_button_layout"
+                android:background="@color/line_input" />
         </RelativeLayout>
-
 
 
     </LinearLayout>

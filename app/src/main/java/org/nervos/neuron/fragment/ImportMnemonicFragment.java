@@ -33,6 +33,7 @@ import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.crypto.WalletEntity;
+import org.nervos.neuron.view.Button.CommonButton;
 import org.web3j.crypto.CipherException;
 
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class ImportMnemonicFragment extends BaseFragment {
     private AppCompatEditText passwordEdit;
     private AppCompatEditText rePasswordEdit;
     private AppCompatEditText mnemonicEdit;
-    private AppCompatButton importButton;
+    private CommonButton importButton;
 
     @Nullable
     @Override
@@ -94,7 +95,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                         rePasswordEdit.getText().toString().trim())) {
                     Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
-                } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())){
+                } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())) {
                     Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     cachedThreadPool.execute(() -> generateAndSaveWallet());
@@ -157,47 +158,42 @@ public class ImportMnemonicFragment extends BaseFragment {
         return check1 && check2 && check3 && check4;
     }
 
-    private void setCreateButtonStatus(boolean status) {
-        importButton.setBackgroundResource(status?
-                R.drawable.button_corner_blue_shape:R.drawable.button_corner_gray_shape);
-        importButton.setEnabled(status);
-    }
-
 
     private boolean check1 = false, check2 = false, check3 = false, check4 = false;
+
     private void checkWalletStatus() {
-        walletNameEdit.addTextChangedListener(new WalletTextWatcher(){
+        walletNameEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check1 = !TextUtils.isEmpty(walletNameEdit.getText().toString().trim());
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
-        passwordEdit.addTextChangedListener(new WalletTextWatcher(){
+        passwordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
                         && passwordEdit.getText().toString().trim().length() >= 8;
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
-        rePasswordEdit.addTextChangedListener(new WalletTextWatcher(){
+        rePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
                         && rePasswordEdit.getText().toString().trim().length() >= 8;
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
-        mnemonicEdit.addTextChangedListener(new WalletTextWatcher(){
+        mnemonicEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
                 check4 = !TextUtils.isEmpty(mnemonicEdit.getText().toString().trim());
-                setCreateButtonStatus(isWalletValid());
+                importButton.setClickAble(isWalletValid());
             }
         });
     }
@@ -208,10 +204,12 @@ public class ImportMnemonicFragment extends BaseFragment {
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void afterTextChanged(Editable editable) {
 

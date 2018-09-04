@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -39,11 +39,15 @@
         android:singleLine="true"
         android:textSize="15sp" />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:background="@color/line_input" />
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            style="@style/inputSeparateLine"
+            android:layout_marginLeft="@dimen/default_margin" />
+    </LinearLayout>
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_password"
@@ -57,11 +61,15 @@
         android:singleLine="true"
         android:textSize="15sp" />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginStart="@dimen/default_margin"
-        android:background="@color/line_input" />
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            style="@style/inputSeparateLine"
+            android:layout_marginLeft="@dimen/default_margin" />
+    </LinearLayout>
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_wallet_password_repeat"
@@ -87,20 +95,15 @@
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginTop="8dp"
         android:text="@string/password_suggestion"
-        android:textColor="@color/font_inside"
+        android:textColor="@color/font_title_third"
         android:textSize="12sp" />
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/create_wallet_button"
+    <org.nervos.neuron.view.Button.CommonButton
+        android:id="@+id/commonBtn"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/button_corner_gray_shape"
-        android:enabled="false"
-        android:text="@string/next_action"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        app:status="false"
+        app:text="@string/next_action" />
 
 </LinearLayout>

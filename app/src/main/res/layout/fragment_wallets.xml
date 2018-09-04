@@ -65,7 +65,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="40dp"
             style="@style/WalletTabLayout"
             android:background="@android:color/white" />
 

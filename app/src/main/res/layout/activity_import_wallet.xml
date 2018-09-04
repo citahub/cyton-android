@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -20,7 +20,7 @@
         android:layout_height="48dp"
         android:background="@color/white"
         app:stl_defaultTabTextAllCaps="false"
-        app:stl_defaultTabTextColor="@color/default_black"
+        app:stl_defaultTabTextColor="@color/font_title"
         app:stl_defaultTabTextSize="15sp"
         app:stl_distributeEvenly="true"
         app:stl_dividerThickness="0dp"

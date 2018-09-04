@@ -11,7 +11,7 @@
             android:id="@+id/wallet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/font_black"
+            android:textColor="@color/font_title"
             android:textSize="14sp"/>
 
         <TextView
@@ -21,7 +21,7 @@
             android:layout_below="@id/wallet_name"
             android:layout_marginTop="5dp"
             android:text="0x3423434..."
-            android:textColor="@color/font_black"
+            android:textColor="@color/font_title"
             android:textSize="12sp"/>
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:text="10.45 CIT"
-            android:textColor="@color/font_black"
+            android:textColor="@color/font_title"
             android:textSize="14sp"/>
     </RelativeLayout>
 

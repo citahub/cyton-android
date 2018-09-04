@@ -19,6 +19,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.DipUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -63,7 +64,7 @@ public class ChangeWalletActivity extends NBaseActivity {
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Adapter();
-        recyclerView.addItemDecoration(new SpaceItemDecoration(60));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(15));
         recyclerView.setAdapter(adapter);
     }
 
@@ -76,7 +77,7 @@ public class ChangeWalletActivity extends NBaseActivity {
 
     @Override
     protected int getStatusBarColor() {
-        return getResources().getColor(R.color.qr_receive_bg);
+        return getResources().getColor(R.color.transparent_color2);
     }
 
     @Override
@@ -172,7 +173,7 @@ public class ChangeWalletActivity extends NBaseActivity {
         private int space;
 
         public SpaceItemDecoration(int space) {
-            this.space = space;
+            this.space = DipUtils.dip2px(mActivity, space);
         }
 
         @Override

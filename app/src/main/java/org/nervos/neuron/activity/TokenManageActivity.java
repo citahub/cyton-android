@@ -21,7 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;

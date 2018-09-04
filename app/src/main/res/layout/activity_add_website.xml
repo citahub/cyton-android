@@ -21,7 +21,7 @@
                 android:layout_height="match_parent"
                 android:textSize="15sp"
                 android:drawableLeft="@drawable/black_back"
-                android:textColor="@color/default_gray_6"
+                android:textColor="@color/font_title_second"
                 android:paddingLeft="@dimen/default_margin"
                 android:layout_centerVertical="true" />
 
@@ -52,7 +52,7 @@
                 android:imeOptions="actionDone"
                 android:hint="@string/input_app_website_hint"
                 android:textColorHint="@color/font_hint"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:textSize="14sp"/>
 
             <ImageView

@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,6 +16,7 @@ import org.nervos.neuron.custom.SelectWalletPopupwWindow;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.Button.CommonButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private TextView cancelTv, walletNameTv, walletSelectTv;
     private AppCompatEditText walletPwdEt;
     private ImageView walletSelectImg, otherImg, arrowImg;
-    private AppCompatButton authBtn;
+    private CommonButton authBtn;
     private WalletItem walletItem;
 
     @Override
@@ -89,11 +89,9 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!TextUtils.isEmpty(walletPwdEt.getText().toString().trim()) && walletPwdEt.getText().toString().length() >= 8) {
-                    authBtn.setBackgroundResource(R.drawable.button_corner_blue_shape);
-                    authBtn.setEnabled(true);
+                    authBtn.setClickAble(true);
                 } else {
-                    authBtn.setBackgroundResource(R.drawable.button_corner_gray_shape);
-                    authBtn.setEnabled(false);
+                    authBtn.setClickAble(false);
                 }
             }
         });

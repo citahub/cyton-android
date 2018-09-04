@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/default_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/default_background"
+    android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/title_transfer"
-        app:isShowLeft="true"/>
+        app:isShowLeft="true"
+        app:title="@string/title_transfer" />
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.Button.CommonButton
         android:id="@+id/next_action_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="@dimen/default_margin"
-        android:background="@drawable/button_corner_blue_shape"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:textSize="15sp"
-        android:textColor="@color/white"
-        android:text="@string/next_action"/>
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        app:status="true"
+        app:text="@string/next_action" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_above="@id/next_action_button">
+        android:layout_above="@id/next_action_button"
+        android:layout_below="@id/title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,8 +38,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="74dp"
-                android:background="@color/white"
-                android:layout_margin="@dimen/default_margin">
+                android:layout_margin="@dimen/default_margin"
+                android:background="@color/white">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/wallet_photo"
@@ -48,26 +47,26 @@
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/default_margin"
-                    app:civ_border_width="1dp"
-                    app:civ_border_color="@color/default_gray_d5"/>
+                    app:civ_border_color="@color/line_input"
+                    app:civ_border_width="1dp" />
 
                 <TextView
                     android:id="@+id/wallet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/wallet_photo"
                     android:layout_alignTop="@id/wallet_photo"
-                    android:textSize="15sp"
-                    android:textColor="@color/default_black"
+                    android:layout_marginEnd="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"/>
+                    android:layout_toEndOf="@id/wallet_photo"
+                    android:textColor="@color/font_title"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/wallet_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="@color/default_gray_9"
+                    android:textColor="@color/font_title_second"
                     android:singleLine="true"
                     android:ellipsize="middle"
                     android:layout_marginStart="@dimen/default_margin"
@@ -89,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/token_transfer_value"
-                    android:textColor="@color/font_black"
+                    android:textColor="@color/font_title"
                     android:textSize="15sp"/>
 
                 <TextView
@@ -130,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/receive_address"
-                    android:textColor="@color/font_black"
+                    android:textColor="@color/font_title"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -169,7 +168,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="8dp"
                     android:text="@string/fee_value"
-                    android:textColor="@color/font_black"
+                    android:textColor="@color/font_title"
                     android:textSize="15sp"/>
 
                 <TextView
@@ -179,11 +178,11 @@
                     android:layout_marginTop="8dp"
                     android:layout_alignParentEnd="true"
                     android:textSize="12sp"
-                    android:textColor="@color/default_black" />
+                    android:textColor="@color/font_title" />
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/white"
@@ -201,7 +200,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/slow"
                         android:textSize="12sp"
-                        android:textColor="@color/default_gray_6" />
+                        android:textColor="@color/font_title_second" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -209,7 +208,7 @@
                         android:text="@string/fast"
                         android:textSize="12sp"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/default_gray_6" />
+                        android:textColor="@color/font_title_second" />
 
                     <android.support.v7.widget.AppCompatSeekBar
                         android:id="@+id/fee_seek_bar"
@@ -225,7 +224,7 @@
                         android:layout_below="@id/fee_seek_bar"
                         android:background="@color/white"
                         android:gravity="center"
-                        android:textColor="@color/default_gray_6"
+                        android:textColor="@color/font_title_second"
                         android:textSize="12sp"/>
                 </RelativeLayout>
 
@@ -250,7 +249,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textSize="13sp"
-                                android:textColor="@color/default_black"
+                                android:textColor="@color/font_title"
                                 android:singleLine="true"
                                 android:hint="@string/custom_gas_price"
                                 android:background="@color/white"/>
@@ -261,7 +260,7 @@
                                 android:layout_gravity="end"
                                 android:gravity="center_vertical"
                                 android:text="@string/gwei"
-                                android:textColor="@color/default_gray_6"
+                                android:textColor="@color/font_title_second"
                                 android:textSize="12sp"/>
                         </FrameLayout>
 
@@ -273,7 +272,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:textSize="13sp"
-                            android:textColor="@color/default_black"
+                            android:textColor="@color/font_title"
                             android:singleLine="true"
                             android:hint="@string/custom_gas"
                             android:background="@color/white"/>
@@ -292,7 +291,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:textSize="13sp"
-                            android:textColor="@color/default_black"
+                            android:textColor="@color/font_title"
                             android:singleLine="true"
                             android:hint="@string/custom_quota"
                             android:background="@color/white"/>
@@ -310,7 +309,7 @@
                         android:padding="10dp"
                         android:gravity="start"
                         android:textSize="13sp"
-                        android:textColor="@color/default_black"/>
+                        android:textColor="@color/font_title"/>
 
 
                 </LinearLayout>
@@ -322,10 +321,10 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/advanced_setup"
-                    android:textColor="@color/default_black"
+                    android:textColor="@color/font_title"
                     android:layout_gravity="end"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

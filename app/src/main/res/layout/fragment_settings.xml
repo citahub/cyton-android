@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_white_f9"
+    android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -22,37 +22,35 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <org.nervos.neuron.custom.SettingButtonView
+        <org.nervos.neuron.view.SettingButtonView
             android:id="@+id/sbv_local_coin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_localcoin"
-            app:name="@string/setting_currency"
-            app:other1="true" />
+            app:name="@string/setting_currency" />
 
-        <org.nervos.neuron.custom.SettingButtonView
+        <org.nervos.neuron.view.SettingButtonView
             android:id="@+id/sbv_fingerprint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_fingerprint"
             app:name="@string/setting_fingerprint"
-            app:other1="false"
+            app:right_arrow="false"
+            app:right_text="CNY"
             app:switch_button="true" />
 
-        <org.nervos.neuron.custom.SettingButtonView
+        <org.nervos.neuron.view.SettingButtonView
             android:id="@+id/sbv_about_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_about_us"
-            app:name="@string/setting_about_us"
-            app:other1="false" />
+            app:name="@string/setting_about_us" />
 
-        <org.nervos.neuron.custom.SettingButtonView
+        <org.nervos.neuron.view.SettingButtonView
             android:id="@+id/sbv_contact_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_contact_us"
-            app:name="@string/setting_contact_us"
-            app:other1="false" />
+            app:name="@string/setting_contact_us" />
     </LinearLayout>
 </LinearLayout>

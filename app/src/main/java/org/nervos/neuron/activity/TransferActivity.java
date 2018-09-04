@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
@@ -53,6 +53,7 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.view.Button.CommonButton;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
@@ -73,7 +74,7 @@ public class TransferActivity extends NBaseActivity {
     private SwitchCompat setupSwitch;
     private ImageView scanImage;
     private AppCompatEditText receiveAddressEdit, transferValueEdit;
-    private AppCompatButton nextActionButton;
+    private CommonButton nextActionButton;
     private CircleImageView photoImage;
     private AppCompatSeekBar feeSeekBar;
     private RelativeLayout feeSeekBarLayout;

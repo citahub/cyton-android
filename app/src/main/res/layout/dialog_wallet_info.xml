@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/default_margin"
-        android:textColor="@color/font_black"
+        android:textColor="@color/font_title"
         android:textSize="16sp"/>
 
     <ImageView
@@ -29,7 +29,7 @@
         android:lines="1"
         android:ellipsize="end"
         android:maxEms="12"
-        android:textColor="@color/font_black"
+        android:textColor="@color/font_title"
         android:textSize="16sp"/>
 
     <LinearLayout

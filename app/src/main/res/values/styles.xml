@@ -78,16 +78,22 @@
 
     <style name="separateLineLong">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">@color/default_separate_gray</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/line_form</item>
     </style>
 
     <style name="separateLineShort">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginStart">@dimen/default_margin</item>
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
-        <item name="android:background">@color/default_separate_gray</item>
+        <item name="android:background">@color/line_form</item>
+    </style>
+
+    <style name="inputSeparateLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/line_input</item>
     </style>
 
     <style name="ConfirmDialog">
@@ -105,7 +111,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginTop">7dp</item>
-        <item name="android:textColor">@color/font_inside</item>
+        <item name="android:textColor">@color/font_title_third</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -120,12 +126,13 @@
 
 
     <style name="WalletTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
         <item name="tabTextAppearance">@style/WalletTabTextAppearance</item>
     </style>
 
     <style name="WalletTabTextAppearance" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/default_black</item>
+        <item name="android:textColor">@color/font_title</item>
         <item name="textAllCaps">true</item>
     </style>
 
@@ -134,6 +141,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="DialogButtonCancel" parent="DialogButtonStyle">
@@ -145,5 +153,4 @@
         <item name="android:textColor">@color/font_link</item>
         <item name="android:text">@string/ok</item>
     </style>
-
 </resources>

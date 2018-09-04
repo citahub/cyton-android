@@ -1,4 +1,4 @@
-package org.nervos.neuron.custom;
+package org.nervos.neuron.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -99,7 +99,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         Drawable drawable;
         mTitleImg = a.getResourceId(R.styleable.TitleBar_title_img, 0);
 
-        mTitleBg = a.getResourceId(R.styleable.TitleBar_title_bg, R.color.default_title_bg);
+        mTitleBg = a.getResourceId(R.styleable.TitleBar_title_bg, R.color.white);
         mTitleBarView.setBackgroundResource(mTitleBg);
 
         if (0 != mTitleImg) {

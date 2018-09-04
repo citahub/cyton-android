@@ -92,7 +92,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="30dp"
                         android:text="@string/empty_no_token_data"
-                        android:textColor="@color/default_gray_6"
+                        android:textColor="@color/font_title_second"
                         android:textSize="16sp" />
 
                 </LinearLayout>

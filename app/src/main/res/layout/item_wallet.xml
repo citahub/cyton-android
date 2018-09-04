@@ -41,9 +41,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
+            android:maxEms="12"
             android:singleLine="true"
             android:text="address"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -52,7 +53,7 @@
         android:layout_width="13dp"
         android:layout_height="14dp"
         android:layout_alignParentRight="true"
-        android:background="@color/qr_receive_bg"
+        android:background="@color/dark_background"
         android:src="@drawable/ic_wallet_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
