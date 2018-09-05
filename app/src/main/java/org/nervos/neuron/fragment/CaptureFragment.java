@@ -61,6 +61,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     private CodeUtils.AnalyzeCallback analyzeCallback;
     private Camera camera;
     private TitleBar titleBar;
+    private boolean isShowRight = true;
 
     @Override
     protected int getContentLayout() {
@@ -74,6 +75,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         surfaceHolder = surfaceView.getHolder();
         titleBar = (TitleBar) findViewById(R.id.title);
+        if (!isShowRight)
+            titleBar.hideRight();
     }
 
     @Override
@@ -266,6 +269,10 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
                 mediaPlayer = null;
             }
         }
+    }
+
+    public void setRight(boolean show) {
+        isShowRight = show;
     }
 
     private static final long VIBRATE_DURATION = 200L;

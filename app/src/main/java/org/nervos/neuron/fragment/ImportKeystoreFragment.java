@@ -67,6 +67,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
         checkWalletStatus();
         if (!TextUtils.isEmpty(ImportWalletActivity.KeyStore)) {
             keystoreEdit.setText(ImportWalletActivity.KeyStore);
+            keystoreEdit.setSelection(ImportWalletActivity.KeyStore.length());
             ImportWalletActivity.KeyStore = "";
         }
     }
@@ -85,6 +86,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
                 .rationale(new RuntimeRationale())
                 .onGranted(permissions -> {
                     Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                    intent.putExtra("showRight", false);
                     startActivityForResult(intent, REQUEST_CODE);
                 })
                 .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))

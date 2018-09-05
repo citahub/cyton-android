@@ -29,6 +29,7 @@ public class QrCodeActivity extends NBaseActivity {
         CodeUtils.setFragmentArgs(captureFragment, R.layout.capture_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         getSupportFragmentManager().beginTransaction().replace(R.id.capture_container, captureFragment).commit();
+        captureFragment.setRight(getIntent().getBooleanExtra("showRight", true));
     }
 
     @Override

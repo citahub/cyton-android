@@ -72,6 +72,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         checkWalletStatus();
         if (!TextUtils.isEmpty(ImportWalletActivity.PrivateKey)) {
             privateKeyEdit.setText(ImportWalletActivity.PrivateKey);
+            privateKeyEdit.setSelection(ImportWalletActivity.PrivateKey.length());
             ImportWalletActivity.PrivateKey = "";
         }
 
