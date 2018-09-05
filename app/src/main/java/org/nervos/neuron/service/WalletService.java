@@ -3,6 +3,7 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
+
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -76,6 +77,7 @@ public class WalletService {
 
     public interface OnGetWalletTokenListener {
         void onGetWalletToken(WalletItem walletItem);
+
         void onGetWalletError(String message);
     }
 
@@ -112,7 +114,7 @@ public class WalletService {
                 return 0.0;
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

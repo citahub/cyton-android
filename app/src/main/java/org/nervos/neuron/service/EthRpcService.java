@@ -23,7 +23,6 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int256;
-import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
@@ -205,7 +204,7 @@ public class EthRpcService {
         String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
-            Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+            Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
             double balances = balance.getValue().doubleValue();
             if (decimal == 0) return balance.getValue().doubleValue();
             else return balances/(Math.pow(10, decimal));
@@ -304,7 +303,7 @@ public class EthRpcService {
         String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(decimals) && !ConstUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
-            Int64 type = (Int64) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
+            Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();
         }
         return 0;
@@ -317,7 +316,7 @@ public class EthRpcService {
         intTypes.add(new TypeReference<Type>() {
             @Override
             public java.lang.reflect.Type getType() {
-                return Int64.class;
+                return Int256.class;
             }
         });
     }
