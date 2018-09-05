@@ -22,6 +22,7 @@ import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
@@ -206,7 +207,7 @@ public class EthRpcService {
             initIntTypes();
             Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
             double balances = balance.getValue().doubleValue();
-            if (decimal == 0) return balances;
+            if (decimal == 0) return balance.getValue().doubleValue();
             else return balances/(Math.pow(10, decimal));
         }
         return 0.0;

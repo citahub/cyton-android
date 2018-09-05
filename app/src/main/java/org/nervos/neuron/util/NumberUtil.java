@@ -131,18 +131,14 @@ public class NumberUtil {
         return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
-    public static String getEthFromWeiForStringDecimal8(String value) {
-        return getDecimal8ENotation(getEthFromWeiForDouble(value));
-    }
-
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
 
-    public static double getEthFromWeiForDouble(String value) {
-        if (TextUtils.isEmpty(value)) return 0.0;
-        value = Numeric.cleanHexPrefix(value);
-        return getEthFromWei(Numeric.toBigInt(value));
+    public static double getEthFromWeiForDouble(String hex) {
+        if (TextUtils.isEmpty(hex)) return 0.0;
+        hex = Numeric.cleanHexPrefix(hex);
+        return getEthFromWei(Numeric.toBigInt(hex));
     }
 
     public static double getEthFromWei(BigInteger value) {

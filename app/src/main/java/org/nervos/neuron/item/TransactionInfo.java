@@ -52,7 +52,7 @@ public class TransactionInfo implements Parcelable {
     public double getGas() {
         BigInteger limitBig = TextUtils.isEmpty(gasLimit)? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
         BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
-        return NumberUtil.getEthFromWeiForDouble(limitBig.multiply(priceBig).toString());
+        return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
     public boolean isEthereum() {
