@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ChainItem implements Parcelable{
 
-    public int chainId = -1;
+    public int chainId;
     public String httpProvider;
     public String blockViewer;
     public String name;

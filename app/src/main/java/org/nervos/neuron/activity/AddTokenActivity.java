@@ -94,10 +94,8 @@ public class AddTokenActivity extends BaseActivity {
                 Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
             } else {
                 DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
-                if (!DBTokenUtil.checkTokenExist(mActivity, tokenItem)) {
-                    DBTokenUtil.saveToken(mActivity, tokenItem);
-                    setResult(TokenManageActivity.RESULT_CODE);
-                }
+                DBTokenUtil.saveToken(mActivity, tokenItem);
+                setResult(TokenManageActivity.RESULT_CODE);
                 finish();
             }
         });
@@ -136,12 +134,10 @@ public class AddTokenActivity extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if (!AddressUtil.isAddressValid(s.toString())) {

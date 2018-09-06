@@ -95,7 +95,7 @@ public class WalletService {
                             return EthRpcService.getERC20Balance(
                                     tokenItem.contractAddress, walletItem.address);
                         }
-                    } else {                                    // CITA
+                    } else {                                    // nervos
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                         if (chainItem != null) {
                             String httpProvider = chainItem.httpProvider;
