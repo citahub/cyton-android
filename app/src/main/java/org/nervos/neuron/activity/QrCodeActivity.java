@@ -12,6 +12,8 @@ import org.nervos.neuron.util.QRUtils.QRResultCheck;
 public class QrCodeActivity extends NBaseActivity {
 
     private CaptureFragment captureFragment;
+    public static String SHOW_RIGHT = "showRight";
+
 
     @Override
     protected int getContentLayout() {
@@ -29,7 +31,7 @@ public class QrCodeActivity extends NBaseActivity {
         CodeUtils.setFragmentArgs(captureFragment, R.layout.capture_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         getSupportFragmentManager().beginTransaction().replace(R.id.capture_container, captureFragment).commit();
-        captureFragment.setRight(getIntent().getBooleanExtra("showRight", true));
+        captureFragment.setRight(getIntent().getBooleanExtra(SHOW_RIGHT, true));
     }
 
     @Override

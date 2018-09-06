@@ -86,7 +86,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
                 .rationale(new RuntimeRationale())
                 .onGranted(permissions -> {
                     Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                    intent.putExtra("showRight", false);
+                    intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
                     startActivityForResult(intent, REQUEST_CODE);
                 })
                 .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
