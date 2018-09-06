@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.CollectionListFragment.CollectionListFragment;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.CollectionItem;
 
@@ -25,7 +26,8 @@ import org.nervos.neuron.item.CollectionItem;
  */
 public class CollectionDetailActivity extends NBaseActivity implements View.OnClickListener {
 
-    private TextView nameText, tokenIdText, contractNameText, describeText, moreText, collectionDescTitleText, descMoreText, collectionDescText;
+    private TextView nameText, tokenIdText, contractNameText, describeText, moreText,
+            collectionDescTitleText, descMoreText, collectionDescText;
     private ImageView collectionImage;
     private Button checkBtn;
     private RelativeLayout imageRl;
@@ -61,7 +63,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        collectionItem = getIntent().getParcelableExtra("collection");
+        collectionItem = getIntent().getParcelableExtra(CollectionListFragment.EXTRA_COLLECTION);
         nameText.setText(collectionItem.name);
         tokenIdText.setText("ID:" + collectionItem.tokenId);
         contractNameText.setText(collectionItem.assetContract.name);
@@ -116,7 +118,8 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(CollectionDetailActivity.this).inflate(R.layout.item_collection_attr, parent, false);
+            View view = LayoutInflater.from(CollectionDetailActivity.this)
+                    .inflate(R.layout.item_collection_attr, parent, false);
             return new ViewHolder(view);
         }
 

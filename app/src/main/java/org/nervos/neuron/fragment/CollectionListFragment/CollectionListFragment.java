@@ -23,6 +23,8 @@ import rx.Subscriber;
 
 public class CollectionListFragment extends NBaseFragment {
 
+    public static final String EXTRA_COLLECTION = "collection";
+
     private RecyclerView collectionRecycler;
     private CollectionAdapter adapter;
     private List<CollectionItem> collectionItemList = new ArrayList<>();
@@ -48,7 +50,7 @@ public class CollectionListFragment extends NBaseFragment {
 
         adapter.setOnItemClickListener((view, position) -> {
             Intent intent = new Intent(getActivity(), CollectionDetailActivity.class);
-            intent.putExtra("collection", collectionItemList.get(position));
+            intent.putExtra(EXTRA_COLLECTION, collectionItemList.get(position));
             startActivity(intent);
         });
     }
@@ -81,14 +83,12 @@ public class CollectionListFragment extends NBaseFragment {
                         swipeRefreshLayout.setRefreshing(false);
                         dismissProgressBar();
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         swipeRefreshLayout.setRefreshing(false);
                         dismissProgressBar();
                     }
-
                     @Override
                     public void onNext(CollectionResponse collectionResponse) {
                         collectionItemList = collectionResponse.assets;

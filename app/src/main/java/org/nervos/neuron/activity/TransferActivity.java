@@ -25,6 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.neuron.service.NeuronSubscriber;
+import org.nervos.neuron.util.view.NeuronTextWatcher;
+import org.nervos.neuron.util.view.OnNeuronSeekBarChangeListener;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -146,17 +149,7 @@ public class TransferActivity extends NBaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void initBalance() {
-        WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new Subscriber<Double>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
+        WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new NeuronSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
                 mBalance = balance;
@@ -169,19 +162,12 @@ public class TransferActivity extends NBaseActivity {
 
     private void initGasInfo() {
         showProgressCircle();
-        EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
+        EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
-                e.printStackTrace();
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 dismissProgressCircle();
             }
-
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
@@ -200,16 +186,7 @@ public class TransferActivity extends NBaseActivity {
     private void initPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
+                .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price)) return;
@@ -251,6 +228,9 @@ public class TransferActivity extends NBaseActivity {
 
     @Override
     protected void initAction() {
+
+        advancedSetup();
+
         scanImage.setOnClickListener((view) -> {
             AndPermission.with(mActivity)
                     .runtime().permission(Permission.Group.CAMERA)
@@ -287,7 +267,7 @@ public class TransferActivity extends NBaseActivity {
                 confirmDialog.getWindow().setGravity(Gravity.BOTTOM);
             }
         });
-        feeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        feeSeekBar.setOnSeekBarChangeListener(new OnNeuronSeekBarChangeListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -303,17 +283,16 @@ public class TransferActivity extends NBaseActivity {
                     feeValueText.setText(feeSeekText.getText());
                 }
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
         });
+
+    }
+
+    /**
+     * transfer advanced setup
+     */
+    private void advancedSetup() {
+        advancedGas();
+        advancedQuota();
         setupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -333,12 +312,13 @@ public class TransferActivity extends NBaseActivity {
             }
         });
 
-        customGasPriceEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-            }
-
+    /**
+     * gas advanced setup
+     */
+    private void advancedGas() {
+        customGasPriceEdit.addTextChangedListener(new NeuronTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -351,18 +331,8 @@ public class TransferActivity extends NBaseActivity {
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
-        customGasEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+        customGasEdit.addTextChangedListener(new NeuronTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -375,18 +345,14 @@ public class TransferActivity extends NBaseActivity {
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
-        customQuotaEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-            }
-
+    /**
+     * quota advanced setup
+     */
+    private void advancedQuota() {
+        customQuotaEdit.addTextChangedListener(new NeuronTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -398,11 +364,6 @@ public class TransferActivity extends NBaseActivity {
                     advancedSetupNervosFeeValue();
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
     }
@@ -531,8 +492,6 @@ public class TransferActivity extends NBaseActivity {
     }
 
 
-    /**   transfer token of etherum and appchain  */
-
     /**
      * transfer origin token of nervos
      *
@@ -543,30 +502,24 @@ public class TransferActivity extends NBaseActivity {
         transactionHexData = payHexDataEdit.getText().toString().trim();
         NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value,
                 transactionHexData, tokenItem.chainId, password)
-                .subscribe(new Subscriber<AppSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
+                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Toast.makeText(TransferActivity.this,
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         passwordDialog.dismiss();
                     }
-
                     @Override
-                    public void onNext(AppSendTransaction ethSendTransaction) {
+                    public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(ethSendTransaction.getSendTransactionResult().getHash())) {
+                        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             passwordDialog.dismiss();
                             finish();
-                        } else if (ethSendTransaction.getError() != null &&
-                                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
-                            Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
+                        } else if (appSendTransaction.getError() != null &&
+                                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
+                            Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
@@ -586,20 +539,14 @@ public class TransferActivity extends NBaseActivity {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
-                .subscribe(new Subscriber<AppSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
+                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Toast.makeText(TransferActivity.this,
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         passwordDialog.dismiss();
                     }
-
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
@@ -629,20 +576,14 @@ public class TransferActivity extends NBaseActivity {
         transactionHexData = payHexDataEdit.getText().toString().trim();
         EthRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
                 Double.valueOf(value), mGasPrice, mGasLimit, transactionHexData, password)
-                .subscribe(new Subscriber<EthSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
+                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Toast.makeText(TransferActivity.this,
                                 e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         passwordDialog.dismiss();
                     }
-
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
@@ -672,19 +613,13 @@ public class TransferActivity extends NBaseActivity {
     private void transferEthErc20(String password, String value, ProgressBar progressBar) {
         EthRpcService.transferErc20(tokenItem, receiveAddressEdit.getText().toString().trim(),
                 Double.valueOf(value), mGasPrice, mGasLimit, password)
-                .subscribe(new Subscriber<EthSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
+                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         passwordDialog.dismiss();
                     }
-
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
@@ -717,22 +652,23 @@ public class TransferActivity extends NBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_SCAN:
-                if (null != data) {
-                    Bundle bundle = data.getExtras();
-                    if (bundle == null) return;
-                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                        switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                            case org.nervos.neuron.util.QRUtils.CodeUtils.STRING_ADDRESS:
-                                String result = bundle.getString(CodeUtils.RESULT_STRING);
-                                receiveAddressEdit.setText(result);
-                                break;
-                            default:
-                                Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
-                                break;
-                        }
-                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                        Toast.makeText(TransferActivity.this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
+                if (null == data)  return;
+                Bundle bundle = data.getExtras();
+                if (bundle == null) return;
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                        case org.nervos.neuron.util.QRUtils.CodeUtils.STRING_ADDRESS:
+                            String result = bundle.getString(CodeUtils.RESULT_STRING);
+                            receiveAddressEdit.setText(result);
+                            break;
+                        default:
+                            Toast.makeText(this, R.string.address_error,
+                                    Toast.LENGTH_LONG).show();
+                            break;
                     }
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    Toast.makeText(TransferActivity.this, R.string.qrcode_handle_fail,
+                            Toast.LENGTH_LONG).show();
                 }
                 break;
             default:
