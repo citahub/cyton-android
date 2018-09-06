@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 
 import org.abstractj.kalium.encoders.Hex;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.response.EthTransactionResponse;
@@ -35,9 +36,13 @@ public class NervosHttpService {
 
     public static OkHttpClient getHttpClient() {
         if (mOkHttpClient == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            mOkHttpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            if (BuildConfig.IS_DEBUG) {
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                mOkHttpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            } else {
+                mOkHttpClient = new OkHttpClient.Builder().build();
+            }
         }
         return mOkHttpClient;
     }
