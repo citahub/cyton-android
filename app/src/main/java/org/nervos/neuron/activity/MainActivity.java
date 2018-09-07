@@ -13,10 +13,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
-import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;

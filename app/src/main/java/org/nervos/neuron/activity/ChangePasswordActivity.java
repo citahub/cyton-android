@@ -1,6 +1,5 @@
 package org.nervos.neuron.activity;
 
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -9,11 +8,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.view.Button.CommonButton;
+import org.nervos.neuron.view.button.CommonButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

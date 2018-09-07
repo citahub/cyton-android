@@ -20,32 +20,33 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.dialog.SimpleDialog;
+import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.webview.OnSignPersonalMessageListener;
-import org.nervos.neuron.webview.item.Address;
+import org.nervos.neuron.view.webview.OnSignPersonalMessageListener;
+import org.nervos.neuron.view.webview.item.Address;
 import org.web3j.utils.Numeric;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
-import org.nervos.neuron.webview.OnSignMessageListener;
-import org.nervos.neuron.webview.Web3View;
-import org.nervos.neuron.webview.item.Message;
-import org.nervos.neuron.webview.item.Transaction;
+import org.nervos.neuron.view.webview.OnSignMessageListener;
+import org.nervos.neuron.view.webview.NeuronWebView;
+import org.nervos.neuron.view.webview.item.Message;
+import org.nervos.neuron.view.webview.item.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class AppWebActivity extends BaseActivity {
     public static final int RESULT_CODE_FAIL = 0x01;
     public static final int RESULT_CODE_CANCEL = 0x00;
 
-    private Web3View webView;
+    private NeuronWebView webView;
     private TextView titleText;
     private TextView collectText;
     private ProgressBar progressBar;
@@ -79,8 +80,6 @@ public class AppWebActivity extends BaseActivity {
 
         initData();
         initView();
-        initWebView();
-        initInjectWebView();
         webView.loadUrl(url);
         initManifest();
 
@@ -112,9 +111,12 @@ public class AppWebActivity extends BaseActivity {
                 initMenuView();
             }
         });
+
+        initWebView();
     }
 
     private void initWebView() {
+        initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
@@ -194,12 +196,9 @@ public class AppWebActivity extends BaseActivity {
 
     private void initManifest() {
         WebAppUtil.getHttpManifest(webView, url)
-            .subscribe(new Subscriber<ChainItem>() {
-                @Override
-                public void onCompleted() { }
+            .subscribe(new NeuronSubscriber<ChainItem>() {
                 @Override
                 public void onError(Throwable e) {
-                    e.printStackTrace();
                     LogUtil.e("manifest error: " + e.getMessage());
                 }
                 @Override
@@ -408,19 +407,15 @@ public class AppWebActivity extends BaseActivity {
 
     private void actionSignNervos(String password, Message<Transaction> message) {
         SignService.signNervosMessage(mActivity, message.value.data, password)
-            .subscribe(new Subscriber<String>() {
-                @Override
-                public void onCompleted() {
-                    sheetDialog.dismiss();
-                }
+            .subscribe(new NeuronSubscriber<String>() {
                 @Override
                 public void onError(Throwable e) {
-                    e.printStackTrace();
                     sheetDialog.dismiss();
                     webView.onSignError(message, e.getMessage());
                 }
                 @Override
                 public void onNext(String hexSign) {
+                    sheetDialog.dismiss();
                     webView.onSignMessageSuccessful(message, hexSign);
                 }
             });

@@ -14,7 +14,7 @@
         app:isShowLeft="true"
         app:title="@string/title_transfer" />
 
-    <org.nervos.neuron.view.Button.CommonButton
+    <org.nervos.neuron.view.button.CommonButton
         android:id="@+id/next_action_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

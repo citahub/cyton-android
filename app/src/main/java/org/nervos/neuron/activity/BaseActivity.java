@@ -13,8 +13,8 @@ import android.view.WindowManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
-import org.nervos.neuron.dialog.ProgressCircleDialog;
-import org.nervos.neuron.dialog.ProgressingDialog;
+import org.nervos.neuron.view.dialog.ProgressCircleDialog;
+import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseActivity extends AppCompatActivity {
 

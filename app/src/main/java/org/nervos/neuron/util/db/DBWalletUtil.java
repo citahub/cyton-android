@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;

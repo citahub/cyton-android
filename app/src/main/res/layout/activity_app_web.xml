@@ -56,7 +56,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <org.nervos.neuron.webview.Web3View
+        <org.nervos.neuron.view.webview.NeuronWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

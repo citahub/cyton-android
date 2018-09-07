@@ -16,12 +16,12 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <org.nervos.neuron.custom.WalletTopView
+            <org.nervos.neuron.view.WalletTopView
                 android:id="@+id/wallet_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <org.nervos.neuron.custom.WalletToolbar
+            <org.nervos.neuron.view.WalletToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -59,7 +59,7 @@
                         android:layout_alignParentBottom="true"
                         android:background="#E9EBF0" />
                 </RelativeLayout>
-            </org.nervos.neuron.custom.WalletToolbar>
+            </org.nervos.neuron.view.WalletToolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout

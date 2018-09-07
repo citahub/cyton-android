@@ -1,14 +1,12 @@
 package org.nervos.neuron.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 

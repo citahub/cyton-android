@@ -8,9 +8,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.SwitchCompat;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +24,8 @@ import android.widget.Toast;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.util.view.NeuronTextWatcher;
-import org.nervos.neuron.util.view.OnNeuronSeekBarChangeListener;
+import org.nervos.neuron.view.tool.NeuronTextWatcher;
+import org.nervos.neuron.view.tool.OnNeuronSeekBarChangeListener;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -49,21 +47,20 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.view.Button.CommonButton;
+import org.nervos.neuron.view.button.CommonButton;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Subscriber;
 
 public class TransferActivity extends NBaseActivity {
 

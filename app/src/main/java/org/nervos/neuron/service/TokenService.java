@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import org.nervos.neuron.item.CurrencyIDItem;
 import org.nervos.neuron.item.CurrencyIDList;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.response.CollectionResponse;
+import org.nervos.neuron.item.response.CollectionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 import java.io.IOException;

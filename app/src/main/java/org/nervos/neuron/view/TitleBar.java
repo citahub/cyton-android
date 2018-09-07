@@ -17,7 +17,7 @@ import org.nervos.neuron.R;
 import java.io.IOException;
 
 /**
- * Created by liutan on 15/1/5.
+ * Created by duanyangyang on 18/1/5.
  */
 public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private RelativeLayout mTitleBarView, mTitleBarLeftView, mTitleBarCenterView, mTitleBarRightView;

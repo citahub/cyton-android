@@ -19,9 +19,9 @@ import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.crypto.WalletEntity;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.view.Button.CommonButton;
+import org.nervos.neuron.view.button.CommonButton;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
