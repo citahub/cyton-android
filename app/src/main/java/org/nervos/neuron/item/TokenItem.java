@@ -64,7 +64,7 @@ public class TokenItem implements Parcelable {
             this.avatar = tokenEntity.logo.src;
         }
         this.decimals = tokenEntity.decimals;
-        this.chainId = -1;
+        this.chainId = tokenEntity.chainId;
     }
 
     @Override

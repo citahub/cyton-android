@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -59,6 +60,7 @@ public class TransactionDetailActivity extends NBaseActivity {
         transactionGasPriceTitle = findViewById(R.id.tv_transaction_gas_price_title);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
@@ -78,11 +80,11 @@ public class TransactionDetailActivity extends NBaseActivity {
             transactionValueText.setText(value);
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
+            transactionChainName.setText(ConstUtil.ETH_MAINNET);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-//            int used = HexUtils.HexToInt(transactionItem.gasUsed);
-            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(transactionItem.gasUsed) + "NOS");
+            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed)) + "NOS");
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
             int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);

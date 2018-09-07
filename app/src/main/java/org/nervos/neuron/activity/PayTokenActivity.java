@@ -24,6 +24,7 @@ import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosRpcService;
 import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
@@ -132,19 +133,15 @@ public class PayTokenActivity extends BaseActivity {
 
     private void getEtherGasPrice() {
         showProgressCircle();
-        EthRpcService.getEthGasPrice().subscribe(new Subscriber<BigInteger>() {
-            @Override
-            public void onCompleted() {
-                dismissProgressCircle();
-            }
+        EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
-                e.printStackTrace();
                 dismissProgressCircle();
             }
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
+                dismissProgressCircle();
                 transactionInfo.gasPrice = gasPrice.toString(16);
                 payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
             }
@@ -153,14 +150,8 @@ public class PayTokenActivity extends BaseActivity {
 
     private void getEtherGasLimit() {
         showProgressCircle();
-        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new Subscriber<BigInteger>() {
-            @Override
-            public void onCompleted() {
-                dismissProgressCircle();
-            }
-            @Override
+        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new NeuronSubscriber<BigInteger>() {
             public void onError(Throwable e) {
-                e.printStackTrace();
                 dismissProgressCircle();
                 transactionInfo.gasLimit = ConstUtil.GAS_ERC20_LIMIT.toString(16);
                 payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
@@ -168,6 +159,7 @@ public class PayTokenActivity extends BaseActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasLimit) {
+                dismissProgressCircle();
                 transactionInfo.gasLimit = gasLimit.toString(16);
                 payFeeText.setText(NumberUtil.getDecimal8ENotation(transactionInfo.getGas()));
             }
@@ -178,15 +170,7 @@ public class PayTokenActivity extends BaseActivity {
         ChainItem chainItem = DBChainUtil.getChain(mActivity, transactionInfo.chainId);
         if (chainItem == null) return ;
         tokenItem = new TokenItem(chainItem);
-        WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new Subscriber<Double>() {
-            @Override
-            public void onCompleted() {
-
-            }
-            @Override
-            public void onError(Throwable e) {
-
-            }
+        WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new NeuronSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
                 mBalance = balance;
@@ -314,22 +298,16 @@ public class PayTokenActivity extends BaseActivity {
                 }
             }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<EthSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-
+                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
                         gotoSignFail(e.getMessage());
                     }
-
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
+                        progressBar.setVisibility(View.GONE);
                         handleTransfer(ethSendTransaction);
                     }
                 });
@@ -339,21 +317,15 @@ public class PayTokenActivity extends BaseActivity {
         NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
         NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int)transactionInfo.chainId, password)
-                .subscribe(new Subscriber<AppSendTransaction>() {
-                    @Override
-                    public void onCompleted() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-
+                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         progressBar.setVisibility(View.GONE);
                         gotoSignFail(e.getMessage());
                     }
-
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
+                        progressBar.setVisibility(View.GONE);
                         handleTransfer(appSendTransaction);
                     }
                 });

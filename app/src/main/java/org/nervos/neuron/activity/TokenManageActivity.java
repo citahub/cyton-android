@@ -41,7 +41,6 @@ public class TokenManageActivity extends BaseActivity {
     private TitleBar titleBar;
     private RecyclerView recyclerView;
     private List<TokenEntity> tokenList = new ArrayList<>();
-    private List<String> tokenNames = new ArrayList<>();
     private TokenAdapter adapter = new TokenAdapter();
 
     @Override
@@ -54,10 +53,8 @@ public class TokenManageActivity extends BaseActivity {
     }
 
     private void initData() {
-        tokenNames = DBWalletUtil.getAllWalletName(mActivity);
         String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
-        Type type = new TypeToken<List<TokenEntity>>() {
-        }.getType();
+        Type type = new TypeToken<List<TokenEntity>>() {}.getType();
         tokenList = new Gson().fromJson(tokens, type);
         addCustomToken();
         adapter.notifyDataSetChanged();
