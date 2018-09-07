@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
-import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;

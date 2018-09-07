@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.nervos.neuron.dialog.ProgressingDialog;
+import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseFragment extends Fragment {
 

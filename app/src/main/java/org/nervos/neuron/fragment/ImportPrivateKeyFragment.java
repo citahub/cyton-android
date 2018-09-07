@@ -2,16 +2,11 @@ package org.nervos.neuron.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,8 +17,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.crypto.WalletEntity;
-import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
@@ -31,7 +26,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
-import org.nervos.neuron.view.Button.CommonButton;
+import org.nervos.neuron.view.button.CommonButton;
 import org.web3j.utils.Numeric;
 
 import java.util.concurrent.ExecutorService;

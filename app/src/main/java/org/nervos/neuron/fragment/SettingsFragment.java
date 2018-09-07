@@ -11,7 +11,7 @@ import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.view.SettingButtonView;
-import org.nervos.neuron.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;

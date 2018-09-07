@@ -21,7 +21,7 @@
         android:textColor="@color/font_title"
         android:textSize="12sp" />
 
-    <org.nervos.neuron.view.Button.CommonButton
+    <org.nervos.neuron.view.button.CommonButton
         android:id="@+id/button_export_chain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -42,7 +42,7 @@
         android:layout_margin="@dimen/default_margin"
         zhy:max_select="-1" />
 
-    <org.nervos.neuron.view.Button.CommonButton
+    <org.nervos.neuron.view.button.CommonButton
         android:id="@+id/backup_complete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

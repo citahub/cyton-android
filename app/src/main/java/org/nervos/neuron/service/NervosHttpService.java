@@ -4,13 +4,12 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.abstractj.kalium.encoders.Hex;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.response.EthTransactionResponse;
-import org.nervos.neuron.response.NervosTransactionResponse;
+import org.nervos.neuron.item.response.EthTransactionResponse;
+import org.nervos.neuron.item.response.NervosTransactionResponse;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
