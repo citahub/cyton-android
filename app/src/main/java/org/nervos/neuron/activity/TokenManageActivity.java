@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
+import org.nervos.neuron.fragment.token.model.TokenAdapter;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
@@ -54,8 +55,12 @@ public class TokenManageActivity extends BaseActivity {
 
     private void initData() {
         String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
-        Type type = new TypeToken<List<TokenEntity>>() {}.getType();
+        Type type = new TypeToken<List<TokenEntity>>() {
+        }.getType();
         tokenList = new Gson().fromJson(tokens, type);
+        for (TokenEntity entity : tokenList) {
+            entity.chainId = -1;
+        }
         addCustomToken();
         adapter.notifyDataSetChanged();
     }
@@ -81,8 +86,8 @@ public class TokenManageActivity extends BaseActivity {
         titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
             @Override
             public void onLeftClick() {
-                finish();
                 postTokenRefreshEvent();
+                finish();
             }
         });
         recyclerView = findViewById(R.id.token_recycler);

@@ -129,10 +129,6 @@ public class WalletManageActivity extends BaseActivity {
                 DBWalletUtil.deleteWallet(mActivity, walletItem.name);
                 deleteDialog.dismiss();
                 Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mActivity, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra(EXTRA_TAG, AppFragment.TAG);
-                startActivity(intent);
                 EventBus.getDefault().post(new TokenRefreshEvent());
                 finish();
             });
