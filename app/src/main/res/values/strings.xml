@@ -21,7 +21,7 @@
     <string name="add_wallet">添加钱包</string>
     <string name="add">添加</string>
     <string name="export_more">批量导出</string>
-    <string name="title_token_management">资产管理</string>
+    <string name="title_token_management">ERC20列表</string>
     <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>
     <string name="confirm_mnemonic">确认助记词</string>
@@ -161,6 +161,7 @@
     <string name="old_password_not_null">原密码不能为空</string>
     <string name="new_password_not_null">新密码不能为空</string>
     <string name="old_password_error">原密码不正确</string>
+    <string name="old_new_password_same">您输入的密码与原密码一致，请重新输入</string>
     <string name="update_password_success">密码修改成功</string>
     <string name="update_wallet_name">修改钱包名称</string>
     <string name="input_wallet_name_hint">输入钱包名称</string>

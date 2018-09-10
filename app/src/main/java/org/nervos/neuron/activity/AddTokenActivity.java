@@ -89,6 +89,11 @@ public class AddTokenActivity extends BaseActivity {
     private void initListener() {
         // add token data into local database
         findViewById(R.id.add_token_button).setOnClickListener(v -> {
+            String address = contractAddressEdit.getText().toString();
+            if (!AddressUtil.isAddressValid(address)) {
+                Toast.makeText(mActivity, R.string.contract_address_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
                     || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
                 Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
@@ -134,14 +139,15 @@ public class AddTokenActivity extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (!AddressUtil.isAddressValid(s.toString())) {
-                    Toast.makeText(mActivity, R.string.contract_address_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 showProgressBar();
