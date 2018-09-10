@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
@@ -93,7 +95,14 @@ public class ImportWalletActivity extends NBaseActivity {
 
         tabLayout.setViewPager(viewPager);
 
-        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot_import));
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", "禁止截屏");
+            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
+            ToastSingleButtonDialog.getInstance(this, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

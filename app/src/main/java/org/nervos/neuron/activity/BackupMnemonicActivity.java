@@ -10,6 +10,8 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
@@ -32,7 +34,14 @@ public class BackupMnemonicActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
-        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot_backup));
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", "禁止截屏");
+            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
+            ToastSingleButtonDialog.getInstance(this, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         mnemonicText.setText(mnemonic);
     }
