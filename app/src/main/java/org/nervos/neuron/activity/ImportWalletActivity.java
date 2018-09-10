@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
@@ -34,6 +35,7 @@ public class ImportWalletActivity extends NBaseActivity {
 
     @Override
     protected int getContentLayout() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         return R.layout.activity_import_wallet;
     }
 

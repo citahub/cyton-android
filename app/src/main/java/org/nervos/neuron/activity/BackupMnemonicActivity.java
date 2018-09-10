@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,6 +25,7 @@ public class BackupMnemonicActivity extends NBaseActivity {
 
     @Override
     protected void initView() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         mnemonicText = findViewById(R.id.mnemonic_text);
     }
 
