@@ -93,7 +93,7 @@ public class ImportWalletActivity extends NBaseActivity {
 
         tabLayout.setViewPager(viewPager);
 
-        ToastSingleButtonDialog.getInstance(this, "禁止截屏！keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！");
+        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot_import));
     }
 
     @Override

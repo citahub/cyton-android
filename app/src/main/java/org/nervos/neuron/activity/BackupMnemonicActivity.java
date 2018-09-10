@@ -32,7 +32,7 @@ public class BackupMnemonicActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
-        ToastSingleButtonDialog.getInstance(this, "禁止截屏！拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！");
+        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot_backup));
         mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         mnemonicText.setText(mnemonic);
     }
