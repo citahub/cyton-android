@@ -13,6 +13,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 import org.objectweb.asm.Handle;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -91,6 +92,8 @@ public class ImportWalletActivity extends NBaseActivity {
         }
 
         tabLayout.setViewPager(viewPager);
+
+        ToastSingleButtonDialog.getInstance(this, "禁止截屏！keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！");
     }
 
     @Override
