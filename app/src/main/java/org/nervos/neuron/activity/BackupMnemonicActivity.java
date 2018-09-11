@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
+import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class BackupMnemonicActivity extends NBaseActivity {
@@ -44,6 +46,28 @@ public class BackupMnemonicActivity extends NBaseActivity {
         }
         mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         mnemonicText.setText(mnemonic);
+
+        TitleBar titleBar = findViewById(R.id.title);
+        titleBar.setOnLeftClickListener(() -> {
+            try {
+                JSONObject object = new JSONObject();
+                object.put("info", getString(R.string.backup_mnemonic_back_tips));
+                object.put("cancel", getString(R.string.reject));
+                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(this, object);
+                dialog.setOnCancelClickListener(dialog1 -> {
+                    dialog1.dismiss();
+                    finish();
+                });
+                dialog.setOnOkClickListener(dialog1 -> {
+                    String[] mnemonicList = mnemonic.split(" ");
+                    Intent intent = new Intent(BackupMnemonicActivity.this, ConfirmMnemonicActivity.class);
+                    intent.putExtra(CreateWalletActivity.EXTRA_MNEMONIC, mnemonicList);
+                    startActivity(intent);
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

@@ -69,7 +69,7 @@
     <string name="backup_mnemonic_warning1">助记词将被用来恢复钱包或重置钱包密码</string>
     <string name="backup_mnemonic_warning2">- 如您的助记词被他人获取，您的财产可能受到损失</string>
     <string name="backup_mnemonic_warning3">- 不要截图或传送给他人</string>
-    <string name="backup_mnemonic_warning4">- 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
+    <string name="backup_mnemonic_warning4">- 推荐抄写并放在安全的地方</string>
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
     <string name="input_password">设置密码</string>
     <string name="confirm_action">确认</string>
@@ -260,6 +260,7 @@
     <string name="qr_tips">放入框内自动扫描</string>
     <string name="qr_photo_failed">扫描本地图片失败</string>
     <string name="developing">正在开发中</string>
+    <string name="backup_mnemonic_back_tips">距离开启您的安全区块链账户还差最后一步，是否继续？</string>
 
     <string name="change_wallet_name_failed">修改失败，请重试</string>
     <string name="forbidden_screen_shoot_import">禁止截屏！keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
