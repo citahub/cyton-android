@@ -9,8 +9,13 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
+import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class BackupMnemonicActivity extends NBaseActivity {
 
@@ -50,6 +55,12 @@ public class BackupMnemonicActivity extends NBaseActivity {
                 dialog.setOnCancelClickListener(dialog1 -> {
                     dialog1.dismiss();
                     finish();
+                });
+                dialog.setOnOkClickListener(dialog1 -> {
+                    String[] mnemonicList = mnemonic.split(" ");
+                    Intent intent = new Intent(BackupMnemonicActivity.this, ConfirmMnemonicActivity.class);
+                    intent.putExtra(CreateWalletActivity.EXTRA_MNEMONIC, mnemonicList);
+                    startActivity(intent);
                 });
             } catch (JSONException e) {
                 e.printStackTrace();
