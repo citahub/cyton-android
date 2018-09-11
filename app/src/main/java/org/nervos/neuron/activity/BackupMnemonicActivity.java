@@ -36,7 +36,7 @@ public class BackupMnemonicActivity extends NBaseActivity {
     protected void initData() {
         try {
             JSONObject object = new JSONObject();
-            object.put("title", "禁止截屏");
+            object.put("title", getString(R.string.forbidden_screen_shoot));
             object.put("info", getString(R.string.forbidden_screen_shoot_backup));
             ToastSingleButtonDialog.getInstance(this, object);
         } catch (JSONException e) {
