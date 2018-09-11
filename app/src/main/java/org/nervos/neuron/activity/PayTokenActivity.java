@@ -292,7 +292,8 @@ public class PayTokenActivity extends BaseActivity {
                 @Override
                 public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                     return EthRpcService.transferEth(transactionInfo.to,
-                            transactionInfo.getDoubleValue(), gasPrice, ConstUtil.GAS_ERC20_LIMIT,
+                            transactionInfo.getDoubleValue(), gasPrice,
+                            Numeric.toBigInt(transactionInfo.gasLimit),
                             transactionInfo.data, password);
                 }
             }).subscribeOn(Schedulers.io())
