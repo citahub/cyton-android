@@ -21,7 +21,7 @@ public class FillButton extends LinearLayout {
     public FillButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CommonButton);
-        LayoutInflater.from(context).inflate(R.layout.button_common, this);
+        LayoutInflater.from(context).inflate(R.layout.button_fill, this);
         button = findViewById(R.id.btn);
         String text = ta.getString(R.styleable.CommonButton_text);
         button.setText(text);
@@ -35,18 +35,20 @@ public class FillButton extends LinearLayout {
 
     public void setClickAble(boolean able) {
         if (able) {
-            button.setBackgroundResource(R.drawable.button_corner_blue_shape);
+            button.setBackgroundResource(R.drawable.button_blue_shape);
             button.setEnabled(true);
         } else {
-            button.setBackgroundResource(R.drawable.button_corner_gray_shape);
+            button.setBackgroundResource(R.drawable.button_gray_shape);
             button.setEnabled(false);
         }
     }
 
+    public void setText(String text) {
+        button.setText(text);
+    }
 
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         listener = l;
-
     }
 }
