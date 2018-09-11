@@ -7,7 +7,7 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/button_corner_blue_shape"
+        android:background="@drawable/button_blue_shape"
         android:textColor="@color/white"
         android:textSize="16sp" />
 

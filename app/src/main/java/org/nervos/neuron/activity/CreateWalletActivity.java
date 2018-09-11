@@ -86,11 +86,11 @@ public class CreateWalletActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         createWalletCbt.setOnClickListener(view -> {
-            if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
-                Toast.makeText(mActivity, R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
+            if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
+            } else if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
+                Toast.makeText(mActivity, R.string.password_weak, Toast.LENGTH_SHORT).show();
             } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
