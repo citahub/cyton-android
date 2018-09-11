@@ -18,7 +18,7 @@ import org.nervos.neuron.util.ScreenUtils;
  */
 public class ToastSingleButtonDialog extends Dialog {
 
-    private TextView messageText, okText;
+    private TextView messageText, okText, titleText;
     private JSONObject jsonInfo = null;
     private String info = null;
     private Context context;
@@ -66,6 +66,7 @@ public class ToastSingleButtonDialog extends Dialog {
     private void initView() {
         messageText = findViewById(R.id.tv_msg);
         okText = findViewById(R.id.tv_ok);
+        titleText = findViewById(R.id.tv_title);
         WindowManager.LayoutParams p = getWindow().getAttributes();
         p.width = (int) (ScreenUtils.getScreenWidth(context) * 0.8);
         getWindow().setAttributes(p);
@@ -73,6 +74,9 @@ public class ToastSingleButtonDialog extends Dialog {
 
     private void initData() {
         if (jsonInfo != null) {
+            String title = jsonInfo.optString("title");
+            if (!TextUtils.isEmpty(title))
+                titleText.setText(title);
             String info = jsonInfo.optString("info");
             if (!TextUtils.isEmpty(info))
                 messageText.setText(info);

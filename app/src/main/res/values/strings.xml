@@ -262,4 +262,7 @@
     <string name="developing">正在开发中</string>
 
     <string name="change_wallet_name_failed">修改失败，请重试</string>
+    <string name="forbidden_screen_shoot_import">禁止截屏！keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
+    <string name="forbidden_screen_shoot_backup">禁止截屏！拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！</string>
+    <string name="forbidden_screen_shoot">禁止截屏</string>
 </resources>

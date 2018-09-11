@@ -7,11 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 import org.objectweb.asm.Handle;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -34,6 +38,7 @@ public class ImportWalletActivity extends NBaseActivity {
 
     @Override
     protected int getContentLayout() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         return R.layout.activity_import_wallet;
     }
 
@@ -89,6 +94,15 @@ public class ImportWalletActivity extends NBaseActivity {
         }
 
         tabLayout.setViewPager(viewPager);
+
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", getString(R.string.forbidden_screen_shoot));
+            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
+            ToastSingleButtonDialog.getInstance(this, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
