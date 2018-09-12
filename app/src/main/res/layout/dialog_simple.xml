@@ -35,6 +35,7 @@
         android:background="@color/white"
         android:textColor="@color/font_title"
         android:textSize="15sp"
+        android:maxLength="15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line1" />
