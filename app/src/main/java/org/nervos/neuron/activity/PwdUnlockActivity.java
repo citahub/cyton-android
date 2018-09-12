@@ -36,6 +36,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
 
     @Override
     protected int getContentLayout() {
+        inLoginPage = true;
         return R.layout.activity_pwd_unlock;
     }
 

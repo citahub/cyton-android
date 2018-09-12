@@ -97,7 +97,6 @@ public class FingerPrintController {
         fpManager.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
                 if (callback != null)
                     callback.onAuthenticationError(errString.toString());
             }
