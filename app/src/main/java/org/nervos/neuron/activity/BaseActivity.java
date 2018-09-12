@@ -72,7 +72,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!inLoginPage && needLogin) {
+        if (isShouldTimeOut() && needLogin) {
+            handler.removeCallbacks(runnable);
             gotoLogin();
             needLogin = false;
         }
@@ -119,7 +120,10 @@ public class BaseActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    private Runnable runnable = () -> gotoLogin();
+    private Runnable runnable = () -> {
+        needLogin = false;
+        gotoLogin();
+    };
 
     private void gotoLogin() {
         if (!inLoginPage)
