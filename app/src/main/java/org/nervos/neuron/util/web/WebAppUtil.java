@@ -3,6 +3,7 @@ package org.nervos.neuron.util.web;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
@@ -189,7 +191,7 @@ public class WebAppUtil {
         webSettings.setDatabaseEnabled(true);
         webSettings.setBuiltInZoomControls(false);
 
-        WebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
     }
 
     public static void initWebViewCache(Context context, WebSettings webSettings) {

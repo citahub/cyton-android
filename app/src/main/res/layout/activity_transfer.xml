@@ -182,7 +182,7 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/white"
@@ -192,7 +192,7 @@
 
                 <RelativeLayout
                     android:id="@+id/fee_seek_bar_layout"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
@@ -239,7 +239,7 @@
                         android:id="@+id/gas_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:orientation="vertical">
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -324,7 +324,7 @@
                     android:textColor="@color/font_title"
                     android:layout_gravity="end"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
