@@ -68,7 +68,7 @@ public class FingerPrintController {
     }
 
     /**
-     *check has fingerprints
+     * check has fingerprints
      *
      * @return
      */
@@ -86,6 +86,7 @@ public class FingerPrintController {
 
     /**
      * authen
+     *
      * @param callback
      */
     public void authenticate(final AuthenticateResultCallback callback) {
@@ -97,6 +98,7 @@ public class FingerPrintController {
         fpManager.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
                 if (callback != null)
                     callback.onAuthenticationError(errString.toString());
             }
@@ -134,7 +136,8 @@ public class FingerPrintController {
     }
 
     /**
-     *get fingerprints
+     * get fingerprints
+     *
      * @return
      */
     public List<Fingerprint> getEnrolledFingerprints() {
