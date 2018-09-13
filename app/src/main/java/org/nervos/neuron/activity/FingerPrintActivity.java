@@ -20,6 +20,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     @Override
     protected int getContentLayout() {
+        inLoginPage = true;
         return R.layout.activity_fingerprint;
     }
 
@@ -90,5 +91,19 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authFingerDialog != null && authFingerDialog.isShowing())
+            authFingerDialog.dismiss();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (authFingerDialog != null && !authFingerDialog.isShowing())
+            authFingerDialog.show();
     }
 }

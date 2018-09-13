@@ -1,18 +1,25 @@
 package org.nervos.neuron.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.AntiHijackingUtil;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProgressCircleDialog;
 import org.nervos.neuron.view.dialog.ProgressingDialog;
 
@@ -20,8 +27,12 @@ public class BaseActivity extends AppCompatActivity {
 
     private ProgressingDialog dialog = null;
     private ProgressCircleDialog circleDialog = null;
-
+    protected boolean mIsSafeLast;
     protected Activity mActivity;
+    Handler handler = new Handler();
+    private long TimeOut = 1000 * 10 * 6;
+    public boolean inLoginPage = false;
+    private boolean needLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +58,76 @@ public class BaseActivity extends AppCompatActivity {
         return getResources().getColor(R.color.white);
     }
 
+    private boolean isShouldTimeOut() {
+        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (isShouldTimeOut())
+            handler.postDelayed(runnable, TimeOut);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isShouldTimeOut() && needLogin) {
+            handler.removeCallbacks(runnable);
+            gotoLogin();
+            needLogin = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (isShouldTimeOut()) {
+            mIsSafeLast = AntiHijackingUtil.checkActivity(this);
+            if (!mIsSafeLast) {
+                needLogin = true;
+            }
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if (isShouldTimeOut()) {
+            mIsSafeLast = AntiHijackingUtil.checkActivity(this);
+            if (!mIsSafeLast) {
+                needLogin = true;
+            }
+        }
+        super.onStop();
+    }
+
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (isShouldTimeOut())
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    handler.removeCallbacks(runnable);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    handler.postDelayed(runnable, TimeOut);
+                    break;
+            }
+        return super.dispatchTouchEvent(event);
+    }
+
+    private Runnable runnable = () -> {
+        needLogin = false;
+        gotoLogin();
+    };
+
+    private void gotoLogin() {
+        if (!inLoginPage)
+            startActivity(new Intent(mActivity, FingerPrintActivity.class));
     }
 
     /**

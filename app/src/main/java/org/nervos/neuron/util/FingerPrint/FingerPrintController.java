@@ -68,7 +68,7 @@ public class FingerPrintController {
     }
 
     /**
-     *check has fingerprints
+     * check has fingerprints
      *
      * @return
      */
@@ -86,6 +86,7 @@ public class FingerPrintController {
 
     /**
      * authen
+     *
      * @param callback
      */
     public void authenticate(final AuthenticateResultCallback callback) {
@@ -135,7 +136,8 @@ public class FingerPrintController {
     }
 
     /**
-     *get fingerprints
+     * get fingerprints
+     *
      * @return
      */
     public List<Fingerprint> getEnrolledFingerprints() {
