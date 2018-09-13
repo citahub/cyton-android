@@ -37,7 +37,7 @@ public class TransactionDetailActivity extends NBaseActivity {
     private TransactionItem transactionItem;
     private TitleBar title;
     private TextView transactionHashText, transactionValueText, transactionFromText, transactionToText, transactionBlockNumberText,
-            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName, transactionGasPriceTitle;
+            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName, transactionGasPriceTitle, dicText;
     private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
     @Override
@@ -50,6 +50,7 @@ public class TransactionDetailActivity extends NBaseActivity {
         title = findViewById(R.id.title);
         transactionHashText = findViewById(R.id.tv_transaction_number);
         transactionValueText = findViewById(R.id.transaction_amount);
+        dicText = findViewById(R.id.tv_dic);
         transactionFromText = findViewById(R.id.tv_transaction_sender);
         transactionToText = findViewById(R.id.tv_transaction_receiver);
         transactionBlockNumberText = findViewById(R.id.tv_transaction_blockchain_no);
@@ -66,9 +67,9 @@ public class TransactionDetailActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
 
-        transactionHashText.setText(lineFeedHex(transactionItem.hash));
-        transactionFromText.setText(lineFeedAddress(transactionItem.from));
-        transactionToText.setText(lineFeedAddress(transactionItem.to));
+        transactionHashText.setText(transactionItem.hash);
+        transactionFromText.setText(transactionItem.from);
+        transactionToText.setText(transactionItem.to);
         if (!TextUtils.isEmpty(transactionItem.gasPrice)) {
             transactionChainName.setText(ConstUtil.ETH_MAINNET);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
@@ -78,12 +79,14 @@ public class TransactionDetailActivity extends NBaseActivity {
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
+            dicText.setText("eth");
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
             transactionChainName.setText(ConstUtil.ETH_MAINNET);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
+            dicText.setText("nos");
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed)) + "NOS");
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
