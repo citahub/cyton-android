@@ -58,10 +58,10 @@ public class NervosHttpService {
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
                                     .body().string(), EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
-                            for(TransactionItem item : transactionItemList) {
+                            for (TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.getEthFromWeiForStringDecimal8(
-                                        new BigInteger(item.value)) + ConstUtil.ETH);
+                                        new BigInteger(item.value)));
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {
@@ -77,34 +77,33 @@ public class NervosHttpService {
     public static Observable<List<TransactionItem>> getNervosTransactionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
-                    @Override
-                    public AppMetaData.AppMetaDataResult call() {
-                        NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
-                        return NervosRpcService.getMetaData().getAppMetaDataResult();
-                    }
-                }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
-                    @Override
-                    public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
-                        try {
-                            String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
-                            final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
-                            Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
+            @Override
+            public AppMetaData.AppMetaDataResult call() {
+                NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
+                return NervosRpcService.getMetaData().getAppMetaDataResult();
+            }
+        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
+            @Override
+            public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
+                try {
+                    String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
+                    final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
+                    Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
 
-                            NervosTransactionResponse response = new Gson().fromJson(nervosCall.execute()
-                                    .body().string(), NervosTransactionResponse.class);
-                            for (TransactionItem item : response.result.transactions) {
-                                item.chainName = result.chainName;
-                                item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value))
-                                        + result.tokenSymbol;
-                            }
-                            return Observable.just(response.result.transactions);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return Observable.just(null);
+                    NervosTransactionResponse response = new Gson().fromJson(nervosCall.execute()
+                            .body().string(), NervosTransactionResponse.class);
+                    for (TransactionItem item : response.result.transactions) {
+                        item.chainName = result.chainName;
+                        item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value));
                     }
-                }).subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread());
+                    return Observable.just(response.result.transactions);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }
