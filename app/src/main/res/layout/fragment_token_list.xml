@@ -44,17 +44,18 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_add_image"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp">
+                    android:layout_centerVertical="true">
 
                     <ImageView
                         android:id="@+id/iv_add"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/default_margin"
                         android:src="@drawable/ic_wallet_token_add" />
                 </RelativeLayout>
 
