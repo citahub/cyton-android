@@ -47,9 +47,7 @@ public class CurrencyActivity extends NBaseActivity {
         currencyArray = CurrencyUtil.getCurrencyList(this);
         Adapter adapter = new Adapter();
         currencyRecycler.setAdapter(adapter);
-        title.setOnLeftClickListener(() -> {
-            finish();
-        });
+        title.setOnLeftClickListener(() -> finish());
     }
 
     @Override
@@ -78,6 +76,7 @@ public class CurrencyActivity extends NBaseActivity {
             holder.currency.setOpenListener(() -> {
                 SharePrefUtil.putString(ConstUtil.Currency, currency.getName());
                 notifyDataSetChanged();
+                finish();
             });
         }
 
