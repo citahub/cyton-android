@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
@@ -188,12 +189,13 @@ public class TransactionListActivity extends NBaseActivity {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
+                viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 if (!transactionItem.from.equalsIgnoreCase(walletItem.address)) {
                     viewHolder.transactionIdText.setText(transactionItem.from);
-                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
+                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_in);
                 } else {
                     viewHolder.transactionIdText.setText(transactionItem.to);
-                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_out);
+                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_out);
                 }
                 String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;
@@ -222,6 +224,7 @@ public class TransactionListActivity extends NBaseActivity {
 
         class TransactionViewHolder extends RecyclerView.ViewHolder {
             ImageView walletImage;
+            ImageView inOutImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
@@ -235,6 +238,7 @@ public class TransactionListActivity extends NBaseActivity {
                     }
                 });
                 walletImage = view.findViewById(R.id.wallet_photo);
+                inOutImage = view.findViewById(R.id.iv_in_out);
                 transactionIdText = view.findViewById(R.id.transaction_id_text);
                 transactionTimeText = view.findViewById(R.id.transaction_time_text);
                 transactionAmountText = view.findViewById(R.id.transaction_amount);
