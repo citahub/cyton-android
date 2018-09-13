@@ -108,7 +108,7 @@ public class ImportWalletActivity extends NBaseActivity {
         try {
             JSONObject object = new JSONObject();
             object.put("title", getString(R.string.forbidden_screen_shoot));
-            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
+            object.put("info", getString(R.string.forbidden_screen_shoot_import));
             ToastSingleButtonDialog.getInstance(this, object);
         } catch (JSONException e) {
             e.printStackTrace();
