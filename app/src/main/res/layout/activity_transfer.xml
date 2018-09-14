@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <org.nervos.neuron.view.TitleBar
@@ -28,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/next_action_button"
-        android:layout_below="@id/title">
+        android:layout_below="@id/title"
+        android:background="@color/default_background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="74dp"
                 android:layout_margin="@dimen/default_margin"
-                android:background="@color/white">
+                android:background="@drawable/dialog_background">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/wallet_photo"
@@ -65,23 +66,23 @@
                     android:id="@+id/wallet_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="@color/font_title_second"
-                    android:singleLine="true"
-                    android:ellipsize="middle"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_alignBottom="@id/wallet_photo"
                     android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
                     android:layout_toEndOf="@id/wallet_photo"
-                    android:layout_alignBottom="@id/wallet_photo"/>
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textColor="@color/font_title_second"
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingStart="@dimen/default_margin"
+                android:background="@color/white"
                 android:paddingEnd="@dimen/default_margin"
-                android:background="@color/white">
+                android:paddingStart="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,16 +90,16 @@
                     android:layout_centerVertical="true"
                     android:text="@string/token_transfer_value"
                     android:textColor="@color/font_title"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/wallet_balance_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 
@@ -106,22 +107,22 @@
                 android:id="@+id/transfer_value"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:paddingStart="@dimen/default_margin"
-                android:paddingEnd="@dimen/default_margin"
-                android:inputType="numberDecimal"
-                android:hint="@string/token_transfer_value"
-                android:textSize="20sp"
                 android:background="@color/white"
-                android:gravity="start|center_vertical"/>
+                android:gravity="start|center_vertical"
+                android:hint="@string/token_transfer_value"
+                android:inputType="numberDecimal"
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin"
+                android:textSize="20sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="@dimen/default_margin"
-                android:paddingStart="@dimen/default_margin"
-                android:paddingEnd="@dimen/default_margin"
                 android:background="@android:color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin">
 
                 <TextView
                     android:id="@+id/transfer_address_text"
@@ -130,7 +131,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/receive_address"
                     android:textColor="@color/font_title"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:id="@+id/transfer_address_scan"
@@ -138,7 +139,7 @@
                     android:layout_height="18dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/scan"/>
+                    android:src="@drawable/scan" />
 
             </RelativeLayout>
 
@@ -146,21 +147,21 @@
                 android:id="@+id/transfer_address"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:paddingStart="@dimen/default_margin"
-                android:paddingEnd="@dimen/default_margin"
                 android:background="@color/white"
+                android:gravity="start|center_vertical"
                 android:hint="@string/input_receive_address_hint"
-                android:textSize="12sp"
-                android:gravity="start|center_vertical"/>
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin"
+                android:textSize="12sp" />
 
             <RelativeLayout
                 android:id="@+id/fee_layout"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/default_margin"
-                android:paddingLeft="@dimen/default_margin"
-                android:paddingEnd="@dimen/default_margin"
                 android:layout_height="48dp"
-                android:background="@color/white">
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingLeft="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -169,16 +170,16 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/fee_value"
                     android:textColor="@color/font_title"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/fee_value_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_alignParentEnd="true"
-                    android:textSize="12sp"
-                    android:textColor="@color/font_title" />
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/font_title"
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 
@@ -187,35 +188,36 @@
                 android:layout_height="200dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/default_margin"
-                android:paddingEnd="@dimen/default_margin">
+                android:paddingEnd="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin">
 
                 <RelativeLayout
                     android:id="@+id/fee_seek_bar_layout"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/slow"
-                        android:textSize="12sp"
-                        android:textColor="@color/font_title_second" />
+                        android:textColor="@color/font_title_second"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/fast"
-                        android:textSize="12sp"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/font_title_second" />
+                        android:text="@string/fast"
+                        android:textColor="@color/font_title_second"
+                        android:textSize="12sp" />
 
                     <android.support.v7.widget.AppCompatSeekBar
                         android:id="@+id/fee_seek_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"/>
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp" />
 
                     <TextView
                         android:id="@+id/fee_seek_text"
@@ -225,34 +227,36 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:textColor="@color/font_title_second"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/advanced_setup_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/gas_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="40dp">
+
                             <EditText
                                 android:id="@+id/custom_gas_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textSize="13sp"
-                                android:textColor="@color/font_title"
-                                android:singleLine="true"
+                                android:background="@color/white"
                                 android:hint="@string/custom_gas_price"
-                                android:background="@color/white"/>
+                                android:singleLine="true"
+                                android:textColor="@color/font_title"
+                                android:textSize="13sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -261,23 +265,23 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/gwei"
                                 android:textColor="@color/font_title_second"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
                         </FrameLayout>
 
 
-                        <View style="@style/separateLineLong"/>
+                        <View style="@style/separateLineLong" />
 
                         <EditText
                             android:id="@+id/custom_gas"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:textSize="13sp"
-                            android:textColor="@color/font_title"
-                            android:singleLine="true"
+                            android:background="@color/white"
                             android:hint="@string/custom_gas"
-                            android:background="@color/white"/>
+                            android:singleLine="true"
+                            android:textColor="@color/font_title"
+                            android:textSize="13sp" />
 
-                        <View style="@style/separateLineLong"/>
+                        <View style="@style/separateLineLong" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -290,13 +294,13 @@
                             android:id="@+id/custom_quota"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:textSize="13sp"
-                            android:textColor="@color/font_title"
-                            android:singleLine="true"
+                            android:background="@color/white"
                             android:hint="@string/custom_quota"
-                            android:background="@color/white"/>
+                            android:singleLine="true"
+                            android:textColor="@color/font_title"
+                            android:textSize="13sp" />
 
-                        <View style="@style/separateLineLong"/>
+                        <View style="@style/separateLineLong" />
                     </LinearLayout>
 
                     <EditText
@@ -304,12 +308,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginTop="8dp"
-                        android:hint="@string/hint_hex_data"
                         android:background="@drawable/rectangle_border_gray_corner"
-                        android:padding="10dp"
                         android:gravity="start"
-                        android:textSize="13sp"
-                        android:textColor="@color/font_title"/>
+                        android:hint="@string/hint_hex_data"
+                        android:padding="10dp"
+                        android:textColor="@color/font_title"
+                        android:textSize="13sp" />
 
 
                 </LinearLayout>
@@ -318,11 +322,11 @@
                     android:id="@+id/advanced_setup"
                     android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_gravity="end"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/advanced_setup"
-                    android:textColor="@color/font_title"
-                    android:layout_gravity="end"/>
+                    android:textColor="@color/font_title" />
 
             </LinearLayout>
 
