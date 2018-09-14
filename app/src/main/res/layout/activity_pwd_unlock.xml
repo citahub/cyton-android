@@ -50,7 +50,7 @@
         <TextView
             android:id="@+id/tv_wallet_name"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="31dp"
             android:layout_marginLeft="37dp"
             android:layout_marginTop="40dp"
             android:ellipsize="end"
@@ -98,16 +98,16 @@
             android:id="@+id/et_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="37dp"
-            android:layout_marginTop="15dp"
             android:background="@null"
             android:hint="@string/wallet_pwd_hint"
             android:inputType="textPassword"
             android:textColor="@color/font_title"
             android:textColorHint="@color/font_title_third"
             android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_name_under_line" />
+            app:layout_constraintBottom_toTopOf="@id/view_pwd_under_line"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <View
             android:id="@+id/view_pwd_under_line"
@@ -115,9 +115,9 @@
             android:layout_height="0.5dp"
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="50dp"
             android:background="@color/line_input"
-            app:layout_constraintTop_toBottomOf="@id/et_pwd" />
+            app:layout_constraintTop_toBottomOf="@id/view_name_under_line" />
 
         <org.nervos.neuron.view.button.CommonButton
             android:id="@+id/password_button"
