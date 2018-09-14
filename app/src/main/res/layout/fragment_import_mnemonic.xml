@@ -44,7 +44,7 @@
                 android:hint="@string/import_mnemonic_input_hint"
                 android:padding="10dp"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
         </FrameLayout>
 
