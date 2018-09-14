@@ -1,13 +1,19 @@
 package org.nervos.neuron.activity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,18 +21,20 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+import org.nervos.neuron.fragment.wallet.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 import org.objectweb.asm.Handle;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImportWalletActivity extends NBaseActivity {
 
     private ViewPager viewPager;
-    private SmartTabLayout tabLayout;
+    private TabLayout tabLayout;
     private ImportMnemonicFragment importMnemonicFragment;
     private ImportPrivateKeyFragment importPrivateKeyFragment;
     private ImportKeystoreFragment importKeystoreFragment;
@@ -57,6 +65,8 @@ public class ImportWalletActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
+        tabLayout.post(() -> setTabWidth(tabLayout));
+
         tabTitles.add(getString(R.string.keystore));
         tabTitles.add(getString(R.string.nmemonic));
         tabTitles.add(getString(R.string.private_key));
@@ -93,7 +103,7 @@ public class ImportWalletActivity extends NBaseActivity {
             }
         }
 
-        tabLayout.setViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
         try {
             JSONObject object = new JSONObject();
@@ -107,6 +117,57 @@ public class ImportWalletActivity extends NBaseActivity {
 
     @Override
     protected void initAction() {
+
+    }
+
+    public static void setTabWidth(final TabLayout tabLayout) {
+        tabLayout.post(() -> {
+            try {
+                LinearLayout mTabStrip = (LinearLayout) tabLayout.getChildAt(0);
+
+
+                for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+                    View tabView = mTabStrip.getChildAt(i);
+
+                    Field mTextViewField = tabView.getClass().getDeclaredField("mTextView");
+                    mTextViewField.setAccessible(true);
+
+                    TextView mTextView = (TextView) mTextViewField.get(tabView);
+
+                    tabView.setPadding(0, 0, 0, 0);
+
+                    int tabWidth = tabView.getWidth();
+                    if (tabWidth == 0) {
+                        mTextView.measure(0, 0);
+                        tabWidth = mTextView.getMeasuredWidth();
+                    }
+
+                    int width = 0;
+                    width = mTextView.getWidth();
+                    if (width == 0) {
+                        mTextView.measure(0, 0);
+                        width = mTextView.getMeasuredWidth();
+                    }
+
+                    int padding = (tabWidth - width - 40) / 2;
+                    if (padding < 0)
+                        padding = 0;
+
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                    params.width = width;
+                    params.leftMargin = padding;
+                    params.rightMargin = padding;
+                    tabView.setLayoutParams(params);
+
+                    tabView.invalidate();
+                }
+
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 }

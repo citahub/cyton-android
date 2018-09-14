@@ -30,7 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/default_margin">
+            android:paddingBottom="6dp"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_wallet_mnemonic"
@@ -48,7 +51,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="@dimen/default_margin"
             android:background="@android:color/white"
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin">
