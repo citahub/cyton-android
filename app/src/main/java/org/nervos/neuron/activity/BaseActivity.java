@@ -126,7 +126,7 @@ public class BaseActivity extends AppCompatActivity {
     };
 
     private void gotoLogin() {
-        if (!inLoginPage)
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false))
             startActivity(new Intent(mActivity, FingerPrintActivity.class));
     }
 

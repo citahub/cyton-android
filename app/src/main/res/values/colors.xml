@@ -31,4 +31,5 @@
     <color name="item_collection_attr_bg">#05456cff</color>
     <color name="item_collection_attr_border">#20456cff</color>
 
+    <color name="grey_background">#33000000</color>
 </resources>
