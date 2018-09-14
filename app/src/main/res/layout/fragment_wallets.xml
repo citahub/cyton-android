@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -64,15 +63,15 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
+            style="@style/WalletTabLayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            style="@style/WalletTabLayout"
             android:background="@android:color/white" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#E9EBF0" />
+            android:background="@color/line_form" />
 
     </android.support.design.widget.AppBarLayout>
 
