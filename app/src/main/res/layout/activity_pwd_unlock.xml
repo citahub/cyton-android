@@ -57,7 +57,7 @@
             android:singleLine="true"
             android:text="wallet1"
             android:textColor="@color/font_title"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@id/tv_select_hint"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
