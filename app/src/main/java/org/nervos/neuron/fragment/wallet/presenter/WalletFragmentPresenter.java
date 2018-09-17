@@ -20,7 +20,7 @@ public class WalletFragmentPresenter {
         this.activity = activity;
     }
 
-    public void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
+    public static void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
         Class<?> tabLayout = tabs.getClass();
         Field tabStrip = null;
         try {

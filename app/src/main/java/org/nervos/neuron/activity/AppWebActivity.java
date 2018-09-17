@@ -1,8 +1,10 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -13,6 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.view.WebMenuPopupWindow;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
@@ -43,6 +47,7 @@ import org.web3j.utils.Numeric;
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
+
 import org.nervos.neuron.view.webview.OnSignMessageListener;
 import org.nervos.neuron.view.webview.NeuronWebView;
 import org.nervos.neuron.view.webview.item.Message;
@@ -63,7 +68,6 @@ public class AppWebActivity extends BaseActivity {
 
     private NeuronWebView webView;
     private TextView titleText;
-    private TextView collectText;
     private ProgressBar progressBar;
     private BottomSheetDialog sheetDialog;
     private ImageView rightMenuView;
@@ -102,10 +106,10 @@ public class AppWebActivity extends BaseActivity {
         webView = findViewById(R.id.webview);
         titleText = findViewById(R.id.title_bar_center);
         titleText.setText(R.string.dapp);
-        collectText = findViewById(R.id.menu_collect);
         rightMenuView = findViewById(R.id.title_bar_right);
         findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
         rightMenuView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 initMenuView();
@@ -117,7 +121,7 @@ public class AppWebActivity extends BaseActivity {
 
     private void initWebView() {
         initInjectWebView();
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
                 if (newProgress == 100) {
@@ -127,6 +131,7 @@ public class AppWebActivity extends BaseActivity {
                     progressBar.setProgress(newProgress);
                 }
             }
+
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
@@ -134,7 +139,7 @@ public class AppWebActivity extends BaseActivity {
                 initViewWhenWebFinish();
             }
         });
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
@@ -142,31 +147,37 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initMenuView() {
-        showMenuWindow();
-        initCollectView();
-        findViewById(R.id.menu_background).setOnClickListener(new View.OnClickListener() {
+        WebMenuPopupWindow popupWindow = new WebMenuPopupWindow(this);
+        popupWindow.showAsDropDown(rightMenuView, 0, 10);
+        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ?
+                getString(R.string.cancel_collect) : getString(R.string.collect));
+        popupWindow.setListener(new WebMenuPopupWindow.WebMenuListener() {
             @Override
-            public void onClick(View v) {
-                closeMenuWindow();
+            public void reload(PopupWindow pop) {
+                webView.reload();
+                pop.dismiss();
             }
-        });
-        findViewById(R.id.menu_collect).setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
+            public void collect(WebMenuPopupWindow pop) {
                 if (WebAppUtil.isCollectApp(webView)) {
                     WebAppUtil.cancelCollectApp(webView);
                 } else {
                     WebAppUtil.collectApp(webView);
                 }
-                initCollectView();
-                closeMenuWindow();
+                pop.setCollectText(WebAppUtil.isCollectApp(webView) ?
+                        getString(R.string.cancel_collect) : getString(R.string.collect));
+                pop.dismiss();
             }
         });
-        findViewById(R.id.menu_reload).setOnClickListener(v1 -> {
-            webView.reload();
-            closeMenuWindow();
-        } );
+        findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.grey_background));
+        popupWindow.setOnDismissListener(() -> {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+            findViewById(R.id.menu_background).setVisibility(View.GONE);
+        });
     }
 
     private void initViewWhenWebFinish() {
@@ -179,42 +190,28 @@ public class AppWebActivity extends BaseActivity {
         rightMenuView.setVisibility(View.VISIBLE);
     }
 
-    private void initCollectView() {
-        collectText.setText(WebAppUtil.isCollectApp(webView)?
-                getString(R.string.cancel_collect):getString(R.string.collect));
-    }
-
-    private void closeMenuWindow() {
-        findViewById(R.id.menu_layout).setVisibility(View.GONE);
-        findViewById(R.id.menu_background).setVisibility(View.GONE);
-    }
-
-    private void showMenuWindow() {
-        findViewById(R.id.menu_layout).setVisibility(View.VISIBLE);
-        findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
-    }
-
     private void initManifest() {
         WebAppUtil.getHttpManifest(webView, url)
-            .subscribe(new NeuronSubscriber<ChainItem>() {
-                @Override
-                public void onError(Throwable e) {
-                    LogUtil.e("manifest error: " + e.getMessage());
-                }
-                @Override
-                public void onNext(ChainItem chainItem) {
-                    if (TextUtils.isEmpty(chainItem.errorMessage)) {
-                        WebAppUtil.addHistory();
-                        DBChainUtil.saveChain(webView.getContext(), chainItem);
-                        if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                            TokenItem tokenItem = new TokenItem(chainItem);
-                            DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                        }
-                    } else {
-                        Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                .subscribe(new NeuronSubscriber<ChainItem>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtil.e("manifest error: " + e.getMessage());
                     }
-                }
-            });
+
+                    @Override
+                    public void onNext(ChainItem chainItem) {
+                        if (TextUtils.isEmpty(chainItem.errorMessage)) {
+                            WebAppUtil.addHistory();
+                            DBChainUtil.saveChain(webView.getContext(), chainItem);
+                            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                                TokenItem tokenItem = new TokenItem(chainItem);
+                                DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
+                            }
+                        } else {
+                            Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void signTxAction(Transaction transaction) {
@@ -225,8 +222,8 @@ public class AppWebActivity extends BaseActivity {
         } else {
             Intent intent = new Intent(mActivity, PayTokenActivity.class);
             intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-            intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null?
-                    new AppItem(url):WebAppUtil.getAppItem());
+            intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ?
+                    new AppItem(url) : WebAppUtil.getAppItem());
             startActivityForResult(intent, REQUEST_CODE);
         }
     }
@@ -307,8 +304,8 @@ public class AppWebActivity extends BaseActivity {
 
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
-        payOwnerText.setText(WebAppUtil.getAppItem() == null?
-                url:WebAppUtil.getAppItem().entry);
+        payOwnerText.setText(WebAppUtil.getAppItem() == null ?
+                url : WebAppUtil.getAppItem().entry);
         payDataText.setText(message.value.data);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         if (WebAppUtil.getAppItem() != null) {
@@ -370,7 +367,7 @@ public class AppWebActivity extends BaseActivity {
                 simpleDialog.dismiss();
                 if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
                     actionSignEth(password, message);
-                } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)){
+                } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)) {
                     actionSignNervos(password, message);
                 }
             }
@@ -392,12 +389,14 @@ public class AppWebActivity extends BaseActivity {
             public void onCompleted() {
                 sheetDialog.dismiss();
             }
+
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 sheetDialog.dismiss();
                 webView.onSignError(message, e.getMessage());
             }
+
             @Override
             public void onNext(String hexSign) {
                 webView.onSignMessageSuccessful(message, hexSign);
@@ -407,18 +406,19 @@ public class AppWebActivity extends BaseActivity {
 
     private void actionSignNervos(String password, Message<Transaction> message) {
         SignService.signNervosMessage(mActivity, message.value.data, password)
-            .subscribe(new NeuronSubscriber<String>() {
-                @Override
-                public void onError(Throwable e) {
-                    sheetDialog.dismiss();
-                    webView.onSignError(message, e.getMessage());
-                }
-                @Override
-                public void onNext(String hexSign) {
-                    sheetDialog.dismiss();
-                    webView.onSignMessageSuccessful(message, hexSign);
-                }
-            });
+                .subscribe(new NeuronSubscriber<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        sheetDialog.dismiss();
+                        webView.onSignError(message, e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(String hexSign) {
+                        sheetDialog.dismiss();
+                        webView.onSignMessageSuccessful(message, hexSign);
+                    }
+                });
     }
 
     @Override

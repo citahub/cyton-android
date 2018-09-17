@@ -11,50 +11,50 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:isShowLeft="true"
-        app:isShowBottomLine="true"/>
+        app:isShowBottomLine="true"
+        app:isShowLeft="true" />
 
     <RelativeLayout
         android:id="@+id/transfer_layout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/default_margin">
+        android:background="@color/colorPrimary">
+
         <View
             android:id="@+id/view_nothing"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_centerInParent="true"/>
+            android:layout_width="2dp"
+            android:layout_height="22dp"
+            android:layout_centerInParent="true"
+            android:background="@color/line_form" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/receive_token"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/view_nothing"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:background="@color/assist_color"
+            android:background="@null"
+            android:text="@string/receive_token"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="@string/receive_token"/>
+            android:textSize="16sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/transfer_token"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toEndOf="@id/view_nothing"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/colorPrimary"
+            android:background="@null"
+            android:text="@string/transfer_button"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="@string/transfer_button"/>
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title"
-        android:layout_above="@id/transfer_layout">
+        android:layout_above="@id/transfer_layout"
+        android:layout_below="@id/title">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_recycler"
