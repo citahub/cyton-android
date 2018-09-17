@@ -33,6 +33,7 @@
     <string name="next_action">下一步</string>
     <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
+    <string name="exist_wallet">已有钱包</string>
     <string name="create_wallet_name">钱包名称</string>
     <string name="quick_backup_button">一键备份</string>
     <string name="quick_backup_restore">一键恢复</string>
@@ -159,7 +160,7 @@
     <string name="set_password">设置密码</string>
     <string name="no_find_password_content">没有「找回密码」!</string>
     <string name="save_password_careful">您的钱包不会被保存在云端，无法提供找回服务，请您谨慎保管</string>
-    <string name="generate_wallet">生成钱包</string>
+    <string name="generate_wallet">创建钱包</string>
     <string name="input_old_password_hint">输入原密码</string>
     <string name="old_password_not_null">原密码不能为空</string>
     <string name="new_password_not_null">新密码不能为空</string>
@@ -270,4 +271,8 @@
     <string name="forbidden_screen_shoot_import">禁止截屏！keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
     <string name="forbidden_screen_shoot_backup">禁止截屏！拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！</string>
     <string name="forbidden_screen_shoot">禁止截屏</string>
+
+    <string name="wallet_guide1_text">甄选全球最新DAPP\n一应俱全</string>
+    <string name="wallet_guide2_text">多重安全算法保护\n钱包秘钥惟您掌握</string>
+    <string name="wallet_guide3_text">开启区块链之旅\n探索无限可能</string>
 </resources>
