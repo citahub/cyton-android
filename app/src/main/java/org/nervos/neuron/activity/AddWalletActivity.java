@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.dialog.ProtocolDialog;
 
 public class AddWalletActivity extends NBaseActivity {
 
@@ -42,16 +44,23 @@ public class AddWalletActivity extends NBaseActivity {
         initGuideList();
         initIndicate();
         viewPager.setAdapter(new PagerAadapter());
+        if (!SharePrefUtil.getBoolean(ConstUtil.Protocol, false))
+            handler.postDelayed(() -> {
+                ProtocolDialog dialog = new ProtocolDialog(mActivity);
+                dialog.show();
+            }, 500);
     }
 
     @Override
     protected void initAction() {
         findViewById(R.id.create_wallet_button).setOnClickListener(v -> {
             startActivity(new Intent(mActivity, CreateWalletActivity.class));
+            finish();
         });
-
-        findViewById(R.id.import_wallet_button).setOnClickListener(v ->
-                startActivity(new Intent(mActivity, ImportWalletActivity.class)));
+        findViewById(R.id.import_wallet_button).setOnClickListener(v -> {
+            startActivity(new Intent(mActivity, ImportWalletActivity.class));
+            finish();
+        });
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -113,11 +122,10 @@ public class AddWalletActivity extends NBaseActivity {
 
     private void goBack() {
         if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
-            Intent intent = new Intent(mActivity, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(mActivity, MainActivity.class);
+//            intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
+//            startActivity(intent);
+//            finish();
         } else {
             finish();
         }
@@ -129,6 +137,12 @@ public class AddWalletActivity extends NBaseActivity {
                 goBack();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName()))
+            goBack();
     }
 
     class PagerAadapter extends PagerAdapter {
