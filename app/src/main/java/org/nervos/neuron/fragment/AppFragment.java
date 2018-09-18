@@ -2,21 +2,18 @@ package org.nervos.neuron.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +50,7 @@ public class AppFragment extends Fragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         WebAppUtil.initWebViewCache(getContext(), webView.getSettings());
     }

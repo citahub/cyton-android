@@ -11,6 +11,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.web.WebAppUtil;
@@ -42,6 +44,7 @@ public class SimpleWebActivity extends BaseActivity {
         webView = findViewById(R.id.webview);
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
