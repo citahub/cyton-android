@@ -1,5 +1,6 @@
 package org.nervos.neuron.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
 import org.nervos.neuron.fragment.wallet.presenter.WalletFragmentPresenter;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 import org.objectweb.asm.Handle;
 
@@ -65,6 +67,11 @@ public class ImportWalletActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
+        ((TitleBar) findViewById(R.id.title)).setOnLeftClickListener(() -> {
+            startActivity(new Intent(this, AddWalletActivity.class));
+            finish();
+        });
+
         tabLayout.post(() -> setTabWidth(tabLayout));
 
         tabTitles.add(getString(R.string.keystore));
@@ -118,6 +125,12 @@ public class ImportWalletActivity extends NBaseActivity {
     @Override
     protected void initAction() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, AddWalletActivity.class));
+        finish();
     }
 
     public static void setTabWidth(final TabLayout tabLayout) {

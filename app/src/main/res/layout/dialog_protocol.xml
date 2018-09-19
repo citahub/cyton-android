@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="270dp"
+    android:layout_height="459dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/protocol_neuron_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:text="@string/protocol_neuron_name"
+        android:textColor="@color/font_title"
+        android:textSize="16sp" />
+
+    <ScrollView
+        android:id="@+id/sl_protocol"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/protocol_neuron"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:text="@string/protocol_neuron"
+            android:textColor="@color/font_title"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginTop="11dp">
+
+        <ImageView
+            android:id="@+id/iv_check"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_unselect" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/iv_check"
+            android:text="@string/approve_protocol"
+            android:textColor="@color/font_title"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        style="@style/separateLineLong"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:id="@+id/tv_ok"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/ok"
+        android:textColor="@color/font_title_third"
+        android:textSize="16sp" />
+
+</LinearLayout>

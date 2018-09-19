@@ -69,17 +69,17 @@ public class CreateWalletActivity extends NBaseActivity {
             titleBar.hideLeft();
         }
 
+        titleBar.setOnLeftClickListener(() -> {
+            startActivity(new Intent(this, AddWalletActivity.class));
+            finish();
+        });
+
         if (SharePrefUtil.getFirstIn()) {
             SharePrefUtil.putFirstIn(false);
             new AlertDialog.Builder(mActivity)
                     .setTitle(R.string.dialog_title_tip)
                     .setMessage(R.string.dialog_tip_message)
-                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                    .setPositiveButton(R.string.have_known, (dialog, which) -> dialog.dismiss()).show();
         }
     }
 
@@ -102,7 +102,6 @@ public class CreateWalletActivity extends NBaseActivity {
                         dismissProgressBar();
                         Intent intent = new Intent(CreateWalletActivity.this,
                                 BackupMnemonicActivity.class);
-
                         intent.putExtra(EXTRA_MNEMONIC, walletEntity.getMnemonic());
                         startActivity(intent);
                     });
@@ -140,6 +139,11 @@ public class CreateWalletActivity extends NBaseActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, AddWalletActivity.class));
+        finish();
+    }
 
     private boolean isWalletValid() {
         return check1 && check2 && check3;

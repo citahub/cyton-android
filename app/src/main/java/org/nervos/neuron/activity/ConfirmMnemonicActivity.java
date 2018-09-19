@@ -113,21 +113,17 @@ public class ConfirmMnemonicActivity extends BaseActivity {
     }
 
     private void backupComplete() {
-        findViewById(R.id.backup_complete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (confirmList.equals(originList)) {
-                    EventBus.getDefault().post(new WalletSaveEvent());
-                    Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
-                    startActivity(intent);
-                    EventBus.getDefault().post(new CloseWalletInfoEvent());
-                    finish();
-                } else {
-                    Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
-                }
+        findViewById(R.id.backup_complete).setOnClickListener(v -> {
+            if (confirmList.equals(originList)) {
+                EventBus.getDefault().post(new WalletSaveEvent());
+                Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                startActivity(intent);
+                EventBus.getDefault().post(new CloseWalletInfoEvent());
+                finish();
+            } else {
+                Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
             }
         });
     }

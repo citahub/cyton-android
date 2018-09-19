@@ -116,12 +116,12 @@ public class ImportKeystoreFragment extends NBaseFragment {
         DBWalletUtil.saveWallet(getContext(), walletItem);
         SharePrefUtil.putCurrentWalletName(walletItem.name);
         passwordEdit.post(() -> {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+            getActivity().startActivity(intent);
+            getActivity().finish();
         });
     }
 
