@@ -134,7 +134,7 @@
             android:layout_height="50dp"
             android:background="@color/white"
             android:gravity="left|center_vertical"
-            android:hint="@string/set_password"
+            android:hint="@string/input_password_hint"
             android:inputType="textPassword"
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"

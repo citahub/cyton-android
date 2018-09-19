@@ -62,6 +62,26 @@ public class TransferDialog {
 
     private void initData() {
         viewPager.setAdapter(new PageAdapter());
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    confirmButton.setClickable(true);
+                } else {
+                    confirmButton.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 //        try {
 //            Field mScroller = null;
 //            mScroller = ViewPager.class.getDeclaredField("mScroller");
@@ -85,16 +105,23 @@ public class TransferDialog {
     }
 
     private void initAction() {
-        viewPager.setOnTouchListener((view, motionEvent) -> true);
-        confirmButton.setOnClickListener(view1 -> viewPager.setCurrentItem(1));
+        confirmButton.setOnClickListener(view1 -> {
+            confirmButton.setClickable(false);
+            viewPager.setCurrentItem(1);
+        });
         closeImage.setOnClickListener(view1 -> dialog.dismiss());
         closeImage1.setOnClickListener(view1 -> dialog.dismiss());
         pwdButton.setOnClickListener(view1 -> {
             if (listener != null) {
+                pwdButton.setClickable(false);
                 String password = passwordEdit.getText().toString().trim();
                 listener.send(password, progressBar);
             }
         });
+    }
+
+    public void setButtonClickAble(boolean able) {
+        pwdButton.setClickable(able);
     }
 
     public void dismiss() {

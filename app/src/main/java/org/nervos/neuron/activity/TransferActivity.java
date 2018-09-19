@@ -254,7 +254,8 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else {
-                getConfirmTransferView();
+                if (!isFastDoubleClick())
+                    getConfirmTransferView();
             }
         });
         feeSeekBar.setOnSeekBarChangeListener(new OnNeuronSeekBarChangeListener() {
@@ -457,6 +458,7 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
+                        transferDialog.setButtonClickAble(true);
                         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             transferDialog.dismiss();
@@ -495,6 +497,7 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
                         progressBar.setVisibility(View.GONE);
+                        transferDialog.setButtonClickAble(true);
                         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             transferDialog.dismiss();
@@ -533,6 +536,7 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
+                        transferDialog.setButtonClickAble(true);
                         if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             transferDialog.dismiss();
@@ -570,6 +574,7 @@ public class TransferActivity extends NBaseActivity {
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
                         progressBar.setVisibility(View.GONE);
+                        transferDialog.setButtonClickAble(true);
                         if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
                             Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
                             transferDialog.dismiss();
