@@ -15,6 +15,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
@@ -77,7 +79,9 @@ public class NeuronWebView extends WebView {
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setDomStorageEnabled(true);
-        WebView.setWebContentsDebuggingEnabled(true);
+        webSettings.setUserAgentString(webSettings.getUserAgentString()
+                + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
         addJavascriptInterface(new SignCallbackJSInterface(
                 this,
                 innerOnSignTransactionListener,
@@ -234,6 +238,7 @@ public class NeuronWebView extends WebView {
                     || internalClient.shouldOverrideUrlLoading(view, request);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             WebResourceResponse response = externalClient.shouldInterceptRequest(view, request);
