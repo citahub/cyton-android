@@ -51,7 +51,6 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     @Override
     public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
         TokenItem tokenItem = tokenItemList.get(position);
-        Uri uri = null;
         if (TextUtils.isEmpty(tokenItem.avatar)) {
             if (tokenItem.chainId < 0) {
                 Glide.with(activity)

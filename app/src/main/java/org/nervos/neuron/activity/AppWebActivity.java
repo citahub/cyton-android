@@ -276,6 +276,7 @@ public class AppWebActivity extends BaseActivity {
         if (sheetDialog != null && sheetDialog.isShowing()) {
             sheetDialog.dismiss();
         }
+        webView = null;
         super.onDestroy();
     }
 
