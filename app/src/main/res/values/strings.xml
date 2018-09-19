@@ -115,7 +115,7 @@
     <string name="input_new_password_hint_again">再次输入新密码</string>
     <string name="input_new_password_again_hint">重复密码</string>
     <string name="copy_success">复制成功</string>
-    <string name="copy_weixin_success">客服的微信号Neruon已复制。</string>
+    <string name="copy_weixin_success">客服微信已复制。</string>
     <string name="password_fail">密码错误</string>
     <string name="operation_success">操作已提交</string>
     <string name="transfer_success">转账成功</string>

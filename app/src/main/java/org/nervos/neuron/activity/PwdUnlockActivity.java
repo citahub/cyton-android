@@ -33,6 +33,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private ImageView walletSelectImg, otherImg, arrowImg;
     private CommonButton authBtn;
     private WalletItem walletItem;
+    private boolean needMain = true;
 
     @Override
     protected int getContentLayout() {
@@ -65,6 +66,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         }
         walletItem = walletItems.get(0);
         walletNameTv.setText(walletItem.name);
+        needMain = getIntent().getBooleanExtra(FingerPrintActivity.NeedMain, true);
     }
 
     @Override
@@ -121,8 +123,10 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 if (!AESCrypt.checkPassword(walletPwdEt.getText().toString().trim(), walletItem)) {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
                 } else {
-                    startActivity(new Intent(mActivity, MainActivity.class));
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();
+                    if (needMain)
+                        startActivity(new Intent(mActivity, MainActivity.class));
+                    finish();
                 }
                 break;
         }

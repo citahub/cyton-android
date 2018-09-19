@@ -79,14 +79,14 @@ public class TransactionDetailActivity extends NBaseActivity {
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-            dicText.setText("eth");
+            dicText.setText("ETH");
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
-            transactionChainName.setText(ConstUtil.ETH_MAINNET);
+            transactionChainName.setText(ConstUtil.APPCHAIN_TEST);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-            dicText.setText("nos");
+            dicText.setText("NOS");
             transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed)) + "NOS");
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
