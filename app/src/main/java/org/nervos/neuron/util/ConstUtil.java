@@ -9,7 +9,7 @@ public class ConstUtil {
     public static final String ETH = "ETH";
     public static final int ETHEREUM_ID = -1;
     public static final String ETH_MAINNET = "Ethereum Mainnet";
-    public static final String APPCHAIN_TEST="Test-Chain";
+    public static final String APPCHAIN_TEST="test-chain";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
     public static final long DEFAULT_QUOTA = LONG_6;

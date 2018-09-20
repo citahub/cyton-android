@@ -113,7 +113,6 @@ public class TransferDialog {
         closeImage1.setOnClickListener(view1 -> dialog.dismiss());
         pwdButton.setOnClickListener(view1 -> {
             if (listener != null) {
-                pwdButton.setClickable(false);
                 String password = passwordEdit.getText().toString().trim();
                 listener.send(password, progressBar);
             }

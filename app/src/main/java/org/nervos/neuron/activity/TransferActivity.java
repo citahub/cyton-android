@@ -413,6 +413,7 @@ public class TransferActivity extends NBaseActivity {
             } else if (!AESCrypt.checkPassword(password, walletItem)) {
                 Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             } else {
+                transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (isETH()) {
                     if (ConstUtil.ETH.equals(tokenItem.symbol)) {

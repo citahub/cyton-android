@@ -224,6 +224,7 @@ public class PayTokenActivity extends BaseActivity {
             } else if (!AESCrypt.checkPassword(password, walletItem)) {
                 Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             } else {
+                transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (transactionInfo.isEthereum()) {
                     transferEth(password, progressBar);

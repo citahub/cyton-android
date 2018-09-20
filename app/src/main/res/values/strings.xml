@@ -165,7 +165,7 @@
     <string name="old_password_not_null">原密码不能为空</string>
     <string name="new_password_not_null">新密码不能为空</string>
     <string name="old_password_error">原密码不正确</string>
-    <string name="old_new_password_same">您输入的密码与原密码一致，请重新输入</string>
+    <string name="old_new_password_same">您输入的新密码与旧密码一致，请重新输入</string>
     <string name="update_password_success">密码修改成功</string>
     <string name="update_wallet_name">修改钱包名称</string>
     <string name="input_wallet_name_hint">输入钱包名称</string>
@@ -269,7 +269,7 @@
     <string name="backup_mnemonic_back_tips">距离开启您的安全区块链账户还差最后一步，是否继续？</string>
 
     <string name="change_wallet_name_failed">修改失败，请重试</string>
-    <string name="forbidden_screen_shoot_import">keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
+    <string name="forbidden_screen_shoot_import">KeyStore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
     <string name="forbidden_screen_shoot_backup">拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！</string>
     <string name="forbidden_screen_shoot">禁止截屏!</string>
 
