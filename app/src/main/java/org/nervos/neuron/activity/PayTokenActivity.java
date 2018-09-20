@@ -239,7 +239,8 @@ public class PayTokenActivity extends BaseActivity {
         } else {
             fee = NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleQuota()) + getNativeToken();
         }
-        transferDialog.setConfirmData(walletItem.address, transactionInfo.to, NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()) + getNativeToken(), fee);
+        transferDialog.setConfirmData(walletItem.address, transactionInfo.to,
+                NumberUtil.getDecimal8ENotation(transactionInfo.getDoubleValue()) + getNativeToken(), fee);
     }
 
     private void transferEth(String password, ProgressBar progressBar) {
