@@ -82,7 +82,7 @@ public class TransactionDetailActivity extends NBaseActivity {
             dicText.setText("ETH");
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
-            transactionChainName.setText(ConstUtil.APPCHAIN_TEST);
+            transactionChainName.setText(transactionItem.chainName);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);

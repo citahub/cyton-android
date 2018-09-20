@@ -11,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.fragment.AppFragment;
+import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProtocolDialog;
@@ -37,6 +38,9 @@ public class AddWalletActivity extends NBaseActivity {
     @Override
     protected void initView() {
         viewPager = findViewById(R.id.viewPager);
+        RelativeLayout.LayoutParams paramsV = new RelativeLayout.LayoutParams((int) (ScreenUtils.getScreenHeight(mActivity) * 0.6 * 750 / 800), (int) (ScreenUtils.getScreenHeight(mActivity) * 0.6));
+        paramsV.topMargin = (int) (ScreenUtils.getScreenHeight(mActivity) * 0.1);
+        viewPager.setLayoutParams(paramsV);
     }
 
     @Override
@@ -100,17 +104,19 @@ public class AddWalletActivity extends NBaseActivity {
         lists.put(0, guide1);
         lists.put(1, guide2);
         lists.put(2, guide3);
-        ((TextView) guide1.findViewById(R.id.tv_guide)).setText(R.string.wallet_guide1_text);
-        ((TextView) guide2.findViewById(R.id.tv_guide)).setText(R.string.wallet_guide2_text);
-        ((TextView) guide3.findViewById(R.id.tv_guide)).setText(R.string.wallet_guide3_text);
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
         Glide.with(this)
                 .load(R.drawable.wallet_guide1)
+                .apply(options)
                 .into((ImageView) guide1.findViewById(R.id.iv_guide));
         Glide.with(this)
                 .load(R.drawable.wallet_guide2)
+                .apply(options)
                 .into((ImageView) guide2.findViewById(R.id.iv_guide));
         Glide.with(this)
                 .load(R.drawable.wallet_guide3)
+                .apply(options)
                 .into((ImageView) guide3.findViewById(R.id.iv_guide));
     }
 

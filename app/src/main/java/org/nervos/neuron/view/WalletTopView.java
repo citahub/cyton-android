@@ -9,7 +9,6 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.PermissionUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -93,8 +93,12 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                 context.startActivity(intent);
                 break;
             case R.id.rl_right:
-                Intent intent1 = new Intent(context, QrCodeActivity.class);
-                context.startActivityForResult(intent1, MainActivity.REQUEST_CODE_SCAN);
+                if (PermissionUtils.isCameraCanUse()) {
+                    Intent intent1 = new Intent(context, QrCodeActivity.class);
+                    context.startActivityForResult(intent1, MainActivity.REQUEST_CODE_SCAN);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.camera_no_perm_tip), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.rl_center:
                 if (DBWalletUtil.getAllWallet(context).size() > 1) {
