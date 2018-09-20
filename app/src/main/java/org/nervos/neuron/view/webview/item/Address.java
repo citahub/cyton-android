@@ -14,7 +14,7 @@ public class Address implements Parcelable {
     private final String value;
 
     public Address(@NonNull String value) {
-        this.value = value.toLowerCase();
+        this.value = value;
     }
 
     protected Address(Parcel in) {

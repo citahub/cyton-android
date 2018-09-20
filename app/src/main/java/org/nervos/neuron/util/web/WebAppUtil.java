@@ -168,10 +168,15 @@ public class WebAppUtil {
     public static void setAppItem(WebView webView) {
         if (mAppItem != null && mAppItem.chainSet != null && mAppItem.chainSet.size() > 0) return;
 
-        URI uri = URI.create(webView.getUrl());
-        String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
-        icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
-        mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+        try {
+            URI uri = URI.create(webView.getUrl());
+            String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
+            icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
+            mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static AppItem getAppItem() {
