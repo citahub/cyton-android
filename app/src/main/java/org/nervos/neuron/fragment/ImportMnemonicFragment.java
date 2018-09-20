@@ -127,7 +127,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             });
             return;
         }
-        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
+        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getCredentials().getAddress())) {
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();

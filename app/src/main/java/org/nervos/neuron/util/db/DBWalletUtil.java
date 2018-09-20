@@ -164,14 +164,16 @@ public class DBWalletUtil extends DBUtil {
                 List<String> names = getAllWalletName(context);
                 for (String name : names) {
                     WalletItem walletItem = getWallet(context, name);
-                    isKeyExist = (walletItem != null && walletItem.address.equals(address));
+                    isKeyExist = (walletItem != null && walletItem.address.toLowerCase().equals(address.toLowerCase()));
+                    if (isKeyExist)
+                        return true;
                 }
                 db.close();
-                return isKeyExist;
+                return false;
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
-            return isKeyExist;
+            return false;
         }
     }
 
