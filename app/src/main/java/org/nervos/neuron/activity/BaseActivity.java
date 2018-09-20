@@ -30,7 +30,6 @@ public class BaseActivity extends AppCompatActivity {
     protected boolean mIsSafeLast;
     protected Activity mActivity;
     Handler handler = new Handler();
-    private long TimeOut = 1000 * 10 * 6;
     public boolean inLoginPage = false;
     private boolean needLogin = false;
 
@@ -63,31 +62,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (isShouldTimeOut())
-            handler.postDelayed(runnable, TimeOut);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (isShouldTimeOut() && needLogin) {
-            handler.removeCallbacks(runnable);
             gotoLogin();
             needLogin = false;
         }
-    }
-
-    @Override
-    protected void onPause() {
-        if (isShouldTimeOut()) {
-            mIsSafeLast = AntiHijackingUtil.checkActivity(this);
-            if (!mIsSafeLast) {
-                needLogin = true;
-            }
-        }
-        super.onPause();
     }
 
     @Override
@@ -108,28 +88,12 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (isShouldTimeOut())
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    handler.removeCallbacks(runnable);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    handler.postDelayed(runnable, TimeOut);
-                    break;
-            }
-        return super.dispatchTouchEvent(event);
-    }
-
-    private Runnable runnable = () -> {
-        needLogin = false;
-        gotoLogin();
-    };
-
     private void gotoLogin() {
-        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false))
-            startActivity(new Intent(mActivity, FingerPrintActivity.class));
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+            Intent intent = new Intent(mActivity, FingerPrintActivity.class);
+            intent.putExtra(FingerPrintActivity.NeedMain, false);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -181,6 +145,19 @@ public class BaseActivity extends AppCompatActivity {
         if (circleDialog != null && circleDialog.isShowing())
             circleDialog.dismiss();
     }
+
+    private long lastClickTime;
+
+    public boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastClickTime;
+        if (0 < timeD && timeD < 1000) {
+            return true;
+        }
+        lastClickTime = time;
+        return false;
+    }
+
 
     @Subscribe
     public void onEvent(Object object) {

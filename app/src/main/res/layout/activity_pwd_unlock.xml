@@ -96,10 +96,11 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_pwd"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="37dp"
+            android:layout_marginRight="37dp"
             android:background="@null"
             android:hint="@string/wallet_pwd_hint"
             android:inputType="textPassword"

@@ -195,7 +195,7 @@ public class TransactionListActivity extends NBaseActivity {
                     viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_in);
                 } else {
                     viewHolder.transactionIdText.setText(transactionItem.to);
-                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_out);
+                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_in);
                 }
                 String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;

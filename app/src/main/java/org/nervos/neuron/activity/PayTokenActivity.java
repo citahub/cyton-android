@@ -189,7 +189,8 @@ public class PayTokenActivity extends BaseActivity {
         findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getConfirmTransferView();
+                if (!isFastDoubleClick())
+                    getConfirmTransferView();
             }
         });
 
@@ -303,6 +304,7 @@ public class PayTokenActivity extends BaseActivity {
      * @param ethSendTransaction result of ethereum transaction
      */
     private void handleTransfer(EthSendTransaction ethSendTransaction) {
+        transferDialog.setButtonClickAble(true);
         if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
@@ -325,6 +327,7 @@ public class PayTokenActivity extends BaseActivity {
      * @param appSendTransaction result of nervos transaction
      */
     private void handleTransfer(AppSendTransaction appSendTransaction) {
+        transferDialog.setButtonClickAble(true);
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
