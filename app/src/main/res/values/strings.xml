@@ -227,6 +227,7 @@
     <string name="hint_hex_data">十六进制数据</string>
     <string name="wallet_top_change_wallet">切换钱包</string>
     <string name="wallet_top_add_wallet">添加钱包</string>
+    <string name="camera_no_perm_tip">请在设置页面打开摄像头权限</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
@@ -250,7 +251,7 @@
     <string name="sign_title">消息签名</string>
     <string name="input_erc20_address">请输入ERC20代币合约地址</string>
     <string name="token_name_hint">代币名称</string>
-    <string name="token_symbol_hint">代币符合</string>
+    <string name="token_symbol_hint">代币符号</string>
     <string name="token_decimal_hint">小数位数</string>
     <string name="input_private_key_hint">请输入私钥原文</string>
     <string name="token">Token</string>
