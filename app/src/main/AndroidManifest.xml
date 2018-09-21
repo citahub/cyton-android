@@ -180,6 +180,10 @@
 
         <service android:name=".application.ApplicationService" />
 
+        <meta-data
+            android:name="com.sensorsdata.analytics.android.DisableTrackDeviceId"
+            android:value="true" />
+
     </application>
 
 
