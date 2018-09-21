@@ -130,7 +130,7 @@ public class ImportMnemonicFragment extends BaseFragment {
         if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getCredentials().getAddress())) {
             passwordEdit.post(() -> {
                 dismissProgressBar();
-                Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
             });
             return;
         }

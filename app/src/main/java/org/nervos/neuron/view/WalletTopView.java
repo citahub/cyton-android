@@ -13,6 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
@@ -24,6 +27,8 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.PermissionUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -93,12 +98,15 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
                 context.startActivity(intent);
                 break;
             case R.id.rl_right:
-                if (PermissionUtils.isCameraCanUse()) {
-                    Intent intent1 = new Intent(context, QrCodeActivity.class);
-                    context.startActivityForResult(intent1, MainActivity.REQUEST_CODE_SCAN);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.camera_no_perm_tip), Toast.LENGTH_SHORT).show();
-                }
+                AndPermission.with(context)
+                        .runtime().permission(Permission.Group.CAMERA)
+                        .rationale(new RuntimeRationale())
+                        .onGranted(permissions -> {
+                            Intent intent1 = new Intent(context, QrCodeActivity.class);
+                            context.startActivityForResult(intent1, MainActivity.REQUEST_CODE_SCAN);
+                        })
+                        .onDenied(permissions -> PermissionUtil.showSettingDialog(context, permissions))
+                        .start();
                 break;
             case R.id.rl_center:
                 if (DBWalletUtil.getAllWallet(context).size() > 1) {

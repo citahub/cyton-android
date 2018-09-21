@@ -120,7 +120,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
             passwordEdit.post(() -> {
                 dismissProgressBar();
-                Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
             });
             return;
         }

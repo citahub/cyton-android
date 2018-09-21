@@ -142,6 +142,7 @@
     <string name="password_weak">您的密码安全性太弱，请重新输入</string>
     <string name="password_not_same">两次密码输入不一致</string>
     <string name="wallet_name_exist">该钱包名称已存在</string>
+    <string name="wallet_address_exist">钱包地址已存在</string>
     <string name="wallet_export_success">钱包导入成功</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="wallet_importing">钱包导入中...</string>
