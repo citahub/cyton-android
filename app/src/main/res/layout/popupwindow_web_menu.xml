@@ -33,6 +33,4 @@
         android:textColor="@color/font_title"
         android:textSize="15sp" />
 
-    <View style="@style/separateLineLong" />
-
 </LinearLayout>

@@ -235,6 +235,8 @@ public class ImportMnemonicFragment extends BaseFragment {
                 currentIndex = position;
                 notifyDataSetChanged();
             });
+            if (position == paths.size() - 1)
+                holder.line.setVisibility(View.GONE);
         }
 
         @Override
@@ -248,12 +250,14 @@ public class ImportMnemonicFragment extends BaseFragment {
         private TextView tv;
         private ConstraintLayout root;
         private ImageView iv;
+        private View line;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.tv);
             root = itemView.findViewById(R.id.root);
             iv = itemView.findViewById(R.id.iv);
+            line = itemView.findViewById(R.id.line);
         }
     }
 }

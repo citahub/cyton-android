@@ -32,4 +32,6 @@
     <color name="item_collection_attr_border">#20456cff</color>
 
     <color name="grey_background">#33000000</color>
+
+    <color name="qr_receive_bg">#252A3E</color>
 </resources>

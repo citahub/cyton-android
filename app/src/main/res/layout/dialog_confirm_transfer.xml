@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="400dp">
 
@@ -144,18 +145,13 @@
             style="@style/separateLineLong"
             android:layout_marginStart="@dimen/default_margin" />
 
-        <android.support.v7.widget.AppCompatButton
+        <org.nervos.neuron.view.button.CommonButton
             android:id="@+id/transfer_confirm_button"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_corner_blue_shape"
-            android:text="@string/confirm_transfer_action"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            app:status="true"
+            app:text="@string/confirm_transfer_action" />
 
     </LinearLayout>
 

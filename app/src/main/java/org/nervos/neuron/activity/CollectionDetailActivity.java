@@ -20,6 +20,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.collection.CollectionListFragment;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.CollectionItem;
+import org.nervos.neuron.view.button.CommonButton;
 
 /**
  * Created by BaojunCZ on 2018/8/21.
@@ -29,7 +30,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
     private TextView nameText, tokenIdText, contractNameText, describeText, moreText,
             collectionDescTitleText, descMoreText, collectionDescText;
     private ImageView collectionImage;
-    private Button checkBtn;
+    private CommonButton checkBtn;
     private RelativeLayout imageRl;
     private CollectionItem collectionItem;
     private RecyclerView attrsRecycler;
@@ -52,7 +53,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         describeText = findViewById(R.id.tv_collection_desc);
         moreText = findViewById(R.id.tv_desc_more);
         collectionImage = findViewById(R.id.iv);
-        checkBtn = findViewById(R.id.btn);
+        checkBtn = findViewById(R.id.btn_check);
         imageRl = findViewById(R.id.rl_image);
         attrsRecycler = findViewById(R.id.rv_attrs);
         collectionDescTitleText = findViewById(R.id.tv_collection_desc_title);
@@ -105,7 +106,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
                     moreText.setText(getString(R.string.more));
                 }
                 break;
-            case R.id.btn:
+            case R.id.btn_check:
                 Intent intent = new Intent(mActivity, SimpleWebActivity.class);
                 intent.putExtra(SimpleWebActivity.EXTRA_URL, collectionItem.externalLink);
                 startActivity(intent);

@@ -47,6 +47,5 @@ public class CommonButton extends LinearLayout {
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         listener = l;
-
     }
 }

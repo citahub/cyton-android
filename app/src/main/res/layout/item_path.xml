@@ -30,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
+        android:id="@+id/line"
         style="@style/inputSeparateLine"
         app:layout_constraintBottom_toBottomOf="parent" />
 
