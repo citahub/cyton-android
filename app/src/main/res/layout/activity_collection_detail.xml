@@ -138,11 +138,6 @@
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:text="111111111111111111111111
-                111111111111111111
-                1111111111111111111111111111
-                111111111111111111111111111
-                11111111111111111111111111111111111111111"
             android:textColor="@color/font_title_third"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -157,18 +152,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_collection_desc">
 
-            <Button
-                android:id="@+id/btn"
+            <org.nervos.neuron.view.button.CommonButton
+                android:id="@+id/btn_check"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="66dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/button_corner_blue_shape"
-                android:text="@string/check"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
+                app:status="true"
+                app:text="@string/check" />
 
         </LinearLayout>
 

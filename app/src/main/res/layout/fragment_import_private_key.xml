@@ -39,14 +39,14 @@
                 android:background="@drawable/edit_input_shape"
                 android:gravity="start"
                 android:hint="@string/input_private_key_hint"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textColor="@color/font_title"
                 android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/wallet_scan"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="5dp"

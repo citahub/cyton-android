@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,25 +58,23 @@
 
         <ImageView
             android:id="@+id/iv_check"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="19dp"
+            android:layout_height="36dp"
             android:layout_centerVertical="true"
+            android:paddingRight="5dp"
             android:src="@drawable/circle_unselect" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_check"
             android:text="@string/approve_protocol"
             android:textColor="@color/font_title"
             android:textSize="12sp" />
     </RelativeLayout>
 
-    <View
-        style="@style/separateLineLong"
-        android:layout_marginTop="11dp" />
+    <View style="@style/separateLineLong" />
 
     <TextView
         android:id="@+id/tv_ok"

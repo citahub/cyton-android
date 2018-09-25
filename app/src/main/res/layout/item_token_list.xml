@@ -21,8 +21,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/token_image_circle_border"
-                android:padding="5dp"
-                android:scaleType="centerInside" />
+                android:padding="5dp" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

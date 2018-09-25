@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.view.button.CommonButton;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +29,7 @@ public class TransferDialog {
     private View view;
     private View confirmView, pwdView;
     private ViewPager viewPager;
-    private AppCompatButton confirmButton, pwdButton;
+    private CommonButton confirmButton, pwdButton;
     private ImageView closeImage, closeImage1;
     private ProgressBar progressBar;
     private AppCompatEditText passwordEdit;
