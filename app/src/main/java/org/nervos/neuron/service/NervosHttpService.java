@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.EthTransactionResponse;
@@ -62,6 +63,38 @@ public class NervosHttpService {
                                 item.chainName = ConstUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.getEthFromWeiForStringDecimal8(
                                         new BigInteger(item.value)));
+                            }
+                            return Observable.just(transactionItemList);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return Observable.just(null);
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static Observable<List<TransactionItem>> getETHERC20TransactionList(
+            Context context, TokenItem tokenItem) {
+        return Observable.just(DBWalletUtil.getCurrentWallet(context))
+                .flatMap(new Func1<WalletItem, Observable<List<TransactionItem>>>() {
+                    @Override
+                    public Observable<List<TransactionItem>> call(WalletItem walletItem) {
+                        try {
+                            String ethUrl = HttpUrls.ETH_ERC20_TRANSACTION_URL
+                                    + "&contractaddress=" + tokenItem.contractAddress
+                                    + "&address=" + walletItem.address
+                                    + "&page=1&offset=30";
+                            final Request ethRequest = new Request.Builder().url(ethUrl).build();
+                            Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
+                            EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
+                                    .body().string(), EthTransactionResponse.class);
+                            List<TransactionItem> transactionItemList = response.result;
+                            for (TransactionItem item : transactionItemList) {
+                                item.chainName = ConstUtil.ETH_MAINNET;
+                                item.value = (NumberUtil.divideDecimal8ENotation(
+                                        new BigInteger(item.value), tokenItem.decimals));
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {

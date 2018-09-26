@@ -145,6 +145,10 @@ public class NumberUtil {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
 
+    public static String divideDecimal8ENotation(BigInteger value, int decimal) {
+        return getDecimal8ENotation(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
+    }
+
 
     public static boolean isPasswordOk(String password) {
         int len = password.length();

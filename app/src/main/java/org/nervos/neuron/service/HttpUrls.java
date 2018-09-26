@@ -7,6 +7,8 @@ public class HttpUrls {
     public static final String NERVOS_TRANSACTION_URL = NERVOS_SERVER_URL + "/api/transactions?account=";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";
+    public static final String ETH_ERC20_TRANSACTION_URL = "https://api.etherscan.io/api?apikey="
+            + ETHER_SCAN_API_KEY + "&module=account&action=tokentx&sort=asc";
 
 
     // setting module url list

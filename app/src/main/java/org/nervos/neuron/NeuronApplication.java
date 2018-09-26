@@ -2,7 +2,6 @@ package org.nervos.neuron;
 
 import android.app.Application;
 
-import com.squareup.leakcanary.LeakCanary;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.nervos.neuron.util.crypto.AESCrypt;
@@ -17,10 +16,6 @@ public class NeuronApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
         ZXingLibrary.initDisplayOpinion(this);
         WalletEntity.initWalletMnemonic(this);
         DBChainUtil.initChainData(this);

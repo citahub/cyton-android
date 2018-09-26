@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
@@ -119,27 +122,32 @@ public class TransactionListActivity extends NBaseActivity {
 
 
     private void getTransactionList() {
+        Observable<List<TransactionItem>> observable;
         if (!isNativeToken(tokenItem)) {
-            dismissProgressBar();
-            return;
+            if (isEthereum(tokenItem)) {
+                observable = NervosHttpService.getETHERC20TransactionList(mActivity, tokenItem);
+            } else {
+                dismissProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+        } else {
+            observable = isEthereum(tokenItem) ?
+                    NervosHttpService.getETHTransactionList(mActivity)
+                    : NervosHttpService.getNervosTransactionList(mActivity);
         }
-        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
-                NervosHttpService.getETHTransactionList(mActivity)
-                : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override
             public void onCompleted() {
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
-
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
-
             @Override
             public void onNext(List<TransactionItem> list) {
                 if (list == null) {
@@ -255,7 +263,7 @@ public class TransactionListActivity extends NBaseActivity {
         return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
-    private boolean isETH(TokenItem tokenItem) {
-        return ConstUtil.ETH.equals(tokenItem.symbol);
+    private boolean isEthereum(TokenItem tokenItem) {
+        return tokenItem.chainId < 0;
     }
 }
