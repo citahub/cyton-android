@@ -196,6 +196,9 @@ public class WebAppUtil {
         webSettings.setDatabaseEnabled(true);
         webSettings.setBuiltInZoomControls(false);
 
+        webSettings.setUserAgentString(webSettings.getUserAgentString()
+                + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
     }
 
