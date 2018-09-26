@@ -151,18 +151,18 @@ public class WebAppUtil {
 
     public static void collectApp(WebView webView) {
         DBAppUtil.saveDbApp(webView.getContext(), mAppItem);
-        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem));
+        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
     }
 
     public static void cancelCollectApp(WebView webView) {
         DBAppUtil.deleteApp(webView.getContext(), mAppItem.entry);
-        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem));
+        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
     public static void addHistory() {
-        EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem()));
+        EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem(), System.currentTimeMillis()));
     }
 
     public static void setAppItem(WebView webView) {

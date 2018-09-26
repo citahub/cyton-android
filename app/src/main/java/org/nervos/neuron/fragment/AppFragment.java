@@ -88,17 +88,17 @@ public class AppFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppCollectEvent(AppCollectEvent event) {
         if (event.isCollect) {
-            String app = new Gson().toJson(event.appItem);
+            String app = new Gson().toJson(event.appInfo);
             webView.loadUrl("javascript:__mydapp.add("+ app + ")");
         } else {
-            webView.loadUrl("javascript:__mydapp.remove('" + event.appItem.entry + "')");
+            webView.loadUrl("javascript:__mydapp.remove('" + event.appInfo.entry + "')");
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppHistoryEvent(AppHistoryEvent event) {
-        String app = new Gson().toJson(event.appItem);
-        webView.loadUrl("javascript:window.__myhistory.add("+ app + ")");
+        String app = new Gson().toJson(event.appInfo);
+        webView.loadUrl("javascript:window.__myhistory.add(" + app + ")");
     }
 
     @Override
