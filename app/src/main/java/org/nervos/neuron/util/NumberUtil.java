@@ -138,6 +138,10 @@ public class NumberUtil {
         return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
+    public static String getEthFromWeiForStringDecimal8Sub(BigInteger value) {
+        return getDecimal8Sub(getEthFromWei(value));
+    }
+
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
@@ -150,6 +154,10 @@ public class NumberUtil {
 
     public static double getEthFromWei(BigInteger value) {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
+    }
+
+    public static String divideDecimal8Sub(BigInteger value, int decimal) {
+        return getDecimal8Sub(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
     }
 
     public static String divideDecimal8ENotation(BigInteger value, int decimal) {
