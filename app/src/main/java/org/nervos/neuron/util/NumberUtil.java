@@ -29,6 +29,17 @@ public class NumberUtil {
         return getDecimal8ENotation(integer + decimal);
     }
 
+    public static String getDecimal8Sub(double value) {
+        if (value > 0) {
+            String temp = value + "";
+            temp = temp.substring(0, temp.length() - 4);
+            DecimalFormat fmt = new DecimalFormat("0.########");
+            return fmt.format(Double.valueOf(temp));
+        } else {
+            return "0";
+        }
+    }
+
     public static String getDecimal8ENotation(double value) {
         if (value < 1) {
             double decimal = value - (long) value;
