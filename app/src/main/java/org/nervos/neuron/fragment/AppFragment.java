@@ -75,13 +75,6 @@ public class AppFragment extends Fragment {
 
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                return super.onJsAlert(view, url, message, result);
-            }
-        });
-
     }
 
     private class AppHybrid {
