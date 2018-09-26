@@ -62,8 +62,8 @@ public class TransferActivity extends NBaseActivity {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
-    private static final int MAX_QUOTA_SEEK = 1000;
-    private static final int DEFAULT_QUOTA_SEEK = 8;
+    private static final int MAX_QUOTA_SEEK = 100;
+    private static final int DEFAULT_QUOTA_SEEK = 1;
     private static final int MAX_FEE = 100;
 
     private TextView walletAddressText, walletNameText, feeSeekText, feeValueText, balanceText;
