@@ -150,7 +150,7 @@ public class TransferActivity extends NBaseActivity {
                 mBalance = balance;
                 balanceText.setText(String.format(
                         getString(R.string.transfer_balance_place_holder),
-                        NumberUtil.getDecimal8ENotation(balance) + " " + tokenItem.symbol));
+                        NumberUtil.getDecimal8Sub(balance) + " " + tokenItem.symbol));
             }
         });
     }
