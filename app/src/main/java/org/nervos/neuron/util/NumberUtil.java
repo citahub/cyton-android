@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -30,14 +31,9 @@ public class NumberUtil {
     }
 
     public static String getDecimal8Sub(double value) {
-        if (value > 0) {
-            String temp = value + "";
-            temp = temp.substring(0, temp.length() - 4);
-            DecimalFormat fmt = new DecimalFormat("0.########");
-            return fmt.format(Double.valueOf(temp));
-        } else {
-            return "0";
-        }
+        DecimalFormat formater = new DecimalFormat("0.########");
+        formater.setRoundingMode(RoundingMode.FLOOR);
+        return formater.format(value);
     }
 
     public static String getDecimal8ENotation(double value) {
