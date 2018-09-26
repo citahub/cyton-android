@@ -47,7 +47,7 @@
     <string name="transaction_list_description">最近交易记录（默认十笔）</string>
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
-    <string name="import_wallet_content">粘贴以太坊keyStore内容至输入框，或通过扫描二维码输入</string>
+    <string name="import_wallet_content">粘贴以太坊KeyStore内容至输入框，或通过扫描二维码输入</string>
     <string name="import_wallet_content_hint">请导入KeyStore文本</string>
     <string name="quick_backup_content">本软件不会在云端保存您的任何信息，包括私钥、应用列表以及区块链配置。因此，您的数字资产完全依赖于您自己的保管，请妥善对您的本地数据进行保存</string>
     <string name="change_password_warning">钱包密码如丢失将无法找回，请您妥善保管密码</string>

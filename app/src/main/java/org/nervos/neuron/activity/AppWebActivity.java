@@ -85,7 +85,7 @@ public class AppWebActivity extends BaseActivity {
         initData();
         initView();
         webView.loadUrl(url);
-        initManifest();
+        initManifest(url);
 
     }
 
@@ -142,6 +142,7 @@ public class AppWebActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                initManifest(url);
                 return false;
             }
         });
@@ -190,7 +191,7 @@ public class AppWebActivity extends BaseActivity {
         rightMenuView.setVisibility(View.VISIBLE);
     }
 
-    private void initManifest() {
+    private void initManifest(String url) {
         WebAppUtil.getHttpManifest(webView, url)
                 .subscribe(new NeuronSubscriber<ChainItem>() {
                     @Override
