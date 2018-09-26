@@ -34,14 +34,12 @@ public class AppFragment extends Fragment {
     public static final String TAG = AppFragment.class.getName();
 
     private WebView webView;
-//    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         webView = view.findViewById(R.id.webview);
-//        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         return view;
     }
 
@@ -60,14 +58,6 @@ public class AppFragment extends Fragment {
     }
 
     private void initWebView() {
-
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                webView.reload();
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
 
         webView.setWebViewClient(new WebViewClient(){
             @Override

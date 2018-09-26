@@ -64,7 +64,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
 }
 
 dependencies {
@@ -109,6 +109,7 @@ dependencies {
     implementation files('libs/protobuf-0.18-android.jar')
     implementation files('libs/utils-0.18-android.jar')
     implementation files('libs/infura-3.3.1-android.jar')
+
 }
 
 def getVersionName(boolean isDebug) {
