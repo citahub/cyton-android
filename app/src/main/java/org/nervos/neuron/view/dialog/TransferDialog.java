@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.view.NoScrollViewPager;
 import org.nervos.neuron.view.button.CommonButton;
 
 import javax.annotation.Nullable;
@@ -28,7 +29,7 @@ public class TransferDialog {
     private BottomSheetDialog dialog;
     private View view;
     private View confirmView, pwdView;
-    private ViewPager viewPager;
+    private NoScrollViewPager viewPager;
     private CommonButton confirmButton, pwdButton;
     private ImageView closeImage, closeImage1;
     private ProgressBar progressBar;
@@ -63,6 +64,7 @@ public class TransferDialog {
 
     private void initData() {
         viewPager.setAdapter(new PageAdapter());
+        viewPager.setScroll(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
