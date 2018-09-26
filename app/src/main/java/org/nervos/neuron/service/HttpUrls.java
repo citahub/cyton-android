@@ -21,13 +21,13 @@ public class HttpUrls {
 
 
     // node host
-    public static final String NERVOS_NODE_IP = "http://47.97.171.140:8866/";
+    public static final String NERVOS_NODE_IP = "http://121.196.200.225:1337";
     public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
 //    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
 
     // discover page config information
-    public static final String DISCOVER_URL = "http://192.168.10.24:3000/";
+    public static final String DISCOVER_URL = "http://47.97.171.140:8866/";
     public static final String INNER_URL = "https://dapp.cryptape.com/";
 
     //Token Currency ID Price
