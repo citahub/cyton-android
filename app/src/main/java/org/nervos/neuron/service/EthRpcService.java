@@ -89,9 +89,10 @@ public class EthRpcService {
     }
 
     public static Observable<BigInteger> getEthGasLimit(TransactionInfo transactionInfo) {
+        String data = TextUtils.isEmpty(transactionInfo.data)? "" : Numeric.prependHexPrefix(transactionInfo.data);
         Transaction transaction = new Transaction(walletItem.address, null, null,
-                null, Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(),
-                Numeric.prependHexPrefix(transactionInfo.data));
+                null, Numeric.prependHexPrefix(transactionInfo.to),
+                transactionInfo.getBigIntegerValue(), data);
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {

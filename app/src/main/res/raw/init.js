@@ -76,5 +76,11 @@ window.web3.eth.getCoinbase = function(cb) {
 }
 window.web3.eth.defaultAccount = addressHex
 
+window.nervos.appchain.defaultAccount = addressHex
+
+window.nervos.appchain.getDefaultAccount = function() {
+    return addressHex
+}
+
 window.isNervosReady = true
 window.isMetaMask = true
