@@ -47,14 +47,14 @@
     <string name="transaction_list_description">最近交易记录（默认十笔）</string>
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
-    <string name="import_wallet_content">粘贴以太坊KeyStore内容至输入框，或通过扫描二维码输入</string>
-    <string name="import_wallet_content_hint">请导入KeyStore文本</string>
+    <string name="import_wallet_content">粘贴以太坊Keystore内容至输入框，或通过扫描二维码输入</string>
+    <string name="import_wallet_content_hint">请导入Keystore文本</string>
     <string name="quick_backup_content">本软件不会在云端保存您的任何信息，包括私钥、应用列表以及区块链配置。因此，您的数字资产完全依赖于您自己的保管，请妥善对您的本地数据进行保存</string>
     <string name="change_password_warning">钱包密码如丢失将无法找回，请您妥善保管密码</string>
     <string name="import_mnemonic_warning">请按顺序输入您的助记词，并选择助记词路径</string>
     <string name="import_mnemonic_input_hint">请按顺序输入您的助记词，按空格分隔</string>
     <string name="import_private_key_warning">请输入您的私钥，或通过二维码扫描输入</string>
-    <string name="export_keystore_warning">KeyStore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 KeyStore 格式与以太坊官方 KeyStore 格式相同。</string>
+    <string name="export_keystore_warning">Keystore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 Keystore 格式与以太坊官方 Keystore 格式相同。</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
     <string name="tab_application">应用</string>
     <string name="tab_wallet">钱包</string>
@@ -86,7 +86,7 @@
     <string name="resume">恢复</string>
     <string name="message_permission_rationale">申请下列权限以保证应用可以正常运行:\n\n%1$s</string>
     <string name="scan_qrcode">扫描二维码</string>
-    <string name="share_keystore">分享KeyStore</string>
+    <string name="share_keystore">分享Keystore</string>
     <string name="change_password_suggestion">密码必须至少8个字符，而且同时包含字母和数字</string>
     <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号的至少三类，且长度在8位以上！</string>
     <string name="empty_no_token_data">您还没有Token数据</string>
@@ -175,7 +175,7 @@
     <string name="wallet_manage_title">钱包管理</string>
     <string name="wallet_photo">钱包头像</string>
     <string name="wallet_address">钱包地址</string>
-    <string name="export_keystore">导出KeyStore</string>
+    <string name="export_keystore">导出Keystore</string>
     <string name="transaction_detail_title">交易详情</string>
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="source_code">源代码</string>
@@ -189,16 +189,16 @@
     <string name="balance_not_enough">您的%s余额不足支付此次交易，请获取后再试～</string>
     <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
-    <string name="generate_keystore_fail">KeyStore生成失败</string>
+    <string name="generate_keystore_fail">Keystore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
     <string name="web_url_error">请扫描正确的网址二维码</string>
-    <string name="keystore_error">请扫描正确的KeyStore二维码</string>
+    <string name="keystore_error">请扫描正确的Keystore二维码</string>
     <string name="private_key_error">请扫描正确的私钥二维码</string>
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">请输入完整的代币信息</string>
-    <string name="keystore">KeyStore</string>
+    <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
     <string name="dialog_title_tip">提示</string>
@@ -270,7 +270,7 @@
     <string name="backup_mnemonic_back_tips">距离开启您的安全区块链账户还差最后一步，是否继续？</string>
 
     <string name="change_wallet_name_failed">修改失败，请重试</string>
-    <string name="forbidden_screen_shoot_import">KeyStore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
+    <string name="forbidden_screen_shoot_import">Keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
     <string name="forbidden_screen_shoot_backup">拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！</string>
     <string name="forbidden_screen_shoot">禁止截屏!</string>
 
