@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,14 +34,14 @@ public class AppFragment extends Fragment {
     public static final String TAG = AppFragment.class.getName();
 
     private WebView webView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         webView = view.findViewById(R.id.webview);
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         return view;
     }
 
@@ -59,13 +61,13 @@ public class AppFragment extends Fragment {
 
     private void initWebView() {
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                webView.reload();
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
 
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -82,6 +84,13 @@ public class AppFragment extends Fragment {
         });
 
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
+            }
+        });
 
     }
 

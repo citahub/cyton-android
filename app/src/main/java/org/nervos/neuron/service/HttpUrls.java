@@ -27,7 +27,7 @@ public class HttpUrls {
 
 
     // discover page config information
-    public static final String DISCOVER_URL = "https://dapp.cryptape.com/dapps";
+    public static final String DISCOVER_URL = "http://192.168.10.24:3000/";
     public static final String INNER_URL = "https://dapp.cryptape.com/";
 
     //Token Currency ID Price
