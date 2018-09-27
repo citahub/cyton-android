@@ -61,7 +61,7 @@ public class NervosHttpService {
                             List<TransactionItem> transactionItemList = response.result;
                             for (TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8(
+                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8Sub(
                                         new BigInteger(item.value)));
                             }
                             return Observable.just(transactionItemList);
@@ -93,7 +93,7 @@ public class NervosHttpService {
                             List<TransactionItem> transactionItemList = response.result;
                             for (TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.divideDecimal8ENotation(
+                                item.value = (NumberUtil.divideDecimal8Sub(
                                         new BigInteger(item.value), tokenItem.decimals));
                             }
                             return Observable.just(transactionItemList);
@@ -127,7 +127,7 @@ public class NervosHttpService {
                             .body().string(), NervosTransactionResponse.class);
                     for (TransactionItem item : response.result.transactions) {
                         item.chainName = result.chainName;
-                        item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value));
+                        item.value = NumberUtil.getEthFromWeiForStringDecimal8Sub(Numeric.toBigInt(item.value));
                     }
                     return Observable.just(response.result.transactions);
                 } catch (Exception e) {
