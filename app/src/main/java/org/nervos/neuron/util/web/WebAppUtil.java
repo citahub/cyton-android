@@ -26,6 +26,7 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -84,9 +85,14 @@ public class WebAppUtil {
             @Override
             public Observable<AppItem> call(String path) {
                 URI uri = URI.create(url);
-                String manifestUrl = path.startsWith("http")?
-                        path : uri.getScheme() + "://" + uri.getAuthority() +
-                        (path.indexOf(".") == 0? path.substring(1) : path);
+                LogUtil.d("web url: " + url);
+                String manifestUrl = path;
+                if (!path.startsWith("http")) {
+                    manifestUrl = uri.getAuthority() + "/" + uri.getPath() + "/" +
+                            (path.indexOf(".") == 0? path.substring(1) : path);
+                    manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
+                }
+                LogUtil.d("manifest.json path : " + manifestUrl);
 
                 Request request = new Request.Builder().url(manifestUrl).build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
@@ -144,6 +150,16 @@ public class WebAppUtil {
           .observeOn(AndroidSchedulers.mainThread());
     }
 
+    private static String formatUrl(String url) {
+        if (url.contains("///")){
+            url = url.replace("///", "/");
+        }
+        if (url.contains("//")) {
+            url = url.replace("//", "/");
+        }
+        return url;
+    }
+
 
     public static boolean isCollectApp(WebView webView) {
         return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
@@ -171,6 +187,7 @@ public class WebAppUtil {
         try {
             URI uri = URI.create(webView.getUrl());
             String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
+            LogUtil.d("web icon: " + icon);
             icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
             mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
         } catch (Exception e) {

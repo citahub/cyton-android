@@ -198,7 +198,6 @@ public class AppWebActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         LogUtil.e("manifest error: " + e.getMessage());
                     }
-
                     @Override
                     public void onNext(ChainItem chainItem) {
                         if (TextUtils.isEmpty(chainItem.errorMessage)) {
