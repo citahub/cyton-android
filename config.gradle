@@ -1,9 +1,9 @@
 ext.appConfig = [
-        versionCode: 10,
+        versionCode: 11,
 
         versionMajor: 0,
         versionMinor: 6,
-        versionBeta: 3,
+        versionBeta: 4,
 
         signStorePassword: "cryptape2016@#",
         signKeyAlias: "neuron",
