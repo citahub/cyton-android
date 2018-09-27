@@ -17,7 +17,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -27,7 +27,7 @@ import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Int64;
+import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.utils.Numeric;
 
@@ -89,7 +89,7 @@ public class NervosRpcService {
                     DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
-            Int64 balance = (Int64) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+            Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
             double balances = balance.getValue().doubleValue();
             if (tokenItem.decimals == 0) return balances;
             else return balances/(Math.pow(10, tokenItem.decimals));
@@ -109,10 +109,10 @@ public class NervosRpcService {
 
 
     public static double getBalance(String address) throws Exception {
-        AppGetBalance ethGetBalance =
+        AppGetBalance appGetBalance =
                 service.appGetBalance(address, DefaultBlockParameterName.LATEST).send();
-        if (ethGetBalance != null) {
-            return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
+        if (appGetBalance != null) {
+            return NumberUtil.getEthFromWei(appGetBalance.getBalance());
         }
         return 0.0;
     }
@@ -120,7 +120,7 @@ public class NervosRpcService {
 
     public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
            String contractAddress, String address, double value, int chainId, String password) throws Exception {
-        BigInteger ercValue = getTransferValue(tokenItem, value);
+        BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
@@ -145,7 +145,7 @@ public class NervosRpcService {
                 return Observable.just(null);
             }
         }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+          .observeOn(AndroidSchedulers.mainThread());
 
     }
 
@@ -193,14 +193,16 @@ public class NervosRpcService {
         return BigInteger.ZERO;
     }
 
+
+    private static final String TRANSFER_METHOD = "transfer";
     private static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
         List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
-        Function function = new Function("transfer", params, returnTypes);
+        Function function = new Function(TRANSFER_METHOD, params, returnTypes);
         return FunctionEncoder.encode(function);
     }
 
-    private static BigInteger getTransferValue(TokenItem tokenItem, double value) {
+    private static BigInteger getERC20TransferValue(TokenItem tokenItem, double value) {
         StringBuilder sb = new StringBuilder("1");
         for(int i = 0; i < tokenItem.decimals; i++) {
             sb.append("0");
@@ -235,7 +237,7 @@ public class NervosRpcService {
                 DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(decimals) && !ConstUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
-            Int64 type = (Int64) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
+            Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();
         }
         return 0;
@@ -247,7 +249,7 @@ public class NervosRpcService {
         intTypes.add(new TypeReference<Type>() {
             @Override
             public java.lang.reflect.Type getType() {
-                return Int64.class;
+                return Int256.class;
             }
         });
     }

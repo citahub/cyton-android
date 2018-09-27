@@ -15,7 +15,8 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
-import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity {
     private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
     private FragmentManager fMgr;
+    public static final int REQUEST_CODE_SCAN = 0x01;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -193,6 +195,47 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK)
+            switch (requestCode) {
+                case REQUEST_CODE_SCAN:
+                    if (null != data) {
+                        Bundle bundle = data.getExtras();
+                        if (bundle == null) return;
+                        if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                            String result = bundle.getString(CodeUtils.RESULT_STRING);
+                            switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                                case CodeUtils.STRING_UNVALID:
+                                    Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
+                                    break;
+                                case CodeUtils.STRING_ADDRESS:
+                                    Toast.makeText(this, R.string.developing, Toast.LENGTH_LONG).show();
+                                    break;
+                                case CodeUtils.STRING_KEYSTORE:
+                                    Intent intent = new Intent(this, ImportWalletActivity.class);
+                                    intent.putExtra("from", "QR");
+                                    intent.putExtra("type", 1);
+                                    intent.putExtra("value", result);
+                                    startActivity(intent);
+                                    break;
+                                case CodeUtils.STRING_WEB:
+                                    SimpleWebActivity.gotoSimpleWeb(this, result);
+                                    break;
+                                case CodeUtils.STRING_PRIVATE_KEY:
+                                    Intent intent1 = new Intent(this, ImportWalletActivity.class);
+                                    intent1.putExtra("from", "QR");
+                                    intent1.putExtra("type", 2);
+                                    intent1.putExtra("value", result);
+                                    startActivity(intent1);
+                                    break;
+                            }
+                        } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                            Toast.makeText(this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
     }
 
     @Override

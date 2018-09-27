@@ -4,13 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
+import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class BackupMnemonicActivity extends NBaseActivity {
 
@@ -24,13 +30,38 @@ public class BackupMnemonicActivity extends NBaseActivity {
 
     @Override
     protected void initView() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         mnemonicText = findViewById(R.id.mnemonic_text);
     }
 
     @Override
     protected void initData() {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", getString(R.string.forbidden_screen_shoot));
+            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
+            ToastSingleButtonDialog.getInstance(this, object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         mnemonicText.setText(mnemonic);
+
+        TitleBar titleBar = findViewById(R.id.title);
+        titleBar.setOnLeftClickListener(() -> {
+            try {
+                JSONObject object = new JSONObject();
+                object.put("info", getString(R.string.backup_mnemonic_back_tips));
+                object.put("cancel", getString(R.string.reject));
+                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(this, object);
+                dialog.setOnCancelClickListener(dialog1 -> {
+                    dialog1.dismiss();
+                    finish();
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

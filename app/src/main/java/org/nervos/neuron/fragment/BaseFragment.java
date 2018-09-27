@@ -1,25 +1,17 @@
 package org.nervos.neuron.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.nervos.neuron.R;
+import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseFragment extends Fragment {
 
-    private View rootView;
-    private View mProgressView;
+    private ProgressingDialog dialog = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,8 +21,6 @@ public class BaseFragment extends Fragment {
 
     public void onDestroy() {
         super.onDestroy();
-        rootView = null;
-        mProgressView = null;
         EventBus.getDefault().unregister(this);
     }
 
@@ -38,36 +28,31 @@ public class BaseFragment extends Fragment {
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        showProgressBar(getString(R.string.loading));
+        if (dialog == null)
+            dialog = new ProgressingDialog(getActivity());
+        dialog.show();
     }
 
     protected void showProgressBar(@StringRes int message) {
-        showProgressBar(getString(message));
+        if (dialog == null)
+            dialog = new ProgressingDialog(getActivity());
+        dialog.show();
+        dialog.setMsg(getString(message));
     }
 
     protected void showProgressBar(String message) {
-        Activity activity = getActivity();
-        if (mProgressView == null) {
-            mProgressView = LayoutInflater.from(activity).inflate(R.layout.progressbar_layout, null);
-            TextView messageText = mProgressView.findViewById(R.id.progress_bar_text);
-            messageText.setText(message);
-            rootView = activity.getWindow().getDecorView();
-            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            fl.gravity = Gravity.CENTER;
-
-            ((ViewGroup) rootView).addView(mProgressView, 1, fl);
-        }
+        if (dialog == null)
+            dialog = new ProgressingDialog(getActivity());
+        dialog.show();
+        dialog.setMsg(message);
     }
 
     /**
      * 隐藏Progress Bar
      */
     protected void dismissProgressBar() {
-        if (rootView != null && mProgressView != null) {
-            ((ViewGroup) rootView).removeView(mProgressView);
-        }
-        mProgressView = null;
-        rootView = null;
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
     }
 
     @Subscribe

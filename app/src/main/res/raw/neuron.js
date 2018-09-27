@@ -54092,6 +54092,7 @@ var Neuron = {
       }
     } else {
       callback(error, value);
+      console.log('callback(error, value): \nvalue: ' + value + '\nerror: ' + error + '\n');
     }
     delete callbacks[id];
   }

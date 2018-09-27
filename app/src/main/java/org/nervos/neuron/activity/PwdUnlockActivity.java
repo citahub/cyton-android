@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,11 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.crypto.AESCrypt;
-import org.nervos.neuron.custom.SelectWalletPopupwWindow;
+import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.view.SelectWalletPopupwWindow;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.button.CommonButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,11 +31,13 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private TextView cancelTv, walletNameTv, walletSelectTv;
     private AppCompatEditText walletPwdEt;
     private ImageView walletSelectImg, otherImg, arrowImg;
-    private AppCompatButton authBtn;
+    private CommonButton authBtn;
     private WalletItem walletItem;
+    private boolean needMain = true;
 
     @Override
     protected int getContentLayout() {
+        inLoginPage = true;
         return R.layout.activity_pwd_unlock;
     }
 
@@ -89,11 +91,9 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!TextUtils.isEmpty(walletPwdEt.getText().toString().trim()) && walletPwdEt.getText().toString().length() >= 8) {
-                    authBtn.setBackgroundResource(R.drawable.button_corner_blue_shape);
-                    authBtn.setEnabled(true);
+                    authBtn.setClickAble(true);
                 } else {
-                    authBtn.setBackgroundResource(R.drawable.button_corner_gray_shape);
-                    authBtn.setEnabled(false);
+                    authBtn.setClickAble(false);
                 }
             }
         });
@@ -122,10 +122,17 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 if (!AESCrypt.checkPassword(walletPwdEt.getText().toString().trim(), walletItem)) {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
                 } else {
-                    startActivity(new Intent(mActivity, MainActivity.class));
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();
+                    if (needMain)
+                        startActivity(new Intent(mActivity, MainActivity.class));
+                    finish();
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -1,14 +1,12 @@
 package org.nervos.neuron.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 
@@ -22,6 +20,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     @Override
     protected int getContentLayout() {
+        inLoginPage = true;
         return R.layout.activity_fingerprint;
     }
 
@@ -58,7 +57,6 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-//            Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_lock_success), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, MainActivity.class));
             finish();
         }
@@ -75,7 +73,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
             case R.id.iv_finger_print:
                 if (FingerPrintController.getInstance(mActivity).hasEnrolledFingerprints() && FingerPrintController.getInstance(mActivity).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(mActivity, R.style.Theme_AppCompat_Dialog);
+                        authFingerDialog = new AuthFingerDialog(mActivity);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(mActivity).authenticate(authenticateResultCallback);
                     });
@@ -92,5 +90,24 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authFingerDialog != null && authFingerDialog.isShowing())
+            authFingerDialog.dismiss();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (authFingerDialog != null && !authFingerDialog.isShowing())
+            authFingerDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

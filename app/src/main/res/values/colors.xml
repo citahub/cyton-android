@@ -1,55 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4f72ff</color>
-    <color name="colorPrimaryDark">#4f72ff</color>
+    <color name="colorPrimary">#456cff</color>
+    <color name="colorPrimaryDark">#456cff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentLight">#55FF4081</color>
-    <color name="font_black">#333333</color>
-    <color name="button_blue">#4f72ff</color>
+    <color name="main_color2">#10456cff</color>
+    <color name="main_color3">#15345cff</color>
 
-    <color name="default_title_bg">#FFFFFF</color>
-    <color name="default_title_text_color">#FF333333</color>
-    <color name="default_title_right_color">#62678A</color>
+    <color name="assist_color">#03c58b</color>
+    <color name="warning_background">#fdfbe5</color>
+    <color name="warning_font">#ca6a01</color>
 
     <color name="font_title">#2E313E</color>
     <color name="font_title_second">#6C7184</color>
     <color name="font_title_third">#9196A6</color>
-    <color name="font_inside">#9196A6</color>
-    <color name="font_annotation">#c5c5d0</color>
     <color name="font_link">#456cff</color>
-    <color name="font_hint">#DBDCE3</color>
+    <color name="font_hint">#dbdce3</color>
 
     <color name="line_form">#f7f7f7</color>
     <color name="line_input">#E9EBF0</color>
 
-    <color name="button_unclick">#e9ebf0</color>
+    <color name="default_background">#F8F8FA</color>
+    <color name="dark_background">#242c4a</color>
 
-    <color name="qr_receive_bg">#252A3E</color>
+    <color name="transparent_color1">#50000000</color>
+    <color name="transparent_color2">#80000000</color>
 
-    <color name="navigation_tab_background_color">#fff5f5f5</color>
-    <color name="warning_background">#19FF8F27</color>
-    <color name="warning_font">#FF8F27</color>
-    <color name="receive_token_color">#03C58B</color>
-    <color name="selected_color">#03C58B</color>
+    <color name="white">#ffffff</color>
 
-    <color name="default_black">#333333</color>
-    <color name="default_separate_gray">#F7F7F7</color>
-    <color name="default_gray_e1">#ffe1e1e1</color>
-    <color name="default_gray_e">#ffeeeeee</color>
-    <color name="default_gray_9">#ff999999</color>
-    <color name="default_gray_6">#ff666666</color>
-    <color name="default_background">#FFF8F8FA</color>
-    <color name="default_gray_c9">#ffc9c9c9</color>
-    <color name="default_gray_d5">#ffd5d5d5</color>
-    <color name="default_title">#f9f9f9</color>
-    <color name="default_white_f9">#fff9f9f9</color>
-    <color name="default_white_f4">#fff4f4f4</color>
-    <color name="default_gray_c">#cccccc</color>
-    <color name="default_gray_a">#ffaaaaaa</color>
-    <color name="white">#ffffffff</color>
-    <color name="red">#ffff4d55</color>
-    <color name="orange">#ff9d45</color>
-    <color name="code_yellow">#ffbd54</color>
     <color name="item_collection_attr_bg">#05456cff</color>
     <color name="item_collection_attr_border">#20456cff</color>
+
+    <color name="grey_background">#33000000</color>
+
+    <color name="qr_receive_bg">#252A3E</color>
 </resources>

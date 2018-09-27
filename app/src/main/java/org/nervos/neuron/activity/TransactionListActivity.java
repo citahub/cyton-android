@@ -14,13 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.NervosHttpService;
-import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
@@ -29,7 +32,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -120,27 +122,32 @@ public class TransactionListActivity extends NBaseActivity {
 
 
     private void getTransactionList() {
+        Observable<List<TransactionItem>> observable;
         if (!isNativeToken(tokenItem)) {
-            dismissProgressBar();
-            return;
+            if (isEthereum(tokenItem)) {
+                observable = NervosHttpService.getETHERC20TransactionList(mActivity, tokenItem);
+            } else {
+                dismissProgressBar();
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+        } else {
+            observable = isEthereum(tokenItem) ?
+                    NervosHttpService.getETHTransactionList(mActivity)
+                    : NervosHttpService.getNervosTransactionList(mActivity);
         }
-        Observable<List<TransactionItem>> observable = isETH(tokenItem) ?
-                NervosHttpService.getETHTransactionList(mActivity)
-                : NervosHttpService.getNervosTransactionList(mActivity);
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override
             public void onCompleted() {
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
-
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 dismissProgressBar();
                 swipeRefreshLayout.setRefreshing(false);
             }
-
             @Override
             public void onNext(List<TransactionItem> list) {
                 if (list == null) {
@@ -190,12 +197,13 @@ public class TransactionListActivity extends NBaseActivity {
             if (holder instanceof TransactionViewHolder) {
                 TransactionItem transactionItem = transactionItemList.get(position);
                 TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
+                viewHolder.walletImage.setImageBitmap(Blockies.createIcon(walletItem.address));
                 if (!transactionItem.from.equalsIgnoreCase(walletItem.address)) {
                     viewHolder.transactionIdText.setText(transactionItem.from);
-                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_in);
+                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_in);
                 } else {
                     viewHolder.transactionIdText.setText(transactionItem.to);
-                    viewHolder.walletImage.setImageResource(R.drawable.ic_trans_out);
+                    viewHolder.inOutImage.setImageResource(R.drawable.ic_trans_in);
                 }
                 String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+")
                         + transactionItem.value;
@@ -224,6 +232,7 @@ public class TransactionListActivity extends NBaseActivity {
 
         class TransactionViewHolder extends RecyclerView.ViewHolder {
             ImageView walletImage;
+            ImageView inOutImage;
             TextView transactionIdText;
             TextView transactionAmountText;
             TextView transactionTimeText;
@@ -237,6 +246,7 @@ public class TransactionListActivity extends NBaseActivity {
                     }
                 });
                 walletImage = view.findViewById(R.id.wallet_photo);
+                inOutImage = view.findViewById(R.id.iv_in_out);
                 transactionIdText = view.findViewById(R.id.transaction_id_text);
                 transactionTimeText = view.findViewById(R.id.transaction_time_text);
                 transactionAmountText = view.findViewById(R.id.transaction_amount);
@@ -253,7 +263,7 @@ public class TransactionListActivity extends NBaseActivity {
         return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
-    private boolean isETH(TokenItem tokenItem) {
-        return ConstUtil.ETH.equals(tokenItem.symbol);
+    private boolean isEthereum(TokenItem tokenItem) {
+        return tokenItem.chainId < 0;
     }
 }

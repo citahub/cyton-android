@@ -1,89 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="280dp"
-        android:layout_height="180dp"
-        android:background="@drawable/rectangle_border_white_corner"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/font_title"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@id/line1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/dialog_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textColor="@color/default_black"
-            android:textSize="18sp" />
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="42dp"
+        android:background="@color/line_input"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/dialog_edit_message"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@color/white"
-            android:maxLength="15"
-            android:textColor="@color/default_black"
-            android:textSize="13sp" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/dialog_edit_message"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginTop="44dp"
+        android:background="@color/white"
+        android:textColor="@color/font_title"
+        android:textSize="15sp"
+        android:maxLength="15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/default_gray_c" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <RelativeLayout
-                android:id="@+id/dialog_button_layout"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true">
-
-                <View
-                    android:id="@+id/separate"
-                    android:layout_width="0.5dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/default_gray_c" />
-
-                <TextView
-                    android:id="@+id/dialog_cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toStartOf="@id/separate"
-                    android:gravity="center"
-                    android:text="取消"
-                    android:textColor="@color/default_gray_6"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/dialog_ok"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toEndOf="@id/separate"
-                    android:gravity="center"
-                    android:text="确定"
-                    android:textColor="@color/button_blue"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_above="@id/dialog_button_layout"
-                android:background="@color/default_gray_c" />
-        </RelativeLayout>
+    <View
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:background="@color/line_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_edit_message" />
 
 
-    </LinearLayout>
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/line_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line4" />
 
-</FrameLayout>
+    <View
+        android:id="@+id/line3"
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="@color/line_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line2" />
+
+    <TextView
+        android:id="@+id/dialog_cancel"
+        style="@style/DialogButtonCancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line2" />
+
+    <TextView
+        android:id="@+id/dialog_ok"
+        style="@style/DialogButtonOK"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/line3"
+        app:layout_constraintTop_toTopOf="@id/line2" />
+</android.support.constraint.ConstraintLayout>

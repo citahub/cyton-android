@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -43,52 +43,47 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="26dp"
             android:layout_marginTop="6dp"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="14sp" />
 
     </LinearLayout>
 
-    <org.nervos.neuron.custom.SettingButtonView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_source_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
         app:icon="@drawable/ic_about_us_origin_code"
-        app:name="源代码"
-        app:other1="false" />
+        app:name="源代码" />
 
-    <org.nervos.neuron.custom.SettingButtonView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_server_private"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_about_us_server_pri"
-        app:name="服务及隐私条款"
-        app:other1="false" />
+        app:name="服务及隐私条款" />
 
-    <org.nervos.neuron.custom.SettingButtonView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_nervos_network"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
         app:icon="@drawable/ic_about_us_nervos_network"
-        app:name="Nervos Network"
-        app:other1="false" />
+        app:name="Nervos Network" />
 
-    <org.nervos.neuron.custom.SettingButtonView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_infura"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_about_us_infua"
-        app:name="Infura"
-        app:other1="false" />
+        app:name="Infura" />
 
-    <org.nervos.neuron.custom.SettingButtonView
+    <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_open_sea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_about_us_open_sea"
-        app:name="Open Sea"
-        app:other1="false" />
+        app:name="Open Sea" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -105,7 +100,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginEnd="3dp"
             android:text="@string/neuron_is_a"
-            android:textColor="@color/default_gray_9"
+            android:textColor="@color/font_title_third"
             android:textSize="12sp" />
 
         <ImageView
@@ -120,7 +115,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginStart="3dp"
             android:text="@string/product"
-            android:textColor="@color/default_gray_9"
+            android:textColor="@color/font_title_third"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

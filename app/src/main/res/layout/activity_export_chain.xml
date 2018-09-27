@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:isShowLeft="true"/>
+        app:isShowLeft="true" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_export_chain"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:textSize="12sp"
-        android:textColor="@color/font_black"
+        android:layout_margin="@dimen/default_margin"
         android:background="@drawable/edit_input_shape"
-        android:layout_margin="@dimen/default_margin"/>
+        android:textColor="@color/font_title"
+        android:textSize="12sp" />
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.button.CommonButton
         android:id="@+id/button_export_chain"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:background="@drawable/button_corner_blue_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="批量导出"
-        android:textColor="@color/font_black"
-        android:textSize="14sp"
-        android:layout_gravity="center_horizontal|bottom"/>
-
+        app:status="true"
+        app:text="@string/export_more" />
 </LinearLayout>

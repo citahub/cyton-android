@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_background"
@@ -29,7 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/default_margin">
+            android:paddingBottom="6dp"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_wallet_mnemonic"
@@ -40,17 +44,14 @@
                 android:hint="@string/import_mnemonic_input_hint"
                 android:padding="10dp"
                 android:textColor="@color/font_title"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
         </FrameLayout>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="@dimen/default_margin"
             android:background="@android:color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin">
 
@@ -58,33 +59,54 @@
                 android:id="@+id/tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
                 android:background="@color/white"
-                android:text="格式"
+                android:text="@string/path"
                 android:textColor="@color/font_title"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/spinner_format"
+            <LinearLayout
+                android:id="@+id/ll_path"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/tv"
-                android:entries="@array/mnemonic_format"
-                android:gravity="right" />
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_path"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:textColor="@color/font_title" />
 
-        <View
-            style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+                <TextView
+                    android:id="@+id/tv_format"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:textColor="@color/font_title" />
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                style="@style/inputSeparateLine"
+                android:layout_marginLeft="@dimen/default_margin" />
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_name"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:background="@android:color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/input_wallet_name_hint"
@@ -95,18 +117,24 @@
             android:textColor="@color/font_title"
             android:textSize="15sp" />
 
-        <View
-            style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                style="@style/inputSeparateLine"
+                android:layout_marginLeft="@dimen/default_margin" />
+        </LinearLayout>
 
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_password"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:background="@color/white"
             android:gravity="left|center_vertical"
-            android:hint="@string/set_password"
+            android:hint="@string/input_password_hint"
             android:inputType="textPassword"
             android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
@@ -114,14 +142,20 @@
             android:textColor="@color/font_title"
             android:textSize="15sp" />
 
-        <View
-            style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                style="@style/inputSeparateLine"
+                android:layout_marginLeft="@dimen/default_margin" />
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_wallet_repassword"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:background="@android:color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/input_new_password_again_hint"
@@ -139,23 +173,16 @@
             android:layout_marginRight="@dimen/default_margin"
             android:layout_marginTop="8dp"
             android:text="@string/password_suggestion"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="12sp" />
 
-
-        <android.support.v7.widget.AppCompatButton
+        <org.nervos.neuron.view.button.CommonButton
             android:id="@+id/import_mnemonic_button"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/margin_30dp"
-            android:background="@drawable/button_corner_gray_shape"
-            android:text="@string/import_wallet"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            app:status="false"
+            app:text="@string/import_wallet" />
     </LinearLayout>
 
 </ScrollView>

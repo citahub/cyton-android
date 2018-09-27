@@ -3,7 +3,7 @@ package org.nervos.neuron.service;
 import android.content.Context;
 
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;

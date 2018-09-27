@@ -2,7 +2,6 @@ package org.nervos.neuron.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -13,7 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.web.WebAppUtil;
 
 

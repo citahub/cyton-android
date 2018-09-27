@@ -1,31 +1,35 @@
 package org.nervos.neuron.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.AntiHijackingUtil;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.dialog.ProgressCircleDialog;
+import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseActivity extends AppCompatActivity {
 
-    private View rootView;
-    private View mProgressView;
-    private View mProgressCircleView;
-
+    private ProgressingDialog dialog = null;
+    private ProgressCircleDialog circleDialog = null;
+    protected boolean mIsSafeLast;
     protected Activity mActivity;
+    Handler handler = new Handler();
+    public boolean inLoginPage = false;
+    private boolean needLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,47 +55,74 @@ public class BaseActivity extends AppCompatActivity {
         return getResources().getColor(R.color.white);
     }
 
+    private boolean isShouldTimeOut() {
+        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isShouldTimeOut() && needLogin) {
+            gotoLogin();
+            needLogin = false;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (isShouldTimeOut()) {
+            mIsSafeLast = AntiHijackingUtil.checkActivity(this);
+            if (!mIsSafeLast) {
+                needLogin = true;
+            }
+        }
+        super.onStop();
+    }
+
     public void onDestroy() {
         super.onDestroy();
-        rootView = null;
-        mProgressView = null;
-        mProgressCircleView = null;
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    private void gotoLogin() {
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+            Intent intent = new Intent(mActivity, FingerPrintActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     /**
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        showProgressBar(getString(R.string.loading));
+        if (dialog == null)
+            dialog = new ProgressingDialog(this);
+        dialog.show();
     }
 
     protected void showProgressBar(@StringRes int message) {
-        showProgressBar(getString(message));
+        if (dialog == null)
+            dialog = new ProgressingDialog(this);
+        dialog.show();
+        dialog.setMsg(getString(message));
     }
 
     protected void showProgressBar(String message) {
-        if (mProgressView == null) {
-            mProgressView = LayoutInflater.from(this).inflate(R.layout.progressbar_layout, null);
-            TextView messageText = mProgressView.findViewById(R.id.progress_bar_text);
-            messageText.setText(message);
-            rootView = getWindow().getDecorView();
-            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            fl.gravity = Gravity.CENTER;
-
-            ((ViewGroup) rootView).addView(mProgressView, 1, fl);
-        }
+        if (dialog == null)
+            dialog = new ProgressingDialog(this);
+        dialog.show();
+        dialog.setMsg(message);
     }
 
     /**
      * 隐藏Progress Bar
      */
     protected void dismissProgressBar() {
-        if (rootView != null && mProgressView != null) {
-            ((ViewGroup) rootView).removeView(mProgressView);
-        }
-        mProgressView = null;
-        rootView = null;
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
     }
 
 
@@ -100,26 +131,31 @@ public class BaseActivity extends AppCompatActivity {
      */
 
     protected void showProgressCircle() {
-        if (mProgressCircleView == null) {
-            mProgressCircleView = LayoutInflater.from(this).inflate(R.layout.progressbar_circle, null);
-            rootView = getWindow().getDecorView();
-            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            fl.gravity = Gravity.CENTER;
-
-            ((ViewGroup) rootView).addView(mProgressCircleView, 1, fl);
-        }
+        if (circleDialog == null)
+            circleDialog = new ProgressCircleDialog(this);
+        circleDialog.show();
     }
 
     /**
      * hide Progress circle
      */
     protected void dismissProgressCircle() {
-        if (rootView != null && mProgressCircleView != null) {
-            ((ViewGroup) rootView).removeView(mProgressCircleView);
-        }
-        mProgressCircleView = null;
-        rootView = null;
+        if (circleDialog != null && circleDialog.isShowing())
+            circleDialog.dismiss();
     }
+
+    private long lastClickTime;
+
+    public boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastClickTime;
+        if (0 < timeD && timeD < 1000) {
+            return true;
+        }
+        lastClickTime = time;
+        return false;
+    }
+
 
     @Subscribe
     public void onEvent(Object object) {

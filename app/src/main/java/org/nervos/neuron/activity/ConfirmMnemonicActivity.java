@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
-import org.nervos.neuron.fragment.WalletsFragment.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_mnemonic);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         mnemonics = getIntent().getStringArrayExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         originList = Arrays.asList(mnemonics);
         shuffleList.addAll(originList);
@@ -112,21 +113,17 @@ public class ConfirmMnemonicActivity extends BaseActivity {
     }
 
     private void backupComplete() {
-        findViewById(R.id.backup_complete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (confirmList.equals(originList)) {
-                    EventBus.getDefault().post(new WalletSaveEvent());
-                    Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
-                    startActivity(intent);
-                    EventBus.getDefault().post(new CloseWalletInfoEvent());
-                    finish();
-                } else {
-                    Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
-                }
+        findViewById(R.id.backup_complete).setOnClickListener(v -> {
+            if (confirmList.equals(originList)) {
+                EventBus.getDefault().post(new WalletSaveEvent());
+                Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                startActivity(intent);
+                EventBus.getDefault().post(new CloseWalletInfoEvent());
+                finish();
+            } else {
+                Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
             }
         });
     }

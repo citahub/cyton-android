@@ -21,7 +21,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.custom.TitleBar;
+import org.nervos.neuron.fragment.token.model.TokenAdapter;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
@@ -41,7 +42,6 @@ public class TokenManageActivity extends BaseActivity {
     private TitleBar titleBar;
     private RecyclerView recyclerView;
     private List<TokenEntity> tokenList = new ArrayList<>();
-    private List<String> tokenNames = new ArrayList<>();
     private TokenAdapter adapter = new TokenAdapter();
 
     @Override
@@ -54,11 +54,13 @@ public class TokenManageActivity extends BaseActivity {
     }
 
     private void initData() {
-        tokenNames = DBWalletUtil.getAllWalletName(mActivity);
         String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
         Type type = new TypeToken<List<TokenEntity>>() {
         }.getType();
         tokenList = new Gson().fromJson(tokens, type);
+        for (TokenEntity entity : tokenList) {
+            entity.chainId = -1;
+        }
         addCustomToken();
         adapter.notifyDataSetChanged();
     }
@@ -84,8 +86,8 @@ public class TokenManageActivity extends BaseActivity {
         titleBar.setOnLeftClickListener(new TitleBar.OnLeftClickListener() {
             @Override
             public void onLeftClick() {
-                finish();
                 postTokenRefreshEvent();
+                finish();
             }
         });
         recyclerView = findViewById(R.id.token_recycler);
@@ -126,13 +128,13 @@ public class TokenManageActivity extends BaseActivity {
                 tokenList.get(position).isSelected =
                         DBWalletUtil.checkTokenInCurrentWallet(mActivity, tokenList.get(position).symbol);
                 viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
-                        R.drawable.circle_selected : R.drawable.circle_unselect);
+                        R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
                 viewHolder.tokenSelectImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         tokenList.get(position).isSelected = !tokenList.get(position).isSelected;
                         viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
-                                R.drawable.circle_selected : R.drawable.circle_unselect);
+                                R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
                         if (tokenList.get(position).isSelected) {
                             DBWalletUtil.addTokenToCurrentWallet(mActivity,
                                     new TokenItem(tokenList.get(position)));

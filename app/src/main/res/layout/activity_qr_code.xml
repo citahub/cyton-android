@@ -5,14 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.nervos.neuron.custom.TitleBar
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorPrimary"
-        app:title="@string/scan_qrcode"
-        app:isShowLeft="true"/>
-
     <FrameLayout
         android:id="@+id/capture_container"
         android:layout_width="match_parent"

@@ -28,6 +28,18 @@ public class AppItem implements Parcelable {
     }
 
 
+    public static final Creator<AppItem> CREATOR = new Creator<AppItem>() {
+        @Override
+        public AppItem createFromParcel(Parcel in) {
+            return new AppItem(in);
+        }
+
+        @Override
+        public AppItem[] newArray(int size) {
+            return new AppItem[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -62,15 +74,4 @@ public class AppItem implements Parcelable {
         }
     }
 
-    public static final Creator<AppItem> CREATOR = new Creator<AppItem>() {
-        @Override
-        public AppItem createFromParcel(Parcel source) {
-            return new AppItem(source);
-        }
-
-        @Override
-        public AppItem[] newArray(int size) {
-            return new AppItem[size];
-        }
-    };
 }

@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -42,17 +42,12 @@
         android:layout_margin="@dimen/default_margin"
         zhy:max_select="-1" />
 
-    <android.support.v7.widget.AppCompatButton
+    <org.nervos.neuron.view.button.CommonButton
         android:id="@+id/backup_complete"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/button_corner_blue_shape"
-        android:text="@string/backup_complete"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:status="true"
+        app:text="@string/backup_complete" />
 
 </LinearLayout>

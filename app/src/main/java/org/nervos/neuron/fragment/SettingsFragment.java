@@ -2,7 +2,9 @@ package org.nervos.neuron.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
@@ -11,8 +13,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
-import org.nervos.neuron.custom.SettingButtonView;
-import org.nervos.neuron.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.SettingButtonView;
+import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
@@ -41,7 +43,7 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
-        currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+        currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
             if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
@@ -66,7 +68,7 @@ public class SettingsFragment extends NBaseFragment {
                 //setting fingerprint
                 if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(getActivity(), R.style.Theme_AppCompat_Dialog);
+                        authFingerDialog = new AuthFingerDialog(getActivity());
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
                     });
@@ -96,7 +98,12 @@ public class SettingsFragment extends NBaseFragment {
             startActivity(intent);
         });
         contactUsSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(getContext(), HttpUrls.CONTACT_US_RUL);
+            ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("contact", "Nervos-Neuron");
+            if (cm != null) {
+                cm.setPrimaryClip(mClipData);
+                Toast.makeText(getActivity(), R.string.copy_weixin_success, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -127,7 +134,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    currencySBV.setOther1Text(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
                     break;
             }
         }

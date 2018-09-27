@@ -6,7 +6,7 @@
     android:background="@color/qr_receive_bg"
     android:orientation="vertical">
 
-    <org.nervos.neuron.custom.TitleBar
+    <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -36,8 +36,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

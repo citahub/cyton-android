@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -27,6 +28,12 @@ public class NumberUtil {
         MathContext mc = new MathContext(2);
         decimal = b.divide(divisor, mc).doubleValue();
         return getDecimal8ENotation(integer + decimal);
+    }
+
+    public static String getDecimal8Sub(double value) {
+        DecimalFormat formater = new DecimalFormat("0.########");
+        formater.setRoundingMode(RoundingMode.FLOOR);
+        return formater.format(value);
     }
 
     public static String getDecimal8ENotation(double value) {
@@ -131,26 +138,30 @@ public class NumberUtil {
         return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
     }
 
-    public static String getEthFromWeiForStringDecimal8(String value) {
-        return getDecimal8ENotation(getEthFromWeiForDouble(value));
+    public static String getEthFromWeiForStringDecimal8Sub(BigInteger value) {
+        return getDecimal8Sub(getEthFromWei(value));
     }
 
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
 
-    public static double getEthFromWeiForDouble(String value) {
-        if (TextUtils.isEmpty(value)) return 0.0;
-        if (Numeric.containsHexPrefix(value)) {
-            value = Numeric.cleanHexPrefix(value);
-            return getEthFromWei(Numeric.toBigInt(value));
-        } else {
-            return getEthFromWei(new BigInteger(value));
-        }
+    public static double getEthFromWeiForDouble(String hex) {
+        if (TextUtils.isEmpty(hex)) return 0.0;
+        hex = Numeric.cleanHexPrefix(hex);
+        return getEthFromWei(Numeric.toBigInt(hex));
     }
 
     public static double getEthFromWei(BigInteger value) {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
+    }
+
+    public static String divideDecimal8Sub(BigInteger value, int decimal) {
+        return getDecimal8Sub(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
+    }
+
+    public static String divideDecimal8ENotation(BigInteger value, int decimal) {
+        return getDecimal8ENotation(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
     }
 
 

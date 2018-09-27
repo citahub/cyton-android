@@ -14,6 +14,7 @@ public class TokenEntity {
      * social : {"blog":"https://medium.com/@fluzcoin","chat":"","facebook":"https://www.facebook.com/fluzcoin/","forum":"https://bitcointalk.org/index.php?topic=3794410.0","github":"https://github.com/Fluzcoin","gitter":"","instagram":"https://www.instagram.com/fluzcoin.official/","linkedin":"https://www.linkedin.com/company/fluzcoin/","reddit":"https://www.reddit.com/r/fluzcoin/","slack":"","telegram":"https://t.me/Fluzcoin_Foundation","twitter":"https://twitter.com/fluzcoin","youtube":"https://www.youtube.com/channel/UCdK-HoZdmvmC-9bS5TeJT0g"}
      */
 
+    public int chainId;
     public String symbol;
     public String address;
     public int decimals;
@@ -85,6 +86,7 @@ public class TokenEntity {
     }
 
     public TokenEntity(TokenItem item) {
+        this.chainId = item.chainId;
         this.name = item.name;
         this.decimals = item.decimals;
         this.symbol = item.symbol;

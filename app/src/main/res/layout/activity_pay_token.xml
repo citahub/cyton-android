@@ -10,7 +10,7 @@
         android:id="@+id/pay_title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <org.nervos.neuron.custom.TitleBar
+        <org.nervos.neuron.view.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -27,12 +27,12 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/wallet_photo"
                 app:civ_border_width="1dp"
-                app:civ_border_color="@color/default_gray_d5"/>
+                app:civ_border_color="@color/line_input"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -246,7 +246,7 @@
                         android:id="@+id/pay_separate"
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/default_gray_d5"
+                        android:background="@color/line_input"
                         android:layout_centerInParent="true"/>
 
                     <LinearLayout
@@ -267,7 +267,7 @@
                             android:id="@+id/pay_data_left_line"
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
-                            android:background="@color/selected_color"/>
+                            android:background="@color/assist_color"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -289,7 +289,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="3dp"
                             android:visibility="gone"
-                            android:background="@color/selected_color"/>
+                            android:background="@color/assist_color"/>
                     </LinearLayout>
 
                 </RelativeLayout>

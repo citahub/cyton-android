@@ -7,6 +7,8 @@ public class HttpUrls {
     public static final String NERVOS_TRANSACTION_URL = NERVOS_SERVER_URL + "/api/transactions?account=";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";
+    public static final String ETH_ERC20_TRANSACTION_URL = "https://api.etherscan.io/api?apikey="
+            + ETHER_SCAN_API_KEY + "&module=account&action=tokentx&sort=asc";
 
 
     // setting module url list
@@ -25,8 +27,7 @@ public class HttpUrls {
 
 
     // discover page config information
-    public static final String DISCOVER_URL = "https://dapp.cryptape.com/dapps";
-    public static final String INNER_URL = "https://dapp.cryptape.com/";
+    public static final String DISCOVER_URL = "https://dapp.cryptape.com";
 
     //Token Currency ID Price
     public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";

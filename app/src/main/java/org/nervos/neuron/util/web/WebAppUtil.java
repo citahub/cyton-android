@@ -3,6 +3,7 @@ package org.nervos.neuron.util.web;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
@@ -24,6 +26,7 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -45,6 +48,7 @@ import rx.schedulers.Schedulers;
 public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";
+    private static final String MANIFEST = "manifest";
     private static AppItem mAppItem = null;
 
     public static void init() {
@@ -63,10 +67,10 @@ public class WebAppUtil {
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByTag("link");
                 for(Element element: elements) {
-                    if ("manifest".equals(element.attr("rel"))) {
+                    if (MANIFEST.equals(element.attr("rel"))) {
                         return element.attr("href");
                     }
-                    if ("manifest".equals(element.attr("ref"))) {
+                    if (MANIFEST.equals(element.attr("ref"))) {
                         return element.attr("href");
                     }
                 }
@@ -81,8 +85,15 @@ public class WebAppUtil {
             @Override
             public Observable<AppItem> call(String path) {
                 URI uri = URI.create(url);
-                path = path.indexOf(".") == 0? path.substring(1) : path;
-                String manifestUrl = uri.getScheme() + "://" + uri.getAuthority() + path;
+                LogUtil.d("web url: " + url);
+                String manifestUrl = path;
+                if (!path.startsWith("http")) {
+                    manifestUrl = uri.getAuthority() + "/" + uri.getPath() + "/" +
+                            (path.indexOf(".") == 0? path.substring(1) : path);
+                    manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
+                }
+                LogUtil.d("manifest.json path : " + manifestUrl);
+
                 Request request = new Request.Builder().url(manifestUrl).build();
                 Call call = NervosHttpService.getHttpClient().newCall(request);
                 String response = "";
@@ -139,6 +150,16 @@ public class WebAppUtil {
           .observeOn(AndroidSchedulers.mainThread());
     }
 
+    private static String formatUrl(String url) {
+        if (url.contains("///")){
+            url = url.replace("///", "/");
+        }
+        if (url.contains("//")) {
+            url = url.replace("//", "/");
+        }
+        return url;
+    }
+
 
     public static boolean isCollectApp(WebView webView) {
         return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
@@ -146,27 +167,35 @@ public class WebAppUtil {
 
     public static void collectApp(WebView webView) {
         DBAppUtil.saveDbApp(webView.getContext(), mAppItem);
-        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem));
+        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
     }
 
     public static void cancelCollectApp(WebView webView) {
         DBAppUtil.deleteApp(webView.getContext(), mAppItem.entry);
-        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem));
+        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
     public static void addHistory() {
-        EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem()));
+        if (WebAppUtil.getAppItem() == null) return;
+        EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem(), System.currentTimeMillis()));
     }
 
     public static void setAppItem(WebView webView) {
         if (mAppItem != null && mAppItem.chainSet != null && mAppItem.chainSet.size() > 0) return;
 
-        URI uri = URI.create(webView.getUrl());
-        String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
-        icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
-        mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+        try {
+            URI uri = URI.create(webView.getUrl());
+            String icon = uri.getAuthority() + "/" + uri.getPath() + "/" + WEB_ICON_PATH;
+            icon = uri.getScheme() + "://" + formatUrl(icon);
+            LogUtil.d("web icon: " + icon);
+            icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
+            mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static AppItem getAppItem() {
@@ -186,7 +215,10 @@ public class WebAppUtil {
         webSettings.setDatabaseEnabled(true);
         webSettings.setBuiltInZoomControls(false);
 
-        WebView.setWebContentsDebuggingEnabled(true);
+        webSettings.setUserAgentString(webSettings.getUserAgentString()
+                + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
     }
 
     public static void initWebViewCache(Context context, WebSettings webSettings) {

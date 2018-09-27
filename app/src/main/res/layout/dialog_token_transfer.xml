@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="ETH"
-        android:textColor="@color/default_black"
+        android:textColor="@color/font_title"
         android:textSize="36sp"
         android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="0.10eth"
-        android:textColor="@color/default_black"
+        android:textColor="@color/font_title"
         android:textSize="24sp" />
 
     <LinearLayout

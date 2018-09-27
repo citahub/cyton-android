@@ -18,7 +18,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:text="@string/cancel"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="18sp"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -41,7 +41,7 @@
             android:layout_marginTop="9dp"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="@color/default_black"
+            android:textColor="@color/font_title"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +49,18 @@
 
         <TextView
             android:id="@+id/tv_wallet_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="31dp"
             android:layout_marginLeft="37dp"
             android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="wallet1"
             android:textColor="@color/font_title"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_select_hint"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_app_name" />
 
         <ImageView
@@ -75,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="@string/select_wallet_unlock"
-            android:textColor="@color/font_inside"
+            android:textColor="@color/font_title_third"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_wallet_name"
             app:layout_constraintRight_toLeftOf="@id/iv_down_arrow" />
@@ -87,23 +91,24 @@
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
             android:layout_marginTop="5dp"
-            android:background="@color/button_unclick"
+            android:background="@color/line_input"
             app:layout_constraintTop_toBottomOf="@id/tv_wallet_name" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_pwd"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="37dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginRight="37dp"
             android:background="@null"
             android:hint="@string/wallet_pwd_hint"
             android:inputType="textPassword"
             android:textColor="@color/font_title"
-            android:textColorHint="@color/font_inside"
+            android:textColorHint="@color/font_title_third"
             android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_name_under_line" />
+            app:layout_constraintBottom_toTopOf="@id/view_pwd_under_line"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <View
             android:id="@+id/view_pwd_under_line"
@@ -111,24 +116,20 @@
             android:layout_height="0.5dp"
             android:layout_marginLeft="37dp"
             android:layout_marginRight="37dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/button_unclick"
-            app:layout_constraintTop_toBottomOf="@id/et_pwd" />
+            android:layout_marginTop="50dp"
+            android:background="@color/line_input"
+            app:layout_constraintTop_toBottomOf="@id/view_name_under_line" />
 
-        <android.support.v7.widget.AppCompatButton
+        <org.nervos.neuron.view.button.CommonButton
             android:id="@+id/password_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/button_corner_gray_shape"
-            android:enabled="false"
-            android:text="@string/pwd_auth_button"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/view_pwd_under_line" />
+            app:layout_constraintTop_toBottomOf="@id/view_pwd_under_line"
+            app:status="false"
+            app:text="@string/pwd_auth_button" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout

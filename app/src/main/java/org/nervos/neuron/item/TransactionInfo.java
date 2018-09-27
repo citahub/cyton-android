@@ -17,8 +17,9 @@ public class TransactionInfo implements Parcelable {
 
     public String from;
     public String to;
-    public long nonce;
+    public String nonce;
     private long quota = -1;
+    public long validUntilBlock;
     public String data;
     private String value;
     public long chainId;
@@ -52,7 +53,7 @@ public class TransactionInfo implements Parcelable {
     public double getGas() {
         BigInteger limitBig = TextUtils.isEmpty(gasLimit)? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
         BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
-        return NumberUtil.getEthFromWeiForDouble(limitBig.multiply(priceBig).toString());
+        return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
     public boolean isEthereum() {
@@ -69,7 +70,7 @@ public class TransactionInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.from);
         dest.writeString(this.to);
-        dest.writeLong(this.nonce);
+        dest.writeString(this.nonce);
         dest.writeLong(this.quota);
         dest.writeString(this.data);
         dest.writeString(this.value);
@@ -82,7 +83,7 @@ public class TransactionInfo implements Parcelable {
     protected TransactionInfo(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
-        this.nonce = in.readLong();
+        this.nonce = in.readString();
         this.quota = in.readLong();
         this.data = in.readString();
         this.value = in.readString();

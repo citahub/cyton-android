@@ -11,7 +11,7 @@
         android:layout_height="250dp"
         android:background="@color/white">
 
-        <org.nervos.neuron.custom.TitleBar
+        <org.nervos.neuron.view.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -41,7 +41,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/default_margin"
                 android:src="@drawable/wallet_photo"
-                app:civ_border_color="@color/default_gray_d5"
+                app:civ_border_color="@color/line_input"
                 app:civ_border_width="1dp" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
                 android:text="Watson"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:textSize="14sp" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:layout_marginTop="5dp"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textColor="@color/default_black"
+                android:textColor="@color/font_title"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -90,7 +90,7 @@
                         android:drawablePadding="10dp"
                         android:drawableStart="@drawable/receive_token"
                         android:text="@string/receive_token"
-                        android:textColor="@color/default_black"
+                        android:textColor="@color/font_title"
                         android:textSize="14sp" />
                 </FrameLayout>
 
@@ -99,7 +99,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/default_gray_c" />
+                    android:background="@color/line_input" />
 
                 <FrameLayout
                     android:id="@+id/wallet_token_management_layout"
@@ -114,7 +114,7 @@
                         android:drawablePadding="10dp"
                         android:drawableStart="@drawable/token_manage"
                         android:text="@string/token_manage"
-                        android:textColor="@color/default_black"
+                        android:textColor="@color/font_title"
                         android:textSize="14sp" />
                 </FrameLayout>
 
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_above="@id/wallet_layout"
-                android:background="@color/default_gray_c" />
+                android:background="@color/line_input" />
 
         </RelativeLayout>
     </FrameLayout>

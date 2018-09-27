@@ -37,12 +37,33 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_center"
+            <RelativeLayout
                 android:layout_width="95dip"
                 android:layout_height="26dip"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_wallet_top_title" />
+                android:background="@drawable/ic_wallet_rectangle">
+
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="15dp"
+                    android:layout_height="13dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_wallet_rec_array" />
+
+                <TextView
+                    android:id="@+id/tv_change_wallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/iv"
+                    android:text="@string/wallet_top_change_wallet"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <RelativeLayout

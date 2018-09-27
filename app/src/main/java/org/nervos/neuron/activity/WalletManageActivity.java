@@ -4,22 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.crypto.AESCrypt;
-import org.nervos.neuron.crypto.WalletEntity;
-import org.nervos.neuron.dialog.SimpleDialog;
+import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.SettingButtonView;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -60,106 +60,79 @@ public class WalletManageActivity extends BaseActivity {
 
 
     private void initListener() {
-        walletNameLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-                simpleDialog.setTitle(getString(R.string.update_wallet_name));
-                simpleDialog.setMessageHint(getString(R.string.input_wallet_name_hint));
-                simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick() {
-                        if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show();
-                        } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+        walletNameLayout.setOnClickListener(v -> {
+            SimpleDialog simpleDialog = new SimpleDialog(mActivity);
+            simpleDialog.setTitle(getString(R.string.update_wallet_name));
+            simpleDialog.setMessageHint(getString(R.string.input_wallet_name_hint));
+            simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
+                @Override
+                public void onOkClick() {
+                    if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
+                        Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show();
+                    } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
+                        Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
+                    } else {
+                        walletNameText.setText(simpleDialog.getMessage());
+                        if (DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage())) {
+                            SharePrefUtil.putCurrentWalletName(simpleDialog.getMessage());
+                            walletItem = DBWalletUtil.getCurrentWallet(WalletManageActivity.this);
                         } else {
-                            walletNameText.setText(simpleDialog.getMessage());
-                            if (DBWalletUtil.updateWalletName(mActivity, walletItem.name, simpleDialog.getMessage())) {
-                                SharePrefUtil.putCurrentWalletName(simpleDialog.getMessage());
-                                walletItem = DBWalletUtil.getCurrentWallet(WalletManageActivity.this);
-                            } else {
-                                Toast.makeText(WalletManageActivity.this, R.string.change_wallet_name_failed, Toast.LENGTH_LONG).show();
-                            }
-                            simpleDialog.dismiss();
+                            Toast.makeText(WalletManageActivity.this, R.string.change_wallet_name_failed, Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
-                simpleDialog.setOnCancelClickListener(new SimpleDialog.OnCancelClickListener() {
-                    @Override
-                    public void onCancelClick() {
                         simpleDialog.dismiss();
                     }
-                });
-                simpleDialog.show();
-            }
+                }
+            });
+            simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
+            simpleDialog.show();
         });
-        findViewById(R.id.change_password).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mActivity, ChangePasswordActivity.class));
-            }
+        SettingButtonView changePwd = findViewById(R.id.change_password);
+        changePwd.setOpenListener(() -> startActivity(new Intent(mActivity, ChangePasswordActivity.class)));
+
+        SettingButtonView exortKeystore = findViewById(R.id.export_keystore);
+        exortKeystore.setOpenListener(() -> {
+            SimpleDialog simpleDialog = new SimpleDialog(mActivity);
+            simpleDialog.setTitle(R.string.input_password_hint);
+            simpleDialog.setMessageHint(R.string.input_password_hint);
+            simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
+            simpleDialog.setOnOkClickListener(() -> {
+                if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
+                    Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
+                } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
+                    Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    generateKeystore(simpleDialog.getMessage());
+                    simpleDialog.dismiss();
+                }
+            });
+            simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
+            simpleDialog.show();
         });
 
-        findViewById(R.id.export_keystore).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-                simpleDialog.setTitle(R.string.input_password_hint);
-                simpleDialog.setMessageHint(R.string.input_password_hint);
-                simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
-                simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick() {
-                        if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
-                            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-                        } else if (!AESCrypt.checkPassword(simpleDialog.getMessage(), walletItem)) {
-                            Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
-                        } else {
-                            generateKeystore(simpleDialog.getMessage());
-                            simpleDialog.dismiss();
-                        }
-                    }
-                });
-                simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
-                simpleDialog.show();
-            }
-        });
-
-        findViewById(R.id.delete_wallet_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SimpleDialog deleteDialog = new SimpleDialog(mActivity);
-                deleteDialog.setTitle(getString(R.string.ask_confirm_delete_wallet));
-                deleteDialog.setMessageHint(getString(R.string.password));
-                deleteDialog.setEditInputType(SimpleDialog.PASSWORD);
-                deleteDialog.setOnCancelClickListener(() -> deleteDialog.dismiss());
-                deleteDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick() {
-                        if (!AESCrypt.checkPassword(deleteDialog.getMessage(), walletItem)) {
-                            Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        List<String> names = DBWalletUtil.getAllWalletName(mActivity);
-                        if (names.size() > 1) {
-                            SharePrefUtil.putCurrentWalletName(names.get(names.indexOf(walletItem.name) == 0 ? 1 : 0));
-                        } else if (names.size() > 0) {
-                            SharePrefUtil.deleteWalletName();
-                        }
-                        DBWalletUtil.deleteWallet(mActivity, walletItem.name);
-                        deleteDialog.dismiss();
-                        Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(mActivity, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra(EXTRA_TAG, AppFragment.TAG);
-                        startActivity(intent);
-                        EventBus.getDefault().post(new TokenRefreshEvent());
-                        finish();
-                    }
-                });
-                deleteDialog.show();
-            }
+        findViewById(R.id.delete_wallet_button).setOnClickListener(v -> {
+            SimpleDialog deleteDialog = new SimpleDialog(mActivity);
+            deleteDialog.setTitle(getString(R.string.ask_confirm_delete_wallet));
+            deleteDialog.setMessageHint(getString(R.string.password));
+            deleteDialog.setEditInputType(SimpleDialog.PASSWORD);
+            deleteDialog.setOnCancelClickListener(() -> deleteDialog.dismiss());
+            deleteDialog.setOnOkClickListener(() -> {
+                if (!AESCrypt.checkPassword(deleteDialog.getMessage(), walletItem)) {
+                    Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                List<String> names = DBWalletUtil.getAllWalletName(mActivity);
+                if (names.size() > 1) {
+                    SharePrefUtil.putCurrentWalletName(names.get(names.indexOf(walletItem.name) == 0 ? 1 : 0));
+                } else if (names.size() > 0) {
+                    SharePrefUtil.deleteWalletName();
+                }
+                DBWalletUtil.deleteWallet(mActivity, walletItem.name);
+                deleteDialog.dismiss();
+                Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(new TokenRefreshEvent());
+                finish();
+            });
+            deleteDialog.show();
         });
 
     }

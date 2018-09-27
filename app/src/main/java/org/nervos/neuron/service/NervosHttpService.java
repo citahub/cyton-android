@@ -5,16 +5,19 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.response.EthTransactionResponse;
-import org.nervos.neuron.response.NervosTransactionResponse;
+import org.nervos.neuron.item.response.EthTransactionResponse;
+import org.nervos.neuron.item.response.NervosTransactionResponse;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -33,9 +36,13 @@ public class NervosHttpService {
 
     public static OkHttpClient getHttpClient() {
         if (mOkHttpClient == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            mOkHttpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            if (BuildConfig.IS_DEBUG) {
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                mOkHttpClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+            } else {
+                mOkHttpClient = new OkHttpClient.Builder().build();
+            }
         }
         return mOkHttpClient;
     }
@@ -52,9 +59,42 @@ public class NervosHttpService {
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
                                     .body().string(), EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
-                            for(TransactionItem item : transactionItemList) {
+                            for (TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8(item.value) + ConstUtil.ETH);
+                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8Sub(
+                                        new BigInteger(item.value)));
+                            }
+                            return Observable.just(transactionItemList);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return Observable.just(null);
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static Observable<List<TransactionItem>> getETHERC20TransactionList(
+            Context context, TokenItem tokenItem) {
+        return Observable.just(DBWalletUtil.getCurrentWallet(context))
+                .flatMap(new Func1<WalletItem, Observable<List<TransactionItem>>>() {
+                    @Override
+                    public Observable<List<TransactionItem>> call(WalletItem walletItem) {
+                        try {
+                            String ethUrl = HttpUrls.ETH_ERC20_TRANSACTION_URL
+                                    + "&contractaddress=" + tokenItem.contractAddress
+                                    + "&address=" + walletItem.address
+                                    + "&page=1&offset=30";
+                            final Request ethRequest = new Request.Builder().url(ethUrl).build();
+                            Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
+                            EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
+                                    .body().string(), EthTransactionResponse.class);
+                            List<TransactionItem> transactionItemList = response.result;
+                            for (TransactionItem item : transactionItemList) {
+                                item.chainName = ConstUtil.ETH_MAINNET;
+                                item.value = (NumberUtil.divideDecimal8Sub(
+                                        new BigInteger(item.value), tokenItem.decimals));
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {
@@ -70,34 +110,33 @@ public class NervosHttpService {
     public static Observable<List<TransactionItem>> getNervosTransactionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
-                    @Override
-                    public AppMetaData.AppMetaDataResult call() {
-                        NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
-                        return NervosRpcService.getMetaData().getAppMetaDataResult();
-                    }
-                }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
-                    @Override
-                    public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
-                        try {
-                            String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
-                            final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
-                            Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
+            @Override
+            public AppMetaData.AppMetaDataResult call() {
+                NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
+                return NervosRpcService.getMetaData().getAppMetaDataResult();
+            }
+        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
+            @Override
+            public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
+                try {
+                    String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
+                    final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
+                    Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
 
-                            NervosTransactionResponse response = new Gson().fromJson(nervosCall.execute()
-                                    .body().string(), NervosTransactionResponse.class);
-                            for (TransactionItem item : response.result.transactions) {
-                                item.chainName = result.chainName;
-                                item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.prependHexPrefix(item.value))
-                                        + result.tokenSymbol;
-                            }
-                            return Observable.just(response.result.transactions);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return Observable.just(null);
+                    NervosTransactionResponse response = new Gson().fromJson(nervosCall.execute()
+                            .body().string(), NervosTransactionResponse.class);
+                    for (TransactionItem item : response.result.transactions) {
+                        item.chainName = result.chainName;
+                        item.value = NumberUtil.getEthFromWeiForStringDecimal8Sub(Numeric.toBigInt(item.value));
                     }
-                }).subscribeOn(Schedulers.io())
-                  .observeOn(AndroidSchedulers.mainThread());
+                    return Observable.just(response.result.transactions);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

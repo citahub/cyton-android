@@ -6,26 +6,27 @@
     <LinearLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:orientation="vertical"
-        android:background="@drawable/progress_bar_gray_corner">
+        android:background="@drawable/progress_bar_gray_corner"
+        android:orientation="vertical">
+
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="18dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dp"
             android:indeterminateTint="@color/white"
-            android:indeterminateTintMode="src_atop"/>
+            android:indeterminateTintMode="src_atop" />
 
         <TextView
             android:id="@+id/progress_bar_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:text="正在加载"
             android:textColor="@color/white"
-            android:textSize="13sp"
-            android:gravity="center_vertical"/>
+            android:textSize="13sp" />
     </LinearLayout>
 
 </FrameLayout>

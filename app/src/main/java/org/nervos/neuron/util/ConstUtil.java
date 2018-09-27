@@ -9,6 +9,7 @@ public class ConstUtil {
     public static final String ETH = "ETH";
     public static final int ETHEREUM_ID = -1;
     public static final String ETH_MAINNET = "Ethereum Mainnet";
+    public static final String APPCHAIN_TEST="test-chain";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
     public static final long DEFAULT_QUOTA = LONG_6;
@@ -20,8 +21,8 @@ public class ConstUtil {
     public static final BigInteger GAS_MIN_LIMIT = Numeric.toBigInt("0x9D8");      // default eth gas min limit is 2520
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x2540BE400");
     public static final String RPC_RESULT_ZERO = "0x";
-    public static final BigInteger QUOTA_TOKEN = new BigInteger("1000000");
-    public static final BigInteger QUOTA_ERC20 = new BigInteger("100000000");
+    public static final BigInteger QUOTA_TOKEN = new BigInteger("100");
+    public static final BigInteger QUOTA_ERC20 = new BigInteger("6000");
 
 
     // ERC20 method hashes
@@ -34,4 +35,5 @@ public class ConstUtil {
 
     public static final String FingerPrint = "FingerPrint";
     public static final String Currency = "Currency";
+    public static final String Protocol = "Protocol";
 }

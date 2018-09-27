@@ -3,11 +3,9 @@ package org.nervos.neuron.util.db;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.snappydb.DB;
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.R;
-import org.nervos.neuron.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -23,7 +21,6 @@ import java.util.Objects;
 public class DBWalletUtil extends DBUtil {
 
     private static final String DB_WALLET = "db_wallet";
-    private static final String ETH = "ETH";
 
     public static WalletItem getWallet(Context context, String walletName) {
         synchronized (dbObject) {
@@ -167,14 +164,16 @@ public class DBWalletUtil extends DBUtil {
                 List<String> names = getAllWalletName(context);
                 for (String name : names) {
                     WalletItem walletItem = getWallet(context, name);
-                    isKeyExist = (walletItem != null && walletItem.address.equals(address));
+                    isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
+                    if (isKeyExist)
+                        return true;
                 }
                 db.close();
-                return isKeyExist;
+                return false;
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
-            return isKeyExist;
+            return false;
         }
     }
 
@@ -205,7 +204,7 @@ public class DBWalletUtil extends DBUtil {
 
     private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(tokenItem.symbol)) {
+            if (token.symbol.equals(tokenItem.symbol) && token.chainId == tokenItem.chainId) {
                 return true;
             }
         }

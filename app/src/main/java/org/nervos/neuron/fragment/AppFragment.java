@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,14 +34,12 @@ public class AppFragment extends Fragment {
     public static final String TAG = AppFragment.class.getName();
 
     private WebView webView;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         webView = view.findViewById(R.id.webview);
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         return view;
     }
 
@@ -59,25 +59,13 @@ public class AppFragment extends Fragment {
 
     private void initWebView() {
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(HttpUrls.INNER_URL)) {
-                    return false;
-                } else {
-                    Intent intent = new Intent(getContext(), AppWebActivity.class);
-                    intent.putExtra(AppWebActivity.EXTRA_URL, url);
-                    startActivity(intent);
-                    return true;
-                }
+                Intent intent = new Intent(getContext(), AppWebActivity.class);
+                intent.putExtra(AppWebActivity.EXTRA_URL, url);
+                startActivity(intent);
+                return true;
             }
         });
 
@@ -96,17 +84,17 @@ public class AppFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppCollectEvent(AppCollectEvent event) {
         if (event.isCollect) {
-            String app = new Gson().toJson(event.appItem);
+            String app = new Gson().toJson(event.appInfo);
             webView.loadUrl("javascript:__mydapp.add("+ app + ")");
         } else {
-            webView.loadUrl("javascript:__mydapp.remove('" + event.appItem.entry + "')");
+            webView.loadUrl("javascript:__mydapp.remove('" + event.appInfo.entry + "')");
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppHistoryEvent(AppHistoryEvent event) {
-        String app = new Gson().toJson(event.appItem);
-        webView.loadUrl("javascript:window.__myhistory.add("+ app + ")");
+        String app = new Gson().toJson(event.appInfo);
+        webView.loadUrl("javascript:window.__myhistory.add(" + app + ")");
     }
 
     @Override

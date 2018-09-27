@@ -19,7 +19,9 @@
     <string name="title_add_token">添加新资产</string>
     <string name="title_add_wallet">新增钱包</string>
     <string name="add_wallet">添加钱包</string>
-    <string name="title_token_management">资产管理</string>
+    <string name="add">添加</string>
+    <string name="export_more">批量导出</string>
+    <string name="title_token_management">ERC20列表</string>
     <string name="title_receive_qrcode">收款码</string>
     <string name="backup_mnemonic">备份助记词</string>
     <string name="confirm_mnemonic">确认助记词</string>
@@ -31,6 +33,7 @@
     <string name="next_action">下一步</string>
     <string name="backup_complete">完成备份</string>
     <string name="import_wallet">开始导入</string>
+    <string name="exist_wallet">已有钱包</string>
     <string name="create_wallet_name">钱包名称</string>
     <string name="quick_backup_button">一键备份</string>
     <string name="quick_backup_restore">一键恢复</string>
@@ -44,13 +47,13 @@
     <string name="transaction_list_description">最近交易记录（默认十笔）</string>
     <string name="wallet_manage">钱包管理</string>
     <string name="chain_manage">链管理</string>
-    <string name="import_wallet_content">将以太坊官方钱包KeyStore文件内容粘贴至输入框，或通过扫描二维码输入。</string>
-    <string name="import_wallet_content_hint">请导入KeyStore文本</string>
+    <string name="import_wallet_content">粘贴以太坊Keystore内容至输入框，或通过扫描二维码输入</string>
+    <string name="import_wallet_content_hint">请导入Keystore文本</string>
     <string name="quick_backup_content">本软件不会在云端保存您的任何信息，包括私钥、应用列表以及区块链配置。因此，您的数字资产完全依赖于您自己的保管，请妥善对您的本地数据进行保存</string>
     <string name="change_password_warning">钱包密码如丢失将无法找回，请您妥善保管密码</string>
-    <string name="import_mnemonic_warning">请输入钱包助记词并选择助记词模式</string>
-    <string name="import_mnemonic_input_hint">助记词输入+空格</string>
-    <string name="import_private_key_warning">请将私钥粘贴至输入框，或通过二维码输入</string>
+    <string name="import_mnemonic_warning">请按顺序输入您的助记词，并选择助记词路径</string>
+    <string name="import_mnemonic_input_hint">请按顺序输入您的助记词，按空格分隔</string>
+    <string name="import_private_key_warning">请输入您的私钥，或通过二维码扫描输入</string>
     <string name="export_keystore_warning">Keystore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 Keystore 格式与以太坊官方 Keystore 格式相同。</string>
     <string name="read_service_file">我已经仔细阅读并同意《服务条款》</string>
     <string name="tab_application">应用</string>
@@ -67,7 +70,7 @@
     <string name="backup_mnemonic_warning1">助记词将被用来恢复钱包或重置钱包密码</string>
     <string name="backup_mnemonic_warning2">- 如您的助记词被他人获取，您的财产可能受到损失</string>
     <string name="backup_mnemonic_warning3">- 不要截图或传送给他人</string>
-    <string name="backup_mnemonic_warning4">- 推荐朗读并背诵全文，或者抄写并放在安全的地方</string>
+    <string name="backup_mnemonic_warning4">- 推荐抄写并放在安全的地方</string>
     <string name="confirm_mnemonic_warning">请按顺序点击助记词，以确认你的备份助记词正确</string>
     <string name="input_password">设置密码</string>
     <string name="confirm_action">确认</string>
@@ -85,7 +88,7 @@
     <string name="scan_qrcode">扫描二维码</string>
     <string name="share_keystore">分享Keystore</string>
     <string name="change_password_suggestion">密码必须至少8个字符，而且同时包含字母和数字</string>
-    <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度在8到50之间</string>
+    <string name="password_suggestion">密码包含大写字母、小写字母、数字、特殊符号的至少三类，且长度在8位以上！</string>
     <string name="empty_no_token_data">您还没有Token数据</string>
     <string name="empty_no_collection_data">您还没有藏品数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
@@ -112,6 +115,7 @@
     <string name="input_new_password_hint_again">再次输入新密码</string>
     <string name="input_new_password_again_hint">重复密码</string>
     <string name="copy_success">复制成功</string>
+    <string name="copy_weixin_success">客服微信已复制。</string>
     <string name="password_fail">密码错误</string>
     <string name="operation_success">操作已提交</string>
     <string name="transfer_success">转账成功</string>
@@ -122,20 +126,23 @@
     <string name="receive_token">收款</string>
     <string name="token_manage">资产管理</string>
     <string name="settings_title">设置</string>
-    <string name="setting_currency">本地货币</string>
+    <string name="setting_currency">默认货币单位</string>
     <string name="setting_fingerprint">指纹设置</string>
     <string name="dialog_finger_msg">请验证已有指纹</string>
     <string name="fingerprint_setting_sucess">指纹设置成功！</string>
     <string name="fingerprint_setting_failed">指纹设置失败！</string>
     <string name="setting_about_us">关于我们</string>
     <string name="setting_contact_us">联系我们</string>
+    <string name="setting_weixin">联系客服</string>
     <string name="about_us_title">关于我们</string>
+    <string name="path">路径</string>
     <string name="wallet_password_error">钱包密码错误</string>
     <string name="password">密码</string>
     <string name="ask_confirm_delete_wallet">确认删除钱包吗？</string>
-    <string name="password_weak">您的密码太弱，请重新输入</string>
-    <string name="password_not_same">两次输入的密码不一致</string>
+    <string name="password_weak">您的密码安全性太弱，请重新输入</string>
+    <string name="password_not_same">两次密码输入不一致</string>
     <string name="wallet_name_exist">该钱包名称已存在</string>
+    <string name="wallet_address_exist">钱包地址已存在</string>
     <string name="wallet_export_success">钱包导入成功</string>
     <string name="wallet_creating">钱包创建中...</string>
     <string name="wallet_importing">钱包导入中...</string>
@@ -154,11 +161,12 @@
     <string name="set_password">设置密码</string>
     <string name="no_find_password_content">没有「找回密码」!</string>
     <string name="save_password_careful">您的钱包不会被保存在云端，无法提供找回服务，请您谨慎保管</string>
-    <string name="generate_wallet">生成钱包</string>
+    <string name="generate_wallet">创建钱包</string>
     <string name="input_old_password_hint">输入原密码</string>
     <string name="old_password_not_null">原密码不能为空</string>
     <string name="new_password_not_null">新密码不能为空</string>
     <string name="old_password_error">原密码不正确</string>
+    <string name="old_new_password_same">您输入的密码与原密码一致，请重新输入</string>
     <string name="update_password_success">密码修改成功</string>
     <string name="update_wallet_name">修改钱包名称</string>
     <string name="input_wallet_name_hint">输入钱包名称</string>
@@ -167,7 +175,7 @@
     <string name="wallet_manage_title">钱包管理</string>
     <string name="wallet_photo">钱包头像</string>
     <string name="wallet_address">钱包地址</string>
-    <string name="export_keystore">导出KeyStore</string>
+    <string name="export_keystore">导出Keystore</string>
     <string name="transaction_detail_title">交易详情</string>
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="source_code">源代码</string>
@@ -176,13 +184,17 @@
     <string name="press_back_finish">再按一次返回键退出</string>
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
+    <string name="reload">重新加载</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
     <string name="balance_not_enough">您的%s余额不足支付此次交易，请获取后再试～</string>
     <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
-    <string name="generate_keystore_fail">KeyStore生成失败</string>
+    <string name="generate_keystore_fail">Keystore生成失败</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="web_url_error">请扫描正确的网址二维码</string>
+    <string name="keystore_error">请扫描正确的Keystore二维码</string>
+    <string name="private_key_error">请扫描正确的私钥二维码</string>
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">请输入完整的代币信息</string>
@@ -214,6 +226,9 @@
     <string name="input_correct_number">请输入格式正确的数字</string>
     <string name="gwei">Gwei</string>
     <string name="hint_hex_data">十六进制数据</string>
+    <string name="wallet_top_change_wallet">切换钱包</string>
+    <string name="wallet_top_add_wallet">添加钱包</string>
+    <string name="camera_no_perm_tip">请在设置页面打开摄像头权限</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
@@ -237,7 +252,7 @@
     <string name="sign_title">消息签名</string>
     <string name="input_erc20_address">请输入ERC20代币合约地址</string>
     <string name="token_name_hint">代币名称</string>
-    <string name="token_symbol_hint">代币符合</string>
+    <string name="token_symbol_hint">代币符号</string>
     <string name="token_decimal_hint">小数位数</string>
     <string name="input_private_key_hint">请输入私钥原文</string>
     <string name="token">Token</string>
@@ -248,6 +263,248 @@
     <string name="more">更多</string>
     <string name="rollback">收起</string>
     <string name="check">查看</string>
+    <string name="qr_title">扫描二维码</string>
+    <string name="qr_tips">放入框内自动扫描</string>
+    <string name="qr_photo_failed">扫描本地图片失败</string>
+    <string name="developing">正在开发中</string>
+    <string name="backup_mnemonic_back_tips">距离开启您的安全区块链账户还差最后一步，是否继续？</string>
 
     <string name="change_wallet_name_failed">修改失败，请重试</string>
+    <string name="forbidden_screen_shoot_import">Keystore，助记词，私钥是打开您钱包的关键要素，请妥善保管！</string>
+    <string name="forbidden_screen_shoot_backup">拥有助记词就能完全控制该地址下的资产，建议抄写并放在安全的地方！</string>
+    <string name="forbidden_screen_shoot">禁止截屏!</string>
+
+    <string name="wallet_guide1_text">甄选全球最新DAPP\n一应俱全</string>
+    <string name="wallet_guide2_text">多重安全算法保护\n钱包秘钥惟您掌握</string>
+    <string name="wallet_guide3_text">开启区块链之旅\n探索无限可能</string>
+
+    <string name="approve_protocol">我以仔细阅读并同意以上条款</string>
+    <string name="protocol_neuron_name">Neuron服务协议</string>
+    <string name="protocol_error_toast">请先同意以上条款</string>
+    <string name="protocol_neuron1">最近更新于：2018年6月29日\n尊敬的用户：\n感谢您选择Neuron服务。《Neuron服务协议》（以下简称“本协议”）由Nervos基金会（以下简称“基金会”或“我们”）和用户（以下简称“您”或“用户”）签订，本协议在您与基金会之间具有合同上的法律效力。\n
+        <b>基金会在此特别提醒您在使用Neuron（以下简称“Neuron” 或“本软件”）之前，请认真阅读《Neuron服务协议》及后文提到的相关协议，尤其是本协议规定的“免责及责任限制”等条款将以加粗的形式突出体现，确保您充分理解本协议中各条款，并自主考虑风险。基金会在此特别提醒您，由于Neuron所使用的代码将在Github上开源，任何人都可能使用开源的Neuron代码，或自行修改后的代码，来打包形成软件。对于这些私自打包形成的软件，并非Neuron应用软件，不受本协议约束，基金会不承担任何责任。本协议只适用于使用基金会官方打包的安装包安装，得到基金会官方授权的Neuron应用软件。</b>\n\n
+        一、 关于本协议的确认与接纳\n
+        1. 您理解本协议及有关协议仅适用于Neuron应用本身，而不包括Neuron所能链接的基金会所自主开发和拥有的其他应用，也不包括任何第三方开发或拥有的应用。\n
+        <b>2. 您下载Neuron软件并创建或导入钱包，即视为您已经充分阅读并接受本协议全部条款，本协议立即生效，对双方具有约束力。\n
+3. 本协议可由基金会随时更新，经修改的协议一经在Neuron上公布，立即自动生效，恕不再另行通知。在基金会公布修改协议条款后，如果您不接受修改后的条款，请立即停止使用Neuron，您继续使用Neuron将被视为接受修改后的协议。</b>
+        4. 如果您未满18周岁，或者是无民事行为能力人或限制民事行为能力人，请在父母或监护人指导下使用Neuron。\n
+        二、 定义\n
+        1. Neuron：指由基金会基于Nervos网络和Ethereum网络开发的，向用户提供访问Nervos网络和Ethereum网络，以及保存Nervos网络和Ethereum网络加密数字资产的服务的钱包客户端，包括其他为方便用户使用相关系统而开发的辅助工具。\n
+        2. 用户：\n
+        （1）用户必须是具备完全民事行为能力的自然人；\n
+        （2）若您为18周岁以下的未成年人使用Neuron服务，需要在您父母或监护人的指导下使用Neuron。无民事行为能力人使用Neuron或限制民事行为能力人超过其民事权利或行为能力范围从事交易的，造成的一切后果，Neuron有权要求您及您的父母或监护人负责。
+3. 创建或导入钱包：指您使用Neuron，确认履行本协议并创建或导入钱包的过程。\n
+        4. 钱包密码：指您在创建Neuron钱包过程中，软件操作界面提示您填写的密码，该密码用于加密保护私钥。<b>作为去中心化的应用，钱包密码不存储在您的这台移动设备或基金会的服务器，一旦丢失你需要借助明文私钥或助记词重置新密码。</b>\n
+        5. 信息提示：Neuron软件操作界面涉及的信息提示内容，建议用户按照相关步骤进行操作。\n
+        6. 特定用户：指按照当地法律法规及政策规定必须要配合基金会履行个人信息披露义务的用户。\n
+        7. 私钥：由私密随机字符构成，是用户拥有并使用数字代币的核心。\n
+        8. 公钥：由私钥借助密码学原理单向推导生成，并用以生成区块链数字钱包地址，数字钱包地址即为公开收款地址。\n
+        9. 助记词：由随机算法生成的若干个有序英文单词组成。助记词是私钥的易记录表现形式，方便用户备份保管。\n
+        10. Keystore: 是私钥或助记词经过用户设置的钱包密码加密保存的文件形式，它只存储在您的这台移动设备中，不会同步至基金会服务器。\n
+        11. 数字代币：指Neuron目前支持的数字代币种类，包括但不限于CKC、ETH、以太坊ERC20标准的代币、以太坊ERC721标准的代币等。\n
+        12. 个人信息：指以电子或者其他方式记录的能够单独或者与其他信息结合识别用户个人身份的各种信息，包括但不限于自然人的姓名、出生日期、身份证件号码、个人生物识别信息、住址、电话号码、银行卡号、邮件地址、钱包地址、移动设备信息、操作记录、交易记录等，但不包括用户的钱包密码、私钥、助记词、Keystore。\n
+        三、 服务内容\n
+        1. 创建或导入钱包。对Neuron支持的数字代币，您可以使用Neuron生成新钱包或导入相关区块链系统的其它钱包工具生成的兼容钱包。\n
+        2. 转账、收款。您可以使用Neuron的转账、收款功能进行数字代币的操作。转账是指付款方利用收款方的区块链地址进行转账操作，实际的转账、收款行为均在相关区块链系统（而非Neuron）发生。\n
+        3. 管理数字资产。您可以使用Neuron添加、保管并移除Neuron所支持的数字代币。\n
+        5. 浏览DApp。用户通过在Neuron上的链接，可以跳转至DApp并使用该DApp（包括基金会自己的DApp和第三方DApp）提供的服务。\n
+        6. 暂停服务。您知悉基于区块链系统交易“不可撤销”的属性，我们不能为您暂停或撤销转账交易等操作，但在行政机关指令等紧急情况等下，我们可以暂停或者限制某位用户对Neuron软件的操作。\n
+        7. 其他基金会认为有必要提供的服务。\n
+        用户接受基金会提供的上述服务时应了解以下常见问题：\n
+        1. 秉承着区块链的去中心化特点，并为了保护用户的数字代币安全，基金会提供的是去中心化服务，与银行业金融机构提供的中心化金融服务具有根本性区别。用户了解，基金会不提供以下服务：\n
+       （1）行情查看；\n
+（2）存储用户的钱包密码（即用户创建/导入钱包时设置的密码）、私钥、助记词、Keystore；\n
+（3）找回用户的钱包密码、私钥、助记词、Keystore；\n
+（4）冻结钱包；\n
+（5）挂失钱包；\n
+（6）恢复钱包；\n
+（7）交易回滚；\n
+（8）交易记录（用户进行的成功的交易记录将被记录在区块链系统账本上，Neuron自身不提供历史交易数据访问服务）。\n
+2. 由于基金会不提供上述服务，因此用户应当自行保管含有Neuron的移动设备及其关键芯片和硬件、备份Neuron、备份钱包密码、助记词、私钥及Keystore。如用户遗失移动设备、删除且未备份Neuron、删除且未备份钱包、钱包被盗或遗忘钱包密码、私钥、助记词、Keystore，基金会均无法还原钱包或找回钱包密码、私钥、助记词、Keystore；如用户进行交易时误操作（例如输错转账地址），基金会亦无法取消交易。\n
+3. 基金会和Neuron所能够提供的数字代币管理服务并未包括所有已存在的数字代币，请勿通过Neuron操作任何Neuron不支持的数字代币。\n
+4. Neuron仅是用户的数字代币管理工具，并非交易所或交易平台。虽然本协议将多次提及“交易”，其行为泛指用户使用Neuron进行的转账和收款操作，这与交易所或交易平台上进行的“交易”有本质区别。\n
+<b>5. Neuron上集成的DApp包括基金会自主拥有的DApp和第三方平台提供的DApp。对于Neuron上每个基金会自己开发和拥有的DApp，都会有独立的用户协议和数据隐私政策，用户应当独立作出判断是否进行签约使用。对于第三方平台提供的DApp，Neuron仅为用户进入DApp提供区块链浏览器。用户在第三方DApp上接受服务或进行交易前应自行判断和评估该第三方DApp提供的服务或交易是否存在风险，基金会和Neuron不承担任何质量和责任担保义务。</b>\n
+四、 您的权利义务\n
+（一）创建或导入钱包\n
+1. 创建或导入钱包：您有权在您的移动设备上通过Neuron创建和/或导入钱包，有权设定钱包的钱包密码等信息，并有权通过Neuron应用程序，使用自己的钱包在区块链上进行转账和收款等交易。\n
+<b>2. 身份验证：按照有关法律法规和政策要求和可能产生的要求变化，特定用户在使用Neuron提供的有关服务时，应当按照Neuron的提示通过基金会另行开发的KYC应用程序或者第三方开发KYC应用程序及时完成相关身份验证，要求您提交包括但不限于您的姓名、身份证号码、手机号码、银行卡号信息等个人信息；Neuron自身不会采集和留存以上任何个人信息。未通过以上身份验证的特定用户将无法使用有关服务，因特定用户拖延造成的损失由您自行承担。\n
+3. 基金会可能为不同的终端设备开发不同的软件版本，您应当根据实际需要选择下载合适的版本进行安装。如果您从未经合法授权的第三方获取本软件或与本软件名称相同的安装程序，基金会将无法保证该软件能否正常使用，也无法保证其安全性，因此造成的损失由您自行承担。\n
+4. 本软件新版本发布后，旧版软件可能无法使用。基金会不保证旧版软件的安全性、继续可用性及提供相应的客户服务。请您随时核对并下载最新版本。</b>\n
+（二）使用\n
+<b>1. 用户应自行妥善保管移动设备、钱包密码、私钥、助记词、Keystore等信息。基金会不负责为用户保管以上信息。因您遗失移动设备、主动或被动泄露、遗忘钱包密码、私钥、助记词、Keystore或遭受他人攻击、诈骗等所引起的一切风险、责任、损失、费用应由您自行承担。\n
+2. 遵循信息提示。您了解并同意遵循Neuron对您做出的信息提示，按照信息提示的内容进行操作，否则，由此引起的一切风险、责任、损失、费用等应由您自行承担。\n
+3. 您知悉并理解Neuron没有义务对链接的任何非Neuron应用自身部分的，特别是第三方提供的DApp服务或交易履行尽职调查义务，您应当理性做出交易、投资决策并自主承担相应的交易、投资风险。\n
+4. 积极完成身份验证。当Neuron合理认为您的交易行为或交易情况出现异常的，或认为您的身份信息存在疑点的，或Neuron认为应核对您身份证件或其他必要文件的情形时，请您积极配合Neuron核对您的有效身份证件或其他必要文件，及时完成相关的身份验证。</b>\n
+5. 转账。\n
+<b>（1）您理解基于区块链操作的“不可撤销”属性，当您使用Neuron转账功能时，您应当自行承担因您操作失误而导致的后果（包括但不限于因您输错转账地址、您自身选择转账节点服务器的问题）。\n
+（2）您知悉在使用Neuron服务时，以下情况的出现可能导致转账“交易失败”或“打包超时”：\n
+a) 钱包余额不足；\n
+b) 交易矿工费不足；\n
+c) 区块链执行合约代码失败；\n
+d) 网络、设备等技术故障；\n
+e) 区块链网络拥堵、故障等原因引起交易被抛弃。\n
+（4）您知悉Neuron仅向您提供转账工具，在您使用Neuron完成转账后，基金会即完成了当次服务的所有义务，基金会对其他纠纷争议，不负担任何义务。\n
+6. 合法合规。您知悉在Neuron进行操作时或进行交易时，您应当遵循有关法律法规、国家政策的要求。</b>\n
+7. 公告通知。Neuron会以网站公告、电子邮件、发送短信、电话、消息中心信息、弹窗提示或客户端通知等方式向您发送通知，例如通知您交易进展情况，或者提示您进行相关操作，请您及时予以关注。\n
+8. 服务费用与纳税义务：\n
+（1）Neuron暂时不向您收取任何形式的服务费或手续费，将来需对某些服务进行收费时将另行约定或公布规则；\n
+（2）您使用Neuron进行转账时应支付矿工费，金额由您自行决定。矿工费由相关区块链系统收取；\n
+<b>（3）您知悉在特定情况下，因为您所处的环境及网络状态不稳定，导致您的转账操作未完成时，亦会被相关区块链系统收取矿工费；\n
+（4）您因在Neuron进行交易而发生的所有应纳税负及其它方面的费用均由您负责支付。\n
+五、 风险提示\n
+1. 您了解并知悉，由于数字代币领域的法律法规政策尚未健全，该领域的数字代币可能会产生无法兑现、技术不稳定等重大风险。且数字代币的价格波动幅度远高于其他金融资产。我们谨慎提醒您应当根据自身财务状况和风险偏好，理性选择持有或处置任何一种数字代币。Neuron不提供行情报价服务。\n
+2. 在使用Neuron服务时，若您或您的相对方未遵从本协议或相关网站说明、交易、支付页面中之操作提示、规则，Neuron并不保证交易会顺利完成，且Neuron不承担损害赔偿责任。若发生前述情形，而款项已先行入账您的或您的交易方的Neuron钱包或第三方钱包，您理解区块链操作具有的“不可逆”属性，以及相关交易具有“不可撤销”的特征，由您及您的相对方自行承担相应的风险后果。\n
+3. 在您使用Neuron集成的基金会开发的DApp或第三方DApp服务或进行交易时，为了您的利益，基金会建议您仔细阅读本协议及Neuron提示，了解交易对象及产品信息，谨慎评估风险后再采取行动。所有您在基金会开发的DApp或第三方DApp进行的交易行为系您的个人行为，有约束力的合同关系在您和您的相对方之间按照特定的DApp的协议内容和隐私条件订立，与Neuron和本协议无关。Neuron和基金会对因您的以上交易行为所引起的一切风险、责任、损失、费用不应因本协议的履行承担任何责任。\n
+4. 您在交易过程中应当自行判断对方是否为完全民事行为能力人并自行决定是否与对方进行交易或转账给对方等，且您自行承担与此相关的所有风险。\n
+5. 在转账过程中，如果出现“交易失败”、“打包超时”等类似的异常信息提示时，您应通过相关区块链系统的官方途径或其他的区块链查询工具进行再次确认，以避免重复转账；否则，由此所引起的一切损失和费用应由您自行承担。\n
+6. 您理解当您在Neuron上创建或导入钱包之后，您的Keystore、私钥、助记词等信息仅存储在当前的这台移动设备中，不存储在Neuron或基金会的服务器上。您可以按照Neuron提供的操作指南采取同步钱包等方式更换移动设备。但若您未保存或备份钱包密码、私钥、助记词、Keystore等信息且在您移动设备丢失的情况下，您的数字代币将因此丢失，基金会无法为您找回，您需自行承担相应损失。若您在导出、保存或备份钱包密码、私钥、助记词、Keystore等信息的时候泄密，或保存或备份上述信息的设备或服务器被黑客攻击或控制等情况下，您的数字代币将因此丢失，基金会无法为您找回，您需自行承担相应损失。\n
+7. 我们建议您在创建或导入钱包时对您钱包的钱包密码、私钥、助记词及Keystore等信息做好安全备份。我们提请您注意，请不要采用以下备份方式：截图、邮件、记事本、短信、微信、QQ等电子备份方式。我们建议您在纸质记事本上抄写助记词和Keystore等信息，同时您亦可将电子数据保管至密码管理器。\n
+8. 我们建议您在安全的网络环境和安全的硬件设备中使用Neuron，确保您的移动设备没有越狱或Root， 以避免可能存在的安全隐患\n
+9. 请您在使用我们的服务过程中，警惕非Neuron官方的诈骗行为。一旦发现此类行为，我们鼓励您第一时间告知我们。\n
+六、 服务的变更、中断、终止\n
+1. 您同意基金会为保证自主业务经营权可以暂时提供部分服务功能，或于将来暂停部分服务功能或开通新的服务功能。当任何功能减少或者增加或者变化时，只要您仍然使用基金会提供的服务，表示您仍然同意本协议或者本协议修正后的条款。\n
+2. 您理解存在如下情形时，基金会将暂停提供服务：\n
+（1）因设备、区块链系统维修、升级、故障和通信中断等技术原因而中断业务；\n
+（2）因台风、地震、海啸、洪水、停电、战争或恐怖袭击等不可抗力因素，病毒、木马、黑客攻击、系统不稳定或政府行为等原因，造成基金会系统不能提供服务或基金会合理认为继续提供服务会有较大风险的；\n
+（3）发生基金会无法控制或合理预见的其他情形。\n
+3. 当您出现如下情况时，基金会可单方面中止或终止您使用Neuron的部分或全部功能:\n
+（1）用户死亡；\n
+（2）盗用他人的钱包信息或移动设备；\n
+（3）填写个人信息时提供虚假信息；\n
+（4）拒绝基金会为提升Neuron功能而发起的强制更新操作；\n
+（5）将Neuron用于违法或犯罪活动；\n
+（6）妨碍其他用户正常使用；\n
+（7）伪称基金会的工作人员或管理人员；\n
+（8）攻击、侵入、更改或以任何其他方式威胁基金会计算机系统的正常运作；\n
+（9）利用Neuron宣传垃圾广告；\n
+（10）散布谣言，损害基金会和Neuron商誉；\n
+（11）违法行为，其他违反本协议的行为，及基金会合理认为应当暂停功能的情形。\n
+4. 当您与基金会之间的服务关系变更、中断、终止时，您仍有权在合理时间内导出您钱包等信息。\n
+七、 您合法使用基金会服务的承诺\n
+1. 您应遵守中华人民共和国相关法律法规及您所居住的国家或地区的法律法规，不得将Neuron用于任何非法目的，也不得以任何非法方式使用基金会服务。\n
+2. 您不得利用Neuron从事违法或犯罪的行为，包括但不限于：\n
+（1）反对宪法所确定的基本原则，危害国家安全、泄漏国家秘密、颠覆国家政权、破坏国家统一的；\n
+（2）从事任何违法犯罪行为，包括但不限于洗钱、非法集资等；\n
+（3）通过使用任何自动化程序、软件、引擎、网络爬虫、网页分析工具、数据挖掘工具或类似工具，接入基金会服务、收集或处理基金会所提供的内容，干预或试图干预任何用户或任何其他方式接入基金会服务的行为；\n
+（4）提供赌博资讯或以任何方式引诱他人参与赌博；\n
+（5）侵入他人Neuron钱包盗取数字代币；\n
+（6）进行与交易对方宣称的交易内容不符的交易，或不真实的交易；\n
+（7）从事任何侵害或可能侵害Neuron服务系统、数据之行为；\n
+（8）其他违法以及基金会有正当理由认为不适当的行为；\n
+（9）不得嵌入恶意代码、重打包，不得通过程序手段窃取用户私钥和用户信息等。\n
+3. 您理解并同意，如因您违反有关法律（包括但不限于海关及税务方面的监管规定）或者本协议之规定，使基金会遭受任何损失、受到任何第三方的索赔或任何行政管理部门的处罚，您应对基金会进行赔偿，包括合理的律师费用。\n
+4. 您承诺按时缴纳基金会的服务费用（如有），否则基金会有权暂停或中止对您提供的服务。\n
+八、 隐私条款\n
+1. 基金会十分重视对用户隐私的保护，相关隐私保护政策请参考基金会公布并不时更新的《Neuron隐私政策》。\n
+九、 免责及责任限制\n
+1. 基金会仅对本协议中所列明的义务承担责任。\n
+2. 您理解和同意，在法律所允许的范围内，基金会只能按照现有的技术水平和条件提供服务。因下列原因导致Neuron无法正常提供服务，基金会不承担责任：\n
+（1）Neuron系统停机维护或升级；\n
+（2）因台风、地震、洪水、雷电或恐怖袭击等不可抗力原因；\n
+（3）您的移动设备软硬件和通信线路、供电线路出现故障的；\n
+（4）您操作不当或未通过基金会授权或认可的方式使用基金会服务的；\n
+（5）因病毒、木马、恶意程序攻击、网络拥堵、系统不稳定、系统或设备故障、通讯故障、电力故障、银行等原因或政府行为等原因；\n
+（6）非因基金会的原因而引起的任何其它原因。\n
+3. 基金会对以下情形不承担责任：\n
+（1）因用户遗失移动设备、删除且未备份Neuron、删除且未备份钱包、钱包被盗或遗忘钱包密码、私钥、助记词、Keystore而导致的数字代币丢失；\n
+（2）因用户自行泄露钱包密码、私钥、助记词、Keystore，或借用、转让或授权他人使用自己的移动设备或Neuron钱包，或未通过基金会官方渠道下载Neuron应用程序或其他不安全的方式使用Neuron应用程序导致的数字代币丢失；\n
+（3）因用户误操作（包括但不限于您输错转账地址、您自身选择转账节点服务器的问题）导致的数字代币丢失；\n
+（4）因用户不理解区块链技术的性质而进行误操作导致的数字代币丢失；\n
+（5）因时间滞后、区块链系统不稳定等原因导致基金会拷贝用户在区块链上的交易记录发生偏差；\n
+（6）用户在第三方DApp上操作产生的风险和后果。\n
+4. 您理解Neuron仅作为您数字代币管理的工具。基金会不能控制第三方DApp提供的产品及服务的质量、安全或合法性，信息的真实性或准确性，以及相对方履行其在与您签订的协议项下的各项义务的能力。所有您在第三方DApp进行的交易行为系您的个人行为，有约束力的合同关系在您和您的相对方之间建立，与Neuron无关。基金会提醒您应该通过自己的谨慎判断确定登录DApp及相关信息的真实性、合法性和有效性。您与任何第三方交易所产生的风险亦应由您自行承担。\n
+5. 基金会可能同时为您及您的交易对手方提供服务，您同意对基金会可能存在的该等行为予以明确豁免任何实际或潜在的利益冲突，并不得以此来主张基金会在提供服务时存在法律上的瑕疵，也不因此而加重基金会的责任或注意义务。\n
+6. 基金会不提供以下形式的保证：\n
+（1）基金会服务将符合您的全部需求；\n
+（2）您经由基金会服务取得的任何技术、产品、服务、资讯将符合您的期望；\n
+（3）基金会从第三方交易所抓取的数字代币市场交易行情等信息的及时性、准确性、完整性、可靠性做出保证；\n
+（4）您在Neuron上的交易各方会及时履行其在与您达成的交易协议中各项义务。\n
+7. 您理解Neuron仅作为用户管理数字代币、显示交易信息的工具，基金会不提供法律、税务或投资建议等服务。您应当自行向法律、税务、投资方面的专业人士寻求建议，且您在使用我们服务过程中所遭受的投资损失、数据损失等，基金会概不负责。\n
+8. 您理解根据有关中国政策法规的要求，我们可能不时更改我们的用户准入标准，限定向某一特定群体提供服务的范围和方式等。</b>\n
+十、 完整协议\n
+1. 本协议由《Neuron服务协议》、《Neuron隐私政策》及基金会不时公布的各项规则（包括“帮助中心”的内容）组成。\n
+2. 本协议部分内容被有管辖权的法院认定为违反或无效的，不因此影响其他内容的效力。\n
+3. 本协议的任何译文版本仅为方便用户而提供，无意对本协议的条款进行修改。如果本协议的中文版本与非中文版本之间存在冲突，应以中文版本为准。\n
+十一、 知识产权保护\n
+1. Neuron系基金会开发并拥有知识产权的应用程序。Neuron中显示的任何内容（包括本协议、公告、文章、视频、音频、图片、档案、资讯、资料、商标或标识）的知识产权归基金会或第三方权利人所有。用户仅可为持有和管理数字代币之目的使用Neuron应用程序及其中的内容。未经基金会或第三方权利人的事先书面同意，任何人不得擅自使用、修改、反向编译、复制、公开传播、改变、散布、发行或公开发表上述应用程序及内容。\n
+十二、 法律适用与争议解决\n
+1. 本协议及其修订版之效力、解释、变更、执行与争议解决均适用中华人民共和国香港特别行政区法律，如无相关法律规定，则应当适用国际商业惯例和（或）行业惯例。\n
+2.凡因本合同所引起的或与之相关的任何争议、纠纷、分歧或索赔，包括合同的存在、效力、解释、履行、违反或终止，或因本合同引起的或与之相关的任何非合同性争议，均应提交由香港国际仲裁中心管理的仲裁，并按照提交仲裁通知时有效的《香港国际仲裁中心机构仲裁规则》最终解决。本仲裁条款适用的法律为香港特别行政区法律。仲裁地应为香港特别行政区。仲裁员人数为三名。仲裁程序应按照中文来进行。 \n\n
+
+十三、 其他\n
+1. 您需全面了解并遵守您所在司法辖区与使用基金会服务所有相关法律、法规及规则。\n
+2. 您在使用基金会服务过程中，如遇到任何问题，您可以通过在Neuron提交反馈等方式联系我们。\n
+3. 您可以在Neuron中查看本协议。 基金会鼓励您在每次访问Neuron时都查阅基金会的服务协议。\n
+4. 本协议自2018年6月29日起适用。\n
+本协议未尽事宜，您需遵守基金会不时更新的公告及相关规则。\n
+Nervos基金会\n\n\n
+    </string>
+
+    <string name="protocol_neuron2">
+        最近更新于：2018年6月29日\n
+尊敬的用户：\n
+Nervos基金会（以下简称“基金会”或“我们”）尊重并保护用户（以下简称“您”或“用户”）的隐私，您使用Neuron时，基金会将按照本隐私政策（以下简称“本政策”）收集、使用您的个人信息。\n
+<b>基金会建议您在使用本产品（以下简称“Neuron”）之前仔细阅读并理解本政策全部内容, 针对免责声明等条款在内的重要信息将以加粗的形式体现。</b>本政策有关关键词定义与基金会《Neuron服务协议》保持一致。\n
+<b>本政策可由基金会在线随时更新，更新后的政策一旦公布即代替原来的政策，如果您不接受修改后的条款，请立即停止使用Neuron，您继续使用Neuron将被视为接受修改后的政策。经修改的政策一经在Neuron上公布，立即自动生效。</b>\n
+您知悉本政策及其他有关规定适用于Neuron，Neuron上能链接的基金会所开发的DApp的隐私政策由该DApp另行向您提供。\n
+一、 我们收集您的哪些信息\n
+请您知悉，我们收集您的以下信息是出于满足您在Neuron服务需要的目的，且我们十分重视对您隐私的保护。在我们收集您的信息时，将严格遵守“合法、正当、必要”的原则。且您知悉，若您不提供我们服务所需的相关信息，您在Neuron的服务体验可能因此而受到影响。
+1. 仅为满足Neuron服务的目的，我们将不会收集您的移动设备信息、操作记录、交易记录、钱包地址、您的姓名、银行卡号、手机号码、邮件地址等个人信息；Neuron使用的代码将在Github上进行开源以验证以上承诺。\n
+2. Neuron仅为了优化应用体验的目的，收集匿名的访问统计数据，但是这些数据不属于您的个人信息。\n
+3. 您知悉：您在Neuron 上的钱包密码、私钥、助记词、Keystore并不存储或同步至基金会服务器。基金会不提供找回您的钱包密码、私钥、助记词、Keystore的服务。\n
+<b>4. 除上述内容之外，您知悉在您使用Neuron特定功能时，我们将在收集您的个人信息前向您作出特别提示，要求向您收集更多的个人信息。如您选择不同意，则视为您放弃使用Neuron该特定功能。\n
+5. 当您跳转到基金会开发的DApp或者第三方开发的DApp后，该DApp会以他自己特有的条款和隐私方案向您收集个人信息，您需要独立作出判断是否签约使用该DApp。Neuron不收集、留存和使用该DApp向您收集的个人信息。\n
+6. 在法律法规允许的范围内，基金会可能会在以下情形中收集并使用您的个人信息无需征得您的授权同意：\n
+（1） 与国家安全、国防安全有关的；\n
+（2） 与公共安全、公共卫生、重大公共利益有关的；\n
+（3） 与犯罪侦查、起诉、审判和判决执行等有关的；\n
+（4） 所收集的个人信息是您自行向社会公众公开的；\n
+（5） 从合法公开披露的信息中收集您的个人信息，如合法的新闻报道，政府信息公开等渠道；\n
+（6） 用于维护服务的安全和合规所必需的，例如发现、处理产品和服务的故障；\n
+（7） 法律法规规定的其他情形。</b>\n
+二、 我们如何使用您的信息
+1. 我们将向您及时发送重要通知，如软件更新、服务协议及本政策条款的变更。\n
+2. 我们将在Neuron的“系统设置”中为您提供“指纹登录”选项，让您方便且更安全地管理您的数字代币；指纹信息将保留在本地，Neuron不会采集和留存您的指纹信息。\n
+3. 法律法规规定及与监管机构配合的要求。\n
+三、 您如何控制自己的信息\n
+您在Neuron中拥有以下对您个人信息自主控制权：\n
+1. 您可以通过同步钱包的方式，将您的其他钱包导入Neuron中，或者将您在Neuron的钱包导入到其他数字代币管理钱包中。Neuron将向您显示导入钱包的信息。\n
+2. 您知悉您可以通过“资产”版块内容修改您的数字代币种类、进行转账及收款等活动。\n
+3. 您知悉当我们出于特定目的向您收集信息时，我们会提前给予您通知，您有权选择拒绝。但同时您知悉，当您选择拒绝提供有关信息时，即表示您放弃使用Neuron的有关服务。\n
+4. 您知悉，您及我们对于您交易记录是否公开并没有控制权，因为基于区块链交易系统的开源属性，您的交易记录在整个区块链系统中公开透明。\n
+<b>5. 您知悉当您使用Neuron的功能跳转至基金会开发的DApp或第三方DApp之后，我们的《Neuron服务协议》、《Neuron隐私政策》将不再适用，针对您在该DApp上对您个人信息的控制权问题，我们建议您在使用该DApp之前详细阅读并了解其隐私规则和有关用户服务协议等内容。</b>\n
+6. 您有权要求我们更新、更改、删除Neuron收集的您的有关信息。\n
+<b>7. 您知悉我们可以根据本政策第一条第6款的要求收集您的信息而无需获得您的授权同意。</b>\n
+四、 我们可能分享或传输您的信息\n
+1. 基金会在中华人民共和国境内收集和产生的用户个人信息将存储在中华人民共和国境内的服务器上。若基金会确需向境外传输您的个人信息，将在事前获得您的授权，且按照有关法律法规政策的要求进行跨境数据传输，并对您的个人信息履行保密义务。\n
+<b>2. 未经您事先同意，基金会不会将您的个人信息向任何第三方共享或转让，但以下情况除外：\n
+（1） 事先获得您明确的同意或授权；\n
+（2） 所收集的个人信息是您自行向社会公众公开的；\n
+（3） 所收集的个人信息系从合法公开披露的信息中收集，如合法的新闻报道，政府信息公开等渠道；\n
+（4） 与基金会的关联方共享，我们只会共享必要的用户信息，且受本隐私条款中所声明的目的的约束；\n
+（5） 根据适用的法律法规、法律程序的要求、行政机关或司法机关的要求进行提供；\n
+（6） 在涉及合并、收购时，如涉及到个人信息转让，基金会将要求个人信息接收方继续接受本政策的约束。</b>\n
+五、 我们如何保护您的信息\n
+1. 如基金会停止运营，基金会将及时停止继续收集您个人信息的活动，将停止运营的通知公告在Neuron上，并对所持有的您的个人信息在合理期限内进行删除或匿名化处理。\n
+2. 为了保护您的个人信息，基金会将采取数据安全技术措施，提升内部合规水平，增加内部员工信息安全培训，并对相关数据设置安全访问权限等方式安全保护您的隐私信息。\n
+3. 我们将在Neuron“消息中心”中向您发送有关信息安全的消息，并不时在Neuron“帮助中心”版块更新钱包使用及信息保护的资料，供您参考。\n
+六、 对未成年人的保护\n
+我们对保护未满18周岁的未成年人做出如下特别约定：\n
+1. 未成年人应当在父母或监护人指导下使用基金会相关服务。\n
+2. 未成年人的父母和监护人应当在阅读本政策、《Neuron服务协议》及我们的其他有关规则的前提下，指导未成年人使用Neuron。\n
+3. Neuron将根据国家相关法律法规的规定保护未成年人的个人信息的保密性及安全性。\n
+<b>七、 免责声明\n
+1. 请您注意，您通过Neuron接入第三方DApp后，将适用该第三方DApp发布的隐私政策。该第三方DApp对您个人信息的收集和使用不为基金会所控制，也不受本政策的约束。基金会无法保证第三方DApp一定会按照基金会的要求采取个人信息保护措施。\n
+2. 您应审慎选择和使用第三方DApp，并妥善保护好您的个人信息，基金会对其他第三方DApp的隐私保护不负任何责任。\n
+3. 请您注意，您通过Neuron接入基金会开发的DApp后，将适用该DApp发布的隐私政策。该DApp对您个人信息的收集和使用不受本政策的约束。\n
+4. 基金会将在现有技术水平条件下尽可能采取合理的安全措施来保护您的个人信息，以避免信息的泄露、篡改或者毁损。基金会系利用无线方式传输数据，因此，基金会无法确保通过无线网络传输数据的隐私性和安全性。</b>\n
+八、 其他\n
+1. 您需全面了解并遵守您所在司法辖区与使用基金会服务所有相关法律、法规及规则。\n
+2. 您在使用基金会服务过程中，如遇到任何有关个人信息使用的问题，您可以通过在Neuron提交反馈等方式联系我们。\n
+3. 您可以在Neuron中查看本政策及基金会其他服务规则。我们鼓励您在每次访问Neuron时都查阅基金会的服务协议及隐私政策。\n
+4. 本政策的任何译文版本仅为方便用户而提供，无意对本政策的条款进行修改。如果本政策的中文版本与非中文版本之间存在冲突，应以中文版本为准。\n
+5. 本政策自2018年6月29日起适用。\n
+本政策未尽事宜，您需遵守基金会不时更新的公告及相关规则。\n
+Nervos基金会\n
+    </string>
 </resources>
