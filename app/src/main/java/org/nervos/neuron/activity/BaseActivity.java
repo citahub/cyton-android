@@ -8,11 +8,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,7 +89,7 @@ public class BaseActivity extends AppCompatActivity {
     private void gotoLogin() {
         if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
             Intent intent = new Intent(mActivity, FingerPrintActivity.class);
-            intent.putExtra(FingerPrintActivity.NeedMain, false);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }

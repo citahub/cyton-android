@@ -17,8 +17,6 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     private ImageView fingerImg, otherImg;
     private AuthFingerDialog authFingerDialog = null;
-    private boolean needMain = true;
-    public static String NeedMain = "NeedMain";
 
     @Override
     protected int getContentLayout() {
@@ -36,7 +34,6 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     protected void initData() {
         fingerImg.setOnClickListener(this);
         otherImg.setOnClickListener(this);
-        needMain = getIntent().getBooleanExtra(NeedMain, true);
     }
 
     @Override
@@ -60,8 +57,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-            if (needMain)
-                startActivity(new Intent(mActivity, MainActivity.class));
+            startActivity(new Intent(mActivity, MainActivity.class));
             finish();
         }
 
@@ -108,5 +104,10 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
         super.onStart();
         if (authFingerDialog != null && !authFingerDialog.isShowing())
             authFingerDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
