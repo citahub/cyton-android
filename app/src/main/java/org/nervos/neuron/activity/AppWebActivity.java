@@ -17,12 +17,14 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.view.WebMenuPopupWindow;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
@@ -71,8 +73,11 @@ public class AppWebActivity extends BaseActivity {
     private ProgressBar progressBar;
     private BottomSheetDialog sheetDialog;
     private ImageView rightMenuView;
+    private ImageView leftView;
+    private RelativeLayout titleLayout;
 
     private WalletItem walletItem;
+    private TitleItem titleItem;
     private Transaction signTransaction;
     private String url;
     private boolean isPersonalSign = false;
@@ -104,10 +109,12 @@ public class AppWebActivity extends BaseActivity {
     private void initView() {
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
+        titleLayout = findViewById(R.id.title_layout);
         titleText = findViewById(R.id.title_bar_center);
         titleText.setText(R.string.dapp);
         rightMenuView = findViewById(R.id.title_bar_right);
-        findViewById(R.id.title_left_close).setOnClickListener(v -> finish());
+        leftView = findViewById(R.id.title_left_close);
+        leftView.setOnClickListener(v -> finish());
         rightMenuView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -126,6 +133,7 @@ public class AppWebActivity extends BaseActivity {
             public void onProgressChanged(WebView webview, int newProgress) {
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
+                    initTitleView();
                 } else {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(newProgress);
@@ -142,6 +150,7 @@ public class AppWebActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                titleItem = null;
                 initManifest(url);
                 return false;
             }
@@ -182,13 +191,16 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initViewWhenWebFinish() {
-        showRightMenu();
         WebAppUtil.setAppItem(webView);
         WebAppUtil.addHistory();
     }
 
-    private void showRightMenu() {
-        rightMenuView.setVisibility(View.VISIBLE);
+    private void initTitleView() {
+        if (titleItem == null) {
+            leftView.setImageResource(R.drawable.title_close);
+            rightMenuView.setVisibility(View.VISIBLE);
+            rightMenuView.setImageResource(R.drawable.title_more);
+        }
     }
 
     private void initManifest(String url) {
@@ -233,6 +245,7 @@ public class AppWebActivity extends BaseActivity {
         webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
         webView.setWalletAddress(new Address(walletItem.address));
         webView.addJavascriptInterface(new Neuron(), "neuron");
+        webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
         });
@@ -267,6 +280,38 @@ public class AppWebActivity extends BaseActivity {
                 walletNames.add(item.address);
             }
             return new Gson().toJson(walletNames);
+        }
+    }
+
+    public class WebTitleBar {
+
+        @JavascriptInterface
+        public void getTitleBar(String data) {
+
+            titleItem = new Gson().fromJson(data, TitleItem.class);
+
+            if (titleItem.right != null) {
+                rightMenuView.setVisibility(titleItem.right.isShow? View.VISIBLE : View.INVISIBLE);
+                if (TitleItem.ACTION_MENU.equals(titleItem.right.type)) {
+                    rightMenuView.setImageResource(R.drawable.title_more);
+                } else if (TitleItem.ACTION_SHARE.equals(titleItem.right.type)) {
+                    rightMenuView.setImageResource(R.drawable.share);
+                }
+            }
+
+            if (titleItem.left != null && !TextUtils.isEmpty(titleItem.left.type)) {
+                if (TitleItem.ACTION_BACK.equals(titleItem.left.type)) {
+                    leftView.setImageResource(R.drawable.black_back);
+                } else if (TitleItem.ACTION_CLOSE.equals(titleItem.left.type)) {
+                    leftView.setImageResource(R.drawable.title_close);
+                }
+            }
+
+            if (titleItem.title != null) {
+                if (!TextUtils.isEmpty(titleItem.title.name)) {
+                    titleText.setText(titleItem.title.name);
+                }
+            }
         }
     }
 
