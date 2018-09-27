@@ -58,13 +58,6 @@ public class BackupMnemonicActivity extends NBaseActivity {
                     dialog1.dismiss();
                     finish();
                 });
-                dialog.setOnOkClickListener(dialog1 -> {
-                    dialog1.dismiss();
-                    String[] mnemonicList = mnemonic.split(" ");
-                    Intent intent = new Intent(BackupMnemonicActivity.this, ConfirmMnemonicActivity.class);
-                    intent.putExtra(CreateWalletActivity.EXTRA_MNEMONIC, mnemonicList);
-                    startActivity(intent);
-                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
