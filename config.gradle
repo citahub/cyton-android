@@ -9,6 +9,6 @@ ext.appConfig = [
         signKeyAlias: "neuron",
         signKeyPassword: "cryptape2016@#",
 
-        isDebug: true
+        isDebug: false
 ]
 
