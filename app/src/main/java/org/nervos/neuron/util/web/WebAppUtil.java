@@ -178,6 +178,7 @@ public class WebAppUtil {
     }
 
     public static void addHistory() {
+        if (WebAppUtil.getAppItem() == null) return;
         EventBus.getDefault().post(new AppHistoryEvent(WebAppUtil.getAppItem(), System.currentTimeMillis()));
     }
 
@@ -186,7 +187,8 @@ public class WebAppUtil {
 
         try {
             URI uri = URI.create(webView.getUrl());
-            String icon = uri.getScheme() + "://" + uri.getAuthority() + "/" + WEB_ICON_PATH;
+            String icon = uri.getAuthority() + "/" + uri.getPath() + "/" + WEB_ICON_PATH;
+            icon = uri.getScheme() + "://" + formatUrl(icon);
             LogUtil.d("web icon: " + icon);
             icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
             mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
