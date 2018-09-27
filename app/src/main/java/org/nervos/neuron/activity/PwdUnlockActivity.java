@@ -66,7 +66,6 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         }
         walletItem = walletItems.get(0);
         walletNameTv.setText(walletItem.name);
-        needMain = getIntent().getBooleanExtra(FingerPrintActivity.NeedMain, true);
     }
 
     @Override
@@ -130,5 +129,10 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -30,6 +30,8 @@ public class QRResultCheck {
     }
 
     public static boolean isPrivateKey(String msg) {
+        if (msg.startsWith("0x"))
+            msg = msg.replace("0x", "");
         Pattern pattern = Pattern.compile("[0-9a-fA-F]{64}");
         return pattern.matcher(msg).matches();
     }
