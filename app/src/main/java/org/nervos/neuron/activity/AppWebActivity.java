@@ -114,7 +114,17 @@ public class AppWebActivity extends BaseActivity {
         titleText.setText(R.string.dapp);
         rightMenuView = findViewById(R.id.title_bar_right);
         leftView = findViewById(R.id.title_left_close);
-        leftView.setOnClickListener(v -> finish());
+        leftView.setOnClickListener(v -> {
+            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    finish();
+                }
+            } else {
+                finish();
+            }
+        });
         rightMenuView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
