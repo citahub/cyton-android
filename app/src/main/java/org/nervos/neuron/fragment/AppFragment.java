@@ -62,14 +62,10 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(HttpUrls.INNER_URL)) {
-                    return false;
-                } else {
-                    Intent intent = new Intent(getContext(), AppWebActivity.class);
-                    intent.putExtra(AppWebActivity.EXTRA_URL, url);
-                    startActivity(intent);
-                    return true;
-                }
+                Intent intent = new Intent(getContext(), AppWebActivity.class);
+                intent.putExtra(AppWebActivity.EXTRA_URL, url);
+                startActivity(intent);
+                return true;
             }
         });
 
