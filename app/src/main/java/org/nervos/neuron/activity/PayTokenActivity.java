@@ -310,13 +310,13 @@ public class PayTokenActivity extends BaseActivity {
         if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(ethSendTransaction.getTransactionHash());
+            gotoSignSuccess(new Gson().toJson(ethSendTransaction));
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(ethSendTransaction.getError().getMessage());
+            gotoSignFail(new Gson().toJson(ethSendTransaction));
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getString(R.string.transfer_fail));
@@ -333,13 +333,13 @@ public class PayTokenActivity extends BaseActivity {
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(appSendTransaction.getSendTransactionResult().getHash());
+            gotoSignSuccess(new Gson().toJson(appSendTransaction));
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(appSendTransaction.getError().getMessage());
+            gotoSignFail(new Gson().toJson(appSendTransaction));
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getString(R.string.transfer_fail));
