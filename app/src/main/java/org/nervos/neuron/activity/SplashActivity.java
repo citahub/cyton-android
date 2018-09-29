@@ -12,6 +12,7 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 public class SplashActivity extends BaseActivity {
 
     public static final String EXTRA_FIRST = "extra_first";
+    public static final String LOCK_TO_MAIN = "lock_to_main";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,7 +26,9 @@ public class SplashActivity extends BaseActivity {
                     sleep(1000);
                     if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
                         if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
-                            startActivity(new Intent(mActivity, FingerPrintActivity.class));
+                            Intent intent = new Intent(mActivity, FingerPrintActivity.class);
+                            intent.putExtra(LOCK_TO_MAIN, true);
+                            startActivity(intent);
                         } else {
                             startActivity(new Intent(mActivity, MainActivity.class));
                         }
