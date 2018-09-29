@@ -26,12 +26,14 @@ import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.TransferDialog;
+import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
 
@@ -47,6 +49,7 @@ public class PayTokenActivity extends BaseActivity {
 
     public static final String EXTRA_HEX_HASH = "extra_hex_hash";
     public static final String EXTRA_PAY_ERROR = "extra_pay_error";
+    private static int ERROR_CODE = -1;
 
     private TransactionInfo transactionInfo;
     private WalletItem walletItem;
@@ -245,17 +248,17 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferEth(String password, ProgressBar progressBar) {
         Observable.just(transactionInfo.gasPrice)
-                .flatMap(new Func1<String, Observable<BigInteger>>() {
-                    @Override
-                    public Observable<BigInteger> call(String gasPrice) {
-                        if (TextUtils.isEmpty(transactionInfo.gasPrice)
-                                || "0".equals(transactionInfo.gasPrice)) {
-                            return EthRpcService.getEthGasPrice();
-                        } else {
-                            return Observable.just(Numeric.toBigInt(gasPrice));
-                        }
+            .flatMap(new Func1<String, Observable<BigInteger>>() {
+                @Override
+                public Observable<BigInteger> call(String gasPrice) {
+                    if (TextUtils.isEmpty(transactionInfo.gasPrice)
+                            || "0".equals(transactionInfo.gasPrice)) {
+                        return EthRpcService.getEthGasPrice();
+                    } else {
+                        return Observable.just(Numeric.toBigInt(gasPrice));
                     }
-                }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
+                }
+            }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
             @Override
             public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                 return EthRpcService.transferEth(transactionInfo.to,
@@ -264,21 +267,22 @@ public class PayTokenActivity extends BaseActivity {
                         transactionInfo.data, password);
             }
         }).subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-                        gotoSignFail(e.getMessage());
-                    }
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe(new NeuronSubscriber<EthSendTransaction>() {
+                @Override
+                public void onError(Throwable e) {
+                    progressBar.setVisibility(View.GONE);
+                    e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+                    gotoSignFail(getCommonError());
+                }
 
-                    @Override
-                    public void onNext(EthSendTransaction ethSendTransaction) {
-                        progressBar.setVisibility(View.GONE);
-                        handleTransfer(ethSendTransaction);
-                    }
-                });
+                @Override
+                public void onNext(EthSendTransaction ethSendTransaction) {
+                    progressBar.setVisibility(View.GONE);
+                    handleTransfer(ethSendTransaction);
+                }
+            });
     }
 
     private void transferNervos(String password, ProgressBar progressBar) {
@@ -289,7 +293,7 @@ public class PayTokenActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
-                        gotoSignFail(e.getMessage());
+                        gotoSignFail(getCommonError());
                     }
 
                     @Override
@@ -310,16 +314,16 @@ public class PayTokenActivity extends BaseActivity {
         if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(ethSendTransaction));
+            gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(new Gson().toJson(ethSendTransaction));
+            gotoSignFail(new Gson().toJson(ethSendTransaction.getError()));
         } else {
-            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-            gotoSignFail(getString(R.string.transfer_fail));
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         }
     }
 
@@ -333,16 +337,16 @@ public class PayTokenActivity extends BaseActivity {
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(appSendTransaction));
+            gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             transferDialog.dismiss();
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
-            gotoSignFail(new Gson().toJson(appSendTransaction));
+            gotoSignFail(new Gson().toJson(appSendTransaction.getError()));
         } else {
-            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-            gotoSignFail(getString(R.string.transfer_fail));
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         }
     }
 
@@ -368,6 +372,10 @@ public class PayTokenActivity extends BaseActivity {
         intent.putExtra(EXTRA_PAY_ERROR, error);
         setResult(AppWebActivity.RESULT_CODE_FAIL, intent);
         finish();
+    }
+
+    private String getCommonError() {
+        return new Gson().toJson(new Response.Error(ERROR_CODE, getString(R.string.operation_fail)));
     }
 
 }

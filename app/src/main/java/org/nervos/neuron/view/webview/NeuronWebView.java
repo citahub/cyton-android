@@ -15,6 +15,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.view.webview.item.Address;
@@ -28,8 +30,8 @@ import java.io.InputStream;
 
 public class NeuronWebView extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";
-    private static final String JS_PROTOCOL_ON_SUCCESSFUL = "onSignSuccessful(%1$s, \"%2$s\")";
-    private static final String JS_PROTOCOL_ON_FAILURE = "onSignError(%1$s, \"%2$s\")";
+    private static final String JS_PROTOCOL_ON_SUCCESSFUL = "onSignSuccessful(%1$s, %2$s)";
+    private static final String JS_PROTOCOL_ON_FAILURE = "onSignError(%1$s, %2$s)";
     @Nullable
     private OnSignTransactionListener onSignTransactionListener;
     @Nullable
