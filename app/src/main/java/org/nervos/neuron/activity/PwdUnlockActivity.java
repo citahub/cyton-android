@@ -33,7 +33,6 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private ImageView walletSelectImg, otherImg, arrowImg;
     private CommonButton authBtn;
     private WalletItem walletItem;
-    private boolean needMain = true;
 
     @Override
     protected int getContentLayout() {
@@ -112,7 +111,9 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 popupwWindow.showAsDropDown(walletNameTv, 0, 10);
                 break;
             case R.id.iv_other:
-                startActivity(new Intent(this, FingerPrintActivity.class));
+                Intent intent = new Intent(this, FingerPrintActivity.class);
+                intent.putExtra(SplashActivity.LOCK_TO_MAIN, intent.getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
+                startActivity(intent);
                 finish();
                 break;
             case R.id.tv_cancel:
@@ -123,7 +124,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();
-                    if (needMain)
+                    if (getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false))
                         startActivity(new Intent(mActivity, MainActivity.class));
                     finish();
                 }

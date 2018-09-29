@@ -57,7 +57,8 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-            startActivity(new Intent(mActivity, MainActivity.class));
+            if (getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false))
+                startActivity(new Intent(mActivity, MainActivity.class));
             finish();
         }
 
@@ -86,7 +87,9 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.iv_other:
-                startActivity(new Intent(this, PwdUnlockActivity.class));
+                Intent intent = new Intent(this, PwdUnlockActivity.class);
+                intent.putExtra(SplashActivity.LOCK_TO_MAIN, intent.getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
+                startActivity(intent);
                 finish();
                 break;
         }
@@ -108,6 +111,10 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 }
