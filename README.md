@@ -5,7 +5,7 @@
 Overview
 ===============
 
-Neuron is an open source blockchain wallet which supports Ethereum and [AppChain](https://docs.nervos.org/#/). It supports most tokens of Ethereum and [AppChain](https://docs.nervos.org/#/), ETH, ERC20, ERC721, and also supports most kinds of DApps of Ethereum and [AppChain](https://docs.nervos.org/#/) , cryptokitties, Fomo3D, 0xproject...
+Neuron is an open source blockchain wallet which supports Ethereum and [AppChain](https://docs.nervos.org/#/). It supports most tokens of Ethereum and [AppChain](https://docs.nervos.org/#/), such as ETH, ERC20, ERC721, and also supports most kinds of DApps of Ethereum and [AppChain](https://docs.nervos.org/#/) , such as cryptokitties, Fomo3D, 0xproject...
 
 Usage
 ===============
@@ -14,19 +14,19 @@ Usage
 
 Neuron is a blockchain wallet which supports Ethereum and [AppChain](https://docs.nervos.org/#/) (AppChain uses same SECP256k1 signature algorithm), you can use same private key and address. **Neuron never saves your private key directly, you need to input password to sign every transaction. If you forget your private key, Neuron can not find and recover it, so you should save private key (keystore and mnemonic) carefully.**
 
-Neuron supports importing wallet througth private key, keystore and mnemonic, and supports exporting keystore.
+Neuron supports importing wallet through private key, keystore and mnemonic, and supports exporting keystore.
 
 ### Token
 
 Neuron is a blockchain wallet which supports Ethereum, so you can visit balance of most tokens of Ethereum and tranfer tokens to other accounts. If you can not find ERC20 token you want, you can input contract address to load token information and add to your token list.
 
-[AppChain](https://docs.nervos.org/#/) is a blockchain solution which includes blockchain kernel CITA, Neuron wallet, blockchain browser [Microscope](https://github.com/cryptape/microscope), cache server [ReBirth](https://github.com/cryptape/re-birth) and SDKs. [AppChain](https://docs.nervos.org/#/) supports Ethereum solidity contract, so all ERC contracts can run on AppChian directly.
+[AppChain](https://docs.nervos.org/#/) is a blockchain solution which includes blockchain kernel CITA, Neuron wallet, blockchain browser [Microscope](https://github.com/cryptape/microscope), cache server [ReBirth](https://github.com/cryptape/re-birth) and SDKs. [AppChain](https://docs.nervos.org/#/) supports Ethereum solidity contract, so all ERC contracts can run on AppChain directly.
 
-AppChain is an open source blockchain solution, so you can publish your blockchain coin by yourself and set any name you like. All tokens on AppChian can display in Neuron.
+AppChain is an open source blockchain solution, so you can publish your blockchain coin by yourself and set any name you like. All tokens on AppChain can display in Neuron.
 
 ### DApp
 
-Neuron is also a DApp browser, which supprts DApps of Ethereum and [AppChain](https://docs.nervos.org/#/). Most popular Ethereum DApps, cryptokitties, Fomo3D, 0xproject, can run in Neuron directly. Neuron also supprts AppChain DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an AppChain DApp](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
+Neuron is also a DApp browser, which supprts DApps of Ethereum and [AppChain](https://docs.nervos.org/#/). Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Neuron directly. Neuron also supports AppChain DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an AppChain DApp](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
 
 Getting Started
 ===============
