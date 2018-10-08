@@ -78,6 +78,7 @@
     <string name="confirm_transfer_action">确认发送</string>
     <string name="input_app_website_hint">请输入应用网址</string>
     <string name="import_mnemonic_path_err">请先填写自定义路径</string>
+    <string name="transaction_money_title">持有token：</string>
 
     <string name="collection_id_place_holder">ID:%s</string>
     <string name="transfer_balance_place_holder">余额：%s</string>

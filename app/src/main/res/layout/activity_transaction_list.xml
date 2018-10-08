@@ -15,6 +15,82 @@
         app:isShowLeft="true" />
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/token_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title">
+
+        <ImageView
+            android:id="@+id/iv_token_logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/token_image_circle_border"
+            android:padding="5dp"
+            android:src="@drawable/ether_big"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_to"
+            android:layout_width="9dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@drawable/right_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_token_des"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/font_title"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_to"
+            app:layout_constraintStart_toEndOf="@+id/iv_token_logo"
+            app:layout_constraintTop_toTopOf="@id/iv_token_logo" />
+
+        <TextView
+            android:id="@+id/tv_money_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="19dp"
+            android:text="@string/transaction_money_title"
+            android:textColor="@color/font_title_third"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/line"
+            app:layout_constraintStart_toStartOf="@id/tv_token_des"
+            app:layout_constraintTop_toBottomOf="@id/tv_token_des" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:textColor="@color/font_link"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@id/tv_money_title"
+            app:layout_constraintTop_toTopOf="@id/tv_money_title" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/default_background"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
         android:id="@+id/transfer_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -54,14 +130,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/transfer_layout"
-        android:layout_below="@id/title">
+        android:layout_below="@id/token_des">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingEnd="@dimen/default_margin"
-            android:paddingStart="@dimen/default_margin" />
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
