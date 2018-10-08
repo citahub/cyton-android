@@ -17,11 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:background="@color/warning_background"
-            android:drawablePadding="5dp"
             android:drawableStart="@drawable/warning"
+            android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:text="@string/import_mnemonic_warning"
             android:textColor="@color/warning_font"
             android:textSize="12sp" />
@@ -30,10 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingBottom="6dp"
             android:paddingLeft="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin"
-            android:paddingTop="@dimen/default_margin">
+            android:paddingBottom="6dp">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_wallet_mnemonic"
@@ -52,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@android:color/white"
-            android:paddingEnd="@dimen/default_margin"
-            android:paddingStart="@dimen/default_margin">
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin">
 
             <TextView
                 android:id="@+id/tv"
@@ -76,12 +76,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tv_path"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:textColor="@color/font_title" />
+                    android:layout_gravity="right">
+
+                    <TextView
+                        android:id="@+id/tv_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_title"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/et_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:textColor="@color/font_title"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
+                </FrameLayout>
+
 
                 <TextView
                     android:id="@+id/tv_format"
@@ -111,8 +127,8 @@
             android:gravity="left|center_vertical"
             android:hint="@string/input_wallet_name_hint"
             android:maxLength="15"
-            android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
             android:textSize="15sp" />
@@ -136,8 +152,8 @@
             android:gravity="left|center_vertical"
             android:hint="@string/input_password_hint"
             android:inputType="textPassword"
-            android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
             android:textSize="15sp" />
@@ -160,8 +176,8 @@
             android:gravity="left|center_vertical"
             android:hint="@string/input_new_password_again_hint"
             android:inputType="textPassword"
-            android:paddingEnd="@dimen/default_margin"
             android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:singleLine="true"
             android:textColor="@color/font_title"
             android:textSize="15sp" />
@@ -170,8 +186,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/default_margin"
             android:text="@string/password_suggestion"
             android:textColor="@color/font_title_third"
             android:textSize="12sp" />

@@ -13,6 +13,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ public class ImportMnemonicFragment extends BaseFragment {
     List<String> paths;
     int currentIndex;
     private TextView pathText, formatText;
+    private EditText pathEditText;
     private SelectorDialog selectorDialog;
     private LinearLayout pathLL;
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
@@ -62,6 +65,7 @@ public class ImportMnemonicFragment extends BaseFragment {
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         mnemonicEdit = view.findViewById(R.id.edit_wallet_mnemonic);
         pathLL = view.findViewById(R.id.ll_path);
+        pathEditText = view.findViewById(R.id.et_path);
         return view;
     }
 
@@ -107,9 +111,24 @@ public class ImportMnemonicFragment extends BaseFragment {
         selectorDialog.setTitleText(getString(R.string.path));
         selectorDialog.setRecyclerView(new RecyclerAdapter());
         selectorDialog.setOkListner(view1 -> {
-            pathText.setText(paths.get(currentIndex));
-            formatText.setText(formats.get(currentIndex));
-            selectorDialog.dismiss();
+            if (currentIndex != paths.size() - 1) {
+                pathText.setText(paths.get(currentIndex));
+                pathText.setVisibility(View.VISIBLE);
+                pathEditText.setVisibility(View.GONE);
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                formatText.setText(formats.get(currentIndex));
+                selectorDialog.dismiss();
+            } else {
+                pathEditText.setText(paths.get(currentIndex));
+                pathText.setVisibility(View.GONE);
+                pathEditText.setVisibility(View.VISIBLE);
+                pathEditText.setFocusable(true);
+                pathEditText.setFocusableInTouchMode(true);
+                pathEditText.requestFocus();
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                formatText.setText(formats.get(currentIndex));
+                selectorDialog.dismiss();
+            }
         });
     }
 
@@ -117,8 +136,21 @@ public class ImportMnemonicFragment extends BaseFragment {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
         try {
+            String path = null;
+            if (currentIndex != paths.size() - 1) {
+                path = paths.get(currentIndex);
+            } else {
+                path = pathEditText.getText().toString().trim();
+                if (TextUtils.isEmpty(path)) {
+                    passwordEdit.post(() -> {
+                        dismissProgressBar();
+                        Toast.makeText(getContext(), R.string.import_mnemonic_path_err, Toast.LENGTH_SHORT).show();
+                    });
+                    return;
+                }
+            }
             walletEntity = WalletEntity.fromMnemonic(
-                    mnemonicEdit.getText().toString().trim(), paths.get(currentIndex));
+                    mnemonicEdit.getText().toString().trim(), path);
         } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
