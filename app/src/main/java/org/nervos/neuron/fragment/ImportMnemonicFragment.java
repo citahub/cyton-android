@@ -89,7 +89,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
                     rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())) {
+            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
                 cachedThreadPool.execute(() -> generateAndSaveWallet());

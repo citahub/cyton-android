@@ -124,7 +124,7 @@ public class SimpleDialog extends Dialog {
     }
 
     public String getMessage() {
-        return messageEdit.getText().toString().trim();
+        return messageEdit.getText().toString();
     }
 
     public void setEditInputType(int type) {

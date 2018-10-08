@@ -69,7 +69,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
     @Override
     protected void initAction() {
         importButton.setOnClickListener(view -> {
-            if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString().trim())) {
+            if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 return;
             }

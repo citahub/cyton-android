@@ -91,7 +91,7 @@ public class CreateWalletActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
             } else if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString().trim())) {
+            } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString())) {
                 Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
                 final String password = rePasswordEdit.getText().toString().trim();
