@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class ApplicationService extends IntentService {
 
-    private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=default";
+    private String SA_SERVER_URL_DEBUG = "https://banana.cryptape.com:8106/sa?project=default";
+    private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=production";
 
     public ApplicationService() {
         super("ApplicationService");
@@ -35,7 +36,7 @@ public class ApplicationService extends IntentService {
         AESCrypt.init(this);
 
         if (org.nervos.neuron.BuildConfig.IS_DEBUG) {
-            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_AND_TRACK);
+            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL_DEBUG, SensorsDataAPI.DebugMode.DEBUG_AND_TRACK);
             SensorsDataAPI.sharedInstance().trackAppCrash();
         } else {
             SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
