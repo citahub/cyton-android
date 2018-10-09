@@ -1,11 +1,17 @@
 package org.nervos.neuron.application;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
+import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,12 @@ public class ApplicationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        ZXingLibrary.initDisplayOpinion(this);
+        WalletEntity.initWalletMnemonic(this);
+        DBChainUtil.initChainData(this);
+        EthRpcService.init(this);
+        AESCrypt.init(this);
+
         SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
         try {
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
@@ -39,6 +51,7 @@ public class ApplicationService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SensorsDataAPI.sharedInstance().trackAppCrash();
+        if (org.nervos.neuron.BuildConfig.IS_DEBUG)
+            SensorsDataAPI.sharedInstance().trackAppCrash();
     }
 }
