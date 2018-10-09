@@ -28,6 +28,7 @@ import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 import org.objectweb.asm.Handle;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -182,5 +183,17 @@ public class ImportWalletActivity extends NBaseActivity {
             }
         });
 
+    }
+
+    public static void track(String id, boolean suc, String address) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("input_type", id);
+            object.put("input_result", suc);
+            object.put("input_address", address);
+            SensorsDataAPI.sharedInstance().track("inputWallet", object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

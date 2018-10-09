@@ -111,6 +111,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                     Numeric.toBigInt(privateKeyEdit.getText().toString().trim()));
         } catch (Exception e) {
             e.printStackTrace();
+            ImportWalletActivity.track("3", false, "");
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -118,6 +119,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             return;
         }
         if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
+            ImportWalletActivity.track("3", false, "");
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
@@ -130,6 +132,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
         DBWalletUtil.saveWallet(getContext(), walletItem);
         SharePrefUtil.putCurrentWalletName(walletItem.name);
+        ImportWalletActivity.track("3", true, walletEntity.getAddress());
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
@@ -223,6 +226,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    QrCodeActivity.track("2", false);
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }

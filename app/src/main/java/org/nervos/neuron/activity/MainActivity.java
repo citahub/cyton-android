@@ -229,6 +229,7 @@ public class MainActivity extends BaseActivity {
                                     break;
                             }
                         } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                            QrCodeActivity.track("0", false);
                             Toast.makeText(this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                         }
                     }

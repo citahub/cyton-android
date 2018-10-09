@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.CaptureFragment;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
@@ -42,6 +46,7 @@ public class QrCodeActivity extends NBaseActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+            track(QRResultCheck.check(result) + "", true);
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS);
@@ -63,5 +68,16 @@ public class QrCodeActivity extends NBaseActivity {
             mActivity.finish();
         }
     };
+
+    public static void track(String type, boolean suc) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("scan_type", type);
+            object.put("scan_result", suc);
+            SensorsDataAPI.sharedInstance().track("scanQRcode", object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

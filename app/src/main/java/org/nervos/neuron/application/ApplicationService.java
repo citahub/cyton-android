@@ -11,7 +11,6 @@ import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,12 @@ public class ApplicationService extends IntentService {
         EthRpcService.init(this);
         AESCrypt.init(this);
 
-        SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
+        if (org.nervos.neuron.BuildConfig.IS_DEBUG) {
+            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_AND_TRACK);
+            SensorsDataAPI.sharedInstance().trackAppCrash();
+        } else {
+            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
+        }
         try {
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
             List<SensorsDataAPI.AutoTrackEventType> eventTypeList = new ArrayList<>();
@@ -51,7 +55,5 @@ public class ApplicationService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (org.nervos.neuron.BuildConfig.IS_DEBUG)
-            SensorsDataAPI.sharedInstance().trackAppCrash();
     }
 }

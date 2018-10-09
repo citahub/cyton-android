@@ -4,6 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -41,9 +45,11 @@ public class WalletService {
                         if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                             tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
+                            track("ETH", "ETH", tokenItem.balance);
                         } else {
                             tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(tokenItem);
+                            track("ETH", tokenItem.symbol, tokenItem.balance);
                         }
                     } else {                                    // nervos
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
@@ -59,6 +65,7 @@ public class WalletService {
                                 tokenItem.chainName = chainItem.name;
                                 tokenItemList.add(tokenItem);
                             }
+                            track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
                         }
                     }
                 } catch (Exception e) {
@@ -73,6 +80,18 @@ public class WalletService {
                 listener.onGetWalletToken(walletItem);
             }
         });
+    }
+
+    private static void track(String chain, String type, double number) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("currency_chain", chain);
+            object.put("currency_type", type);
+            object.put("currency_number", number);
+            SensorsDataAPI.sharedInstance().track("possess_money", object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface OnGetWalletTokenListener {

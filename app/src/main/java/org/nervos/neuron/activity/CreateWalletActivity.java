@@ -9,9 +9,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Toast;
 
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
@@ -99,6 +103,13 @@ public class CreateWalletActivity extends NBaseActivity {
                 cachedThreadPool.execute(() -> {
                     saveWalletInfo(password);
                     rePasswordEdit.post(() -> {
+                        try {
+                            JSONObject object = new JSONObject();
+                            object.put("create_address", walletEntity.getAddress());
+                            SensorsDataAPI.sharedInstance().track("createWallet", object);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         dismissProgressBar();
                         Intent intent = new Intent(CreateWalletActivity.this,
                                 BackupMnemonicActivity.class);

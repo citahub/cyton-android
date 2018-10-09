@@ -12,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
@@ -226,10 +229,23 @@ public class PayTokenActivity extends BaseActivity {
             } else {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
-                if (transactionInfo.isEthereum()) {
-                    transferEth(password, progressBar);
-                } else {
-                    transferNervos(password, progressBar);
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("target_currency", tokenItem.symbol);
+                    object.put("target_currency_number", "");
+                    object.put("receive_address", "");
+                    object.put("outcome_address", walletItem.address);
+                    object.put("transfer_type", "1");
+                    if (transactionInfo.isEthereum()) {
+                        object.put("target_chain", "ETH");
+                        transferEth(password, progressBar);
+                    } else {
+                        object.put("target_chain", tokenItem.chainName);
+                        transferNervos(password, progressBar);
+                    }
+                    SensorsDataAPI.sharedInstance().track("transfer_accounts", object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
