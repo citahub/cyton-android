@@ -231,6 +231,7 @@
     <string name="wallet_top_change_wallet">切换钱包</string>
     <string name="wallet_top_add_wallet">添加钱包</string>
     <string name="camera_no_perm_tip">请在设置页面打开摄像头权限</string>
+    <string name="ETH_Describe">Ethereum是一个运行智能合约的去中心化平台，应用将完全按照程序运作，不存在任何欺诈，审查与第三方干预的可能。</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

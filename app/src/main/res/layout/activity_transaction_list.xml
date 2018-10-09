@@ -21,10 +21,11 @@
     </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/token_des"
+        android:id="@+id/cl_token_des"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title">
+        android:layout_below="@id/title"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_token_logo"
@@ -55,6 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/font_title"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/iv_to"
@@ -75,8 +78,9 @@
             app:layout_constraintTop_toBottomOf="@id/tv_token_des" />
 
         <TextView
+            android:id="@+id/tv_balance"
             android:layout_width="wrap_content"
-            android:layout_height="13dp"
+            android:layout_height="wrap_content"
             android:textColor="@color/font_link"
             android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@id/tv_money_title"
@@ -130,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/transfer_layout"
-        android:layout_below="@id/token_des">
+        android:layout_below="@id/cl_token_des">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_recycler"
