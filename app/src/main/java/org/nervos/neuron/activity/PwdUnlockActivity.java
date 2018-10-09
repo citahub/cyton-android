@@ -33,6 +33,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private ImageView walletSelectImg, otherImg, arrowImg;
     private CommonButton authBtn;
     private WalletItem walletItem;
+    private Boolean needToFinger = false;
 
     @Override
     protected int getContentLayout() {
@@ -129,6 +130,21 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                     finish();
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        needToFinger = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (needToFinger) {
+            startActivity(new Intent(this, FingerPrintActivity.class));
+            finish();
         }
     }
 
