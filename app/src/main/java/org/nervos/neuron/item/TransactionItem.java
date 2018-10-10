@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class TransactionItem implements Parcelable{
+public class TransactionItem implements Parcelable {
 
     public String hash;
     public String from;
@@ -20,10 +20,12 @@ public class TransactionItem implements Parcelable{
     public String gas;
     public String gasPrice;
     public String blockNumber;
+    //0 failed 1 success 2 pending
+    public int status;
 
 
     public String getDate() {
-        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
         if (timeStamp > 0) {
             return ft.format(timeStamp * 1000);
         } else {
@@ -50,6 +52,7 @@ public class TransactionItem implements Parcelable{
         dest.writeString(this.gas);
         dest.writeString(this.gasPrice);
         dest.writeString(this.blockNumber);
+        dest.writeInt(this.status);
     }
 
     public TransactionItem() {
@@ -68,6 +71,7 @@ public class TransactionItem implements Parcelable{
         this.gas = in.readString();
         this.gasPrice = in.readString();
         this.blockNumber = in.readString();
+        this.status = in.readInt();
     }
 
     public static final Creator<TransactionItem> CREATOR = new Creator<TransactionItem>() {

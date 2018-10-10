@@ -78,6 +78,7 @@
     <string name="confirm_transfer_action">确认发送</string>
     <string name="input_app_website_hint">请输入应用网址</string>
     <string name="import_mnemonic_path_err">请先填写自定义路径</string>
+    <string name="transaction_money_title">持有token：</string>
 
     <string name="collection_id_place_holder">ID:%s</string>
     <string name="transfer_balance_place_holder">余额：%s</string>
@@ -230,6 +231,10 @@
     <string name="wallet_top_change_wallet">切换钱包</string>
     <string name="wallet_top_add_wallet">添加钱包</string>
     <string name="camera_no_perm_tip">请在设置页面打开摄像头权限</string>
+    <string name="ETH_Describe">Ethereum是一个运行智能合约的去中心化平台，应用将完全按照程序运作，不存在任何欺诈，审查与第三方干预的可能。</string>
+    <string name="transaction_status_failed">交易失败</string>
+    <string name="transaction_status_success">交易成功</string>
+    <string name="transaction_status_pending">交易进行中</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

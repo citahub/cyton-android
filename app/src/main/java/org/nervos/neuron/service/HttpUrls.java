@@ -38,4 +38,7 @@ public class HttpUrls {
 
     public static final String DEFAULT_WEB_IMAGE_URL = "https://cdn.cryptape.com/neuron/default_web_icon.png";
 
+    //Token Describe
+    public static final String TOKEN_LOGO = "https://github.com/consenlabs/token-profile/blob/master/images/@address.png?raw=true";
+    public static final String TOKEN_DESC = "https://raw.githubusercontent.com/consenlabs/token-profile/master/erc20/@address.json";
 }
