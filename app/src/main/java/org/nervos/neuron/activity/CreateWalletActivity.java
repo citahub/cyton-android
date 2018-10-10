@@ -98,10 +98,9 @@ public class CreateWalletActivity extends NBaseActivity {
             } else if (DBWalletUtil.checkWalletName(mActivity, walletNameEdit.getText().toString())) {
                 Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
-                final String password = rePasswordEdit.getText().toString().trim();
                 showProgressBar(getString(R.string.wallet_creating));
                 cachedThreadPool.execute(() -> {
-                    saveWalletInfo(password);
+                    saveWalletInfo();
                     rePasswordEdit.post(() -> {
                         try {
                             JSONObject object = new JSONObject();
@@ -124,16 +123,11 @@ public class CreateWalletActivity extends NBaseActivity {
     /**
      * save wallet information to database and add default eth token
      */
-    private void saveWalletInfo(String password) {
-        walletEntity = WalletEntity.createWithMnemonic(MnemonicPath);
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                walletItem = WalletItem.fromWalletEntity(password, walletEntity);
-                walletItem.name = walletNameEdit.getText().toString().trim();
-            }
-        }.start();
+    private void saveWalletInfo() {
+        String password = rePasswordEdit.getText().toString().trim();
+        walletEntity = WalletEntity.createWithMnemonic(MnemonicPath, password);
+        walletItem = WalletItem.fromWalletEntity(walletEntity);
+        walletItem.name = walletNameEdit.getText().toString().trim();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

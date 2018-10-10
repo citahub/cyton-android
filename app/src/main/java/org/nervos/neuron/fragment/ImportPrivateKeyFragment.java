@@ -13,10 +13,12 @@ import android.widget.Toast;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
@@ -106,9 +108,10 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     private void generateAndSaveWallet() {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
+        String password = passwordEdit.getText().toString().trim();
+        String privateKey = privateKeyEdit.getText().toString().trim();
         try {
-            walletEntity = WalletEntity.fromPrivateKey(
-                    Numeric.toBigInt(privateKeyEdit.getText().toString().trim()));
+            walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privateKey), password);
         } catch (Exception e) {
             e.printStackTrace();
             ImportWalletActivity.track("3", false, "");
@@ -126,8 +129,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             });
             return;
         }
-        WalletItem walletItem = WalletItem.fromWalletEntity(
-                passwordEdit.getText().toString().trim(), walletEntity);
+        WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
         walletItem.name = walletNameEdit.getText().toString().trim();
         walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
         DBWalletUtil.saveWallet(getContext(), walletItem);
@@ -139,6 +141,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
             getActivity().startActivity(intent);
+            EventBus.getDefault().post(new TokenRefreshEvent());
             getActivity().finish();
         });
     }

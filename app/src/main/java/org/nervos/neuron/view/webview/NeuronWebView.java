@@ -18,7 +18,6 @@ import android.webkit.WebViewClient;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.BuildConfig;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;

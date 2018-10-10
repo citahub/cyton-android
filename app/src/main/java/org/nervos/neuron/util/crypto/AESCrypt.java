@@ -123,17 +123,6 @@ public final class AESCrypt {
         return cipher.doFinal(decodedCipherText);
     }
 
-    public static boolean checkPassword(String password, WalletItem walletItem) {
-        try {
-            String privateKey = decrypt(password, walletItem.cryptPrivateKey);
-            Credentials credentials = Credentials.create(privateKey);
-            return walletItem.address.equalsIgnoreCase(credentials.getAddress());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     private static byte[] getIV() {
         return readIvFromFileOrGenerateNew();
     }

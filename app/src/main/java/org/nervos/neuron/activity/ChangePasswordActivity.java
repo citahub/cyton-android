@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.WalletItem;
@@ -63,7 +64,7 @@ public class ChangePasswordActivity extends NBaseActivity {
             } else if (!TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                     newRePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (!AESCrypt.checkPassword(oldPasswordEdit.getText().toString().trim(), walletItem)) {
+            } else if (!WalletService.checkPassword(mActivity, oldPasswordEdit.getText().toString().trim(), walletItem)) {
                 Toast.makeText(mActivity, R.string.old_password_error, Toast.LENGTH_SHORT).show();
             } else if (TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                     oldPasswordEdit.getText().toString().trim())) {

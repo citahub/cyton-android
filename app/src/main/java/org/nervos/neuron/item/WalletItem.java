@@ -32,6 +32,8 @@ public class WalletItem implements Parcelable{
      */
     public String cryptPrivateKey;
 
+    public String keystore;
+
     /**
      * all tokens in wallet
      */
@@ -41,14 +43,10 @@ public class WalletItem implements Parcelable{
 
     public boolean currentSelected = false;
 
-    public static WalletItem fromWalletEntity(String password, WalletEntity walletEntity) {
+    public static WalletItem fromWalletEntity(WalletEntity walletEntity) {
         WalletItem walletItem = new WalletItem();
         walletItem.address = walletEntity.getAddress();
-        try {
-            walletItem.cryptPrivateKey = AESCrypt.encrypt(password, walletEntity.getPrivateKey());
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
+        walletItem.keystore = walletEntity.getKeystore();
         return walletItem;
     }
 

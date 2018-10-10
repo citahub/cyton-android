@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.view.SelectWalletPopupwWindow;
 import org.nervos.neuron.item.WalletItem;
@@ -121,7 +122,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.password_button:
-                if (!AESCrypt.checkPassword(walletPwdEt.getText().toString().trim(), walletItem)) {
+                if (!WalletService.checkPassword(mActivity, walletPwdEt.getText().toString().trim(), walletItem)) {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();

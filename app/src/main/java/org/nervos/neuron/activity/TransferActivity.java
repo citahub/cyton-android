@@ -18,12 +18,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
@@ -40,11 +37,9 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -416,7 +411,7 @@ public class TransferActivity extends NBaseActivity {
             this.progressBar = progressBar;
             if (TextUtils.isEmpty(password)) {
                 Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-            } else if (!AESCrypt.checkPassword(password, walletItem)) {
+            } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
                 Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             } else {
                 transferDialog.setButtonClickAble(false);
