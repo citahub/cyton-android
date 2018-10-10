@@ -228,7 +228,7 @@ public class PayTokenActivity extends BaseActivity {
         transferDialog = new TransferDialog(this, (password, progressBar) -> {
             if (TextUtils.isEmpty(password)) {
                 Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-            } else if (!AESCrypt.checkPassword(password, walletItem)) {
+            } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
                 Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             } else {
                 transferDialog.setButtonClickAble(false);

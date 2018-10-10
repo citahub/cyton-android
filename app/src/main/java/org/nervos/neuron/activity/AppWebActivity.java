@@ -28,6 +28,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TitleItem;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.view.WebMenuPopupWindow;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
@@ -432,7 +433,7 @@ public class AppWebActivity extends BaseActivity {
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!AESCrypt.checkPassword(password, walletItem)) {
+                } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
                     Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
                     return;
                 }

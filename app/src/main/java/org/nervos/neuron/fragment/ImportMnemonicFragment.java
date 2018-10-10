@@ -20,13 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
@@ -155,8 +153,9 @@ public class ImportMnemonicFragment extends BaseFragment {
                     return;
                 }
             }
+            String password = passwordEdit.getText().toString().trim();
             walletEntity = WalletEntity.fromMnemonic(
-                    mnemonicEdit.getText().toString().trim(), path);
+                    mnemonicEdit.getText().toString().trim(), path, password);
         } catch (Exception e) {
             ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {
@@ -173,8 +172,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             });
             return;
         }
-        WalletItem walletItem = WalletItem.fromWalletEntity(
-                passwordEdit.getText().toString().trim(), walletEntity);
+        WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
         walletItem.name = walletNameEdit.getText().toString().trim();
         walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
         DBWalletUtil.saveWallet(getContext(), walletItem);
@@ -186,6 +184,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
             getActivity().startActivity(intent);
+            EventBus.getDefault().post(new TokenRefreshEvent());
             getActivity().finish();
         });
     }

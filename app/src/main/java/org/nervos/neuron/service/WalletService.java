@@ -3,6 +3,7 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
@@ -12,8 +13,12 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.crypto.Credentials;
+import org.web3j.utils.Numeric;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -134,6 +139,27 @@ public class WalletService {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static boolean checkPassword(Context context, String password, WalletItem walletItem) {
+        try {
+            Credentials credentials;
+            if (!TextUtils.isEmpty(walletItem.keystore)) {
+                WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
+                credentials = walletEntity.getCredentials();
+            } else {
+                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                WalletEntity walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privateKey), password);
+                credentials = walletEntity.getCredentials();
+                walletItem.keystore = walletEntity.getKeystore();
+                walletItem.cryptPrivateKey = "";
+                DBWalletUtil.saveWallet(context, walletItem);
+            }
+            return walletItem.address.equalsIgnoreCase(credentials.getAddress());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

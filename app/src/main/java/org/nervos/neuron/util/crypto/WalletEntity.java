@@ -15,6 +15,7 @@ import org.web3j.crypto.*;
 import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.utils.Numeric;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -23,8 +24,6 @@ import java.io.IOException;
  * 钱包
  */
 public class WalletEntity {
-
-    private static final String PASSWORD = "";
 
     private static final SecureRandom secureRandom = SecureRandomUtils.secureRandom();
 
@@ -53,6 +52,7 @@ public class WalletEntity {
      */
     private String path;
 
+    private String keystore;
 
     private WalletEntity() {
     }
@@ -74,22 +74,23 @@ public class WalletEntity {
      * @return
      * @throws CipherException
      */
-    public static WalletEntity createWithMnemonic(String path) {
+    public static WalletEntity createWithMnemonic(String path, String password) {
 
         WalletEntity wa = new WalletEntity();
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
         String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSWORD);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         try {
-            wa.walletFile = Wallet.create(PASSWORD, ecKeyPair, 1024, 1);
+            wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
         } catch (CipherException e) {
             e.printStackTrace();
         }
+        wa.keystore = new Gson().toJson(wa.walletFile);
         wa.credentials = Credentials.create(ecKeyPair);
         wa.mnemonic = mnemonic;
-        wa.passphrase = PASSWORD;
+        wa.passphrase = password;
         wa.path = path;
         return wa;
     }
@@ -103,14 +104,15 @@ public class WalletEntity {
      * @return wallet
      * @throws CipherException
      */
-    public static WalletEntity fromMnemonic(String mnemonic, String path) throws Exception {
+    public static WalletEntity fromMnemonic(String mnemonic, String path, String password) throws Exception {
         WalletEntity wa = new WalletEntity();
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSWORD);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
-        wa.walletFile = Wallet.create(PASSWORD, ecKeyPair, 1024, 1);
+        wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
+        wa.keystore = new Gson().toJson(wa.walletFile);
         wa.credentials = Credentials.create(ecKeyPair);
         wa.mnemonic = mnemonic;
-        wa.passphrase = PASSWORD;
+        wa.passphrase = password;
         wa.path = path;
         return wa;
     }
@@ -123,10 +125,11 @@ public class WalletEntity {
      * @return wallet
      * @throws CipherException
      */
-    public static WalletEntity fromPrivateKey(BigInteger privateKey) throws CipherException {
+    public static WalletEntity fromPrivateKey(BigInteger privateKey, String password) throws CipherException {
         WalletEntity wa = new WalletEntity();
         ECKeyPair ecKeyPair = ECKeyPair.create(privateKey);
-        wa.walletFile = Wallet.create(PASSWORD, ecKeyPair, 1024, 1);
+        wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
+        wa.keystore = new Gson().toJson(wa.walletFile);
         wa.credentials = Credentials.create(ecKeyPair);
         return wa;
     }
@@ -141,6 +144,7 @@ public class WalletEntity {
      */
     public static WalletEntity fromKeyStore(String password, String keystore) throws Exception {
         WalletEntity wa = new WalletEntity();
+        wa.keystore = keystore;
         wa.walletFile = createWalletFile(keystore);
         wa.credentials = Credentials.create(Wallet.decrypt(password, wa.walletFile));
         return wa;
@@ -159,8 +163,7 @@ public class WalletEntity {
         HdKeyNode node = HdKeyNode.fromSeed(seed);
         node = node.createChildNode(p);
         byte[] privateKeyByte = node.getPrivateKey().getPrivateKeyBytes();
-        ECKeyPair ecKeyPair = ECKeyPair.create(privateKeyByte);
-        return ecKeyPair;
+        return ECKeyPair.create(privateKeyByte);
     }
 
     /**
@@ -204,8 +207,7 @@ public class WalletEntity {
     public static WalletFile createWalletFile(byte[] content) {
         try {
             ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
-            WalletFile walletFile = objectMapper.readValue(content, WalletFile.class);
-            return walletFile;
+            return objectMapper.readValue(content, WalletFile.class);
         } catch (IOException ex) {
 
         }
@@ -218,10 +220,14 @@ public class WalletEntity {
      * @param content
      * @return wallet file
      */
-    public static WalletFile createWalletFile(String content) throws IOException {
-        ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
-        WalletFile walletFile = objectMapper.readValue(content, WalletFile.class);
-        return walletFile;
+    public static WalletFile createWalletFile(String content) {
+        try {
+            ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+            return objectMapper.readValue(content, WalletFile.class);
+        } catch (IOException ex) {
+
+        }
+        return null;
     }
 
     /**
@@ -283,6 +289,10 @@ public class WalletEntity {
 
     public WalletFile getWalletFile() {
         return walletFile;
+    }
+
+    public String getKeystore() {
+        return keystore;
     }
 
     public String getPath() {
