@@ -3,8 +3,8 @@ package org.nervos.neuron.service;
 public class HttpUrls {
 
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
-    public static final String NERVOS_SERVER_URL = "https://microscope.cryptape.com:8888";
-    public static final String NERVOS_TRANSACTION_URL = NERVOS_SERVER_URL + "/api/transactions?account=";
+    public static final String APPCHAIN_SERVER_URL = "https://microscope.cryptape.com:8888";
+    public static final String APPCHAIN_TRANSACTION_URL = APPCHAIN_SERVER_URL + "/api/transactions?account=";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";
     public static final String ETH_ERC20_TRANSACTION_URL = "https://api.etherscan.io/api?apikey="
@@ -21,7 +21,7 @@ public class HttpUrls {
 
 
     // node host
-    public static final String NERVOS_NODE_IP = "http://121.196.200.225:1337";
+    public static final String APPCHAIN_NODE_IP = "http://121.196.200.225:1337";
     public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
 //    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
@@ -31,7 +31,7 @@ public class HttpUrls {
 
     //Token Currency ID Price
     public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";
-    public static final String Token_CURRENCY = "https://api.coinmarketcap.com/v2/ticker/@ID/?convert=@Currency";
+    public static final String TOKEN_CURRENCY = "https://api.coinmarketcap.com/v2/ticker/@ID/?convert=@Currency";
 
     public static final String COLLECTION_LIST_URL = "https://api.opensea.io/api/v1/assets/?owner=";
 

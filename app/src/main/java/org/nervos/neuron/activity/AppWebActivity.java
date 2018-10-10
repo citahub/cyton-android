@@ -442,7 +442,7 @@ public class AppWebActivity extends BaseActivity {
                 if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
                     actionSignEth(password, message);
                 } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)) {
-                    actionSignNervos(password, message);
+                    actionSignAppChain(password, message);
                 }
             }
         });
@@ -478,8 +478,8 @@ public class AppWebActivity extends BaseActivity {
         });
     }
 
-    private void actionSignNervos(String password, Message<Transaction> message) {
-        SignService.signNervosMessage(mActivity, message.value.data, password)
+    private void actionSignAppChain(String password, Message<Transaction> message) {
+        SignService.signAppChainMessage(mActivity, message.value.data, password)
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {

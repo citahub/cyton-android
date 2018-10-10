@@ -29,7 +29,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.service.WalletService;
@@ -125,7 +125,7 @@ public class TransferActivity extends NBaseActivity {
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
         titleBar.setTitle(tokenItem.symbol + getString(R.string.title_transfer));
         EthRpcService.init(mActivity);
-        NervosRpcService.init(mActivity, HttpUrls.NERVOS_NODE_IP);
+        AppChainRpcService.init(mActivity, HttpUrls.APPCHAIN_NODE_IP);
         walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
@@ -293,7 +293,7 @@ public class TransferActivity extends NBaseActivity {
                     if (isETH()) {
                         advancedSetupETHFeeValue();
                     } else {
-                        advancedSetupNervosFeeValue();
+                        advancedSetupAppChainFeeValue();
                     }
                 } else {
                     feeSeekBarLayout.setVisibility(View.VISIBLE);
@@ -348,11 +348,11 @@ public class TransferActivity extends NBaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     mQuota = new BigInteger(s.toString());
-                    advancedSetupNervosFeeValue();
+                    advancedSetupAppChainFeeValue();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     mQuota = BigInteger.ZERO;
-                    advancedSetupNervosFeeValue();
+                    advancedSetupAppChainFeeValue();
                     Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -387,7 +387,7 @@ public class TransferActivity extends NBaseActivity {
 
 
     @SuppressLint("SetTextI18n")
-    private void advancedSetupNervosFeeValue() {
+    private void advancedSetupAppChainFeeValue() {
         gasEditLayout.setVisibility(View.GONE);
         quotaEditLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
@@ -426,9 +426,9 @@ public class TransferActivity extends NBaseActivity {
                 } else {
                     SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, tokenItem.chainName, "2");
                     if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                        transferNervosToken(password, Double.valueOf(value));
+                        transferAppChainToken(password, Double.valueOf(value));
                     } else {
-                        transferNervosErc20(password, Double.valueOf(value));
+                        transferAppChainErc20(password, Double.valueOf(value));
                     }
                 }
             }
@@ -442,19 +442,19 @@ public class TransferActivity extends NBaseActivity {
      *
      * @param value transfer value
      */
-    private void transferNervosToken(String password, double value) {
+    private void transferAppChainToken(String password, double value) {
         transactionHexData = payHexDataEdit.getText().toString().trim();
-        NervosRpcService.transferNervos(receiveAddressEdit.getText().toString().trim(), value,
+        AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
                 transactionHexData, tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        transferNervosError(e);
+                        transferAppChainError(e);
                     }
 
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
-                        transferNervosNormal(appSendTransaction);
+                        transferAppChainNormal(appSendTransaction);
                     }
                 });
     }
@@ -465,20 +465,20 @@ public class TransferActivity extends NBaseActivity {
      *
      * @param value transfer value
      */
-    private void transferNervosErc20(String password, double value) {
-        NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
+    private void transferAppChainErc20(String password, double value) {
+        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         try {
-            NervosRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+            AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                     receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
-                            transferNervosError(e);
+                            transferAppChainError(e);
                         }
 
                         @Override
                         public void onNext(AppSendTransaction appSendTransaction) {
-                            transferNervosNormal(appSendTransaction);
+                            transferAppChainNormal(appSendTransaction);
                         }
                     });
         } catch (Exception e) {
@@ -486,7 +486,7 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
-    private void transferNervosNormal(AppSendTransaction appSendTransaction) {
+    private void transferAppChainNormal(AppSendTransaction appSendTransaction) {
         progressBar.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
@@ -501,7 +501,7 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
-    private void transferNervosError(Throwable e) {
+    private void transferAppChainError(Throwable e) {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(TransferActivity.this,
                 e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -521,7 +521,7 @@ public class TransferActivity extends NBaseActivity {
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        transferNervosError(e);
+                        transferAppChainError(e);
                     }
 
                     @Override

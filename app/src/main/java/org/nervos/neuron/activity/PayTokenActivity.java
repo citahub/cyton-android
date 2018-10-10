@@ -12,10 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
@@ -24,15 +21,13 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SensorDataTrackUtils;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -238,7 +233,7 @@ public class PayTokenActivity extends BaseActivity {
                     transferEth(password, progressBar);
                 } else {
                     SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "", walletItem.address, tokenItem.chainName, "1");
-                    transferNervos(password, progressBar);
+                    transferAppChain(password, progressBar);
                 }
             }
         });
@@ -291,9 +286,9 @@ public class PayTokenActivity extends BaseActivity {
             });
     }
 
-    private void transferNervos(String password, ProgressBar progressBar) {
-        NervosRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        NervosRpcService.transferNervos(transactionInfo.to, transactionInfo.getDoubleValue(),
+    private void transferAppChain(String password, ProgressBar progressBar) {
+        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
+        AppChainRpcService.transferAppChain(transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int) transactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override

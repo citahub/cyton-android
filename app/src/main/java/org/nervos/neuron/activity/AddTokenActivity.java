@@ -17,7 +17,7 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
@@ -62,7 +62,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        NervosRpcService.init(this, HttpUrls.NERVOS_NODE_IP);
+        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_IP);
     }
 
     private void initView() {
@@ -155,7 +155,7 @@ public class AddTokenActivity extends BaseActivity {
                     if (chainItem.chainId == ConstUtil.ETHEREUM_ID) {
                         tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
-                        tokenItem = NervosRpcService.getErc20TokenInfo(s.toString());
+                        tokenItem = AppChainRpcService.getErc20TokenInfo(s.toString());
                     }
                     if (chainItem != null && tokenItem != null) {
                         tokenItem.chainId = chainItem.chainId;

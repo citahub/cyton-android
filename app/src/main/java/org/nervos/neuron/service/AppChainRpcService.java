@@ -46,7 +46,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class NervosRpcService {
+public class AppChainRpcService {
 
     private static Nervosj service;
 
@@ -149,12 +149,12 @@ public class NervosRpcService {
 
     }
 
-    public static Observable<AppSendTransaction> transferNervos(String toAddress, double value,
+    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
                                                 String data, int chainId, String password) {
-        return transferNervos(toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
+        return transferAppChain(toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
     }
 
-    public static Observable<AppSendTransaction> transferNervos(String toAddress, double value,
+    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override

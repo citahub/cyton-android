@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosHttpService;
+import org.nervos.neuron.service.AppChainHttpService;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class TokenDescribeModel {
     public void get(String address) {
         String url = HttpUrls.TOKEN_DESC.replace("@address", address);
         final Request ethRequest = new Request.Builder().url(url).build();
-        Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
+        Call ethCall = AppChainHttpService.getHttpClient().newCall(ethRequest);
         ethCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
