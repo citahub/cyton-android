@@ -1,6 +1,8 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -162,6 +164,18 @@ public class AppWebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 titleItem = null;
                 initManifest(url);
+                if (url.startsWith("weixin://") || url.startsWith("alipay")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        PackageManager packageManager = getPackageManager();
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent);
+                            return true;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
                 return false;
             }
         });
@@ -220,6 +234,7 @@ public class AppWebActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         LogUtil.e("manifest error: " + e.getMessage());
                     }
+
                     @Override
                     public void onNext(ChainItem chainItem) {
                         if (TextUtils.isEmpty(chainItem.errorMessage)) {
@@ -301,7 +316,7 @@ public class AppWebActivity extends BaseActivity {
             titleItem = new Gson().fromJson(data, TitleItem.class);
 
             if (titleItem.right != null) {
-                rightMenuView.setVisibility(titleItem.right.isShow? View.VISIBLE : View.INVISIBLE);
+                rightMenuView.setVisibility(titleItem.right.isShow ? View.VISIBLE : View.INVISIBLE);
                 if (TitleItem.ACTION_MENU.equals(titleItem.right.type)) {
                     rightMenuView.setImageResource(R.drawable.title_more);
                 } else if (TitleItem.ACTION_SHARE.equals(titleItem.right.type)) {
