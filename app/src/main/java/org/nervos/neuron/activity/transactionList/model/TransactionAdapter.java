@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.TransactionListActivity.model;
+package org.nervos.neuron.activity.transactionList.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

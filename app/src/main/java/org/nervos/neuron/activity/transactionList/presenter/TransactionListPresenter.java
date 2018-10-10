@@ -1,17 +1,15 @@
-package org.nervos.neuron.activity.TransactionListActivity.presenter;
+package org.nervos.neuron.activity.transactionList.presenter;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.TransactionListActivity.model.TokenDescribeModel;
+import org.nervos.neuron.activity.transactionList.model.TokenDescribeModel;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;

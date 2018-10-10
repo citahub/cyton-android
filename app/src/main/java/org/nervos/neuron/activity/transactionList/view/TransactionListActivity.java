@@ -1,46 +1,33 @@
-package org.nervos.neuron.activity.TransactionListActivity.view;
+package org.nervos.neuron.activity.transactionList.view;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
-import org.nervos.neuron.activity.TransactionListActivity.model.TokenDescribeModel;
-import org.nervos.neuron.activity.TransactionListActivity.model.TransactionAdapter;
-import org.nervos.neuron.activity.TransactionListActivity.presenter.TransactionListPresenter;
+import org.nervos.neuron.activity.transactionList.model.TransactionAdapter;
+import org.nervos.neuron.activity.transactionList.presenter.TransactionListPresenter;
 import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosHttpService;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import rx.Observable;
-import rx.Subscriber;
 
 import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
 
@@ -159,7 +146,7 @@ public class TransactionListActivity extends NBaseActivity {
 
         @Override
         public void getTokenDescribe(EthErc20TokenInfoItem item) {
-            tokenDesText.post(() -> tokenDesText.setText(item.overview.zh));
+            tokenDesText.post(() -> tokenDesText.setText(item.overView.zh));
         }
 
         @Override
