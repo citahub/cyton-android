@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
+        app:isShowBottomLine="false"
         app:isShowLeft="true"
-        app:left_img="@drawable/back"
         app:isShowRight="true"
+        app:left_img="@drawable/back"
         app:right_img="@drawable/ic_share"
         app:title="@string/title_receive_qrcode"
         app:title_bg="@color/transparent"
-        app:title_color="@color/white"
-        app:isShowBottomLine="false"/>
+        app:title_color="@color/white" />
 
     <LinearLayout
         android:id="@+id/ll_qrcode"
@@ -36,9 +36,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/wallet_photo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="51dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="17dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -47,30 +47,16 @@
                 android:id="@+id/qrcode_wallet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="wallert"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="18dp"
+                android:text="wallet"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/wallet_photo" />
 
-            <TextView
-                android:id="@+id/qrcode_wallet_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"
-                android:ellipsize="middle"
-                android:maxEms="12"
-                android:singleLine="true"
-                android:text="0x12345454645342422334343534343"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/qrcode_wallet_name" />
         </android.support.constraint.ConstraintLayout>
 
         <RelativeLayout
@@ -78,32 +64,44 @@
             android:layout_height="wrap_content"
             android:background="@drawable/qrcode_receipt_bottom">
 
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="18dp"
-                android:text="@string/qrcode_address"
-                android:textColor="@color/font_title"
-                android:textSize="20sp" />
-
             <ImageView
                 android:id="@+id/receive_qrcode_image"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:layout_below="@id/tv_address"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="@dimen/default_margin" />
+                android:layout_marginTop="34dp"
+                android:layout_marginBottom="15dp" />
+
+            <TextView
+                android:id="@+id/qrcode_wallet_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/receive_qrcode_image"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="middle"
+                android:maxEms="12"
+                android:singleLine="true"
+                android:text="0x12345454645342422334343534343"
+                android:textColor="@color/font_title_second"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <View
+                android:id="@+id/line"
+                style="@style/separateLineLong"
+                android:layout_below="@id/qrcode_wallet_address"
+                android:layout_marginTop="21dp" />
 
             <TextView
                 android:id="@+id/button_copy_receive_qrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/receive_qrcode_image"
+                android:layout_below="@id/line"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="13dp"
                 android:text="@string/copy_address"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
