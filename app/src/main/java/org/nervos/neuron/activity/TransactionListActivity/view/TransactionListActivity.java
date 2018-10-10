@@ -112,7 +112,7 @@ public class TransactionListActivity extends NBaseActivity {
 
     private void initAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        transactionAdapter = new TransactionAdapter(transactionItemList, walletItem.address);
+        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address, tokenItem.symbol);
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {

@@ -138,6 +138,8 @@ public class TransactionListPresenter {
                     return;
                 }
                 Collections.sort(list, (item1, item2) -> item2.getDate().compareTo(item1.getDate()));
+                for (TransactionItem item : list)
+                    item.status = 1;
                 listener.refreshList(list);
             }
         });

@@ -1,89 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="80dp"
+    android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/transaction_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ellipsize="middle"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:text="111111"
+        android:textColor="@color/font_title"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/wallet_photo"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerVertical="true" />
+    <TextView
+        android:id="@+id/transaction_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="222222"
+        android:textColor="@color/font_title_third"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_id_text" />
 
-        <ImageView
-            android:id="@+id/iv_in_out"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="11dp"
-            android:layout_toRightOf="@id/wallet_photo" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="19dp"
-            android:layout_toRightOf="@id/iv_in_out"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/transaction_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="333333"
+        android:textColor="@color/font_title"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/transaction_id_text" />
 
-            <TextView
-                android:id="@+id/transaction_id_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="middle"
-                android:maxEms="8"
-                android:singleLine="true"
-                android:textColor="@color/font_title"
-                android:textSize="16sp" />
+    <TextView
+        android:id="@+id/transaction_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="444444"
+        android:textColor="@color/font_title_third"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/transaction_time_text" />
 
-            <TextView
-                android:id="@+id/transaction_time_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="2018/2/3 11:12"
-                android:textColor="@color/font_title_third"
-                android:textSize="13sp" />
-        </LinearLayout>
+    <View style="@style/separateLineLong" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/default_margin"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/transaction_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="+21.15eth"
-                android:textColor="@color/font_title"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/transaction_chain_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
-                android:text="Ethereum Mainnet"
-                android:textColor="@color/font_title_third"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <View
-            style="@style/separateLineLong"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/margin_30dp" />
-
-    </RelativeLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
 
 
