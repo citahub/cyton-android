@@ -30,6 +30,7 @@ import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SensorDataTrackUtils;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -229,23 +230,12 @@ public class PayTokenActivity extends BaseActivity {
             } else {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
-                try {
-                    JSONObject object = new JSONObject();
-                    object.put("target_currency", tokenItem.symbol);
-                    object.put("target_currency_number", "");
-                    object.put("receive_address", "");
-                    object.put("outcome_address", walletItem.address);
-                    object.put("transfer_type", "1");
-                    if (transactionInfo.isEthereum()) {
-                        object.put("target_chain", "ETH");
-                        transferEth(password, progressBar);
-                    } else {
-                        object.put("target_chain", tokenItem.chainName);
-                        transferNervos(password, progressBar);
-                    }
-                    SensorsDataAPI.sharedInstance().track("transfer_accounts", object);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (transactionInfo.isEthereum()) {
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "", walletItem.address, ConstUtil.ETH, "1");
+                    transferEth(password, progressBar);
+                } else {
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "", walletItem.address, tokenItem.chainName, "1");
+                    transferNervos(password, progressBar);
                 }
             }
         });

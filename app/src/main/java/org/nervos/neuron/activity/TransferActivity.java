@@ -43,6 +43,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.SensorDataTrackUtils;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -420,31 +421,20 @@ public class TransferActivity extends NBaseActivity {
             } else {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
-                try {
-                    JSONObject object = new JSONObject();
-                    object.put("target_currency", tokenItem.symbol);
-                    object.put("target_currency_number", value);
-                    object.put("receive_address", receiveAddressEdit.getText().toString().trim());
-                    object.put("outcome_address", walletItem.address);
-                    object.put("transfer_type", "2");
-                    if (isETH()) {
-                        object.put("target_chain", "ETH");
-                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
-                            transferEth(password, value);
-                        } else {
-                            transferEthErc20(password, value);
-                        }
+                if (isETH()) {
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, ConstUtil.ETH, "2");
+                    if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                        transferEth(password, value);
                     } else {
-                        object.put("target_chain", tokenItem.chainName);
-                        if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            transferNervosToken(password, Double.valueOf(value));
-                        } else {
-                            transferNervosErc20(password, Double.valueOf(value));
-                        }
+                        transferEthErc20(password, value);
                     }
-                    SensorsDataAPI.sharedInstance().track("transfer_accounts", object);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else {
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, tokenItem.chainName, "2");
+                    if (TextUtils.isEmpty(tokenItem.contractAddress)) {
+                        transferNervosToken(password, Double.valueOf(value));
+                    } else {
+                        transferNervosErc20(password, Double.valueOf(value));
+                    }
                 }
             }
         });
