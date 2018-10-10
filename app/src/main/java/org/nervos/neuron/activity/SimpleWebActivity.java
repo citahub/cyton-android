@@ -2,6 +2,8 @@ package org.nervos.neuron.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -63,6 +65,18 @@ public class SimpleWebActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("weixin://") || url.startsWith("alipay")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        PackageManager packageManager = getPackageManager();
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent);
+                            return true;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
                 return false;
             }
         });
