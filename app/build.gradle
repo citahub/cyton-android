@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: "$rootDir/config.gradle"
+apply plugin: 'com.sensorsdata.analytics.android'
 
 android {
     compileSdkVersion 27
@@ -99,6 +100,7 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.0.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

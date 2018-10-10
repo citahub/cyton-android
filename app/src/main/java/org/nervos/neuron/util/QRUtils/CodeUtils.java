@@ -40,9 +40,10 @@ public class CodeUtils {
     public static final int RESULT_FAILED = 2;
     public static final int STRING_UNVALID = 0;
     public static final int STRING_ADDRESS = 1;
-    public static final int STRING_KEYSTORE = 2;
-    public static final int STRING_WEB = 3;
-    public static final int STRING_PRIVATE_KEY = 4;
+    public static final int STRING_KEYSTORE = 3;
+    public static final int STRING_MNEMONIC = 4;
+    public static final int STRING_WEB = 5;
+    public static final int STRING_PRIVATE_KEY = 2;
 
     public static final String LAYOUT_ID = "layout_id";
 

@@ -25,7 +25,6 @@ import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.PermissionUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;

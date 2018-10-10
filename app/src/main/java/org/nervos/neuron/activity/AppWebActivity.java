@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TitleItem;
@@ -139,6 +140,7 @@ public class AppWebActivity extends BaseActivity {
     }
 
     private void initWebView() {
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

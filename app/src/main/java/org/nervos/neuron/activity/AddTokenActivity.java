@@ -191,6 +191,7 @@ public class AddTokenActivity extends BaseActivity {
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    QrCodeActivity.track("1", false);
                     Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }

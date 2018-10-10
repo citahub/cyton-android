@@ -20,7 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
@@ -142,6 +147,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             } else {
                 path = pathEditText.getText().toString().trim();
                 if (TextUtils.isEmpty(path)) {
+                    ImportWalletActivity.track("2", false, "");
                     passwordEdit.post(() -> {
                         dismissProgressBar();
                         Toast.makeText(getContext(), R.string.import_mnemonic_path_err, Toast.LENGTH_SHORT).show();
@@ -152,7 +158,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             walletEntity = WalletEntity.fromMnemonic(
                     mnemonicEdit.getText().toString().trim(), path);
         } catch (Exception e) {
-            e.printStackTrace();
+            ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -160,6 +166,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             return;
         }
         if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getCredentials().getAddress())) {
+            ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
@@ -172,6 +179,7 @@ public class ImportMnemonicFragment extends BaseFragment {
         walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
         DBWalletUtil.saveWallet(getContext(), walletItem);
         SharePrefUtil.putCurrentWalletName(walletItem.name);
+        ImportWalletActivity.track("2", true, walletEntity.getAddress());
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
