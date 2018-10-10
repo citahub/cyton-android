@@ -99,7 +99,6 @@ public class EthRpcService {
                 BigInteger gasLimit = ConstUtil.GAS_ERC20_LIMIT;
                 try {
                     EthEstimateGas ethEstimateGas = service.ethEstimateGas(transaction).send();
-                    LogUtil.d("ethEstimateGas: " + new Gson().toJson(ethEstimateGas));
                     gasLimit = ethEstimateGas.getAmountUsed();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -114,6 +113,7 @@ public class EthRpcService {
                                        BigInteger gasPrice, BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
         BigInteger finalGasLimit = gasLimit;
+        String sdata = data == null? "" : data;
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
@@ -128,7 +128,7 @@ public class EthRpcService {
                     String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
                     Credentials credentials = Credentials.create(privateKey);
                     RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
-                            gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value), data);
+                            gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value), sdata);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (GeneralSecurityException e) {

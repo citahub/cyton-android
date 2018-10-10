@@ -7,6 +7,7 @@ function executeCallback (id, error, value) {
   Neuron.executeCallback(id, error, value)
 }
 function onSignSuccessful(id, value) {
+  console.log("onSignSuccessful", value)
   Neuron.executeCallback(id, null, value)
 }
 function onSignError(id, error) {
@@ -75,12 +76,6 @@ window.web3.eth.getCoinbase = function(cb) {
     return cb(null, addressHex)
 }
 window.web3.eth.defaultAccount = addressHex
-
-window.nervos.appchain.defaultAccount = addressHex
-
-window.nervos.appchain.getDefaultAccount = function() {
-    return addressHex
-}
 
 window.isNervosReady = true
 window.isMetaMask = true
