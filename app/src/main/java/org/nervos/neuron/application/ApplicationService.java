@@ -39,7 +39,7 @@ public class ApplicationService extends IntentService {
         AESCrypt.init(this);
 
         if (org.nervos.neuron.BuildConfig.IS_DEBUG) {
-            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL_DEBUG, SensorsDataAPI.DebugMode.DEBUG_AND_TRACK);
+            SensorsDataAPI.sharedInstance(this, SA_SERVER_URL_DEBUG, SensorsDataAPI.DebugMode.DEBUG_ONLY);
             SensorsDataAPI.sharedInstance().trackAppCrash();
         } else {
             SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
