@@ -11,6 +11,7 @@ import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;

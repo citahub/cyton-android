@@ -18,6 +18,7 @@ import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.response.AppChainTransactionResponse;
 import org.nervos.neuron.service.AppChainRpcService;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.intentService.TransactionListService;
 import org.nervos.neuron.util.ConstUtil;

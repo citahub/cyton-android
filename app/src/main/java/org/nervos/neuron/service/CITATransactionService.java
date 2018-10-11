@@ -44,12 +44,12 @@ public class CITATransactionService {
                     public void onNext(CITATransactionDBItem item) {
                         if (!TextUtils.isEmpty(item.chain)) {
                             try {
-                                NervosRpcService.setHttpProvider(item.chain);
-                                TransactionReceipt receipt = NervosRpcService.getTransactionReceipt(item.hash);
+                                AppChainRpcService.setHttpProvider(item.chain);
+                                TransactionReceipt receipt = AppChainRpcService.getTransactionReceipt(item.hash);
                                 if (receipt != null) {
                                     DBCITATransactionsUtil.deletePending(context, item);
                                 } else {
-                                    if (Numeric.decodeQuantity(item.validUntilBlock).compareTo(NervosRpcService.getBlockNumber()) < 0) {
+                                    if (Numeric.decodeQuantity(item.validUntilBlock).compareTo(AppChainRpcService.getBlockNumber()) < 0) {
                                         DBCITATransactionsUtil.failed(context, item);
                                     }
                                 }
