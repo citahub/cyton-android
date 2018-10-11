@@ -14,7 +14,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosHttpService;
+import org.nervos.neuron.service.AppChainHttpService;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
 
@@ -104,7 +104,7 @@ public class TransactionListPresenter {
         Observable<List<TransactionItem>> observable;
         if (!isNativeToken(tokenItem)) {
             if (isEthereum(tokenItem)) {
-                observable = NervosHttpService.getETHERC20TransactionList(activity, tokenItem);
+                observable = AppChainHttpService.getETHERC20TransactionList(activity, tokenItem);
             } else {
                 listener.hideProgressBar();
                 listener.setRefreshing(false);
@@ -112,8 +112,8 @@ public class TransactionListPresenter {
             }
         } else {
             observable = isEthereum(tokenItem) ?
-                    NervosHttpService.getETHTransactionList(activity)
-                    : NervosHttpService.getNervosTransactionList(activity);
+                    AppChainHttpService.getETHTransactionList(activity)
+                    : AppChainHttpService.getAppChainTransactionList(activity);
         }
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override

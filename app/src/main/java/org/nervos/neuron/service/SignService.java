@@ -55,7 +55,7 @@ public class SignService {
     }
 
 
-    public static Observable<String> signNervosMessage(
+    public static Observable<String> signAppChainMessage(
             Context context, String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override

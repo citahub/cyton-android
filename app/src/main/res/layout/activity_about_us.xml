@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
         app:icon="@drawable/ic_about_us_nervos_network"
-        app:name="Nervos Network" />
+        app:name="AppChain Network" />
 
     <org.nervos.neuron.view.SettingButtonView
         android:id="@+id/sbv_infura"

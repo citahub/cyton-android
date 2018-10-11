@@ -10,7 +10,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.EthTransactionResponse;
-import org.nervos.neuron.item.response.NervosTransactionResponse;
+import org.nervos.neuron.item.response.AppChainTransactionResponse;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -30,7 +30,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class NervosHttpService {
+public class AppChainHttpService {
 
     private static OkHttpClient mOkHttpClient;
 
@@ -55,7 +55,7 @@ public class NervosHttpService {
                         try {
                             String ethUrl = HttpUrls.ETH_TRANSACTION_URL + walletItem.address;
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
-                            Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
+                            Call ethCall = AppChainHttpService.getHttpClient().newCall(ethRequest);
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
                                     .body().string(), EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
@@ -87,7 +87,7 @@ public class NervosHttpService {
                                     + "&address=" + walletItem.address
                                     + "&page=1&offset=30";
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
-                            Call ethCall = NervosHttpService.getHttpClient().newCall(ethRequest);
+                            Call ethCall = AppChainHttpService.getHttpClient().newCall(ethRequest);
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute()
                                     .body().string(), EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
@@ -107,24 +107,24 @@ public class NervosHttpService {
     }
 
 
-    public static Observable<List<TransactionItem>> getNervosTransactionList(Context context) {
+    public static Observable<List<TransactionItem>> getAppChainTransactionList(Context context) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                NervosRpcService.init(context, HttpUrls.NERVOS_NODE_IP);
-                return NervosRpcService.getMetaData().getAppMetaDataResult();
+                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_IP);
+                return AppChainRpcService.getMetaData().getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
             @Override
             public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String nervosUrl = HttpUrls.NERVOS_TRANSACTION_URL + walletItem.address;
+                    String nervosUrl = HttpUrls.APPCHAIN_TRANSACTION_URL + walletItem.address;
                     final Request nervosRequest = new Request.Builder().url(nervosUrl).build();
-                    Call nervosCall = NervosHttpService.getHttpClient().newCall(nervosRequest);
+                    Call nervosCall = AppChainHttpService.getHttpClient().newCall(nervosRequest);
 
-                    NervosTransactionResponse response = new Gson().fromJson(nervosCall.execute()
-                            .body().string(), NervosTransactionResponse.class);
+                    AppChainTransactionResponse response = new Gson().fromJson(nervosCall.execute()
+                            .body().string(), AppChainTransactionResponse.class);
                     for (TransactionItem item : response.result.transactions) {
                         item.chainName = result.chainName;
                         item.value = NumberUtil.getEthFromWeiForStringDecimal8Sub(Numeric.toBigInt(item.value));

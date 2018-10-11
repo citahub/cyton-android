@@ -3,8 +3,6 @@ package org.nervos.neuron.service;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.json.JSONException;
@@ -60,13 +58,13 @@ public class WalletService {
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                         if (chainItem != null) {
                             String httpProvider = chainItem.httpProvider;
-                            NervosRpcService.init(context, httpProvider);
+                            AppChainRpcService.init(context, httpProvider);
                             if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                                tokenItem.balance = NervosRpcService.getErc20Balance(tokenItem, walletItem.address);
+                                tokenItem.balance = AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
                                 tokenItem.chainName = chainItem.name;
                                 tokenItemList.add(tokenItem);
                             } else {
-                                tokenItem.balance = NervosRpcService.getBalance(walletItem.address);
+                                tokenItem.balance = AppChainRpcService.getBalance(walletItem.address);
                                 tokenItem.chainName = chainItem.name;
                                 tokenItemList.add(tokenItem);
                             }
@@ -123,12 +121,12 @@ public class WalletService {
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                         if (chainItem != null) {
                             String httpProvider = chainItem.httpProvider;
-                            NervosRpcService.init(context, httpProvider);
+                            AppChainRpcService.init(context, httpProvider);
                             if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                                return NervosRpcService.getErc20Balance(
+                                return AppChainRpcService.getErc20Balance(
                                         tokenItem, walletItem.address);
                             } else {
-                                return NervosRpcService.getBalance(walletItem.address);
+                                return AppChainRpcService.getBalance(walletItem.address);
                             }
                         }
                     }

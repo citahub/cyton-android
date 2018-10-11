@@ -6,7 +6,7 @@ import android.support.annotation.DrawableRes;
 
 public class TokenItem implements Parcelable {
 
-    private static int NERVOS_DECIMAL = 18;
+    private static int APPCHAIN_DECIMAL = 18;
 
     public String name;
     @DrawableRes
@@ -50,7 +50,7 @@ public class TokenItem implements Parcelable {
     public TokenItem(ChainItem chainItem) {
         this.name = chainItem.tokenName;
         this.symbol = chainItem.tokenSymbol;
-        this.decimals = NERVOS_DECIMAL;
+        this.decimals = APPCHAIN_DECIMAL;
         this.avatar = chainItem.tokenAvatar;
         this.chainId = chainItem.chainId;
         this.chainName = chainItem.name;

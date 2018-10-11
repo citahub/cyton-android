@@ -4,11 +4,11 @@ import org.nervos.neuron.item.TransactionItem;
 
 import java.util.List;
 
-public class NervosTransactionResponse {
+public class AppChainTransactionResponse {
 
-    public NervosTransactionResult result;
+    public AppChainTransactionResult result;
 
-    public static class NervosTransactionResult {
+    public static class AppChainTransactionResult {
         public List<TransactionItem> transactions;
     }
 

@@ -2,8 +2,6 @@ package org.nervos.neuron.util.web;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.os.Build;
 import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,8 +22,8 @@ import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NervosHttpService;
-import org.nervos.neuron.service.NervosRpcService;
+import org.nervos.neuron.service.AppChainHttpService;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -92,7 +90,7 @@ public class WebAppUtil {
                 }
 
                 Request request = new Request.Builder().url(manifestUrl).build();
-                Call call = NervosHttpService.getHttpClient().newCall(request);
+                Call call = AppChainHttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {
                     response = call.execute().body().string();
@@ -129,9 +127,9 @@ public class WebAppUtil {
         }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
             @Override
             public Observable<ChainItem> call(ChainItem chainItem) {
-                NervosRpcService.init(webView.getContext(), chainItem.httpProvider);
+                AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
                 AppMetaData.AppMetaDataResult ethMetaData =
-                        NervosRpcService.getMetaData().getAppMetaDataResult();
+                        AppChainRpcService.getMetaData().getAppMetaDataResult();
                 if (ethMetaData != null) {
                     chainItem.name = ethMetaData.chainName;
                     chainItem.tokenAvatar = ethMetaData.tokenAvatar;
