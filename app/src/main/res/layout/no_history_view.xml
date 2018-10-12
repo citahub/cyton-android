@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="90dp"
-        android:src="@drawable/no_history"
-        android:scaleType="centerInside"/>
+        android:contentDescription="TODO"
+        android:scaleType="centerInside"
+        android:src="@drawable/no_history" />
 
     <TextView
         android:id="@+id/no_history_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
         android:text="@string/empty_no_history_data"
         android:textColor="@color/font_title_second"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
 </LinearLayout>
