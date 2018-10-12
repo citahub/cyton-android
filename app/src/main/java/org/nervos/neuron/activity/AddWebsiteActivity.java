@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -211,6 +214,10 @@ public class AddWebsiteActivity extends BaseActivity {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == VIEW_TYPE_EMPTY) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_history_view, parent, false);
+                ImageView iv = view.findViewById(R.id.iv);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (ScreenUtils.getScreenWidth(mActivity) * 0.73), (int) (ScreenUtils.getScreenWidth(mActivity) * 0.73 / 1.4723));
+                params.topMargin = (int) (ScreenUtils.getScreenHeight(mActivity) * 0.24);
+                iv.setLayoutParams(params);
                 return new RecyclerView.ViewHolder(view) {
                 };
             }
