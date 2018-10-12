@@ -8,9 +8,11 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.util.SensorIDRandomUtils;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class ApplicationService extends IntentService {
 
     private String SA_SERVER_URL_DEBUG = "https://banana.cryptape.com:8106/sa?project=default";
     private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=production";
+    private String SensorID = "sensor_id";
 
     public ApplicationService() {
         super("ApplicationService");
@@ -40,6 +43,10 @@ public class ApplicationService extends IntentService {
             SensorsDataAPI.sharedInstance().trackAppCrash();
         } else {
             SensorsDataAPI.sharedInstance(this, SA_SERVER_URL, SensorsDataAPI.DebugMode.DEBUG_OFF);
+        }
+        if (!SharePrefUtil.getBoolean(SensorID, false)) {
+            SharePrefUtil.putBoolean(SensorID, true);
+            SensorsDataAPI.sharedInstance().identify(SensorIDRandomUtils.getID());
         }
         try {
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
