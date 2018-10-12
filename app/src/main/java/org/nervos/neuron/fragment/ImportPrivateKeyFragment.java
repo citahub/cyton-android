@@ -15,10 +15,13 @@ import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.ImportFingerTipActivity;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
@@ -138,9 +141,14 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
-            getActivity().startActivity(intent);
+            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                getActivity().startActivity(intent);
+            }
             EventBus.getDefault().post(new TokenRefreshEvent());
             getActivity().finish();
         });

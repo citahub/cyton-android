@@ -2,6 +2,7 @@ package org.nervos.neuron.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -20,6 +21,8 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
+import org.nervos.neuron.view.dialog.listener.onDialogOKClickListener;
 
 public class SettingsFragment extends NBaseFragment {
 
@@ -77,14 +80,11 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     authFingerDialog.show();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getResources().getString(R.string.dialog_title_tip));
-                    builder.setMessage(getResources().getString(R.string.dialog_finger_setting));
-                    builder.setPositiveButton(getResources().getString(R.string.ok), (view, i) -> {
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
+                    dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();
                     });
-                    builder.show();
                 }
             } else {
                 //close fingerprint

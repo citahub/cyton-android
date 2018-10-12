@@ -9,6 +9,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 /**
  * Created by BaojunCZ on 2018/8/6.
@@ -72,18 +73,22 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_finger_print:
-                if (FingerPrintController.getInstance(mActivity).hasEnrolledFingerprints() && FingerPrintController.getInstance(mActivity).getEnrolledFingerprints().size() > 0) {
+                if (FingerPrintController.getInstance(this).hasEnrolledFingerprints() && FingerPrintController.getInstance(this).getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(mActivity);
+                        authFingerDialog = new AuthFingerDialog(this);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
-                        FingerPrintController.getInstance(mActivity).authenticate(authenticateResultCallback);
+                        FingerPrintController.getInstance(this).authenticate(authenticateResultCallback);
                     });
                     authFingerDialog.setOnDismissListener((dialog) -> {
-                        FingerPrintController.getInstance(mActivity).cancelAuth();
+                        FingerPrintController.getInstance(this).cancelAuth();
                     });
                     authFingerDialog.show();
                 } else {
-                    Toast.makeText(mActivity, getResources().getString(R.string.finger_print_no_touchID), Toast.LENGTH_LONG).show();
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(this, getResources().getString(R.string.dialog_finger_setting));
+                    dialog.setOnCancelClickListener(dialog1 -> {
+                        FingerPrintController.openFingerPrintSettingPage(this);
+                        dialog1.dismiss();
+                    });
                 }
                 break;
             case R.id.iv_other:

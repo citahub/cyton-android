@@ -167,7 +167,10 @@
             android:name=".activity.CollectionDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activity.ImportFingerTipActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="org.nervos.neuron.fileprovider"

@@ -19,6 +19,9 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,9 +120,14 @@ public class ConfirmMnemonicActivity extends BaseActivity {
             if (confirmList.equals(originList)) {
                 EventBus.getDefault().post(new WalletSaveEvent());
                 Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
-                startActivity(intent);
+                if (FingerPrintController.getInstance(this).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                    Intent intent = new Intent(ConfirmMnemonicActivity.this, ImportFingerTipActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                    startActivity(intent);
+                }
                 EventBus.getDefault().post(new CloseWalletInfoEvent());
                 finish();
             } else {
