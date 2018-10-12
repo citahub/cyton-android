@@ -257,6 +257,8 @@
     <string name="import_finger_tip_text">请开启指纹验证，确保您的资产安全</string>
     <string name="import_finger_tip_button">开启指纹验证</string>
     <string name="import_finger_tip_button_cancel">暂不开启</string>
+    <string name="web_error_hint">网络错误，请稍候重试</string>
+    <string name="refresh">刷新</string>
 
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>

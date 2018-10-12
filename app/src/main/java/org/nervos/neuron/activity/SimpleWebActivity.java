@@ -9,6 +9,9 @@ import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -18,6 +21,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.web.WebAppUtil;
+import org.nervos.neuron.view.WebErrorView;
 
 
 public class SimpleWebActivity extends BaseActivity {
@@ -26,6 +30,7 @@ public class SimpleWebActivity extends BaseActivity {
     private WebView webView;
     private TitleBar titleBar;
     private ProgressBar progressBar;
+    private WebErrorView webErrorView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +51,14 @@ public class SimpleWebActivity extends BaseActivity {
         webView = findViewById(R.id.webview);
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
+        webErrorView = findViewById(R.id.view_web_error);
         SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
+        webErrorView.setImpl(() -> {
+            webView.reload();
+            webView.setVisibility(View.VISIBLE);
+            webErrorView.setVisibility(View.GONE);
+        });
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView webview, int newProgress) {
@@ -81,6 +92,24 @@ public class SimpleWebActivity extends BaseActivity {
                     }
                 }
                 return false;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
             }
         });
     }

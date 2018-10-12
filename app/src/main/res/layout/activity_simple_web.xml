@@ -20,9 +20,21 @@
         android:layout_height="3dip"
         android:visibility="gone" />
 
-    <WebView
-        android:id="@+id/webview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <org.nervos.neuron.view.WebErrorView
+            android:id="@+id/view_web_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
 
 </LinearLayout>

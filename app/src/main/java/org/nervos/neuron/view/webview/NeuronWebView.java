@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -237,6 +239,26 @@ public class NeuronWebView extends WebView {
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             return externalClient.shouldOverrideUrlLoading(view, request)
                     || internalClient.shouldOverrideUrlLoading(view, request);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            if (externalClient != null)
+                externalClient.onReceivedError(view, request, error);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            if (externalClient != null)
+                externalClient.onReceivedError(view, errorCode, description, failingUrl);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            if (externalClient != null)
+                externalClient.onReceivedHttpError(view, request, errorResponse);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

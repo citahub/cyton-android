@@ -14,6 +14,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -29,6 +32,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.WebMenuPopupWindow;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
@@ -62,7 +66,7 @@ import org.nervos.neuron.view.webview.item.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppWebActivity extends BaseActivity {
+public class AppWebActivity extends NBaseActivity {
 
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
@@ -78,7 +82,7 @@ public class AppWebActivity extends BaseActivity {
     private BottomSheetDialog sheetDialog;
     private ImageView rightMenuView;
     private ImageView leftView;
-    private RelativeLayout titleLayout;
+    private WebErrorView webErrorView;
 
     private WalletItem walletItem;
     private TitleItem titleItem;
@@ -87,18 +91,23 @@ public class AppWebActivity extends BaseActivity {
     private boolean isPersonalSign = false;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_web);
-
-        initData();
-        initView();
-        webView.loadUrl(url);
-        initManifest(url);
-
+    protected int getContentLayout() {
+        return R.layout.activity_app_web;
     }
 
-    private void initData() {
+    @Override
+    protected void initView() {
+        progressBar = findViewById(R.id.progressBar);
+        webView = findViewById(R.id.webview);
+        titleText = findViewById(R.id.title_bar_center);
+        titleText.setText(R.string.dapp);
+        rightMenuView = findViewById(R.id.title_bar_right);
+        leftView = findViewById(R.id.title_left_close);
+        webErrorView = findViewById(R.id.view_web_error);
+    }
+
+    @Override
+    protected void initData() {
         url = getIntent().getStringExtra(EXTRA_URL);
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
@@ -106,18 +115,14 @@ public class AppWebActivity extends BaseActivity {
             Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
-
         WebAppUtil.init();
+        webView.loadUrl(url);
+        initManifest(url);
+        initWebView();
     }
 
-    private void initView() {
-        progressBar = findViewById(R.id.progressBar);
-        webView = findViewById(R.id.webview);
-        titleLayout = findViewById(R.id.title_layout);
-        titleText = findViewById(R.id.title_bar_center);
-        titleText.setText(R.string.dapp);
-        rightMenuView = findViewById(R.id.title_bar_right);
-        leftView = findViewById(R.id.title_left_close);
+    @Override
+    protected void initAction() {
         leftView.setOnClickListener(v -> {
             if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
                 if (webView.canGoBack()) {
@@ -136,8 +141,11 @@ public class AppWebActivity extends BaseActivity {
                 initMenuView();
             }
         });
-
-        initWebView();
+        webErrorView.setImpl(() -> {
+            webView.reload();
+            webView.setVisibility(View.VISIBLE);
+            webErrorView.setVisibility(View.GONE);
+        });
     }
 
     private void initWebView() {
@@ -181,6 +189,25 @@ public class AppWebActivity extends BaseActivity {
                 }
                 return false;
             }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
         });
     }
 

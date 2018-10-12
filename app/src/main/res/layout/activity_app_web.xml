@@ -36,10 +36,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/title_left_close"
+                android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/title_bar_right"
+                android:layout_toEndOf="@id/title_left_close"
                 android:gravity="center"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
@@ -58,10 +58,23 @@
             android:layout_height="3dip"
             android:visibility="gone" />
 
-        <org.nervos.neuron.view.webview.NeuronWebView
-            android:id="@+id/webview"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <org.nervos.neuron.view.webview.NeuronWebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <org.nervos.neuron.view.WebErrorView
+                android:id="@+id/view_web_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
     </LinearLayout>
 
     <View
