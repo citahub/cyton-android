@@ -15,15 +15,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AddWalletActivity;
 import org.nervos.neuron.activity.ChangeWalletActivity;
-import org.nervos.neuron.view.WalletToolbar;
-import org.nervos.neuron.view.WalletTopView;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.fragment.collection.CollectionListFragment;
 import org.nervos.neuron.fragment.NBaseFragment;
+import org.nervos.neuron.fragment.collection.CollectionListFragment;
 import org.nervos.neuron.fragment.token.view.TokenListFragment;
 import org.nervos.neuron.fragment.wallet.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.view.WalletToolbar;
+import org.nervos.neuron.view.WalletTopView;
 
 /**
  * Created by BaojunCZ on 2018/8/1.
@@ -97,9 +97,13 @@ public class WalletsFragment extends NBaseFragment {
             }
         });
         toolbar.setRightTitleClickListener((view) -> {
-            Intent intent2 = new Intent(getActivity(), ChangeWalletActivity.class);
-            startActivity(intent2);
-            getActivity().overridePendingTransition(R.anim.wallet_activity_in, 0);
+            if (DBWalletUtil.getAllWallet(getActivity()).size() > 1) {
+                Intent intent2 = new Intent(getActivity(), ChangeWalletActivity.class);
+                startActivity(intent2);
+                getActivity().overridePendingTransition(R.anim.wallet_activity_in, 0);
+            } else {
+                startActivity(new Intent(getActivity(), AddWalletActivity.class));
+            }
         });
     }
 
@@ -109,6 +113,11 @@ public class WalletsFragment extends NBaseFragment {
     }
 
     private void initWalletData() {
+        if (DBWalletUtil.getAllWallet(getActivity()).size() > 1) {
+            toolbar.setmIVRight(R.drawable.ic_wallet_exchange);
+        } else {
+            toolbar.setmIVRight(R.drawable.ic_wallet_top_exchange);
+        }
         if ((walletItem = DBWalletUtil.getCurrentWallet(getContext())) != null) {
             walletView.setWalletItem(walletItem);
         } else {

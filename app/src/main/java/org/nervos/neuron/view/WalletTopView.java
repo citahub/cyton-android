@@ -9,10 +9,12 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
@@ -41,6 +43,7 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
     private TextView walletName, walletAddress, changeWalletText;
     private Activity context;
     private WalletItem walletItem;
+    private ImageView changeIv;
 
     public WalletTopView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,13 +65,20 @@ public class WalletTopView extends ConstraintLayout implements View.OnClickListe
         walletName = findViewById(R.id.qrcode_wallet_name);
         walletAddress = findViewById(R.id.qrcode_wallet_address);
         changeWalletText = findViewById(R.id.tv_change_wallet);
+        changeIv = findViewById(R.id.iv);
     }
 
     private void initData() {
         if (DBWalletUtil.getAllWallet(context).size() > 1) {
             changeWalletText.setText(R.string.wallet_top_change_wallet);
+            Glide.with(context)
+                    .load(R.drawable.ic_wallet_rec_array)
+                    .into(changeIv);
         } else {
             changeWalletText.setText(R.string.wallet_top_add_wallet);
+            Glide.with(context)
+                    .load(R.drawable.ic_wallet_rec_add)
+                    .into(changeIv);
         }
     }
 

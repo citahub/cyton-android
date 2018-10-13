@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -25,18 +28,21 @@ import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
+import org.nervos.neuron.view.WebErrorView;
 
 public class AppFragment extends Fragment {
 
     public static final String TAG = AppFragment.class.getName();
 
     private WebView webView;
+    private WebErrorView webErrorView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         webView = view.findViewById(R.id.webview);
+        webErrorView = view.findViewById(R.id.view_web_error);
         return view;
     }
 
@@ -46,6 +52,11 @@ public class AppFragment extends Fragment {
         webView.loadUrl(HttpUrls.DISCOVER_URL);
         initWebSettings();
         initWebView();
+        webErrorView.setImpl(() -> {
+            webView.reload();
+            webView.setVisibility(View.VISIBLE);
+            webErrorView.setVisibility(View.GONE);
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -57,13 +68,30 @@ public class AppFragment extends Fragment {
 
     private void initWebView() {
 
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Intent intent = new Intent(getContext(), AppWebActivity.class);
                 intent.putExtra(AppWebActivity.EXTRA_URL, url);
                 startActivity(intent);
                 return true;
+            }
+
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                webErrorView.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
             }
         });
 
@@ -83,7 +111,7 @@ public class AppFragment extends Fragment {
     public void onAppCollectEvent(AppCollectEvent event) {
         if (event.isCollect) {
             String app = new Gson().toJson(event.appInfo);
-            webView.loadUrl("javascript:__mydapp.add("+ app + ")");
+            webView.loadUrl("javascript:__mydapp.add(" + app + ")");
         } else {
             webView.loadUrl("javascript:__mydapp.remove('" + event.appInfo.entry + "')");
         }

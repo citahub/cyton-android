@@ -1,13 +1,13 @@
 package org.nervos.neuron.view;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.nervos.neuron.R;
 
@@ -17,6 +17,7 @@ import org.nervos.neuron.R;
 public class WalletToolbar extends Toolbar {
     private TextView mTxtMiddleTitle;
     private ImageView mIVRight;
+    private Context context;
 
     public WalletToolbar(Context context) {
         this(context, null);
@@ -28,6 +29,7 @@ public class WalletToolbar extends Toolbar {
 
     public WalletToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
     }
 
     @Override
@@ -57,5 +59,11 @@ public class WalletToolbar extends Toolbar {
     //set right clicklistener
     public void setRightTitleClickListener(OnClickListener onClickListener) {
         mIVRight.setOnClickListener(onClickListener);
+    }
+
+    public void setmIVRight(int id) {
+        Glide.with(context)
+                .load(id)
+                .into(mIVRight);
     }
 }
