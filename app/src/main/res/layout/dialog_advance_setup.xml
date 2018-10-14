@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="235dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="235dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/close_image"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:background="@drawable/delete" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/advanced_setup"
+                android:textColor="@color/font_title"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_form" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="82dp"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/gas_price"
+                android:textColor="@color/font_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/default_gas_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_alignParentRight="true"
+                android:text="@string/default_eth_gas_price"
+                android:textColor="@color/font_title_second"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/edit_gas_price"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/default_gas_price_text"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:inputType="number"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:hint="@string/please_input_gas_price"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@color/font_title"
+                android:textSize="15sp"/>
+
+
+        </RelativeLayout>
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/default_eth_gas_limit"
+                android:textColor="@color/font_title_third"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/default_eth_gas_limit_value"
+                android:textColor="@color/font_title_second"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <org.nervos.neuron.view.button.CommonButton
+            android:id="@+id/advanced_setup_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:status="true"
+            app:text="@string/confirm_action" />
+    </LinearLayout>
+
+
+
+</FrameLayout>
