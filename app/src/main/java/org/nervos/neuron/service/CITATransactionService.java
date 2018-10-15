@@ -6,13 +6,24 @@ import android.text.TextUtils;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.utils.Numeric;
 import org.nervos.neuron.item.CITATransactionDBItem;
+import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBCITATransactionsUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -20,7 +31,7 @@ import rx.schedulers.Schedulers;
  */
 public class CITATransactionService {
     private static Observable<CITATransactionDBItem> query(Context context, boolean pending, int type, String contractAddress) {
-        List<CITATransactionDBItem> list = DBCITATransactionsUtil.getAllPending(context, pending, type, contractAddress);
+        List<CITATransactionDBItem> list = DBCITATransactionsUtil.getAll(context, pending, type, contractAddress);
         return Observable
                 .from(list)
                 .subscribeOn(Schedulers.newThread())
@@ -37,7 +48,7 @@ public class CITATransactionService {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        impl.checkFinish();
                     }
 
                     @Override
@@ -61,6 +72,39 @@ public class CITATransactionService {
                         }
                     }
                 });
+    }
+
+    public static List<TransactionItem> getTransactionList(Context context, boolean type, String chain, String contractAddress, List<TransactionItem> list, String from) {
+        List<CITATransactionDBItem> allList = DBCITATransactionsUtil.getChainAll(context, chain, type, contractAddress);
+        if (allList.size() > 0) {
+            for (CITATransactionDBItem item : allList) {
+                Long oldestTime;
+                if (list.get(list.size() - 1).timeStamp > 0) {
+                    oldestTime = list.get(list.size() - 1).timeStamp * 1000;
+                } else {
+                    oldestTime = list.get(list.size() - 1).timestamp;
+                }
+                if (oldestTime < item.timestamp && from.equalsIgnoreCase(item.from)) {
+                    TransactionItem transactionItem = new TransactionItem();
+                    transactionItem.from = item.from;
+                    transactionItem.to = item.to;
+                    transactionItem.value = item.value;
+                    transactionItem.chainName = item.chainName;
+                    transactionItem.status = item.status;
+                    transactionItem.timestamp = item.timestamp;
+                    transactionItem.hash = item.hash;
+                    list.add(transactionItem);
+                }
+            }
+            Collections.sort(list, (o1, o2) -> {
+                int ret = 0;
+                Long x = Long.valueOf(o1.timestamp);
+                Long y = Long.valueOf(o2.timestamp);
+                ret = -1 * x.compareTo(y);
+                return ret;
+            });
+        }
+        return list;
     }
 
     public interface CheckImpl {

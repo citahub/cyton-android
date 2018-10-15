@@ -6,9 +6,16 @@ package org.nervos.neuron.item;
 public class CITATransactionDBItem {
 
     public String hash;
-    public int timestamp;
+    public long timestamp;
     public String validUntilBlock;
     public boolean isNativeToken;
     public String contractAddress;
     public String chain;
+
+    public String from;
+    public String to;
+    public String value;
+    public String chainName;
+    //0 failed 1 success 2 pending
+    public int status;
 }

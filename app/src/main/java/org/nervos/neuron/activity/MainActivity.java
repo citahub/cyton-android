@@ -141,7 +141,7 @@ public class MainActivity extends NBaseActivity {
         Intent serverIntent = new Intent(this, TransactionListService.class);
         startService(serverIntent);
         TransactionListService.impl = () -> {
-            handler.postDelayed(() -> startCheckTransaction(), 10000);
+            handler.postDelayed(() -> startCheckTransaction(), 3000);
         };
     }
 

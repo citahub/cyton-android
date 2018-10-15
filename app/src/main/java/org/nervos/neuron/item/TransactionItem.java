@@ -12,8 +12,8 @@ public class TransactionItem implements Parcelable {
     public String from;
     public String to;
     public String value;
-    private long timestamp;
-    private long timeStamp;
+    public long timestamp;
+    public long timeStamp;
     public String chainName;
     public String content;
     public String gasUsed;
