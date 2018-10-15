@@ -89,7 +89,7 @@ public class AppChainRpcService {
 
     public static double getErc20Balance(TokenItem tokenItem, String address) throws Exception {
         Call balanceCall = new Call(address, tokenItem.contractAddress,
-                ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                ConstUtil.BALANCE_OF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
         String balanceOf = service.appCall(balanceCall,
                     DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {

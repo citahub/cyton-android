@@ -22,6 +22,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
@@ -33,6 +34,7 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
@@ -50,7 +52,9 @@ import org.web3j.utils.Convert;
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscriber;
 
+import static org.web3j.utils.Convert.Unit.ETHER;
 import static org.web3j.utils.Convert.Unit.GWEI;
 
 public class TransferActivity extends NBaseActivity {
@@ -152,23 +156,41 @@ public class TransferActivity extends NBaseActivity {
                 initFeeText();
             }
         });
+        TransactionInfo transactionInfo = new TransactionInfo("0xc5bbae50781be1669306b9e001eff57a2957b09d", Convert.toWei("0", Convert.Unit.ETHER).toString());
+        transactionInfo.data = EthRpcService.createTokenTransferData("0x961a844bA756F7CE5523129ceb35f72F2251aBeD", Convert.toWei("100", Convert.Unit.ETHER).toBigInteger());
+        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new Subscriber<BigInteger>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(BigInteger bigInteger) {
+
+            }
+        });
     }
 
     private void initPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
-                .subscribe(new NeuronSubscriber<String>() {
-                    @Override
-                    public void onNext(String price) {
-                        if (TextUtils.isEmpty(price)) return;
-                        try {
-                            mPrice = Double.parseDouble(price);
-                            initFeeText();
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }
+            .subscribe(new NeuronSubscriber<String>() {
+                @Override
+                public void onNext(String price) {
+                    if (TextUtils.isEmpty(price)) return;
+                    try {
+                        mPrice = Double.parseDouble(price);
+                        initFeeText();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+            });
     }
 
 
@@ -212,9 +234,11 @@ public class TransferActivity extends NBaseActivity {
             }
         });
 
+        String gasLimitDefault = NumberUtil.getDecimalValid_2(
+                Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
         gasPriceDefaultText.setText(
-                String.format(getString(R.string.default_eth_gas_price),
-                        Convert.fromWei(mGasPrice.toString(), GWEI).toString()));
+                String.format(getString(R.string.default_eth_gas_price), gasLimitDefault));
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

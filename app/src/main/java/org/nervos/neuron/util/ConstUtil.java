@@ -10,19 +10,18 @@ public class ConstUtil {
     public static final int ETHEREUM_ID = -1;
     public static final String ETH_MAINNET = "Ethereum Mainnet";
     public static final String GWEI = "GWei";
-    public static final String APPCHAIN_TEST="test-chain";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
     public static final long DEFAULT_QUOTA = LONG_6;
 
 
     // gas constant data
-    public static final BigInteger GAS_LIMIT = Numeric.toBigInt("0x5208");  // default eth gas limit is 21000
-    public static final BigInteger GAS_ERC20_LIMIT = Numeric.toBigInt("0x23280");  // default eth gas limit is 144000
+    public static final BigInteger GAS_LIMIT = new BigInteger("21000");        // default eth gas limit is 21000
+    public static final BigInteger GAS_ERC20_LIMIT = new BigInteger("144000");  // default eth gas limit is 144000
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x2540BE400");
     public static final String RPC_RESULT_ZERO = "0x";
-    public static final BigInteger QUOTA_TOKEN = new BigInteger("100");
-    public static final BigInteger QUOTA_ERC20 = new BigInteger("6000");
+    public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
+    public static final BigInteger QUOTA_ERC20 = new BigInteger("144000");
 
 
     // ERC20 method hashes
@@ -30,7 +29,7 @@ public class ConstUtil {
     public static final String NAME_HASH = "06fdde03";
     public static final String SYMBOL_HASH = "95d89b41";
     public static final String DECIMALS_HASH = "313ce567";
-    public static final String BALANCEOF_HASH = "70a08231";
+    public static final String BALANCE_OF_HASH = "70a08231";
 
 
     public static final String FingerPrint = "FingerPrint";

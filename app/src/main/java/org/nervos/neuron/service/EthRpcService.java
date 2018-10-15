@@ -100,6 +100,7 @@ public class EthRpcService {
                 BigInteger gasLimit = ConstUtil.GAS_ERC20_LIMIT;
                 try {
                     EthEstimateGas ethEstimateGas = service.ethEstimateGas(transaction).send();
+                    LogUtil.d("ethEstimateGas" + new Gson().toJson(ethEstimateGas));
                     gasLimit = ethEstimateGas.getAmountUsed();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -202,7 +203,7 @@ public class EthRpcService {
     public static double getERC20Balance(String contractAddress, String address) throws Exception {
         long decimal = getErc20Decimal(address, contractAddress);
         Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
-                ConstUtil.BALANCEOF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                ConstUtil.BALANCE_OF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
         String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && ! ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
@@ -277,7 +278,7 @@ public class EthRpcService {
     }
 
 
-    private static String createTokenTransferData(String to, BigInteger tokenAmount) {
+    public static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
         List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
         Function function = new Function("transfer", params, returnTypes);
