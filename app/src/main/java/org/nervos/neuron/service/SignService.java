@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
@@ -22,9 +23,9 @@ public class SignService {
                                                     String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
-            public String call() throws GeneralSecurityException {
+            public String call() throws Exception {
                 WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
                 Sign.SignatureData signatureData = Sign.signMessage(message.getBytes(),
                         ECKeyPair.create(Numeric.toBigInt(privateKey)));
                 return getSignature(signatureData);
@@ -37,9 +38,9 @@ public class SignService {
                                                          String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
-            public String call() throws GeneralSecurityException {
+            public String call() throws Exception {
                 WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
 
                 byte[] unSignData = ("\u0019Ethereum Signed Message:\n"
                         + message.getBytes().length
@@ -59,9 +60,9 @@ public class SignService {
             Context context, String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
-            public String call() throws GeneralSecurityException {
+            public String call() throws Exception {
                 WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
                 org.nervos.appchain.crypto.Sign.SignatureData signatureData =
                         org.nervos.appchain.crypto.Sign.signMessage(message.getBytes(),
                                 org.nervos.appchain.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));

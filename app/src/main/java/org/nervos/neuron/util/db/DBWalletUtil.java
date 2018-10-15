@@ -5,11 +5,15 @@ import android.text.TextUtils;
 
 import com.snappydb.SnappydbException;
 
+import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.crypto.WalletEntity;
+import org.web3j.utils.Numeric;
 
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,9 +113,10 @@ public class DBWalletUtil extends DBUtil {
                 db = openDB(context, DB_WALLET);
                 WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
                 try {
-                    String privateKey = AESCrypt.decrypt(oldPassword, walletItem.cryptPrivateKey);
-                    walletItem.cryptPrivateKey = AESCrypt.encrypt(newPassword, privateKey);
-                } catch (GeneralSecurityException e) {
+                    WalletEntity walletEntity = WalletEntity.fromKeyStore(oldPassword, walletItem.keystore);
+                    BigInteger privateKey = Numeric.toBigInt(walletEntity.getPrivateKey());
+                    walletItem.keystore = WalletEntity.fromPrivateKey(privateKey, newPassword).getKeystore();
+                } catch (Exception e) {
                     e.printStackTrace();
                     return false;
                 }

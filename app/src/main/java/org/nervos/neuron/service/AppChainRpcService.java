@@ -18,6 +18,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -57,6 +58,10 @@ public class AppChainRpcService {
     public static void init(Context context, String httpProvider) {
         HttpService.setDebug(BuildConfig.IS_DEBUG);
         service = NervosjFactory.build(new HttpService(httpProvider));
+        walletItem = DBWalletUtil.getCurrentWallet(context);
+    }
+
+    public static void init(Context context) {
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
@@ -119,7 +124,7 @@ public class AppChainRpcService {
 
 
     public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
-           String contractAddress, String address, double value, int chainId, String password) throws Exception {
+           String contractAddress, String address, double value, int chainId, String password){
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -136,10 +141,10 @@ public class AppChainRpcService {
                         version, chainId, BigInteger.ZERO.toString(), data);
                 try {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
-                            AESCrypt.decrypt(password, walletItem.cryptPrivateKey));
+                            WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
-                } catch (GeneralSecurityException | IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
@@ -171,10 +176,10 @@ public class AppChainRpcService {
                         NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);
                 try {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
-                            AESCrypt.decrypt(password, walletItem.cryptPrivateKey));
+                            WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
-                } catch (GeneralSecurityException | IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);

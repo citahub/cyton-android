@@ -152,12 +152,18 @@ public class WalletService {
                 walletItem.keystore = walletEntity.getKeystore();
                 walletItem.cryptPrivateKey = "";
                 DBWalletUtil.saveWallet(context, walletItem);
+                reInitRpcService(context);
             }
             return walletItem.address.equalsIgnoreCase(credentials.getAddress());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void reInitRpcService(Context context) {
+        EthRpcService.init(context);
+        AppChainRpcService.init(context);
     }
 
 }

@@ -13,6 +13,7 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -125,13 +126,13 @@ public class EthRpcService {
             @Override
             public Observable<String> call(BigInteger nonce) {
                 try {
-                    String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
-                    Credentials credentials = Credentials.create(privateKey);
+                    WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
+                    Credentials credentials = Credentials.create(walletEntity.getPrivateKey());
                     RawTransaction rawTransaction = RawTransaction.createTransaction(nonce,
                             gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value), sdata);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
-                } catch (GeneralSecurityException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
