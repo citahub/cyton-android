@@ -105,12 +105,6 @@ public class SimpleWebActivity extends BaseActivity {
                 webErrorView.setVisibility(View.VISIBLE);
                 webView.setVisibility(View.GONE);
             }
-
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-            }
         });
     }
 

@@ -87,12 +87,6 @@ public class AppFragment extends Fragment {
                 webErrorView.setVisibility(View.VISIBLE);
                 webView.setVisibility(View.GONE);
             }
-
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-            }
         });
 
         webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
