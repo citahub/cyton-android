@@ -14,7 +14,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.AppChainHttpService;
+import org.nervos.neuron.service.HttpService;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
 
@@ -92,7 +92,10 @@ public class TransactionListPresenter {
                                 DecimalFormat df = new DecimalFormat("######0.00");
                                 DecimalFormat formater = new DecimalFormat("0.####");
                                 formater.setRoundingMode(RoundingMode.FLOOR);
-                                listener.getCurrency(formater.format(tokenItem.balance) + tokenItem.symbol + "~" + CurrencyUtil.getCurrencyItem(activity).getSymbol() + Double.parseDouble(df.format(price * tokenItem.balance)));
+                                listener.getCurrency(formater.format(tokenItem.balance)
+                                        + tokenItem.symbol + "~"
+                                        + CurrencyUtil.getCurrencyItem(activity).getSymbol()
+                                        + Double.parseDouble(df.format(price * tokenItem.balance)));
                             } else
                                 listener.getCurrency("0" + tokenItem.symbol);
                         }
@@ -102,18 +105,14 @@ public class TransactionListPresenter {
 
     public void getTransactionList() {
         Observable<List<TransactionItem>> observable;
-        if (!isNativeToken(tokenItem)) {
-            if (isEthereum(tokenItem)) {
-                observable = AppChainHttpService.getETHERC20TransactionList(activity, tokenItem);
-            } else {
-                listener.hideProgressBar();
-                listener.setRefreshing(false);
-                return;
-            }
-        } else {
+        if (isNativeToken(tokenItem)) {
             observable = isEthereum(tokenItem) ?
-                    AppChainHttpService.getETHTransactionList(activity)
-                    : AppChainHttpService.getAppChainTransactionList(activity);
+                    HttpService.getETHTransactionList(activity) :
+                    HttpService.getAppChainTransactionList(activity);
+        } else {
+            observable = isEthereum(tokenItem)?
+                    HttpService.getETHERC20TransactionList(activity, tokenItem) :
+                    HttpService.getAppChainERC20TransactionList(activity, tokenItem);
         }
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override

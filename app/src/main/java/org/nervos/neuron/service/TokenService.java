@@ -43,7 +43,7 @@ public class TokenService {
                         if (!TextUtils.isEmpty(ID)) {
                             String url = HttpUrls.TOKEN_CURRENCY.replace(PARAM_ID, ID).replace(PARAM_CURRENCY, currency);
                             Request request = new Request.Builder().url(url).build();
-                            Call call = AppChainHttpService.getHttpClient().newCall(request);
+                            Call call = HttpService.getHttpClient().newCall(request);
                             try {
                                 String response = call.execute().body().string();
                                 return Observable.just(fetchPriceFromResponse(response, currency));
@@ -61,7 +61,7 @@ public class TokenService {
         return Observable.fromCallable(() -> {
             String url = HttpUrls.TOKEN_CURRENCY.replace("@ID", ID).replace("@Currency", currency);
             Request request = new Request.Builder().url(url).build();
-            Call call = AppChainHttpService.getHttpClient().newCall(request);
+            Call call = HttpService.getHttpClient().newCall(request);
             return fetchPriceFromResponse(call.execute().body().string(), currency);
         }).subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread());
@@ -83,7 +83,7 @@ public class TokenService {
         return Observable.fromCallable(() -> {
             if (list == null) {
                 Request request = new Request.Builder().url(HttpUrls.TOKEN_ID).build();
-                Call call = AppChainHttpService.getHttpClient().newCall(request);
+                Call call = HttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {
                     response = call.execute().body().string();
@@ -120,7 +120,7 @@ public class TokenService {
             public CollectionResponse call() throws Exception {
                 Request request = new Request.Builder()
                         .url(HttpUrls.COLLECTION_LIST_URL + walletItem.address).build();
-                Call call = AppChainHttpService.getHttpClient().newCall(request);
+                Call call = HttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {
                     response = call.execute().body().string();
