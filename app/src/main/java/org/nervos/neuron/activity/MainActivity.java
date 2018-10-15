@@ -16,6 +16,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -203,15 +205,20 @@ public class MainActivity extends BaseActivity {
                         if (bundle == null) return;
                         if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
+                            Intent intent;
                             switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
                                 case CodeUtils.STRING_UNVALID:
                                     Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
                                     break;
                                 case CodeUtils.STRING_ADDRESS:
-                                    Toast.makeText(this, R.string.developing, Toast.LENGTH_LONG).show();
+                                    TokenItem tokenItem = new TokenItem(ConstUtil.ETH_MAINNET, ConstUtil.ETH, ConstUtil.ETHEREUM_ID);
+                                    intent = new Intent(mActivity, TransferActivity.class);
+                                    intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
+                                    intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);
+                                    startActivity(intent);
                                     break;
                                 case CodeUtils.STRING_KEYSTORE:
-                                    Intent intent = new Intent(this, ImportWalletActivity.class);
+                                    intent = new Intent(this, ImportWalletActivity.class);
                                     intent.putExtra("from", "QR");
                                     intent.putExtra("type", 1);
                                     intent.putExtra("value", result);
@@ -221,11 +228,11 @@ public class MainActivity extends BaseActivity {
                                     SimpleWebActivity.gotoSimpleWeb(this, result);
                                     break;
                                 case CodeUtils.STRING_PRIVATE_KEY:
-                                    Intent intent1 = new Intent(this, ImportWalletActivity.class);
-                                    intent1.putExtra("from", "QR");
-                                    intent1.putExtra("type", 2);
-                                    intent1.putExtra("value", result);
-                                    startActivity(intent1);
+                                    intent = new Intent(this, ImportWalletActivity.class);
+                                    intent.putExtra("from", "QR");
+                                    intent.putExtra("type", 2);
+                                    intent.putExtra("value", result);
+                                    startActivity(intent);
                                     break;
                             }
                         } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {

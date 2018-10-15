@@ -61,6 +61,7 @@ public class TransferActivity extends NBaseActivity {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
+    public static final String EXTRA_ADDRESS = "extra_address";
     private static final int MAX_QUOTA_SEEK = 100;
     private static final int DEFAULT_QUOTA_SEEK = 1;
     private static final int MAX_FEE = 100;
@@ -123,12 +124,16 @@ public class TransferActivity extends NBaseActivity {
     @Override
     protected void initData() {
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        String address = getIntent().getStringExtra(EXTRA_ADDRESS);
         titleBar.setTitle(tokenItem.symbol + getString(R.string.title_transfer));
         EthRpcService.init(mActivity);
         AppChainRpcService.init(mActivity, HttpUrls.APPCHAIN_NODE_IP);
         walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
+        if (!TextUtils.isEmpty(address)) {
+            receiveAddressEdit.setText(address);
+        }
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
         initBalance();
         if (isETH()) {
