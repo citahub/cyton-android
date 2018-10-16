@@ -36,8 +36,10 @@ public class TransactionDetailActivity extends NBaseActivity {
     private WalletItem walletItem;
     private TransactionItem transactionItem;
     private TitleBar title;
-    private TextView transactionHashText, transactionValueText, transactionFromText, transactionToText, transactionBlockNumberText,
-            transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName, transactionGasPriceTitle, dicText;
+    private TextView transactionHashText, transactionValueText, transactionFromText,
+            transactionToText, transactionBlockNumberText, transactionBlockTimeText,
+            transactionGas, transactionGasPrice, transactionChainName,
+            transactionGasPriceTitle, tokenUnitText;
     private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
     @Override
@@ -50,7 +52,7 @@ public class TransactionDetailActivity extends NBaseActivity {
         title = findViewById(R.id.title);
         transactionHashText = findViewById(R.id.tv_transaction_number);
         transactionValueText = findViewById(R.id.transaction_amount);
-        dicText = findViewById(R.id.tv_dic);
+        tokenUnitText = findViewById(R.id.tv_token_unit);
         transactionFromText = findViewById(R.id.tv_transaction_sender);
         transactionToText = findViewById(R.id.tv_transaction_receiver);
         transactionBlockNumberText = findViewById(R.id.tv_transaction_blockchain_no);
@@ -74,20 +76,25 @@ public class TransactionDetailActivity extends NBaseActivity {
             transactionChainName.setText(ConstUtil.ETH_MAINNET);
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
-            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + "eth");
-            transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " Gwei");
+            transactionGas.setText(
+                    NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig))
+                            + transactionItem.nativeSymbol);
+            transactionGasPrice.setText(
+                    Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " " + ConstUtil.GWEI);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-            dicText.setText("ETH");
+            tokenUnitText.setText(transactionItem.symbol);
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
             transactionChainName.setText(transactionItem.chainName);
             String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
-            dicText.setText("NOS");
-            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed)) + "NOS");
+            tokenUnitText.setText(transactionItem.symbol);
+            transactionGas.setText(
+                    NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed))
+                            + transactionItem.nativeSymbol);
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
             int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
@@ -133,26 +140,6 @@ public class TransactionDetailActivity extends NBaseActivity {
             cm.setPrimaryClip(mClipData);
             Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String lineFeedAddress(String address) {
-        int singleLine = address.length() / 2;
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(address.substring(0, singleLine));
-        buffer.append("\n");
-        buffer.append(address.substring(singleLine));
-        return buffer.toString();
-    }
-
-    private String lineFeedHex(String hex) {
-        int singleLine = hex.length() / 3;
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(hex.substring(0, singleLine));
-        buffer.append("\n");
-        buffer.append(hex.substring(singleLine, singleLine * 2));
-        buffer.append("\n");
-        buffer.append(hex.substring(singleLine * 2));
-        return buffer.toString();
     }
 
 }

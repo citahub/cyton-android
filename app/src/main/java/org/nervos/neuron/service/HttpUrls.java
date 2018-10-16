@@ -5,6 +5,7 @@ public class HttpUrls {
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
     public static final String APPCHAIN_SERVER_URL = "https://microscope.cryptape.com:8888";
     public static final String APPCHAIN_TRANSACTION_URL = APPCHAIN_SERVER_URL + "/api/transactions?account=";
+    public static final String APPCHAIN_ERC20_TRANSACTION_URL = APPCHAIN_SERVER_URL + "/api/erc20/transfers?address=@address&account=@account";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";
     public static final String ETH_ERC20_TRANSACTION_URL = "https://api.etherscan.io/api?apikey="

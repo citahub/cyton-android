@@ -22,7 +22,7 @@ import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.AppChainHttpService;
+import org.nervos.neuron.service.HttpService;
 import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
@@ -90,7 +90,7 @@ public class WebAppUtil {
                 }
 
                 Request request = new Request.Builder().url(manifestUrl).build();
-                Call call = AppChainHttpService.getHttpClient().newCall(request);
+                Call call = HttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {
                     response = call.execute().body().string();
