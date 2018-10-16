@@ -450,6 +450,7 @@ public class TransferActivity extends NBaseActivity {
      * @param value transfer value
      */
     private void transferAppChainToken(String password, double value) {
+        AppChainRpcService.citaTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
         AppChainRpcService.citaTransactionDBItem.isNativeToken = true;
         AppChainRpcService.citaTransactionDBItem.contractAddress = "";
         AppChainRpcService.citaTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
@@ -478,6 +479,7 @@ public class TransferActivity extends NBaseActivity {
      * @param value transfer value
      */
     private void transferAppChainErc20(String password, double value) {
+        AppChainRpcService.citaTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         AppChainRpcService.citaTransactionDBItem.isNativeToken = false;
         AppChainRpcService.citaTransactionDBItem.contractAddress = tokenItem.contractAddress;

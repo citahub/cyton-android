@@ -23,15 +23,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<TransactionItem> transactionItemList;
     private String address;
     private Context context;
-    private String symbol;
 
     private OnItemClickListener onItemClickListener;
 
-    public TransactionAdapter(Context context, List<TransactionItem> transactionItemList, String address, String symbol) {
+    public TransactionAdapter(Context context, List<TransactionItem> transactionItemList, String address) {
         this.transactionItemList = transactionItemList;
         this.address = address;
         this.context = context;
-        this.symbol = symbol;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -68,7 +66,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolder.transactionIdText.setText(transactionItem.to);
             }
             String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+")
-                    + transactionItem.value + symbol;
+                    + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionItem.getDate());
             switch (transactionItem.status) {

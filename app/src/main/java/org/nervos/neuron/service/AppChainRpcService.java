@@ -150,7 +150,6 @@ public class AppChainRpcService {
                     citaTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
                     citaTransactionDBItem.from = walletItem.address.toLowerCase();
                     citaTransactionDBItem.to = address.toLowerCase();
-                    citaTransactionDBItem.value = value + "";
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -191,7 +190,6 @@ public class AppChainRpcService {
                     citaTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
                     citaTransactionDBItem.from = walletItem.address.toLowerCase();
                     citaTransactionDBItem.to = toAddress.toLowerCase();
-                    citaTransactionDBItem.value = value + "";
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (Exception e) {
                     e.printStackTrace();

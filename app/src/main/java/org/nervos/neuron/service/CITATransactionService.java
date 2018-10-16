@@ -84,7 +84,14 @@ public class CITATransactionService {
                 } else {
                     oldestTime = list.get(list.size() - 1).timestamp;
                 }
-                if (oldestTime < item.timestamp && from.equalsIgnoreCase(item.from)) {
+                boolean isReceive = false;
+                for (TransactionItem transactionItem : list) {
+                    if (transactionItem.hash.equalsIgnoreCase(item.hash)) {
+                        isReceive = true;
+                        break;
+                    }
+                }
+                if (!isReceive && oldestTime < item.timestamp && from.equalsIgnoreCase(item.from)) {
                     TransactionItem transactionItem = new TransactionItem();
                     transactionItem.from = item.from;
                     transactionItem.to = item.to;
