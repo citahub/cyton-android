@@ -138,6 +138,11 @@
     <string name="setting_contact_us">联系我们</string>
     <string name="setting_weixin">联系客服</string>
     <string name="about_us_title">关于我们</string>
+    <string name="setting_nervos_forum">论坛</string>
+    <string name="infua_describe">提供以太坊访问服务</string>
+    <string name="openSea_describe">提供721数据服务</string>
+    <string name="peckShield_describe">提供代码安全审计服务</string>
+    <string name="cita_describe">区块链内核</string>
     <string name="path">路径</string>
     <string name="wallet_password_error">钱包密码错误</string>
     <string name="password">密码</string>

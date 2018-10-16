@@ -27,7 +27,7 @@ import org.nervos.neuron.view.dialog.listener.onDialogOKClickListener;
 public class SettingsFragment extends NBaseFragment {
 
     public static final String TAG = SettingsFragment.class.getName();
-    private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV;
+    private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV, forumsSBV;
     private static final int Currency_Code = 10001;
     private AuthFingerDialog authFingerDialog = null;
 
@@ -42,6 +42,7 @@ public class SettingsFragment extends NBaseFragment {
         aboutUsSBV = (SettingButtonView) findViewById(R.id.sbv_about_us);
         contactUsSBV = (SettingButtonView) findViewById(R.id.sbv_contact_us);
         fingerPrintSBV = (SettingButtonView) findViewById(R.id.sbv_fingerprint);
+        forumsSBV = (SettingButtonView) findViewById(R.id.sbv_forums);
     }
 
     @Override
@@ -104,6 +105,9 @@ public class SettingsFragment extends NBaseFragment {
                 cm.setPrimaryClip(mClipData);
                 Toast.makeText(getActivity(), R.string.copy_weixin_success, Toast.LENGTH_SHORT).show();
             }
+        });
+        forumsSBV.setOpenListener(()->{
+            SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_FORUMS);
         });
     }
 

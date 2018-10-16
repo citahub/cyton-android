@@ -52,5 +52,12 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_setting_contact_us"
             app:name="@string/setting_weixin" />
+
+        <org.nervos.neuron.view.SettingButtonView
+            android:id="@+id/sbv_forums"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_setting_nervos_forums"
+            app:name="@string/setting_nervos_forum" />
     </LinearLayout>
 </LinearLayout>

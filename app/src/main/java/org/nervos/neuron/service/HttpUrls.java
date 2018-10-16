@@ -19,6 +19,9 @@ public class HttpUrls {
     public static final String NERVOS_NETWORK = "https://www.nervos.org/";
     public static final String OPEN_SEA = "https://opensea.io/";
     public static final String INFURA = "https://infura.io/";
+    public static final String NERVOS_FORUMS = "https://forums.nervos.org/";
+    public static final String PECKSHEILD = "https://peckshield.com/";
+    public static final String CITA = "https://github.com/cryptape/cita";
 
 
     // node host

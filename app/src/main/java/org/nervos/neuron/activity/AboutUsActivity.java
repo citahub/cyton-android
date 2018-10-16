@@ -15,7 +15,7 @@ public class AboutUsActivity extends NBaseActivity {
 
     private TextView versionText;
     private TitleBar title;
-    private SettingButtonView sourceCodeSBV, serverPrivateSBV, NervosSBV, InfuraSBV, openSeaSBV;
+    private SettingButtonView sourceCodeSBV, serverPrivateSBV, NervosSBV, InfuraSBV, openSeaSBV, peckShieldSBV, citaSBV;
 
     @Override
     protected int getContentLayout() {
@@ -31,6 +31,8 @@ public class AboutUsActivity extends NBaseActivity {
         InfuraSBV = findViewById(R.id.sbv_infura);
         openSeaSBV = findViewById(R.id.sbv_open_sea);
         title = findViewById(R.id.title);
+        peckShieldSBV = findViewById(R.id.sbv_peck_shield);
+        citaSBV = findViewById(R.id.sbv_cita);
     }
 
     @Override
@@ -66,5 +68,7 @@ public class AboutUsActivity extends NBaseActivity {
         openSeaSBV.setOpenListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.OPEN_SEA);
         });
+        peckShieldSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PECKSHEILD));
+        citaSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.CITA));
     }
 }
