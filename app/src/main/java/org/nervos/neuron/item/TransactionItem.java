@@ -12,8 +12,8 @@ public class TransactionItem implements Parcelable {
     public String from;
     public String to;
     public String value;
-    public long timestamp;
-    public long timeStamp;
+    private long timestamp;
+    private long timeStamp;
     public String chainName;
     public String content;
     public String gasUsed;
@@ -37,6 +37,9 @@ public class TransactionItem implements Parcelable {
         }
     }
 
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public int describeContents() {

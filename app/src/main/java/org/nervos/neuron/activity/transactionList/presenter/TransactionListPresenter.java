@@ -137,13 +137,7 @@ public class TransactionListPresenter {
                     Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Collections.sort(list, (o1, o2) -> {
-                    int ret = 0;
-                    Long x = Long.valueOf(o1.timestamp);
-                    Long y = Long.valueOf(o2.timestamp);
-                    ret = y.compareTo(x);
-                    return ret;
-                });
+                Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
                 if (isEthereum(tokenItem)) {
                     for (TransactionItem item : list) {
                         item.status = 1;

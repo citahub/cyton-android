@@ -69,12 +69,6 @@ public class AppChainTransactionService {
         List<AppChainTransactionDBItem> allList = DBAppChainTransactionsUtil.getChainAll(context, chain, type, contractAddress);
         if (allList.size() > 0) {
             for (AppChainTransactionDBItem item : allList) {
-                Long oldestTime;
-                if (list.get(list.size() - 1).timeStamp > 0) {
-                    oldestTime = list.get(list.size() - 1).timeStamp * 1000;
-                } else {
-                    oldestTime = list.get(list.size() - 1).timestamp;
-                }
                 boolean isReceive = false;
                 for (TransactionItem transactionItem : list) {
                     if (transactionItem.hash.equalsIgnoreCase(item.hash)) {
@@ -82,25 +76,19 @@ public class AppChainTransactionService {
                         break;
                     }
                 }
-                if (!isReceive && oldestTime < item.timestamp && from.equalsIgnoreCase(item.from)) {
+                if (!isReceive && list.get(list.size() - 1).getDate().compareTo(item.getDate()) < 0 && from.equalsIgnoreCase(item.from)) {
                     TransactionItem transactionItem = new TransactionItem();
                     transactionItem.from = item.from;
                     transactionItem.to = item.to;
                     transactionItem.value = item.value;
                     transactionItem.chainName = item.chainName;
                     transactionItem.status = item.status;
-                    transactionItem.timestamp = item.timestamp;
+                    transactionItem.setTimestamp(item.timestamp);
                     transactionItem.hash = item.hash;
                     list.add(transactionItem);
                 }
             }
-            Collections.sort(list, (o1, o2) -> {
-                int ret = 0;
-                Long x = Long.valueOf(o1.timestamp);
-                Long y = Long.valueOf(o2.timestamp);
-                ret = y.compareTo(x);
-                return ret;
-            });
+            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
