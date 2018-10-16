@@ -101,7 +101,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
 
 
     /**
-     * get all pending transaction (native & token)
+     * get all local pending transaction to query (native & token)
      * 获取所有本地保存的交易数据，轮训使用
      *
      * @param context
