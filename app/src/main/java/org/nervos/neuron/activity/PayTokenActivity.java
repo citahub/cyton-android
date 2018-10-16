@@ -20,15 +20,15 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.AppChainRpcService;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SensorDataTrackUtils;
-import org.nervos.neuron.util.db.DBCITATransactionsUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -289,11 +289,11 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        AppChainRpcService.citaTransactionDBItem.isNativeToken = true;
-        AppChainRpcService.citaTransactionDBItem.contractAddress = "";
-        AppChainRpcService.citaTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
+        AppChainRpcService.appChainTransactionDBItem.isNativeToken = true;
+        AppChainRpcService.appChainTransactionDBItem.contractAddress = "";
+        AppChainRpcService.appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
         ChainItem item = DBChainUtil.getChain(mActivity, tokenItem.chainId);
-        AppChainRpcService.citaTransactionDBItem.chainName = item.name;
+        AppChainRpcService.appChainTransactionDBItem.chainName = item.name;
         AppChainRpcService.transferAppChain(transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int) transactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -342,8 +342,8 @@ public class PayTokenActivity extends BaseActivity {
     private void handleTransfer(AppSendTransaction appSendTransaction) {
         transferDialog.setButtonClickAble(true);
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            AppChainRpcService.citaTransactionDBItem.hash = appSendTransaction.getSendTransactionResult().getHash();
-            DBCITATransactionsUtil.save(mActivity, true, AppChainRpcService.citaTransactionDBItem);
+            AppChainRpcService.appChainTransactionDBItem.hash = appSendTransaction.getSendTransactionResult().getHash();
+            DBAppChainTransactionsUtil.save(mActivity, true, AppChainRpcService.appChainTransactionDBItem);
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
             gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));

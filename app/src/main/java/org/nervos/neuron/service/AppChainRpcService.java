@@ -14,14 +14,12 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.neuron.BuildConfig;
-import org.nervos.neuron.item.CITATransactionDBItem;
+import org.nervos.neuron.item.AppChainTransactionDBItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -37,7 +35,6 @@ import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -145,11 +142,11 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    citaTransactionDBItem.status = 2;
-                    citaTransactionDBItem.timestamp = System.currentTimeMillis();
-                    citaTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
-                    citaTransactionDBItem.from = walletItem.address.toLowerCase();
-                    citaTransactionDBItem.to = address.toLowerCase();
+                    appChainTransactionDBItem.status = 2;
+                    appChainTransactionDBItem.timestamp = System.currentTimeMillis();
+                    appChainTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
+                    appChainTransactionDBItem.from = walletItem.address.toLowerCase();
+                    appChainTransactionDBItem.to = address.toLowerCase();
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -185,11 +182,11 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    citaTransactionDBItem.status = 2;
-                    citaTransactionDBItem.timestamp = System.currentTimeMillis();
-                    citaTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
-                    citaTransactionDBItem.from = walletItem.address.toLowerCase();
-                    citaTransactionDBItem.to = toAddress.toLowerCase();
+                    appChainTransactionDBItem.status = 2;
+                    appChainTransactionDBItem.timestamp = System.currentTimeMillis();
+                    appChainTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
+                    appChainTransactionDBItem.from = walletItem.address.toLowerCase();
+                    appChainTransactionDBItem.to = toAddress.toLowerCase();
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -200,7 +197,7 @@ public class AppChainRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static CITATransactionDBItem citaTransactionDBItem = new CITATransactionDBItem();
+    public static AppChainTransactionDBItem appChainTransactionDBItem = new AppChainTransactionDBItem();
 
     public static TransactionReceipt getTransactionReceipt(String hash) throws IOException {
         return service.appGetTransactionReceipt(hash).send().getTransactionReceipt();

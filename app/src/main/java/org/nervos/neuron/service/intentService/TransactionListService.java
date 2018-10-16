@@ -4,14 +4,14 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import org.nervos.neuron.service.CITATransactionService;
+import org.nervos.neuron.service.AppChainTransactionService;
 
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
 public class TransactionListService extends IntentService {
 
-    public static CITATransactionService.CheckImpl impl;
+    public static AppChainTransactionService.CheckImpl impl;
 
     public TransactionListService() {
         super("TransactionListService");
@@ -19,6 +19,6 @@ public class TransactionListService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        CITATransactionService.checkResult(this, impl);
+        AppChainTransactionService.checkResult(this, impl);
     }
 }

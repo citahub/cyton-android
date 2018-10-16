@@ -14,12 +14,11 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
-import org.nervos.neuron.service.CITATransactionService;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.AppChainTransactionService;
 import org.nervos.neuron.service.HttpService;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 
 import java.math.RoundingMode;
@@ -142,7 +141,7 @@ public class TransactionListPresenter {
                     int ret = 0;
                     Long x = Long.valueOf(o1.timestamp);
                     Long y = Long.valueOf(o2.timestamp);
-                    ret = -1 * x.compareTo(y);
+                    ret = y.compareTo(x);
                     return ret;
                 });
                 if (isEthereum(tokenItem)) {
@@ -155,7 +154,7 @@ public class TransactionListPresenter {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? 1 : 0;
                     }
                     ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
-                    List<TransactionItem> allList = CITATransactionService.getTransactionList(activity, isNativeToken(tokenItem), chain.httpProvider, tokenItem.contractAddress, list, from);
+                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, isNativeToken(tokenItem), chain.httpProvider, tokenItem.contractAddress, list, from);
                     listener.refreshList(allList);
                 }
             }

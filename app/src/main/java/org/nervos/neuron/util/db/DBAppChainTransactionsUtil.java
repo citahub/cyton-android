@@ -4,7 +4,8 @@ import android.content.Context;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.CITATransactionDBItem;
+import org.nervos.neuron.item.AppChainTransactionDBItem;
+import org.nervos.neuron.item.AppChainTransactionDBItem;
 import org.nervos.neuron.util.LogUtil;
 
 import java.util.ArrayList;
@@ -15,12 +16,12 @@ import java.util.List;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class DBCITATransactionsUtil extends DBUtil {
-    private static final String DB_CITA = "db_cita_transaction";
-    private static final String DB_PRE_CITA = DB_PREFIX + "cita-";
+public class DBAppChainTransactionsUtil extends DBUtil {
+    private static final String DB_APPCHAIN = "db_appchain_transaction";
+    private static final String DB_PRE_APPCHAIN = DB_PREFIX + "appchain-";
 
-    private static final String DB_PRE_PENDING_HALF = DB_PRE_CITA + "pending-";
-    private static final String DB_PRE_FAILED_HALF = DB_PRE_CITA + "failed-";
+    private static final String DB_PRE_PENDING_HALF = DB_PRE_APPCHAIN + "pending-";
+    private static final String DB_PRE_FAILED_HALF = DB_PRE_APPCHAIN + "failed-";
     private static final String DB_PRE_TOKEN_HALF = "native-";
     private static final String DB_PRE_CHAIN_HALF = "chain-";
 
@@ -28,10 +29,10 @@ public class DBCITATransactionsUtil extends DBUtil {
     private static final String DB_PRE_FAILED = DB_PRE_FAILED_HALF + DB_PRE_TOKEN_HALF + DB_PRE_CHAIN_HALF;
 
 
-    public static void save(Context context, boolean pending, CITATransactionDBItem item) {
+    public static void save(Context context, boolean pending, AppChainTransactionDBItem item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_CITA);
+                db = openDB(context, DB_APPCHAIN);
                 String pendingKey;
                 if (pending) {
                     pendingKey = DB_PRE_PENDING;
@@ -55,10 +56,10 @@ public class DBCITATransactionsUtil extends DBUtil {
         }
     }
 
-    public static void deletePending(Context context, CITATransactionDBItem item) {
+    public static void deletePending(Context context, AppChainTransactionDBItem item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_CITA);
+                db = openDB(context, DB_APPCHAIN);
                 if (item.isNativeToken) {
                     db.del((DB_PRE_PENDING + item.hash).replace("chain", item.chain));
                 } else {
@@ -71,10 +72,10 @@ public class DBCITATransactionsUtil extends DBUtil {
         }
     }
 
-    public static void failed(Context context, CITATransactionDBItem item) {
+    public static void failed(Context context, AppChainTransactionDBItem item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_CITA);
+                db = openDB(context, DB_APPCHAIN);
                 String key;
                 if (item.isNativeToken) {
                     key = (DB_PRE_PENDING + item.hash).replace("chain", item.chain);
@@ -108,17 +109,17 @@ public class DBCITATransactionsUtil extends DBUtil {
      * @param type    0:all 1:native 2:token
      * @return
      */
-    public static List<CITATransactionDBItem> getAll(Context context, boolean pending, int type, String contractAddress) {
+    public static List<AppChainTransactionDBItem> getAll(Context context, boolean pending, int type, String contractAddress) {
         synchronized (dbObject) {
-            List<CITATransactionDBItem> list = new ArrayList<>();
+            List<AppChainTransactionDBItem> list = new ArrayList<>();
             try {
-                db = openDB(context, DB_CITA);
+                db = openDB(context, DB_APPCHAIN);
                 String pendingKey = pending ? DB_PRE_PENDING_HALF : DB_PRE_PENDING_HALF;
                 String query;
                 switch (type) {
                     case 0:
                     default:
-                        query = DB_PRE_CITA;
+                        query = DB_PRE_APPCHAIN;
                         break;
                     case 1:
                         query = pendingKey + DB_PRE_TOKEN_HALF;
@@ -129,7 +130,7 @@ public class DBCITATransactionsUtil extends DBUtil {
                 }
                 String[] keys = db.findKeys(query);
                 for (String key : keys) {
-                    list.add(db.getObject(key, CITATransactionDBItem.class));
+                    list.add(db.getObject(key, AppChainTransactionDBItem.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
@@ -148,11 +149,11 @@ public class DBCITATransactionsUtil extends DBUtil {
      * @param type    true:native fasle:token
      * @return
      */
-    public static List<CITATransactionDBItem> getChainAll(Context context, String chain, boolean type, String contractAddress) {
+    public static List<AppChainTransactionDBItem> getChainAll(Context context, String chain, boolean type, String contractAddress) {
         synchronized (dbObject) {
-            List<CITATransactionDBItem> list = new ArrayList<>();
+            List<AppChainTransactionDBItem> list = new ArrayList<>();
             try {
-                db = openDB(context, DB_CITA);
+                db = openDB(context, DB_APPCHAIN);
                 String queryPending = DB_PRE_PENDING.replace("chain", chain);
                 String queryFailed = DB_PRE_FAILED.replace("chain", chain);
                 if (!type) {
@@ -161,11 +162,11 @@ public class DBCITATransactionsUtil extends DBUtil {
                 }
                 String[] keysPending = db.findKeys(queryPending);
                 for (String key : keysPending) {
-                    list.add(db.getObject(key, CITATransactionDBItem.class));
+                    list.add(db.getObject(key, AppChainTransactionDBItem.class));
                 }
                 String[] keysFailed = db.findKeys(queryFailed);
                 for (String key : keysFailed) {
-                    list.add(db.getObject(key, CITATransactionDBItem.class));
+                    list.add(db.getObject(key, AppChainTransactionDBItem.class));
                 }
                 db.close();
 //                LogUtil.d("show queryPending>>>" + queryPending);

@@ -3,7 +3,7 @@ package org.nervos.neuron.item;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class CITATransactionDBItem {
+public class AppChainTransactionDBItem {
 
     public String hash;
     public long timestamp;

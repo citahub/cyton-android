@@ -23,14 +23,13 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.CITATransactionDBItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.service.WalletService;
@@ -41,7 +40,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
-import org.nervos.neuron.util.db.DBCITATransactionsUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -450,12 +449,12 @@ public class TransferActivity extends NBaseActivity {
      * @param value transfer value
      */
     private void transferAppChainToken(String password, double value) {
-        AppChainRpcService.citaTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
-        AppChainRpcService.citaTransactionDBItem.isNativeToken = true;
-        AppChainRpcService.citaTransactionDBItem.contractAddress = "";
-        AppChainRpcService.citaTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
+        AppChainRpcService.appChainTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
+        AppChainRpcService.appChainTransactionDBItem.isNativeToken = true;
+        AppChainRpcService.appChainTransactionDBItem.contractAddress = "";
+        AppChainRpcService.appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
         ChainItem item = DBChainUtil.getChain(mActivity, tokenItem.chainId);
-        AppChainRpcService.citaTransactionDBItem.chainName = item.name;
+        AppChainRpcService.appChainTransactionDBItem.chainName = item.name;
         transactionHexData = payHexDataEdit.getText().toString().trim();
         AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
                 transactionHexData, tokenItem.chainId, password)
@@ -479,13 +478,13 @@ public class TransferActivity extends NBaseActivity {
      * @param value transfer value
      */
     private void transferAppChainErc20(String password, double value) {
-        AppChainRpcService.citaTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
+        AppChainRpcService.appChainTransactionDBItem.value = NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim()));
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
-        AppChainRpcService.citaTransactionDBItem.isNativeToken = false;
-        AppChainRpcService.citaTransactionDBItem.contractAddress = tokenItem.contractAddress;
-        AppChainRpcService.citaTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
+        AppChainRpcService.appChainTransactionDBItem.isNativeToken = false;
+        AppChainRpcService.appChainTransactionDBItem.contractAddress = tokenItem.contractAddress;
+        AppChainRpcService.appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
         ChainItem item = DBChainUtil.getChain(mActivity, tokenItem.chainId);
-        AppChainRpcService.citaTransactionDBItem.chainName = item.name;
+        AppChainRpcService.appChainTransactionDBItem.chainName = item.name;
         try {
             AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
                     receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
@@ -509,8 +508,8 @@ public class TransferActivity extends NBaseActivity {
         progressBar.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-            AppChainRpcService.citaTransactionDBItem.hash = appSendTransaction.getSendTransactionResult().getHash();
-            DBCITATransactionsUtil.save(mActivity, true, AppChainRpcService.citaTransactionDBItem);
+            AppChainRpcService.appChainTransactionDBItem.hash = appSendTransaction.getSendTransactionResult().getHash();
+            DBAppChainTransactionsUtil.save(mActivity, true, AppChainRpcService.appChainTransactionDBItem);
             transferDialog.dismiss();
             finish();
         } else if (appSendTransaction.getError() != null &&
