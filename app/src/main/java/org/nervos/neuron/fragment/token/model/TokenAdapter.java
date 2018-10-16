@@ -13,10 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
@@ -53,17 +55,29 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         TokenItem tokenItem = tokenItemList.get(position);
         if (TextUtils.isEmpty(tokenItem.avatar)) {
             if (tokenItem.chainId < 0) {
-                Glide.with(activity)
-                        .load(R.drawable.ether_big)
-                        .into(holder.tokenImage);
+                if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                    RequestOptions options = new RequestOptions()
+                            .error(R.drawable.ether_big);
+                    Glide.with(activity)
+                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenItem.contractAddress)))
+                            .apply(options)
+                            .into(holder.tokenImage);
+                } else {
+                    Glide.with(activity)
+                            .load(R.drawable.ether_big)
+                            .into(holder.tokenImage);
+                }
             } else {
                 Glide.with(activity)
                         .load(R.mipmap.ic_launcher)
                         .into(holder.tokenImage);
             }
         } else {
+            RequestOptions options = new RequestOptions()
+                    .error(R.drawable.ether_big);
             Glide.with(activity)
                     .load(Uri.parse(tokenItem.avatar))
+                    .apply(options)
                     .into(holder.tokenImage);
         }
         if (tokenItem != null) {
