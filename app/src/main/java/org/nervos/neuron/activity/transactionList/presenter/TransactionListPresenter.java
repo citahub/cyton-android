@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionList.model.TokenDescribeModel;
@@ -45,11 +46,14 @@ public class TransactionListPresenter {
     public void setTokenLogo(ImageView tokenLogoImage) {
         if (isEthereum(tokenItem)) {
             if (!isNativeToken(tokenItem)) {
-                if (TextUtils.isEmpty(tokenItem.avatar))
+                if (TextUtils.isEmpty(tokenItem.avatar)) {
+                    RequestOptions options = new RequestOptions()
+                            .error(R.drawable.ether_big);
                     Glide.with(activity)
                             .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenItem.contractAddress)))
+                            .apply(options)
                             .into(tokenLogoImage);
-                else
+                } else
                     Glide.with(activity)
                             .load(Uri.parse(tokenItem.avatar))
                             .into(tokenLogoImage);
@@ -110,7 +114,7 @@ public class TransactionListPresenter {
                     HttpService.getETHTransactionList(activity) :
                     HttpService.getAppChainTransactionList(activity);
         } else {
-            observable = isEthereum(tokenItem)?
+            observable = isEthereum(tokenItem) ?
                     HttpService.getETHERC20TransactionList(activity, tokenItem) :
                     HttpService.getAppChainERC20TransactionList(activity, tokenItem);
         }

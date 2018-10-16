@@ -16,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.token.model.TokenAdapter;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
@@ -114,8 +116,11 @@ public class TokenManageActivity extends BaseActivity {
                 TokenViewHolder viewHolder = (TokenViewHolder) holder;
                 if (tokenList.get(position).logo == null ||
                         TextUtils.isEmpty(tokenList.get(position).logo.src)) {
+                    RequestOptions options = new RequestOptions()
+                            .error(R.drawable.ether_big);
                     Glide.with(mActivity)
-                            .load(R.drawable.ether_big)
+                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenList.get(position).address)))
+                            .apply(options)
                             .into(viewHolder.tokenImage);
                 } else {
                     Glide.with(mActivity)

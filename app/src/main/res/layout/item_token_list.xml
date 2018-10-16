@@ -11,8 +11,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="79dp"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp">
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
 
             <ImageView
                 android:id="@+id/token_image"
