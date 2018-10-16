@@ -21,6 +21,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -51,6 +52,7 @@ import org.nervos.neuron.view.dialog.TransferDialog;
 import org.nervos.neuron.view.tool.NeuronTextWatcher;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
@@ -284,10 +286,25 @@ public class TransferActivity extends NBaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void initQuota() {
-        mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
-                ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
-        mTransferFee = NumberUtil.getEthFromWei(mQuota);
-        feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+        AppChainRpcService.getQuotaPrice(walletItem.address).subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onNext(String quotaPrice) {
+                mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
+                        ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+                mQuota = mQuota.multiply(Numeric.toBigInt(quotaPrice));
+                mTransferFee = NumberUtil.getEthFromWei(mQuota);
+                feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+            }
+        });
+
     }
 
     @Override
@@ -471,7 +488,7 @@ public class TransferActivity extends NBaseActivity {
      */
     private void transferAppChainToken(String password, double value) {
         AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
-                "", tokenItem.chainId, password)
+                "", ConstUtil.QUOTA_TOKEN.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -494,7 +511,7 @@ public class TransferActivity extends NBaseActivity {
     private void transferAppChainErc20(String password, double value) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
         AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
+                receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {

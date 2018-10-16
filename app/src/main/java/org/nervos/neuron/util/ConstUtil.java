@@ -12,7 +12,6 @@ public class ConstUtil {
     public static final String GWEI = "GWei";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
-    public static final long DEFAULT_QUOTA = LONG_6;
 
 
     // gas constant data

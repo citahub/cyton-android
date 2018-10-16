@@ -12,6 +12,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.http.HttpService;
+import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -19,6 +20,7 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -122,9 +124,26 @@ public class AppChainRpcService {
         return 0.0;
     }
 
+    public static Observable<String> getQuotaPrice(String from) {
+        return Observable.fromCallable(new Callable<String>() {
+            @Override
+            public String call() {
+                try {
+                    String price = new NervosjSysContract(service).getQuotaPrice(from).getValue();
+                    price = price.equals("0x")? "0" : price;
+                    return price;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "0";
+            }
+        }).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread());
+    }
+
 
     public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
-           String contractAddress, String address, double value, int chainId, String password){
+           String contractAddress, String address, double value, long quota, int chainId, String password){
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -137,7 +156,7 @@ public class AppChainRpcService {
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
                         NumberUtil.toLowerCaseWithout0x(contractAddress),
-                        randomNonce(), ConstUtil.DEFAULT_QUOTA, validUntilBlock.longValue(),
+                        randomNonce(), quota, validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO.toString(), data);
                 try {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
@@ -155,11 +174,6 @@ public class AppChainRpcService {
     }
 
     public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
-                                                String data, int chainId, String password) {
-        return transferAppChain(toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
-    }
-
-    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
@@ -171,7 +185,7 @@ public class AppChainRpcService {
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
                         NumberUtil.toLowerCaseWithout0x(toAddress),
-                        randomNonce(), (quota == 0? ConstUtil.DEFAULT_QUOTA : quota),
+                        randomNonce(), quota ,
                         validUntilBlock.longValue(), version, chainId,
                         NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);
                 try {

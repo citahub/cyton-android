@@ -107,12 +107,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/abi-0.18-android.jar')
-    implementation files('libs/core-0.18-android.jar')
     implementation files('libs/crypto-0.18-android.jar')
     implementation files('libs/protobuf-0.18-android.jar')
     implementation files('libs/utils-0.18-android.jar')
     implementation files('libs/infura-3.3.1-android.jar')
-
+    implementation files('libs/core-0.19-android.jar')
 }
 
 def getVersionName(boolean isDebug) {
