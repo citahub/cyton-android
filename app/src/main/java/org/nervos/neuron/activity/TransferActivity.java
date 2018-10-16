@@ -1,6 +1,8 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
@@ -49,11 +51,11 @@ import org.nervos.neuron.view.dialog.TransferDialog;
 import org.nervos.neuron.view.tool.NeuronTextWatcher;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
-import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscriber;
 
 import static org.web3j.utils.Convert.Unit.GWEI;
 
@@ -73,7 +75,7 @@ public class TransferActivity extends NBaseActivity {
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BigInteger mGasPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
-    private double mTokenPrice = 0.0f, mBalance;
+    private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
     private double mTransferFee;
@@ -133,10 +135,40 @@ public class TransferActivity extends NBaseActivity {
         WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new NeuronSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
-                mBalance = balance;
+                mTokenBalance = balance;
                 balanceText.setText(String.format(
                         getString(R.string.transfer_balance_place_holder),
                         NumberUtil.getDecimal8Sub(balance) + " " + tokenItem.symbol));
+            }
+        });
+
+        WalletService.getBalanceWithNativeToken(mActivity, tokenItem).subscribe(new Subscriber<Double>(){
+            @Override
+            public void onNext(Double balance) {
+                mNativeTokenBalance = balance;
+                initBalanceToTransferView();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+    private void initBalanceToTransferView() {
+        balanceText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(tokenItem.contractAddress)) {
+                    transferValueEdit.setText(String.valueOf(mNativeTokenBalance - mTransferFee));
+                } else {
+                    transferValueEdit.setText(String.valueOf(mTokenBalance));
+                }
             }
         });
     }
@@ -163,7 +195,7 @@ public class TransferActivity extends NBaseActivity {
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
                 mGasPrice = gasPrice;
-
+                mGas = mGasPrice.multiply(mGasLimit);
                 initTransferFeeView();
             }
         });
@@ -194,14 +226,12 @@ public class TransferActivity extends NBaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void initTransferFeeView() {
-        mGas = mGasPrice.multiply(mGasLimit);
         mTransferFee = NumberUtil.getEthFromWei(mGas);
         if (mTokenPrice > 0 && currencyItem != null) {
             feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
                     + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
         }
-
     }
 
 
@@ -215,26 +245,33 @@ public class TransferActivity extends NBaseActivity {
         TextView gasPriceDefaultText = view.findViewById(R.id.default_gas_price_text);
         TextView gasLimitDefaultText = view.findViewById(R.id.default_gas_limit_text);
         CommonButton confirmButton = view.findViewById(R.id.advanced_setup_button);
-        view.findViewById(R.id.close_image).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        String gasLimitDefault = NumberUtil.getDecimalValid_2(
+        String gasPriceDefault = NumberUtil.getDecimalValid_2(
                 Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
         gasPriceDefaultText.setText(
-                String.format(getString(R.string.default_eth_gas_price), gasLimitDefault));
+                String.format(getString(R.string.default_eth_gas_price), gasPriceDefault));
         gasLimitDefaultText.setText(mGasLimit.toString());
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(gasPriceEdit.getText().toString().trim())) {
+                String gasPrice = gasPriceEdit.getText().toString().trim();
+                if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                    Toast.makeText(mActivity,
+                            String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                            Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
-                    mGas = Convert.toWei(gasPriceEdit.getText().toString(), GWEI).toBigInteger()
+                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger()
                             .multiply(mGasLimit);
                     initTransferFeeView();
                 }
@@ -276,17 +313,35 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
-            } else if (mBalance < Double.parseDouble(transferValueEdit.getText().toString().trim())) {
-                Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
-                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
-            } else if (mBalance < mTransferFee) {
+            } else if (mNativeTokenBalance < mTransferFee) {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
+            } else if (checkTransferValueMoreBalance()) {
+                new AlertDialog.Builder(mActivity).setMessage(R.string.all_balance_transfer_tip)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getConfirmTransferView();
+                            }
+                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
             } else {
-                if (!isFastDoubleClick())
-                    getConfirmTransferView();
+                getConfirmTransferView();
             }
         });
+    }
+
+    private boolean checkTransferValueMoreBalance() {
+        if (isNativeToken()) {
+            return Double.parseDouble(transferValueEdit.getText().toString().trim()) >
+                    (mNativeTokenBalance - mTransferFee);
+        } else {
+            return Double.parseDouble(transferValueEdit.getText().toString().trim()) > mTokenBalance;
+        }
     }
 
     private boolean isAddressOK = false, isValueOk = false;
@@ -330,6 +385,7 @@ public class TransferActivity extends NBaseActivity {
             @Override
             public void onNext(BigInteger gasLimit) {
                 mGasLimit = gasLimit.multiply(BigInteger.valueOf(2));
+                mGas = mGasPrice.multiply(mGasLimit);
                 initTransferFeeView();
             }
         });
@@ -355,6 +411,10 @@ public class TransferActivity extends NBaseActivity {
         return tokenItem.chainId < 0 && !TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
+    private boolean isNativeToken() {
+       return TextUtils.isEmpty(tokenItem.contractAddress);
+    }
+
     private String getFeeTokenUnit() {
         if (isETH()) {
             return " " + ConstUtil.ETH;
@@ -371,6 +431,7 @@ public class TransferActivity extends NBaseActivity {
      */
     @SuppressLint("SetTextI18n")
     private void getConfirmTransferView() {
+        if (isFastDoubleClick()) return;
         String value = transferValueEdit.getText().toString().trim();
         transferDialog = new TransferDialog(this, (password, progressBar) -> {
             this.progressBar = progressBar;

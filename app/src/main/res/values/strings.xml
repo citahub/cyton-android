@@ -533,4 +533,7 @@ Nervos基金会\n
     <string name="default_eth_gas_limit">以太坊推荐值 GasLimit</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">请输入正确的GasPrice</string>
+    <string name="gas_price_too_low">您的gasPrice设置过低，请确保输入大于等于%sGWei 以快速转账</string>
+    <string name="balance_more_gas">请确保账户剩余Token高于矿工费用，以便顺利完成转账～</string>
+    <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
 </resources>

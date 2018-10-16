@@ -12,14 +12,21 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            <ImageView
-                android:id="@+id/close_image"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+            <FrameLayout
+                android:id="@+id/close_layout"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:background="@drawable/delete" />
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:background="@drawable/delete" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
