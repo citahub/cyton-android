@@ -114,7 +114,7 @@ public class TransactionListPresenter {
                     HttpService.getETHTransactionList(activity) :
                     HttpService.getAppChainTransactionList(activity);
         } else {
-            observable = isEthereum(tokenItem)?
+            observable = isEthereum(tokenItem) ?
                     HttpService.getETHERC20TransactionList(activity, tokenItem) :
                     HttpService.getAppChainERC20TransactionList(activity, tokenItem);
         }
@@ -146,7 +146,10 @@ public class TransactionListPresenter {
                     return ret;
                 });
                 if (isEthereum(tokenItem)) {
-
+                    for (TransactionItem item : list) {
+                        item.status = 1;
+                    }
+                    listener.refreshList(list);
                 } else {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? 1 : 0;

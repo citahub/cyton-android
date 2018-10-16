@@ -31,7 +31,6 @@ public class DBCITATransactionsUtil extends DBUtil {
     public static void save(Context context, boolean pending, CITATransactionDBItem item) {
         synchronized (dbObject) {
             try {
-                LogUtil.d("save>>>" + item.hash);
                 db = openDB(context, DB_CITA);
                 String pendingKey;
                 if (pending) {
@@ -45,8 +44,10 @@ public class DBCITATransactionsUtil extends DBUtil {
                 if (item.isNativeToken) {
                     db.put(pendingKey, item);
                 } else {
-                    db.put(pendingKey.replace("native", item.contractAddress), item);
+                    pendingKey = pendingKey.replace("native", item.contractAddress);
+                    db.put(pendingKey, item);
                 }
+//                LogUtil.d("save>>>" + pendingKey);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -131,7 +132,6 @@ public class DBCITATransactionsUtil extends DBUtil {
                     list.add(db.getObject(key, CITATransactionDBItem.class));
                 }
                 db.close();
-                return list;
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
@@ -156,11 +156,11 @@ public class DBCITATransactionsUtil extends DBUtil {
                 String queryPending = DB_PRE_PENDING.replace("chain", chain);
                 String queryFailed = DB_PRE_FAILED.replace("chain", chain);
                 if (!type) {
-                    queryPending.replace("native", contractAddress);
-                    queryFailed.replace("native", contractAddress);
+                    queryPending = queryPending.replace("native", contractAddress);
+                    queryFailed = queryFailed.replace("native", contractAddress);
                 }
-                String[] keysPeding = db.findKeys(queryPending);
-                for (String key : keysPeding) {
+                String[] keysPending = db.findKeys(queryPending);
+                for (String key : keysPending) {
                     list.add(db.getObject(key, CITATransactionDBItem.class));
                 }
                 String[] keysFailed = db.findKeys(queryFailed);
@@ -168,9 +168,11 @@ public class DBCITATransactionsUtil extends DBUtil {
                     list.add(db.getObject(key, CITATransactionDBItem.class));
                 }
                 db.close();
+//                LogUtil.d("show queryPending>>>" + queryPending);
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
+//            LogUtil.d("show>>>" + list.size());
             return list;
         }
     }

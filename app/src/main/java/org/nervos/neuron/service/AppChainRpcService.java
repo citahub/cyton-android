@@ -145,6 +145,12 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
+                    citaTransactionDBItem.status = 2;
+                    citaTransactionDBItem.timestamp = System.currentTimeMillis();
+                    citaTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
+                    citaTransactionDBItem.from = walletItem.address.toLowerCase();
+                    citaTransactionDBItem.to = address.toLowerCase();
+                    citaTransactionDBItem.value = value + "";
                     return Observable.just(service.appSendRawTransaction(rawTx).send());
                 } catch (Exception e) {
                     e.printStackTrace();
