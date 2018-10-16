@@ -97,6 +97,7 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/default_gas_limit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
