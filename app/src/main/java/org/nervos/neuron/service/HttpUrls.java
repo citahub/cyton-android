@@ -47,4 +47,5 @@ public class HttpUrls {
     //Token Describe
     public static final String TOKEN_LOGO = "https://github.com/consenlabs/token-profile/blob/master/images/@address.png?raw=true";
     public static final String TOKEN_DESC = "https://raw.githubusercontent.com/consenlabs/token-profile/master/erc20/@address.json";
+    public static final String TOKEN_DETAIL = "http://47.97.171.140:8096/?token=@address";
 }
