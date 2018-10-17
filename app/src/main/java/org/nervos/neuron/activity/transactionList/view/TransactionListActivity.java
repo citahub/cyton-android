@@ -123,6 +123,8 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenDesRoot.setVisibility(View.VISIBLE);
                 tokenDesText.setText(R.string.ETH_Describe);
                 presenter.getBalance();
+                tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", "ethereum")));
+
             }
         }
     }
@@ -162,7 +164,7 @@ public class TransactionListActivity extends NBaseActivity {
                     tokenDesRoot.setVisibility(View.VISIBLE);
                     presenter.setTokenLogo(tokenLogoImage);
                     initBalance();
-                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", tokenItem.contractAddress)));
+                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_ERC20_DETAIL.replace("@address", tokenItem.contractAddress)));
                 } else
                     tokenDesRoot.setVisibility(View.GONE);
             });
