@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
+import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.activity.transactionList.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionList.presenter.TransactionListPresenter;
@@ -21,6 +22,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
 
@@ -79,7 +81,7 @@ public class TransactionListActivity extends NBaseActivity {
         showProgressBar();
         presenter = new TransactionListPresenter(this, tokenItem, listener);
         initAdapter();
-        presenter.getTransactionList();
+        presenter.getTransactionList(walletItem.address);
         initDescribe();
         DecimalFormat formater = new DecimalFormat("0.####");
         formater.setRoundingMode(RoundingMode.FLOOR);
@@ -94,17 +96,18 @@ public class TransactionListActivity extends NBaseActivity {
             intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList());
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList(walletItem.address));
     }
 
     private void initAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address, tokenItem.symbol);
+        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address);
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
             Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
             intent.putExtra(EXTRA_TRANSACTION, transactionItemList.get(position));
+            intent.putExtra(EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
     }
@@ -156,6 +159,7 @@ public class TransactionListActivity extends NBaseActivity {
                     tokenDesRoot.setVisibility(View.VISIBLE);
                     presenter.setTokenLogo(tokenLogoImage);
                     initBalance();
+                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", tokenItem.contractAddress)));
                 } else
                     tokenDesRoot.setVisibility(View.GONE);
             });

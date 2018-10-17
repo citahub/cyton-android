@@ -20,13 +20,14 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.AppChainRpcService;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -249,17 +250,17 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferEth(String password, ProgressBar progressBar) {
         Observable.just(transactionInfo.gasPrice)
-            .flatMap(new Func1<String, Observable<BigInteger>>() {
-                @Override
-                public Observable<BigInteger> call(String gasPrice) {
-                    if (TextUtils.isEmpty(transactionInfo.gasPrice)
-                            || "0".equals(transactionInfo.gasPrice)) {
-                        return EthRpcService.getEthGasPrice();
-                    } else {
-                        return Observable.just(Numeric.toBigInt(gasPrice));
+                .flatMap(new Func1<String, Observable<BigInteger>>() {
+                    @Override
+                    public Observable<BigInteger> call(String gasPrice) {
+                        if (TextUtils.isEmpty(transactionInfo.gasPrice)
+                                || "0".equals(transactionInfo.gasPrice)) {
+                            return EthRpcService.getEthGasPrice();
+                        } else {
+                            return Observable.just(Numeric.toBigInt(gasPrice));
+                        }
                     }
-                }
-            }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
+                }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
             @Override
             public Observable<EthSendTransaction> call(BigInteger gasPrice) {
                 return EthRpcService.transferEth(transactionInfo.to,
@@ -268,27 +269,28 @@ public class PayTokenActivity extends BaseActivity {
                         transactionInfo.data, password);
             }
         }).subscribeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe(new NeuronSubscriber<EthSendTransaction>() {
-                @Override
-                public void onError(Throwable e) {
-                    progressBar.setVisibility(View.GONE);
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
-                    gotoSignFail(getCommonError());
-                }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                        e.printStackTrace();
+                        Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+                        gotoSignFail(getCommonError());
+                    }
 
-                @Override
-                public void onNext(EthSendTransaction ethSendTransaction) {
-                    progressBar.setVisibility(View.GONE);
-                    handleTransfer(ethSendTransaction);
-                }
-            });
+                    @Override
+                    public void onNext(EthSendTransaction ethSendTransaction) {
+                        progressBar.setVisibility(View.GONE);
+                        handleTransfer(ethSendTransaction);
+                    }
+                });
     }
 
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        AppChainRpcService.transferAppChain(transactionInfo.to, transactionInfo.getDoubleValue(),
+        SaveAppChainPendingItemUtils.setNativeToken(mActivity, transactionInfo.chainId, walletItem.address.toLowerCase(), transactionInfo.to.toLowerCase(), "0");
+        AppChainRpcService.transferAppChain(mActivity, transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int) transactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override

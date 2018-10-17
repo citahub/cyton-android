@@ -6,6 +6,8 @@ public class HttpUrls {
     public static final String APPCHAIN_SERVER_URL = "https://microscope.cryptape.com:8888";
     public static final String APPCHAIN_TRANSACTION_URL = APPCHAIN_SERVER_URL + "/api/transactions?account=";
     public static final String APPCHAIN_ERC20_TRANSACTION_URL = APPCHAIN_SERVER_URL + "/api/erc20/transfers?address=@address&account=@account";
+    public static final String APPCHAIN_SERVER_URL_STAGING = "http://47.97.171.140:18090";
+    public static final String APPCHAIN_TRANSACTION_URL_STAGING = APPCHAIN_SERVER_URL_STAGING + "/api/transactions?account=";
     public static final String ETH_TRANSACTION_URL = "http://api.etherscan.io/api?apikey="
             + ETHER_SCAN_API_KEY + "&module=account&action=txlist&sort=asc&address=";
     public static final String ETH_ERC20_TRANSACTION_URL = "https://api.etherscan.io/api?apikey="
@@ -45,4 +47,5 @@ public class HttpUrls {
     //Token Describe
     public static final String TOKEN_LOGO = "https://github.com/consenlabs/token-profile/blob/master/images/@address.png?raw=true";
     public static final String TOKEN_DESC = "https://raw.githubusercontent.com/consenlabs/token-profile/master/erc20/@address.json";
+    public static final String TOKEN_DETAIL = "http://47.97.171.140:8096/?token=@address";
 }

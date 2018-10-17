@@ -156,8 +156,8 @@ public class NumberUtil {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
 
-    public static String divideDecimal8Sub(BigInteger value, int decimal) {
-        return getDecimal8Sub(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
+    public static String divideDecimal8Sub(BigDecimal value, int decimal) {
+        return getDecimal8Sub(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
     }
 
     public static String divideDecimal8ENotation(BigInteger value, int decimal) {

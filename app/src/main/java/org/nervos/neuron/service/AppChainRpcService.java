@@ -11,6 +11,7 @@ import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.BuildConfig;
@@ -18,7 +19,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
+import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -34,10 +35,8 @@ import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.utils.Numeric;
 
-
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,11 +76,11 @@ public class AppChainRpcService {
     }
 
 
-    public static TokenItem getErc20TokenInfo(String contractAddress){
+    public static TokenItem getErc20TokenInfo(String contractAddress) {
         try {
             return new TokenItem(getErc20Name(contractAddress),
-                getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
-                contractAddress);
+                    getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
+                    contractAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,13 +92,13 @@ public class AppChainRpcService {
         Call balanceCall = new Call(address, tokenItem.contractAddress,
                 ConstUtil.BALANCE_OF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
         String balanceOf = service.appCall(balanceCall,
-                    DefaultBlockParameterName.LATEST).send().getValue();
+                DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
             Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
             double balances = balance.getValue().doubleValue();
             if (tokenItem.decimals == 0) return balances;
-            else return balances/(Math.pow(10, tokenItem.decimals));
+            else return balances / (Math.pow(10, tokenItem.decimals));
         }
         return 0.0;
     }
@@ -162,16 +161,19 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    return Observable.just(service.appSendRawTransaction(rawTx).send());
+                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
+                    return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
 
     }
+
 
     public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
@@ -187,19 +189,26 @@ public class AppChainRpcService {
                         NumberUtil.toLowerCaseWithout0x(toAddress),
                         randomNonce(), quota ,
                         validUntilBlock.longValue(), version, chainId,
-                        NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data)? "":data);
+                        NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
                 try {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    return Observable.just(service.appSendRawTransaction(rawTx).send());
+                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
+                    return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return Observable.just(null);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static TransactionReceipt getTransactionReceipt(String hash) throws IOException {
+        return service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
     }
 
     private static BigInteger getValidUntilBlock() {
@@ -212,22 +221,27 @@ public class AppChainRpcService {
         return BigInteger.ZERO;
     }
 
+    public static BigInteger getBlockNumber() throws IOException {
+        return (service.appBlockNumber().send()).getBlockNumber();
+    }
 
     private static final String TRANSFER_METHOD = "transfer";
+
     private static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
-        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+        });
         Function function = new Function(TRANSFER_METHOD, params, returnTypes);
         return FunctionEncoder.encode(function);
     }
 
     private static BigInteger getERC20TransferValue(TokenItem tokenItem, double value) {
         StringBuilder sb = new StringBuilder("1");
-        for(int i = 0; i < tokenItem.decimals; i++) {
+        for (int i = 0; i < tokenItem.decimals; i++) {
             sb.append("0");
         }
         BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long)(ConstUtil.LONG_6*value)))
+        return ERC20Decimal.multiply(BigInteger.valueOf((long) (ConstUtil.LONG_6 * value)))
                 .divide(BigInteger.valueOf(ConstUtil.LONG_6));
     }
 
@@ -263,6 +277,7 @@ public class AppChainRpcService {
     }
 
     private static List<TypeReference<Type>> intTypes = new ArrayList<>();
+
     private static void initIntTypes() {
         intTypes.clear();
         intTypes.add(new TypeReference<Type>() {
@@ -274,6 +289,7 @@ public class AppChainRpcService {
     }
 
     private static List<TypeReference<Type>> stringTypes = new ArrayList<>();
+
     private static void initStringTypes() {
         stringTypes.clear();
         stringTypes.add(new TypeReference<Type>() {

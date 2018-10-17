@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -17,12 +16,17 @@ import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.response.AppChainTransactionResponse;
+import org.nervos.neuron.service.AppChainRpcService;
+import org.nervos.neuron.service.AppChainRpcService;
+import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.intentService.TransactionListService;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
 
@@ -34,13 +38,8 @@ public class MainActivity extends BaseActivity {
     public static final int REQUEST_CODE_SCAN = 0x01;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        initView();
-        initListener();
-
+    protected int getContentLayout() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -48,11 +47,16 @@ public class MainActivity extends BaseActivity {
         return getResources().getColor(R.color.colorPrimary);
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         navigation = findViewById(R.id.navigation);
         navigation.check(RadioGroup.NO_ID);
-        fMgr = getSupportFragmentManager();
 
+    }
+
+    @Override
+    protected void initData() {
+        fMgr = getSupportFragmentManager();
         if (SharePrefUtil.getFirstIn()) {
             SharePrefUtil.putFirstIn(false);
             new AlertDialog.Builder(mActivity)
@@ -65,23 +69,11 @@ public class MainActivity extends BaseActivity {
                         }
                     }).show();
         }
+        startCheckTransaction();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (getIntent() != null) {
-            setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setNavigationItem(intent.getStringExtra(EXTRA_TAG));
-    }
-
-    private void initListener() {
+    protected void initAction() {
         navigation.setOnCheckedChangeListener((group, checkedId) -> {
             FragmentTransaction transaction = fMgr.beginTransaction();
             hideFragments(transaction);
@@ -128,6 +120,29 @@ public class MainActivity extends BaseActivity {
 
         setNavigationItem(AppFragment.TAG);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (getIntent() != null) {
+            setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setNavigationItem(intent.getStringExtra(EXTRA_TAG));
+    }
+
+    private void startCheckTransaction() {
+        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_IP);
+        Intent serverIntent = new Intent(this, TransactionListService.class);
+        startService(serverIntent);
+        TransactionListService.impl = () -> {
+            handler.postDelayed(() -> startCheckTransaction(), 3000);
+        };
     }
 
     /**

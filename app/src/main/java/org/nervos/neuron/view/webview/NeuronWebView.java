@@ -254,13 +254,6 @@ public class NeuronWebView extends WebView {
                 externalClient.onReceivedError(view, errorCode, description, failingUrl);
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            if (externalClient != null)
-                externalClient.onReceivedHttpError(view, request, errorResponse);
-        }
-
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {

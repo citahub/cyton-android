@@ -18,6 +18,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -101,7 +102,7 @@ public class HttpService {
                             for (TransactionItem item : transactionItemList) {
                                 item.chainName = ConstUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.divideDecimal8Sub(
-                                        new BigInteger(item.value), tokenItem.decimals));
+                                        new BigDecimal(item.value), tokenItem.decimals));
                                 item.symbol = tokenItem.symbol;
                                 item.nativeSymbol = ConstUtil.ETH;
                             }
@@ -174,7 +175,7 @@ public class HttpService {
                             .body().string(), AppChainERC20TransferResponse.class);
                     for (TransactionItem item : response.result.transfers) {
                         item.value = (NumberUtil.divideDecimal8Sub(
-                                new BigInteger(item.value), tokenItem.decimals));
+                                new BigDecimal(item.value), tokenItem.decimals));
                         item.symbol = tokenItem.symbol;
                         item.nativeSymbol = result.tokenSymbol;
                     }

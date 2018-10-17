@@ -14,16 +14,15 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.HexUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SharePicUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.view.TitleBar;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
@@ -92,13 +91,17 @@ public class TransactionDetailActivity extends NBaseActivity {
                     "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             tokenUnitText.setText(transactionItem.symbol);
-            transactionGas.setText(
-                    NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed))
-                            + transactionItem.nativeSymbol);
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
-            int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
-            transactionBlockNumberText.setText(String.valueOf(blockNumber));
+            try {
+                transactionGas.setText(
+                        NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed))
+                                + transactionItem.nativeSymbol);
+                int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
+                transactionBlockNumberText.setText(String.valueOf(blockNumber));
+            } catch (Exception e) {
+
+            }
         }
 
         transactionBlockTimeText.setText(transactionItem.getDate());
