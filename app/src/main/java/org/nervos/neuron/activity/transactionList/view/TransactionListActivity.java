@@ -105,10 +105,13 @@ public class TransactionListActivity extends NBaseActivity {
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
-            Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-            intent.putExtra(EXTRA_TRANSACTION, transactionItemList.get(position));
-            intent.putExtra(EXTRA_TOKEN, tokenItem);
-            startActivity(intent);
+            TransactionItem item = transactionItemList.get(position);
+            if (item.status != 2) {
+                Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
+                intent.putExtra(EXTRA_TRANSACTION, item);
+                intent.putExtra(EXTRA_TOKEN, tokenItem);
+                startActivity(intent);
+            }
         });
     }
 

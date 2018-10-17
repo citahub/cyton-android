@@ -105,7 +105,7 @@ public class TransactionListPresenter {
                                 DecimalFormat formater = new DecimalFormat("0.####");
                                 formater.setRoundingMode(RoundingMode.FLOOR);
                                 listener.getCurrency(formater.format(tokenItem.balance)
-                                        + tokenItem.symbol + "~"
+                                        + tokenItem.symbol + "≈"
                                         + CurrencyUtil.getCurrencyItem(activity).getSymbol()
                                         + Double.parseDouble(df.format(price * tokenItem.balance)));
                             } else
