@@ -19,8 +19,10 @@ import org.nervos.neuron.service.AppChainTransactionService;
 import org.nervos.neuron.service.HttpService;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
+import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -50,10 +52,13 @@ public class TransactionListPresenter {
         if (isEthereum(tokenItem)) {
             if (!isNativeToken(tokenItem)) {
                 if (TextUtils.isEmpty(tokenItem.avatar)) {
+                    String address = tokenItem.contractAddress;
+                    if (AddressUtil.isAddressValid(address))
+                        address = Keys.toChecksumAddress(address);
                     RequestOptions options = new RequestOptions()
                             .error(R.drawable.ether_big);
                     Glide.with(activity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenItem.contractAddress)))
+                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
                             .apply(options)
                             .into(tokenLogoImage);
                 } else

@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.HttpService;
+import org.nervos.neuron.util.AddressUtil;
+import org.web3j.crypto.Keys;
 
 import java.io.IOException;
 
@@ -27,6 +29,8 @@ public class TokenDescribeModel {
     }
 
     public void get(String address) {
+        if (AddressUtil.isAddressValid(address))
+            address = Keys.toChecksumAddress(address);
         String url = HttpUrls.TOKEN_DESC.replace("@address", address);
         final Request ethRequest = new Request.Builder().url(url).build();
         Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
