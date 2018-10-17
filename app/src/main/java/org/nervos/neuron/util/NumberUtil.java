@@ -30,12 +30,6 @@ public class NumberUtil {
         return getDecimal8ENotation(integer + decimal);
     }
 
-    public static String getDecimal8Sub(double value) {
-        DecimalFormat formater = new DecimalFormat("0.########");
-        formater.setRoundingMode(RoundingMode.FLOOR);
-        return formater.format(value);
-    }
-
     public static String getDecimal8ENotation(double value) {
         if (value < 1) {
             double decimal = value - (long) value;
@@ -44,6 +38,7 @@ public class NumberUtil {
             }
         }
         DecimalFormat fmt = new DecimalFormat("0.########");
+        fmt.setRoundingMode(RoundingMode.FLOOR);
         return fmt.format(value);
     }
 
@@ -139,7 +134,7 @@ public class NumberUtil {
     }
 
     public static String getEthFromWeiForStringDecimal8Sub(BigInteger value) {
-        return getDecimal8Sub(getEthFromWei(value));
+        return getDecimal8ENotation(getEthFromWei(value));
     }
 
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
@@ -157,7 +152,7 @@ public class NumberUtil {
     }
 
     public static String divideDecimal8Sub(BigDecimal value, int decimal) {
-        return getDecimal8Sub(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
+        return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
     }
 
     public static String divideDecimal8ENotation(BigInteger value, int decimal) {

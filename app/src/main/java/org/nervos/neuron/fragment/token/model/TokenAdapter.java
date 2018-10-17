@@ -82,7 +82,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         }
         if (tokenItem != null) {
             holder.tokenName.setText(tokenItem.symbol);
-            holder.tokenBalance.setText(NumberUtil.getDecimal8Sub(tokenItem.balance));
+            holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
         }
         if (!TextUtils.isEmpty(tokenItem.chainName)) {
             holder.tokenNetworkText.setText(tokenItem.chainName);
