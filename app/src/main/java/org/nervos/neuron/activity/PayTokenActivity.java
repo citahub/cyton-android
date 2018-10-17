@@ -27,8 +27,8 @@ import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -289,12 +289,8 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        AppChainRpcService.appChainTransactionDBItem.isNativeToken = true;
-        AppChainRpcService.appChainTransactionDBItem.contractAddress = "";
-        AppChainRpcService.appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(tokenItem.chainId);
-        ChainItem item = DBChainUtil.getChain(mActivity, tokenItem.chainId);
-        AppChainRpcService.appChainTransactionDBItem.chainName = item.name;
-        AppChainRpcService.transferAppChain(transactionInfo.to, transactionInfo.getDoubleValue(),
+        SaveAppChainPendingItemUtils.setNativeToken(mActivity, transactionInfo.chainId, walletItem.address.toLowerCase(), transactionInfo.to.toLowerCase(), "0");
+        AppChainRpcService.transferAppChain(mActivity, transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int) transactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
@@ -342,8 +338,6 @@ public class PayTokenActivity extends BaseActivity {
     private void handleTransfer(AppSendTransaction appSendTransaction) {
         transferDialog.setButtonClickAble(true);
         if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            AppChainRpcService.appChainTransactionDBItem.hash = appSendTransaction.getSendTransactionResult().getHash();
-            DBAppChainTransactionsUtil.save(mActivity, true, AppChainRpcService.appChainTransactionDBItem);
             transferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
             gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));

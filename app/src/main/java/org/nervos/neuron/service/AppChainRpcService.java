@@ -14,11 +14,11 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.neuron.BuildConfig;
-import org.nervos.neuron.item.AppChainTransactionDBItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.abi.FunctionEncoder;
@@ -122,7 +122,7 @@ public class AppChainRpcService {
     }
 
 
-    public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
+    public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
                                                                String contractAddress, String address, double value, int chainId, String password) {
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
@@ -142,12 +142,9 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    appChainTransactionDBItem.status = 2;
-                    appChainTransactionDBItem.timestamp = System.currentTimeMillis();
-                    appChainTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
-                    appChainTransactionDBItem.from = walletItem.address.toLowerCase();
-                    appChainTransactionDBItem.to = address.toLowerCase();
-                    return Observable.just(service.appSendRawTransaction(rawTx).send());
+                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
+                    return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -158,12 +155,12 @@ public class AppChainRpcService {
 
     }
 
-    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
+    public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, double value,
                                                                   String data, int chainId, String password) {
-        return transferAppChain(toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
+        return transferAppChain(context, toAddress, value, data, ConstUtil.DEFAULT_QUOTA, chainId, password);
     }
 
-    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
+    public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, double value,
                                                                   String data, long quota, int chainId, String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
@@ -182,12 +179,9 @@ public class AppChainRpcService {
                     String privateKey = NumberUtil.toLowerCaseWithout0x(
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
-                    appChainTransactionDBItem.status = 2;
-                    appChainTransactionDBItem.timestamp = System.currentTimeMillis();
-                    appChainTransactionDBItem.validUntilBlock = validUntilBlock.longValue() + "";
-                    appChainTransactionDBItem.from = walletItem.address.toLowerCase();
-                    appChainTransactionDBItem.to = toAddress.toLowerCase();
-                    return Observable.just(service.appSendRawTransaction(rawTx).send());
+                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
+                    return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,7 +191,6 @@ public class AppChainRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static AppChainTransactionDBItem appChainTransactionDBItem = new AppChainTransactionDBItem();
 
     public static TransactionReceipt getTransactionReceipt(String hash) throws IOException {
         return service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
