@@ -20,6 +20,7 @@ public class TransactionItem implements Parcelable {
     public String gas;
     public String gasPrice;
     public String blockNumber;
+    public String errorMessage;
     //0 failed 1 success 2 pending
     public int status;
     public long chainId;
@@ -36,6 +37,9 @@ public class TransactionItem implements Parcelable {
         }
     }
 
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public int describeContents() {
@@ -57,6 +61,7 @@ public class TransactionItem implements Parcelable {
         dest.writeString(this.gasPrice);
         dest.writeString(this.blockNumber);
         dest.writeInt(this.status);
+        dest.writeString(this.errorMessage);
         dest.writeLong(this.chainId);
         dest.writeString(this.symbol);
         dest.writeString(this.nativeSymbol);
@@ -79,6 +84,7 @@ public class TransactionItem implements Parcelable {
         this.gasPrice = in.readString();
         this.blockNumber = in.readString();
         this.status = in.readInt();
+        this.errorMessage = in.readString();
         this.chainId = in.readLong();
         this.symbol = in.readString();
         this.nativeSymbol = in.readString();

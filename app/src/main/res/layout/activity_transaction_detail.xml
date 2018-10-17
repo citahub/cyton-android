@@ -94,7 +94,6 @@
                 <TextView
                     android:id="@+id/tv_chain_name"
                     style="@style/TransactionDetailContent"
-                    android:text="@string/ethereum_mainnet"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_chain_name_title"
@@ -110,7 +109,6 @@
                 <TextView
                     android:id="@+id/tv_transaction_receiver"
                     style="@style/TransactionDetailContent"
-                    android:text="0xadlgdslfkadsflkdasfsadfasgadsgdasgadsgasdgadsgsadgsdsdfadsf"
                     android:textColor="@color/font_link"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_receiver_title"
@@ -126,7 +124,6 @@
                 <TextView
                     android:id="@+id/tv_transaction_sender"
                     style="@style/TransactionDetailContent"
-                    android:text="0xadlgdslfkadsflkdasfsadfasdfadsf"
                     android:textColor="@color/font_link"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_sender_title"
@@ -143,7 +140,6 @@
                     android:id="@+id/tv_transaction_gas"
                     style="@style/TransactionDetailContent"
                     android:layout_height="16dp"
-                    android:text="0.005eth"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_gas_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_title" />
@@ -158,7 +154,6 @@
                 <TextView
                     android:id="@+id/tv_transaction_gas_price"
                     style="@style/TransactionDetailContent"
-                    android:text="0.00012eth/gas"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_gas_price_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_price_title" />
@@ -173,7 +168,6 @@
                 <TextView
                     android:id="@+id/tv_transaction_number"
                     style="@style/TransactionDetailContent"
-                    android:text="0xadlgdslfkadsflkdasfsadfasdfadsf"
                     android:textColor="@color/font_link"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_number_title"
@@ -189,7 +183,6 @@
                 <TextView
                     android:id="@+id/tv_transaction_blockchain_no"
                     style="@style/TransactionDetailContent"
-                    android:text="12345"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_blockchain_no_title"
                     app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no_title" />
@@ -205,7 +198,6 @@
                     android:id="@+id/tv_transaction_blockchain_time"
                     style="@style/TransactionDetailContent"
                     android:layout_marginBottom="45dp"
-                    android:text="12345"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_transaction_blockchain_time_title"

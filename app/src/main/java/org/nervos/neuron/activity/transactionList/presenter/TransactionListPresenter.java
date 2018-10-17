@@ -11,13 +11,16 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionList.model.TokenDescribeModel;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.AppChainTransactionService;
 import org.nervos.neuron.service.HttpService;
+import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.db.DBChainUtil;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -107,7 +110,7 @@ public class TransactionListPresenter {
         }
     }
 
-    public void getTransactionList() {
+    public void getTransactionList(String from) {
         Observable<List<TransactionItem>> observable;
         if (isNativeToken(tokenItem)) {
             observable = isEthereum(tokenItem) ?
@@ -138,10 +141,20 @@ public class TransactionListPresenter {
                     Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Collections.sort(list, (item1, item2) -> item2.getDate().compareTo(item1.getDate()));
-                for (TransactionItem item : list)
-                    item.status = 1;
-                listener.refreshList(list);
+                Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+                if (isEthereum(tokenItem)) {
+                    for (TransactionItem item : list) {
+                        item.status = 1;
+                    }
+                    listener.refreshList(list);
+                } else {
+                    for (TransactionItem item : list) {
+                        item.status = TextUtils.isEmpty(item.errorMessage) ? 1 : 0;
+                    }
+                    ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
+                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, isNativeToken(tokenItem), chain.httpProvider, tokenItem.contractAddress, list, from);
+                    listener.refreshList(allList);
+                }
             }
         });
     }

@@ -27,9 +27,9 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.service.WalletService;
@@ -39,6 +39,7 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -448,8 +449,13 @@ public class TransferActivity extends NBaseActivity {
      * @param value transfer value
      */
     private void transferAppChainToken(String password, double value) {
+        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
+        SaveAppChainPendingItemUtils.setNativeToken(mActivity,
+                tokenItem.chainId, walletItem.address.toLowerCase(),
+                receiveAddressEdit.getText().toString().trim().toLowerCase(),
+                NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
         transactionHexData = payHexDataEdit.getText().toString().trim();
-        AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
+        AppChainRpcService.transferAppChain(mActivity, receiveAddressEdit.getText().toString().trim(), value,
                 transactionHexData, tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
@@ -472,8 +478,12 @@ public class TransferActivity extends NBaseActivity {
      */
     private void transferAppChainErc20(String password, double value) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(tokenItem.chainId));
+        SaveAppChainPendingItemUtils.setErc20(mActivity, tokenItem.contractAddress,
+                tokenItem.chainId, walletItem.address.toLowerCase(),
+                receiveAddressEdit.getText().toString().trim().toLowerCase(),
+                NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
-            AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+            AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
                     receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override

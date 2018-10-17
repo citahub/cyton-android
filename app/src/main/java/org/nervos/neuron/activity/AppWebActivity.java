@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
@@ -22,7 +20,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,41 +27,38 @@ import com.google.gson.Gson;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.TitleItem;
-import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.view.WebErrorView;
-import org.nervos.neuron.view.WebMenuPopupWindow;
-import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.web.WebAppUtil;
+import org.nervos.neuron.view.WebErrorView;
+import org.nervos.neuron.view.WebMenuPopupWindow;
+import org.nervos.neuron.view.dialog.SimpleDialog;
+import org.nervos.neuron.view.webview.NeuronWebView;
+import org.nervos.neuron.view.webview.OnSignMessageListener;
 import org.nervos.neuron.view.webview.OnSignPersonalMessageListener;
 import org.nervos.neuron.view.webview.item.Address;
+import org.nervos.neuron.view.webview.item.Message;
+import org.nervos.neuron.view.webview.item.Transaction;
 import org.web3j.utils.Numeric;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
-
-import org.nervos.neuron.view.webview.OnSignMessageListener;
-import org.nervos.neuron.view.webview.NeuronWebView;
-import org.nervos.neuron.view.webview.item.Message;
-import org.nervos.neuron.view.webview.item.Transaction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AppWebActivity extends NBaseActivity {
 
@@ -192,20 +186,18 @@ public class AppWebActivity extends NBaseActivity {
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                webView.post(() -> {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                });
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                webView.post(() -> {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                });
             }
 
         });

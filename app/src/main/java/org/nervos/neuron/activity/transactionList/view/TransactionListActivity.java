@@ -79,7 +79,7 @@ public class TransactionListActivity extends NBaseActivity {
         showProgressBar();
         presenter = new TransactionListPresenter(this, tokenItem, listener);
         initAdapter();
-        presenter.getTransactionList();
+        presenter.getTransactionList(walletItem.address);
         initDescribe();
         DecimalFormat formater = new DecimalFormat("0.####");
         formater.setRoundingMode(RoundingMode.FLOOR);
@@ -94,17 +94,18 @@ public class TransactionListActivity extends NBaseActivity {
             intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList());
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList(walletItem.address));
     }
 
     private void initAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address, tokenItem.symbol);
+        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address);
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
             Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
             intent.putExtra(EXTRA_TRANSACTION, transactionItemList.get(position));
+            intent.putExtra(EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
     }
