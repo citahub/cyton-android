@@ -503,8 +503,7 @@ public class TransferActivity extends NBaseActivity {
                 tokenItem.chainId, walletItem.address.toLowerCase(),
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
                 NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
-        transactionHexData = payHexDataEdit.getText().toString().trim();
-        AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
+        AppChainRpcService.transferAppChain(mActivity, receiveAddressEdit.getText().toString().trim(), value,
                 "", ConstUtil.QUOTA_TOKEN.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
@@ -532,7 +531,7 @@ public class TransferActivity extends NBaseActivity {
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
                 NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
-            AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+            AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override

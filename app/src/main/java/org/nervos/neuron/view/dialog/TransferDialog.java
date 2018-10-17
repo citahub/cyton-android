@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,9 +33,9 @@ public class TransferDialog {
     private ImageView closeImage, closeImage1;
     private ProgressBar progressBar;
     private AppCompatEditText passwordEdit;
-    private onSendPwdListener listener = null;
+    private OnSendPwdListener listener = null;
 
-    public TransferDialog(@Nullable Activity context, onSendPwdListener listener) {
+    public TransferDialog(@Nullable Activity context, OnSendPwdListener listener) {
         this.listener = listener;
         dialog = new BottomSheetDialog(context);
         view = LayoutInflater.from(context).inflate(R.layout.dialog_transfer, null);
@@ -130,7 +129,7 @@ public class TransferDialog {
         dialog.dismiss();
     }
 
-    public interface onSendPwdListener {
+    public interface OnSendPwdListener {
         void send(String pwd, ProgressBar progressBar);
     }
 

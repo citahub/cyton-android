@@ -141,7 +141,7 @@ public class AppChainRpcService {
     }
 
 
-    public static Observable<AppSendTransaction> transferErc20(TokenItem tokenItem,
+    public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
            String contractAddress, String address, double value, long quota, int chainId, String password){
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
@@ -170,12 +170,12 @@ public class AppChainRpcService {
                 return Observable.just(null);
             }
         }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+          .observeOn(AndroidSchedulers.mainThread());
 
     }
 
 
-    public static Observable<AppSendTransaction> transferAppChain(String toAddress, double value,
+    public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
