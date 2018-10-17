@@ -1,9 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
@@ -22,7 +20,6 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -239,6 +236,9 @@ public class TransferActivity extends NBaseActivity {
                     + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
         }
+        if (isNativeToken()) {
+            initAdvancedSetup();
+        }
     }
 
 
@@ -339,24 +339,7 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else if (checkTransferValueMoreBalance()) {
-                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
-                        getString(R.string.all_balance_transfer_tip));
-                dialog.setOnOkClickListener(new OnDialogOKClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        transferValueEdit.setText(isNativeToken()?
-                                String.valueOf(mNativeTokenBalance - mTransferFee)
-                                : String.valueOf(mTokenBalance));
-                        getConfirmTransferView();
-                    }
-                });
-                dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        transferValueEdit.setText("");
-                        dialog.dismiss();
-                    }
-                });
+                handleBigTransferValue();
             } else {
                 getConfirmTransferView();
             }
@@ -370,6 +353,27 @@ public class TransferActivity extends NBaseActivity {
         } else {
             return Double.parseDouble(transferValueEdit.getText().toString().trim()) > mTokenBalance;
         }
+    }
+
+    private void handleBigTransferValue() {
+        ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
+                getString(R.string.all_balance_transfer_tip));
+        dialog.setOnOkClickListener(new OnDialogOKClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                transferValueEdit.setText(isNativeToken()?
+                        String.valueOf(mNativeTokenBalance - mTransferFee)
+                        : String.valueOf(mTokenBalance));
+                getConfirmTransferView();
+            }
+        });
+        dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                transferValueEdit.setText("");
+                dialog.dismiss();
+            }
+        });
     }
 
     private boolean isAddressOK = false, isValueOk = false;
@@ -420,15 +424,13 @@ public class TransferActivity extends NBaseActivity {
     }
 
     private void initAdvancedSetup() {
-        if (isETH()) {
-            feeValueText.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-            feeValueText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    initAdvancedSetupDialog();
-                }
-            });
-        }
+        feeValueText.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+        feeValueText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initAdvancedSetupDialog();
+            }
+        });
     }
 
     private boolean isETH() {
