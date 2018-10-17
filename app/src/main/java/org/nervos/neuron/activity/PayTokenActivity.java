@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -289,7 +290,8 @@ public class PayTokenActivity extends BaseActivity {
 
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(transactionInfo.chainId));
-        SaveAppChainPendingItemUtils.setNativeToken(mActivity, transactionInfo.chainId, walletItem.address.toLowerCase(), transactionInfo.to.toLowerCase(), "0");
+        SaveAppChainPendingItemUtils.setNativeToken(mActivity, transactionInfo.chainId,
+                walletItem.address.toLowerCase(), transactionInfo.to.toLowerCase(), "0");
         AppChainRpcService.transferAppChain(mActivity, transactionInfo.to, transactionInfo.getDoubleValue(),
                 transactionInfo.data, transactionInfo.getLongQuota(), (int) transactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
