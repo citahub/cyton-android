@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.dialog.listener.onDialogOKClickListener;
+import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
 import org.nervos.neuron.util.ScreenUtils;
 
 /**
@@ -23,7 +23,7 @@ public class ToastSingleButtonDialog extends Dialog {
     private String info = null;
     private Context context;
     private static ToastSingleButtonDialog dialog = null;
-    private onDialogOKClickListener okClickListener = null;
+    private OnDialogOKClickListener okClickListener = null;
 
     private ToastSingleButtonDialog(@NonNull Context context) {
         super(context, R.style.DefaultDialog);
@@ -50,7 +50,7 @@ public class ToastSingleButtonDialog extends Dialog {
         return dialog;
     }
 
-    public void setOnCancelClickListener(onDialogOKClickListener okClickListener) {
+    public void setOnCancelClickListener(OnDialogOKClickListener okClickListener) {
         this.okClickListener = okClickListener;
     }
 

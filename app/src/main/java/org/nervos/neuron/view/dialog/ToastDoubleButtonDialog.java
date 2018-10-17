@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.dialog.listener.onDialogCancelClickListener;
-import org.nervos.neuron.view.dialog.listener.onDialogOKClickListener;
+import org.nervos.neuron.view.dialog.listener.OnDialogCancelClickListener;
+import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
 import org.nervos.neuron.util.ScreenUtils;
 
 /**
@@ -24,8 +24,8 @@ public class ToastDoubleButtonDialog extends Dialog {
     private String info = null;
     private Context context;
     private static ToastDoubleButtonDialog dialog = null;
-    private onDialogOKClickListener okClickListener = null;
-    private onDialogCancelClickListener cancelClickListener = null;
+    private OnDialogOKClickListener okClickListener = null;
+    private OnDialogCancelClickListener cancelClickListener = null;
 
     private ToastDoubleButtonDialog(@NonNull Context context) {
         super(context, R.style.DefaultDialog);
@@ -53,11 +53,11 @@ public class ToastDoubleButtonDialog extends Dialog {
         return dialog;
     }
 
-    public void setOnOkClickListener(onDialogOKClickListener okClickListener) {
+    public void setOnOkClickListener(OnDialogOKClickListener okClickListener) {
         this.okClickListener = okClickListener;
     }
 
-    public void setOnCancelClickListener(onDialogCancelClickListener cancelClickListener) {
+    public void setOnCancelClickListener(OnDialogCancelClickListener cancelClickListener) {
         this.cancelClickListener = cancelClickListener;
     }
 

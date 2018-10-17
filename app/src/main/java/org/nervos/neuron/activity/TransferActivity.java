@@ -1,20 +1,20 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatSeekBar;
-import android.support.v7.widget.SwitchCompat;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +22,12 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.AppChainRpcService;
 import org.nervos.neuron.service.EthRpcService;
@@ -48,46 +50,42 @@ import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
+import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
+import org.nervos.neuron.view.dialog.listener.OnDialogCancelClickListener;
+import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
 import org.nervos.neuron.view.tool.NeuronTextWatcher;
-import org.nervos.neuron.view.tool.OnNeuronSeekBarChangeListener;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscriber;
+
+import static org.web3j.utils.Convert.Unit.GWEI;
 
 public class TransferActivity extends NBaseActivity {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
     public static final String EXTRA_TOKEN = "extra_token";
     public static final String EXTRA_ADDRESS = "extra_address";
-    private static final int MAX_QUOTA_SEEK = 100;
-    private static final int DEFAULT_QUOTA_SEEK = 1;
-    private static final int MAX_FEE = 100;
 
-    private TextView walletAddressText, walletNameText, feeSeekText, feeValueText, balanceText;
-    private SwitchCompat setupSwitch;
+    private TextView walletAddressText, walletNameText, feeValueText, balanceText;
     private ImageView scanImage;
     private AppCompatEditText receiveAddressEdit, transferValueEdit;
     private CommonButton nextActionButton;
     private CircleImageView photoImage;
-    private AppCompatSeekBar feeSeekBar;
-    private RelativeLayout feeSeekBarLayout;
-    private LinearLayout advancedSetupLayout, gasEditLayout, quotaEditLayout;
-    private EditText customGasPriceEdit, customGasEdit, customQuotaEdit, payHexDataEdit;
     private ProgressBar progressBar;
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
-    private BigInteger mGasPrice, mGasUnit, mGasLimit = BigInteger.ZERO, mQuota, mQuotaUnit, mGas;
-    private boolean isGasPriceOk = false, isGasLimitOk = false;
-    private String transactionHexData;
-    private double mPrice = 0.0f, mBalance;
+    private BigInteger mGasPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
+    private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
-    private double mFee;
+    private double mTransferFee;
 
     private TransferDialog transferDialog;
 
@@ -102,62 +100,94 @@ public class TransferActivity extends NBaseActivity {
         nextActionButton = findViewById(R.id.next_action_button);
         walletAddressText = findViewById(R.id.wallet_address);
         walletNameText = findViewById(R.id.wallet_name);
-        feeSeekText = findViewById(R.id.fee_seek_text);
         balanceText = findViewById(R.id.wallet_balance_text);
         feeValueText = findViewById(R.id.fee_value_text);
         receiveAddressEdit = findViewById(R.id.transfer_address);
         transferValueEdit = findViewById(R.id.transfer_value);
-        feeSeekBar = findViewById(R.id.fee_seek_bar);
         photoImage = findViewById(R.id.wallet_photo);
-        setupSwitch = findViewById(R.id.advanced_setup);
-        feeSeekBarLayout = findViewById(R.id.fee_seek_bar_layout);
-        advancedSetupLayout = findViewById(R.id.advanced_setup_layout);
-        customGasPriceEdit = findViewById(R.id.custom_gas_price);
-        customGasEdit = findViewById(R.id.custom_gas);
-        customQuotaEdit = findViewById(R.id.custom_quota);
-        payHexDataEdit = findViewById(R.id.pay_hex_data);
-        gasEditLayout = findViewById(R.id.gas_layout);
-        quotaEditLayout = findViewById(R.id.quota_layout);
         titleBar = findViewById(R.id.title);
 
     }
 
     @Override
     protected void initData() {
+        initWalletData();
+        initTokenBalance();
+        initTransferFee();
+    }
+
+    private void initWalletData() {
         tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
-        String address = getIntent().getStringExtra(EXTRA_ADDRESS);
         titleBar.setTitle(tokenItem.symbol + getString(R.string.title_transfer));
+
         EthRpcService.init(mActivity);
         AppChainRpcService.init(mActivity, HttpUrls.APPCHAIN_NODE_IP);
+
         walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
         walletNameText.setText(walletItem.name);
+
+        String address = getIntent().getStringExtra(EXTRA_ADDRESS);
         if (!TextUtils.isEmpty(address)) {
             receiveAddressEdit.setText(address);
         }
+
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        initBalance();
-        if (isETH()) {
-            feeSeekBar.setMax(MAX_FEE);
-            initGasInfo();
-            initPrice();
-        } else {
-            feeSeekBar.setMax(MAX_QUOTA_SEEK);
-            initQuota();
-        }
     }
 
+
+
     @SuppressLint("SetTextI18n")
-    private void initBalance() {
+    private void initTokenBalance() {
         WalletService.getBalanceWithToken(mActivity, tokenItem).subscribe(new NeuronSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
-                mBalance = balance;
+                mTokenBalance = balance;
                 balanceText.setText(String.format(
                         getString(R.string.transfer_balance_place_holder),
                         NumberUtil.getDecimal8Sub(balance) + " " + tokenItem.symbol));
             }
         });
+
+        WalletService.getBalanceWithNativeToken(mActivity, tokenItem).subscribe(new Subscriber<Double>(){
+            @Override
+            public void onNext(Double balance) {
+                mNativeTokenBalance = balance;
+                initBalanceToTransferView();
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+    private void initBalanceToTransferView() {
+        balanceText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(tokenItem.contractAddress)) {
+                    transferValueEdit.setText(String.valueOf(mNativeTokenBalance - mTransferFee));
+                } else {
+                    transferValueEdit.setText(String.valueOf(mTokenBalance));
+                }
+            }
+        });
+    }
+
+    private void initTransferFee() {
+        if (isETH()) {
+            initGasInfo();
+            initTransferEditValue();
+            initTokenPrice();
+        } else {
+            initQuota();
+        }
     }
 
     private void initGasInfo() {
@@ -168,70 +198,122 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 dismissProgressCircle();
             }
-
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
                 mGasPrice = gasPrice;
-                mGasUnit = gasPrice.multiply(ConstUtil.GAS_MIN_LIMIT);
-                mGasLimit = ConstUtil.ETH.equalsIgnoreCase(tokenItem.symbol) ?
-                        ConstUtil.GAS_LIMIT : ConstUtil.GAS_ERC20_LIMIT;
-                mGas = mGasLimit.multiply(mGasPrice);
-                feeSeekBar.setProgress(mGasLimit.divide(ConstUtil.GAS_MIN_LIMIT).intValue());
-
-                initFeeText();
+                mGas = mGasPrice.multiply(mGasLimit);
+                initTransferFeeView();
             }
         });
     }
 
-    private void initPrice() {
+
+    /**
+     * get the price of token
+     */
+    private void initTokenPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
-                .subscribe(new NeuronSubscriber<String>() {
-                    @Override
-                    public void onNext(String price) {
-                        if (TextUtils.isEmpty(price)) return;
-                        try {
-                            mPrice = Double.parseDouble(price);
-                            initFeeText();
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }
+            .subscribe(new NeuronSubscriber<String>() {
+                @Override
+                public void onNext(String price) {
+                    if (TextUtils.isEmpty(price)) return;
+                    try {
+                        mTokenPrice = Double.parseDouble(price);
+                        initTransferFeeView();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+            });
     }
 
 
-    @SuppressLint("SetTextI18n")
-    private void initFeeText() {
-        double fee = NumberUtil.getEthFromWei(mGas);
-        if (fee > 0) {
-            mFee = NumberUtil.getEthFromWei(mGas);
-            feeSeekText.setText(NumberUtil.getDecimal8ENotation(fee) + getFeeTokenUnit());
-            if (mPrice > 0 && currencyItem != null) {
-                feeValueText.setText(feeSeekText.getText() + " = " +
-                        currencyItem.getSymbol() + NumberUtil.getDecimalValid_2(fee * mPrice));
-            }
-        }
 
+    @SuppressLint("SetTextI18n")
+    private void initTransferFeeView() {
+        mTransferFee = NumberUtil.getEthFromWei(mGas);
+        if (mTokenPrice > 0 && currencyItem != null) {
+            feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
+                    + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
+                    + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
+        }
+    }
+
+
+    /**
+     * handle transfer advanced setup
+     */
+    private void initAdvancedSetupDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
+        View view = getLayoutInflater().inflate(R.layout.dialog_advance_setup, null);
+        EditText gasPriceEdit = view.findViewById(R.id.edit_gas_price);
+        TextView gasPriceDefaultText = view.findViewById(R.id.default_gas_price_text);
+        TextView gasLimitDefaultText = view.findViewById(R.id.default_gas_limit_text);
+        CommonButton confirmButton = view.findViewById(R.id.advanced_setup_button);
+        view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        String gasPriceDefault = NumberUtil.getDecimalValid_2(
+                Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
+        gasPriceDefaultText.setText(
+                String.format(getString(R.string.default_eth_gas_price), gasPriceDefault));
+        gasLimitDefaultText.setText(mGasLimit.toString());
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String gasPrice = gasPriceEdit.getText().toString().trim();
+                if (TextUtils.isEmpty(gasPrice)) {
+                    Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                    Toast.makeText(mActivity,
+                            String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger()
+                            .multiply(mGasLimit);
+                    initTransferFeeView();
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     @SuppressLint("SetTextI18n")
     private void initQuota() {
-        mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
-                ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
-        mQuotaUnit = ConstUtil.QUOTA_TOKEN.divide(BigInteger.valueOf(DEFAULT_QUOTA_SEEK));
-        feeSeekBar.setProgress(mQuota.divide(mQuotaUnit).intValue());
-        mFee = NumberUtil.getEthFromWei(mQuota);
-        feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
-        feeValueText.setText(feeSeekText.getText());
+        AppChainRpcService.getQuotaPrice(walletItem.address).subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onNext(String quotaPrice) {
+                mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
+                        ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+                mQuota = mQuota.multiply(Numeric.toBigInt(quotaPrice));
+                mTransferFee = NumberUtil.getEthFromWei(mQuota);
+                feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+            }
+        });
+
     }
 
     @Override
     protected void initAction() {
-
-        advancedSetup();
-
         scanImage.setOnClickListener((view) -> {
             AndPermission.with(mActivity)
                     .runtime().permission(Permission.Group.CAMERA)
@@ -253,120 +335,112 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValueEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
-            } else if (mBalance < Double.parseDouble(transferValueEdit.getText().toString().trim())) {
-                Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough),
-                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
-            } else if (mBalance < mFee) {
+            } else if (mNativeTokenBalance < mTransferFee) {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
-            } else {
-                if (!isFastDoubleClick())
-                    getConfirmTransferView();
-            }
-        });
-        feeSeekBar.setOnSeekBarChangeListener(new OnNeuronSeekBarChangeListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progress = progress < 1 ? 1 : progress;
-                if (isETH()) {
-                    mGas = mGasUnit.multiply(BigInteger.valueOf(progress));
-                    mGasLimit = mGasLimit.multiply(BigInteger.valueOf(progress));
-                    initFeeText();
-                } else {
-                    mQuota = mQuotaUnit.multiply(BigInteger.valueOf(progress));
-                    mFee = NumberUtil.getEthFromWei(mQuota);
-                    feeSeekText.setText(NumberUtil.getDecimal8ENotation(mFee) + getFeeTokenUnit());
-                    feeValueText.setText(feeSeekText.getText());
-                }
-            }
-        });
-
-    }
-
-    /**
-     * transfer advanced setup
-     */
-    private void advancedSetup() {
-        advancedGas();
-        advancedQuota();
-        setupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    feeSeekBarLayout.setVisibility(View.GONE);
-                    advancedSetupLayout.setVisibility(View.VISIBLE);
-                    if (isETH()) {
-                        advancedSetupETHFeeValue();
-                    } else {
-                        advancedSetupAppChainFeeValue();
+            } else if (checkTransferValueMoreBalance()) {
+                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
+                        getString(R.string.all_balance_transfer_tip));
+                dialog.setOnOkClickListener(new OnDialogOKClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        transferValueEdit.setText(isNativeToken()?
+                                String.valueOf(mNativeTokenBalance - mTransferFee)
+                                : String.valueOf(mTokenBalance));
+                        getConfirmTransferView();
                     }
-                } else {
-                    feeSeekBarLayout.setVisibility(View.VISIBLE);
-                    advancedSetupLayout.setVisibility(View.GONE);
-                    feeValueText.setText(feeSeekText.getText());
-                }
-            }
-        });
-
-    }
-
-    /**
-     * gas advanced setup
-     */
-    private void advancedGas() {
-        customGasPriceEdit.addTextChangedListener(new NeuronTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    double price = Double.parseDouble(s.toString());
-                    isGasPriceOk = (price > 0);
-                    mGasPrice = Convert.toWei(s.toString(), Convert.Unit.GWEI).toBigInteger();
-                    advancedSetupETHFeeValue();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        customGasEdit.addTextChangedListener(new NeuronTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    double limit = Double.parseDouble(s.toString());
-                    isGasLimitOk = (limit > 0);
-                    mGasLimit = new BigInteger(s.toString());
-                    advancedSetupETHFeeValue();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
-                }
+                });
+                dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        transferValueEdit.setText("");
+                        dialog.dismiss();
+                    }
+                });
+            } else {
+                getConfirmTransferView();
             }
         });
     }
 
-    /**
-     * quota advanced setup
-     */
-    private void advancedQuota() {
-        customQuotaEdit.addTextChangedListener(new NeuronTextWatcher() {
+    private boolean checkTransferValueMoreBalance() {
+        if (isNativeToken()) {
+            return Double.parseDouble(transferValueEdit.getText().toString().trim()) >
+                    (mNativeTokenBalance - mTransferFee);
+        } else {
+            return Double.parseDouble(transferValueEdit.getText().toString().trim()) > mTokenBalance;
+        }
+    }
+
+    private boolean isAddressOK = false, isValueOk = false;
+    private void initTransferEditValue() {
+        receiveAddressEdit.addTextChangedListener(new NeuronTextWatcher() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    mQuota = new BigInteger(s.toString());
-                    advancedSetupAppChainFeeValue();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    mQuota = BigInteger.ZERO;
-                    advancedSetupAppChainFeeValue();
-                    Toast.makeText(mActivity, R.string.input_correct_number, Toast.LENGTH_SHORT).show();
+            public void afterTextChanged(Editable s) {
+                super.afterTextChanged(s);
+                isAddressOK = !TextUtils.isEmpty(s);
+                if (isAddressOK && isValueOk && isETHERC20()) {
+                    initGasLimit();
                 }
             }
         });
+        transferValueEdit.addTextChangedListener(new NeuronTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                super.afterTextChanged(s);
+                isValueOk = !TextUtils.isEmpty(s);
+                if (isAddressOK && isValueOk && isETHERC20()) {
+                    initGasLimit();
+                }
+            }
+        });
+    }
+
+
+    private void initGasLimit() {
+        initAdvancedSetup();
+
+        TransactionInfo transactionInfo = new TransactionInfo(tokenItem.contractAddress, "0");
+        transactionInfo.data = EthRpcService.createTokenTransferData(
+                receiveAddressEdit.getText().toString(),
+                Convert.toWei(transferValueEdit.getText().toString(), Convert.Unit.ETHER).toBigInteger());
+        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new NeuronSubscriber<BigInteger>() {
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(BigInteger gasLimit) {
+                mGasLimit = gasLimit.multiply(BigInteger.valueOf(2));
+                mGas = mGasPrice.multiply(mGasLimit);
+                initTransferFeeView();
+            }
+        });
+    }
+
+    private void initAdvancedSetup() {
+        if (isETH()) {
+            feeValueText.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+            feeValueText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initAdvancedSetupDialog();
+                }
+            });
+        }
     }
 
     private boolean isETH() {
         return tokenItem.chainId < 0;
+    }
+
+    private boolean isETHERC20() {
+        return tokenItem.chainId < 0 && !TextUtils.isEmpty(tokenItem.contractAddress);
+    }
+
+    private boolean isNativeToken() {
+       return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
     private String getFeeTokenUnit() {
@@ -378,33 +452,6 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private void advancedSetupETHFeeValue() {
-        gasEditLayout.setVisibility(View.VISIBLE);
-        quotaEditLayout.setVisibility(View.GONE);
-        if (isGasLimitOk && isGasPriceOk) {
-            mFee = NumberUtil.getEthFromWei(mGasPrice.multiply(mGasLimit));
-            feeValueText.setText(mFee + getFeeTokenUnit());
-        } else {
-            mFee = 0;
-            feeValueText.setText(mFee + "");
-        }
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private void advancedSetupAppChainFeeValue() {
-        gasEditLayout.setVisibility(View.GONE);
-        quotaEditLayout.setVisibility(View.VISIBLE);
-        if (!TextUtils.isEmpty(customQuotaEdit.getText())) {
-            mFee = NumberUtil.getEthFromWei(mQuota);
-            feeValueText.setText(mFee + getFeeTokenUnit());
-        } else {
-            mFee = 0;
-            feeValueText.setText(mFee + "");
-        }
-    }
-
     /**
      * struct confirm transfer view
      *
@@ -412,6 +459,7 @@ public class TransferActivity extends NBaseActivity {
      */
     @SuppressLint("SetTextI18n")
     private void getConfirmTransferView() {
+        if (isFastDoubleClick()) return;
         String value = transferValueEdit.getText().toString().trim();
         transferDialog = new TransferDialog(this, (password, progressBar) -> {
             this.progressBar = progressBar;
@@ -440,7 +488,8 @@ public class TransferActivity extends NBaseActivity {
             }
         });
         transferDialog.setConfirmData(walletItem.address, receiveAddressEdit.getText().toString(),
-                value + tokenItem.symbol, feeSeekText.getText().toString());
+                NumberUtil.getDecimal8ENotation(Double.parseDouble(value)) + tokenItem.symbol,
+                feeValueText.getText().toString());
     }
 
     /**
@@ -455,8 +504,8 @@ public class TransferActivity extends NBaseActivity {
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
                 NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
         transactionHexData = payHexDataEdit.getText().toString().trim();
-        AppChainRpcService.transferAppChain(mActivity, receiveAddressEdit.getText().toString().trim(), value,
-                transactionHexData, tokenItem.chainId, password)
+        AppChainRpcService.transferAppChain(receiveAddressEdit.getText().toString().trim(), value,
+                "", ConstUtil.QUOTA_TOKEN.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -483,19 +532,20 @@ public class TransferActivity extends NBaseActivity {
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
                 NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
-            AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
-                    receiveAddressEdit.getText().toString().trim(), value, tokenItem.chainId, password)
-                    .subscribe(new NeuronSubscriber<AppSendTransaction>() {
-                        @Override
-                        public void onError(Throwable e) {
-                            transferAppChainError(e);
-                        }
+            AppChainRpcService.transferErc20(tokenItem, tokenItem.contractAddress,
+                receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
+                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        transferAppChainError(e);
+                    }
 
-                        @Override
-                        public void onNext(AppSendTransaction appSendTransaction) {
-                            transferAppChainNormal(appSendTransaction);
-                        }
-                    });
+                    @Override
+                    public void onNext(AppSendTransaction appSendTransaction) {
+                        transferAppChainNormal(appSendTransaction);
+                    }
+                });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -530,9 +580,8 @@ public class TransferActivity extends NBaseActivity {
      * @param value
      */
     private void transferEth(String password, String value) {
-        transactionHexData = payHexDataEdit.getText().toString().trim();
         EthRpcService.transferEth(receiveAddressEdit.getText().toString().trim(),
-                Double.valueOf(value), mGasPrice, mGasLimit, transactionHexData, password)
+                Double.valueOf(value), mGasPrice, mGasLimit, "", password)
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {

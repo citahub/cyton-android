@@ -119,16 +119,40 @@ public class WalletService {
                         }
                     } else {                                    // nervos
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
-                        if (chainItem != null) {
-                            String httpProvider = chainItem.httpProvider;
-                            AppChainRpcService.init(context, httpProvider);
-                            if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                                return AppChainRpcService.getErc20Balance(
-                                        tokenItem, walletItem.address);
-                            } else {
-                                return AppChainRpcService.getBalance(walletItem.address);
-                            }
+                        if (chainItem == null) return 0.0;
+                        String httpProvider = chainItem.httpProvider;
+                        AppChainRpcService.init(context, httpProvider);
+                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                            return AppChainRpcService.getErc20Balance(
+                                    tokenItem, walletItem.address);
+                        } else {
+                            return AppChainRpcService.getBalance(walletItem.address);
                         }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0.0;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<Double> getBalanceWithNativeToken(Context context, TokenItem tokenItem) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        return Observable.fromCallable(new Callable<Double>() {
+            @Override
+            public Double call() {
+                try {
+                    if (tokenItem.chainId < 0) {                // ethereum
+                        return EthRpcService.getEthBalance(walletItem.address);
+                    } else {                                    // appChain
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        if (chainItem == null) return 0.0;
+                        String httpProvider = chainItem.httpProvider;
+                        AppChainRpcService.init(context, httpProvider);
+                        return AppChainRpcService.getBalance(walletItem.address);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

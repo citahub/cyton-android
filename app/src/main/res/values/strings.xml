@@ -222,7 +222,7 @@
     <string name="sum_value">费用总计（含矿工费）</string>
     <string name="advanced_setup">高级设置</string>
     <string name="gas_price">Gas Price</string>
-    <string name="gas_limit">Gas限制</string>
+    <string name="gas_limit">Gas Limit</string>
     <string name="quota">Quota</string>
     <string name="hex">HEX</string>
     <string name="utf8">UTF8</string>
@@ -274,6 +274,7 @@
     <string name="token_decimal_hint">小数位数</string>
     <string name="input_private_key_hint">请输入私钥原文</string>
     <string name="token">Token</string>
+    <string name="please_input_gas_price">请输入以GWei为单位的GasPrice</string>
 
     <string name="collection_detail_title">藏品详情</string>
     <string name="collection_attrs">藏品属性</string>
@@ -528,4 +529,11 @@ Nervos基金会（以下简称“基金会”或“我们”）尊重并保护�
 本政策未尽事宜，您需遵守基金会不时更新的公告及相关规则。\n
 Nervos基金会\n
     </string>
+    <string name="default_eth_gas_price">以太坊推荐值 %sGWei</string>
+    <string name="default_eth_gas_limit">以太坊推荐值 GasLimit</string>
+    <string name="default_eth_gas_limit_value">21000</string>
+    <string name="input_correct_gas_price_tip">请输入正确的GasPrice</string>
+    <string name="gas_price_too_low">您的gasPrice设置过低，请确保输入大于等于%sGWei 以快速转账</string>
+    <string name="balance_more_gas">请确保账户剩余Token高于矿工费用，以便顺利完成转账～</string>
+    <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
 </resources>
