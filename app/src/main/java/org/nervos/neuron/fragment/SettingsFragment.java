@@ -1,8 +1,6 @@
 package org.nervos.neuron.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -22,7 +20,6 @@ import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
-import org.nervos.neuron.view.dialog.listener.onDialogOKClickListener;
 
 public class SettingsFragment extends NBaseFragment {
 

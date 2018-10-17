@@ -5,7 +5,7 @@ import android.app.Dialog;
 /**
  * Created by BaojunCZ on 2018/8/28.
  */
-public interface onDialogOKClickListener {
+public interface OnDialogCancelClickListener {
 
     void onClick(Dialog dialog);
 

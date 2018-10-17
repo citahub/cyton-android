@@ -2,6 +2,7 @@ package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +49,10 @@ import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
+import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
+import org.nervos.neuron.view.dialog.listener.OnDialogCancelClickListener;
+import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
 import org.nervos.neuron.view.tool.NeuronTextWatcher;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
@@ -334,19 +338,24 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else if (checkTransferValueMoreBalance()) {
-                new AlertDialog.Builder(mActivity).setMessage(R.string.all_balance_transfer_tip)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getConfirmTransferView();
-                            }
-                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                transferValueEdit.setText("");
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
+                        getString(R.string.all_balance_transfer_tip));
+                dialog.setOnOkClickListener(new OnDialogOKClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        transferValueEdit.setText(isNativeToken()?
+                                String.valueOf(mNativeTokenBalance - mTransferFee)
+                                : String.valueOf(mTokenBalance));
+                        getConfirmTransferView();
+                    }
+                });
+                dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        transferValueEdit.setText("");
+                        dialog.dismiss();
+                    }
+                });
             } else {
                 getConfirmTransferView();
             }
@@ -478,7 +487,8 @@ public class TransferActivity extends NBaseActivity {
             }
         });
         transferDialog.setConfirmData(walletItem.address, receiveAddressEdit.getText().toString(),
-                value + tokenItem.symbol, feeValueText.getText().toString());
+                NumberUtil.getDecimal8ENotation(Double.parseDouble(value)) + tokenItem.symbol,
+                feeValueText.getText().toString());
     }
 
     /**
