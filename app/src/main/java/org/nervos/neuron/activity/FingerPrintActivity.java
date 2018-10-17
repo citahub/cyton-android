@@ -93,7 +93,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                 break;
             case R.id.iv_other:
                 Intent intent = new Intent(this, PwdUnlockActivity.class);
-                intent.putExtra(SplashActivity.LOCK_TO_MAIN, intent.getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
+                intent.putExtra(SplashActivity.LOCK_TO_MAIN, getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
                 startActivity(intent);
                 finish();
                 break;

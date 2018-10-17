@@ -114,7 +114,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 break;
             case R.id.iv_other:
                 Intent intent = new Intent(this, FingerPrintActivity.class);
-                intent.putExtra(SplashActivity.LOCK_TO_MAIN, intent.getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
+                intent.putExtra(SplashActivity.LOCK_TO_MAIN, getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false));
                 startActivity(intent);
                 finish();
                 break;
