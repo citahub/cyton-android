@@ -130,7 +130,7 @@ public class AppChainRpcService {
             public String call() {
                 try {
                     String price = new NervosjSysContract(service).getQuotaPrice(from).getValue();
-                    price = price.equals("0x")? "0" : price;
+                    price = price.equals("0x")? "1" : price;
                     return price;
                 } catch (IOException e) {
                     e.printStackTrace();
