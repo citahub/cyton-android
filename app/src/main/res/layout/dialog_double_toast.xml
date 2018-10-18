@@ -11,7 +11,7 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
         android:textColor="@color/font_title"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

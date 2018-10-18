@@ -1,9 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
@@ -22,7 +20,6 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
@@ -145,7 +142,7 @@ public class TransferActivity extends NBaseActivity {
                 mTokenBalance = balance;
                 balanceText.setText(String.format(
                         getString(R.string.transfer_balance_place_holder),
-                        NumberUtil.getDecimal8Sub(balance) + " " + tokenItem.symbol));
+                        NumberUtil.getDecimal8ENotation(balance) + " " + tokenItem.symbol));
             }
         });
 
@@ -171,10 +168,15 @@ public class TransferActivity extends NBaseActivity {
         balanceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mNativeTokenBalance - mTransferFee < 0) {
+                    Toast.makeText(mActivity, String.format(getString(R.string.balance_more_gas),
+                            getFeeTokenUnit()), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                    transferValueEdit.setText(String.valueOf(mNativeTokenBalance - mTransferFee));
+                    transferValueEdit.setText(NumberUtil.getDecimal8ENotation(mNativeTokenBalance - mTransferFee));
                 } else {
-                    transferValueEdit.setText(String.valueOf(mTokenBalance));
+                    transferValueEdit.setText(NumberUtil.getDecimal8ENotation(mTokenBalance));
                 }
             }
         });
@@ -182,15 +184,15 @@ public class TransferActivity extends NBaseActivity {
 
     private void initTransferFee() {
         if (isETH()) {
-            initGasInfo();
+            initETHGasInfo();
             initTransferEditValue();
             initTokenPrice();
         } else {
-            initQuota();
+            initAppChainQuota();
         }
     }
 
-    private void initGasInfo() {
+    private void initETHGasInfo() {
         showProgressCircle();
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
@@ -238,6 +240,9 @@ public class TransferActivity extends NBaseActivity {
             feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
                     + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
+        }
+        if (isNativeToken()) {
+            initAdvancedSetup();
         }
     }
 
@@ -290,7 +295,7 @@ public class TransferActivity extends NBaseActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void initQuota() {
+    private void initAppChainQuota() {
         AppChainRpcService.getQuotaPrice(walletItem.address).subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
@@ -339,30 +344,18 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
                         tokenItem.symbol), Toast.LENGTH_SHORT).show();
             } else if (checkTransferValueMoreBalance()) {
-                ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
-                        getString(R.string.all_balance_transfer_tip));
-                dialog.setOnOkClickListener(new OnDialogOKClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        transferValueEdit.setText(isNativeToken()?
-                                String.valueOf(mNativeTokenBalance - mTransferFee)
-                                : String.valueOf(mTokenBalance));
-                        getConfirmTransferView();
-                    }
-                });
-                dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        transferValueEdit.setText("");
-                        dialog.dismiss();
-                    }
-                });
+                handleBigTransferValue();
             } else {
                 getConfirmTransferView();
             }
         });
     }
 
+
+    /**
+     * Check whether transfer value is bigger than balance of wallet
+     * @return
+     */
     private boolean checkTransferValueMoreBalance() {
         if (isNativeToken()) {
             return Double.parseDouble(transferValueEdit.getText().toString().trim()) >
@@ -372,6 +365,36 @@ public class TransferActivity extends NBaseActivity {
         }
     }
 
+
+    /**
+     * If balance of wallet is more than gas fee, neuron will show dialog to give user two choices
+     */
+    private void handleBigTransferValue() {
+        ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(mActivity,
+                getString(R.string.all_balance_transfer_tip));
+        dialog.setOnOkClickListener(new OnDialogOKClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                transferValueEdit.setText(isNativeToken()?
+                        String.valueOf(mNativeTokenBalance - mTransferFee)
+                        : String.valueOf(mTokenBalance));
+                getConfirmTransferView();
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnCancelClickListener(new OnDialogCancelClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                transferValueEdit.setText("");
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    /**
+     * Estimate Gas limit when address edit text and value edit text were not null
+     */
     private boolean isAddressOK = false, isValueOk = false;
     private void initTransferEditValue() {
         receiveAddressEdit.addTextChangedListener(new NeuronTextWatcher() {
@@ -420,15 +443,13 @@ public class TransferActivity extends NBaseActivity {
     }
 
     private void initAdvancedSetup() {
-        if (isETH()) {
-            feeValueText.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-            feeValueText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    initAdvancedSetupDialog();
-                }
-            });
-        }
+        feeValueText.setTextColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+        feeValueText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initAdvancedSetupDialog();
+            }
+        });
     }
 
     private boolean isETH() {
@@ -453,9 +474,7 @@ public class TransferActivity extends NBaseActivity {
     }
 
     /**
-     * struct confirm transfer view
-     *
-     * @return
+     * show confirm transfer view
      */
     @SuppressLint("SetTextI18n")
     private void getConfirmTransferView() {
@@ -502,7 +521,7 @@ public class TransferActivity extends NBaseActivity {
         SaveAppChainPendingItemUtils.setNativeToken(mActivity,
                 tokenItem.chainId, walletItem.address.toLowerCase(),
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
-                NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
+                NumberUtil.getDecimal8ENotation(Double.valueOf(transferValueEdit.getText().toString().trim())));
         AppChainRpcService.transferAppChain(mActivity, receiveAddressEdit.getText().toString().trim(), value,
                 "", ConstUtil.QUOTA_TOKEN.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -529,7 +548,7 @@ public class TransferActivity extends NBaseActivity {
         SaveAppChainPendingItemUtils.setErc20(mActivity, tokenItem.contractAddress,
                 tokenItem.chainId, walletItem.address.toLowerCase(),
                 receiveAddressEdit.getText().toString().trim().toLowerCase(),
-                NumberUtil.getDecimal8Sub(Double.valueOf(transferValueEdit.getText().toString().trim())));
+                NumberUtil.getDecimal8ENotation(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
             AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
                 receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
