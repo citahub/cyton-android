@@ -42,6 +42,15 @@ public class NumberUtil {
         return fmt.format(value);
     }
 
+    public static String getDecimal8ENotation(String value) {
+        if (!value.contains(".")) return value;
+        int index = value.indexOf(".");
+        String integer = value.substring(0, index);
+        String decimal = value.substring(index + 1);
+        decimal = decimal.substring(0, 8);
+        return integer + "." + decimal;
+    }
+
     public static String hexToUtf8(String hex) {
         hex = Numeric.cleanHexPrefix(hex);
         ByteBuffer buff = ByteBuffer.allocate(hex.length() / 2);
