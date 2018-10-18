@@ -13,6 +13,13 @@ public class ConstUtil {
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
 
+    public static final int CMB_CHAIN_ID = 2;
+    public static final String CMB_CHAIN_NAME = "mba-testnet";
+    public static final String CMB_TOKEN_NAME = "Merchant Base Assert";
+    public static final String CMB_TOKEN_SYMBOL = "MBA";
+    public static final String CMB_TOKEN_AVATAR = "https://download.mba.cmbchina.biz/images/MBA-logo.jpg";
+    public static final String CMB_HTTP_PROVIDER = "http://testnet.mba.cmbchina.biz:1337";
+
 
     // gas constant data
     public static final BigInteger GAS_LIMIT = new BigInteger("21000");        // default eth gas limit is 21000
