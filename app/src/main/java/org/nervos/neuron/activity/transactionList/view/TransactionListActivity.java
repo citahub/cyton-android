@@ -15,9 +15,9 @@ import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
+import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.activity.transactionList.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionList.presenter.TransactionListPresenter;
-import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
@@ -33,11 +33,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
-
 public class TransactionListActivity extends NBaseActivity {
 
-    public static final String EXTRA_TOKEN = "extra_token";
+    public static final String TRANSACTION_TOKEN = "TRANSACTION_TOKEN";
 
     private List<TransactionItem> transactionItemList = new ArrayList<>();
     private WalletItem walletItem;
@@ -78,7 +76,7 @@ public class TransactionListActivity extends NBaseActivity {
     @Override
     protected void initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        tokenItem = getIntent().getParcelableExtra(TRANSACTION_TOKEN);
         titleBar.setTitle(tokenItem.symbol);
         showProgressBar();
         presenter = new TransactionListPresenter(this, tokenItem, listener);
@@ -110,8 +108,8 @@ public class TransactionListActivity extends NBaseActivity {
             TransactionItem item = transactionItemList.get(position);
             if (item.status != 2) {
                 Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-                intent.putExtra(EXTRA_TRANSACTION, item);
-                intent.putExtra(EXTRA_TOKEN, tokenItem);
+                intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, item);
+                intent.putExtra(TRANSACTION_TOKEN, tokenItem);
                 startActivity(intent);
             }
         });

@@ -138,6 +138,8 @@
     <string name="setting_contact_us">联系我们</string>
     <string name="setting_weixin">联系客服</string>
     <string name="about_us_title">关于我们</string>
+    <string name="about_us_source_code">源代码</string>
+    <string name="about_us_server_private">服务及隐私条款</string>
     <string name="setting_nervos_forum">论坛</string>
     <string name="infua_describe">提供以太坊访问服务</string>
     <string name="openSea_describe">提供721数据服务</string>

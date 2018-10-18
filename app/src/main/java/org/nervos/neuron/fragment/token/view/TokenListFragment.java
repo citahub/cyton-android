@@ -83,7 +83,7 @@ public class TokenListFragment extends NBaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), TransactionListActivity.class);
-                intent.putExtra(TransactionListActivity.EXTRA_TOKEN, tokenItemList.get(position));
+                intent.putExtra(TransactionListActivity.TRANSACTION_TOKEN, tokenItemList.get(position));
                 startActivity(intent);
             }
 
