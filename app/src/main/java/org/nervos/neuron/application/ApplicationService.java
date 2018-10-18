@@ -32,11 +32,6 @@ public class ApplicationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        ZXingLibrary.initDisplayOpinion(this);
-        WalletEntity.initWalletMnemonic(this);
-        DBChainUtil.initChainData(this);
-        EthRpcService.init(this);
-        AESCrypt.init(this);
 
         if (org.nervos.neuron.BuildConfig.IS_DEBUG) {
             SensorsDataAPI.sharedInstance(this, SA_SERVER_URL_DEBUG, SensorsDataAPI.DebugMode.DEBUG_OFF);

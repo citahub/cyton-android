@@ -44,17 +44,17 @@ public class WalletService {
                 TokenItem tokenItem = iterator.next();
                 iterator.remove();
                 try {
-                    if (tokenItem.chainId < 0) {                // ethereum
+                    if (tokenItem.chainId < 0) {
                         if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                             tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
-                            track("ETH", "ETH", tokenItem.balance);
+                            track(ConstUtil.ETH, ConstUtil.ETH, tokenItem.balance);
                         } else {
                             tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(tokenItem);
-                            track("ETH", tokenItem.symbol, tokenItem.balance);
+                            track(ConstUtil.ETH, tokenItem.symbol, tokenItem.balance);
                         }
-                    } else {                                    // nervos
+                    } else {
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
                         if (chainItem != null) {
                             String httpProvider = chainItem.httpProvider;

@@ -20,7 +20,14 @@ public class NeuronApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ZXingLibrary.initDisplayOpinion(this);
+        WalletEntity.initWalletMnemonic(this);
         SharePrefUtil.init(this);
+        DBChainUtil.initChainData(this);
+        EthRpcService.init(this);
+        AESCrypt.init(this);
+
         Intent serverIntent = new Intent(getApplicationContext(), ApplicationService.class);
         startService(serverIntent);
     }

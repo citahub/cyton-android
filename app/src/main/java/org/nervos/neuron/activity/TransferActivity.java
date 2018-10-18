@@ -56,6 +56,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -79,10 +80,9 @@ public class TransferActivity extends NBaseActivity {
     private WalletItem walletItem;
     private TokenItem tokenItem;
     private BigInteger mGasPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
-    private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance;
+    private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance, mTransferFee;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
-    private double mTransferFee;
 
     private TransferDialog transferDialog;
 
@@ -174,7 +174,9 @@ public class TransferActivity extends NBaseActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(tokenItem.contractAddress)) {
-                    transferValueEdit.setText(NumberUtil.getDecimal8ENotation(mNativeTokenBalance - mTransferFee));
+                    transferValueEdit.setText(NumberUtil.getDecimal8ENotation(
+                            new BigDecimal(mNativeTokenBalance)
+                                    .subtract(new BigDecimal(mTransferFee)).toString()));
                 } else {
                     transferValueEdit.setText(NumberUtil.getDecimal8ENotation(mTokenBalance));
                 }

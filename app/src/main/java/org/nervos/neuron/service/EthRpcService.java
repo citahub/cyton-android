@@ -156,36 +156,6 @@ public class EthRpcService {
     }
 
 
-    public static void getTransactionReceipt(String hash) {
-        Observable.fromCallable(new Callable<EthGetTransactionReceipt>() {
-            @Override
-            public EthGetTransactionReceipt call() {
-                try {
-                    return service.ethGetTransactionReceipt(hash).send();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<EthGetTransactionReceipt>() {
-            @Override
-            public void onCompleted() {
-
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onNext(EthGetTransactionReceipt ethGetTransactionReceipt) {
-                LogUtil.d("transaction receipt: " + ethGetTransactionReceipt.getTransactionReceipt());
-            }
-        });
-    }
-
-
     /**
      * get standard erc20 token info through function hash and parameters
      */
@@ -213,12 +183,6 @@ public class EthRpcService {
             else return balances/(Math.pow(10, decimal));
         }
         return 0.0;
-    }
-
-
-    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address,
-                           double value, BigInteger gasPrice, String password) {
-        return transferErc20(tokenItem, address, value, gasPrice, ConstUtil.GAS_ERC20_LIMIT, password);
     }
 
 
