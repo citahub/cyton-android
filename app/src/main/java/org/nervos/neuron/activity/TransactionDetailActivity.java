@@ -31,7 +31,7 @@ import java.math.BigInteger;
 
 public class TransactionDetailActivity extends NBaseActivity {
 
-    public static final String EXTRA_TRANSACTION = "extra_transaction";
+    public static final String TRANSACTION_DETAIL = "TRANSACTION_DETAIL";
     private WalletItem walletItem;
     private TransactionItem transactionItem;
     private TitleBar title;
@@ -66,7 +66,7 @@ public class TransactionDetailActivity extends NBaseActivity {
     @Override
     protected void initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        transactionItem = getIntent().getParcelableExtra(EXTRA_TRANSACTION);
+        transactionItem = getIntent().getParcelableExtra(TRANSACTION_DETAIL);
 
         transactionHashText.setText(transactionItem.hash);
         transactionFromText.setText(transactionItem.from);

@@ -14,126 +14,138 @@
         app:title="@string/about_us_title"
         app:title_color="@color/font_title" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="26dp"
-            android:src="@drawable/ic_about_us_logo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dip"
-            android:text="@string/app_name"
-            android:textColor="@color/font_title"
-            android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/app_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="26dp"
-            android:textColor="@color/font_title_third"
-            android:textSize="14sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="26dp"
+                    android:src="@drawable/ic_about_us_logo" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/app_name"
+                    android:textColor="@color/font_title"
+                    android:textSize="16sp" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_source_code"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dip"
-        app:icon="@drawable/ic_about_us_origin_code"
-        app:name="源代码" />
+                <TextView
+                    android:id="@+id/app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="26dp"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="14sp" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_server_private"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_about_us_server_pri"
-        app:name="服务及隐私条款" />
+            </LinearLayout>
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_nervos_network"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dip"
-        app:icon="@drawable/ic_about_us_nervos_network"
-        app:name="AppChain Network" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_source_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dip"
+                app:icon="@drawable/ic_about_us_origin_code"
+                app:name="@string/about_us_source_code" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_infura"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_about_us_infua"
-        app:name="Infura"
-        app:right_txt="@string/infua_describe" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_server_private"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_about_us_server_pri"
+                app:name="@string/about_us_server_private" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_open_sea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_about_us_open_sea"
-        app:name="Open Sea"
-        app:right_txt="@string/openSea_describe" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_nervos_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dip"
+                app:icon="@drawable/ic_about_us_nervos_network"
+                app:name="AppChain Network" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_peck_shield"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_about_peck_shield"
-        app:name="PeckShield"
-        app:right_txt="@string/peckShield_describe" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_infura"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_about_us_infua"
+                app:name="Infura"
+                app:right_txt="@string/infua_describe" />
 
-    <org.nervos.neuron.view.SettingButtonView
-        android:id="@+id/sbv_cita"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/ic_about_cita"
-        app:name="Cita"
-        app:right_txt="@string/cita_describe" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_open_sea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_about_us_open_sea"
+                app:name="Open Sea"
+                app:right_txt="@string/openSea_describe" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/default_margin">
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_peck_shield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_about_peck_shield"
+                app:name="PeckShield"
+                app:right_txt="@string/peckShield_describe" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/neuron_is_a"
-            android:textColor="@color/font_title_third"
-            android:textSize="12sp" />
+            <org.nervos.neuron.view.SettingButtonView
+                android:id="@+id/sbv_cita"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_about_cita"
+                app:name="CITA"
+                app:right_txt="@string/cita_describe" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="20dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/neuron_logo" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/default_margin"
+                android:paddingBottom="@dimen/default_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginBottom="1dp"
-            android:text="@string/product"
-            android:textColor="@color/font_title_third"
-            android:textSize="12sp" />
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginBottom="1dp"
+                    android:text="@string/neuron_is_a"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="20dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/neuron_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="1dp"
+                    android:text="@string/product"
+                    android:textColor="@color/font_title_third"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

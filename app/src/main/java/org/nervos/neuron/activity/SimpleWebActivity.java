@@ -91,6 +91,9 @@ public class SimpleWebActivity extends BaseActivity {
                     } catch (Exception e) {
                     }
                 }
+                if (url.startsWith("http:") || url.startsWith("https:")) {
+                    webView.loadUrl(url);
+                }
                 return false;
             }
 

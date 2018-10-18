@@ -60,23 +60,26 @@ public class NeuronWebViewClient extends WebViewClient {
     }
 
     private boolean shouldOverrideUrlLoading(WebView webView, String url, boolean isMainFrame, boolean isRedirect) {
-        boolean result = false;
+//        boolean result = false;
         synchronized (lock) {
             isInjected = false;
         }
-        String urlToOpen = urlHandlerManager.handle(url);
-        if (!url.startsWith("http")) {
-            result = true;
+//        String urlToOpen = urlHandlerManager.handle(url);
+//        if (!url.startsWith("http")) {
+//            result = true;
+//        }
+//        if (isMainFrame && isRedirect) {
+//            urlToOpen = url;
+//            result = true;
+//        }
+//
+//        if (result && !TextUtils.isEmpty(urlToOpen)) {
+//            webView.loadUrl(urlToOpen);
+//        }
+        if (url.startsWith("http:") || url.startsWith("https:")) {
+            webView.loadUrl(url);
         }
-        if (isMainFrame && isRedirect) {
-            urlToOpen = url;
-            result = true;
-        }
-
-        if (result && !TextUtils.isEmpty(urlToOpen)) {
-            webView.loadUrl(urlToOpen);
-        }
-        return result;
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -86,10 +89,10 @@ public class NeuronWebViewClient extends WebViewClient {
             return null;
         }
         if (!request.getMethod().equalsIgnoreCase("GET") || !request.isForMainFrame()) {
-             if (request.getMethod().equalsIgnoreCase("GET")
-                     && (request.getUrl().toString().contains(".js")
-                        || request.getUrl().toString().contains("json")
-                        || request.getUrl().toString().contains("css"))) {
+            if (request.getMethod().equalsIgnoreCase("GET")
+                    && (request.getUrl().toString().contains(".js")
+                    || request.getUrl().toString().contains("json")
+                    || request.getUrl().toString().contains("css"))) {
                 synchronized (lock) {
                     if (!isInjected) {
                         injectScriptFile(view);
@@ -114,7 +117,7 @@ public class NeuronWebViewClient extends WebViewClient {
         }
         if (response == null || response.isRedirect) {
             return null;
-        } else if (TextUtils.isEmpty(response.data)){
+        } else if (TextUtils.isEmpty(response.data)) {
             return null;
         } else {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(response.data.getBytes());

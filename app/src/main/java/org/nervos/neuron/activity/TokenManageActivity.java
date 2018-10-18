@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.token.model.TokenAdapter;
 import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
@@ -31,6 +32,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.web3j.crypto.Keys;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -116,10 +118,13 @@ public class TokenManageActivity extends BaseActivity {
                 TokenViewHolder viewHolder = (TokenViewHolder) holder;
                 if (tokenList.get(position).logo == null ||
                         TextUtils.isEmpty(tokenList.get(position).logo.src)) {
+                    String address = tokenList.get(position).address;
+                    if (AddressUtil.isAddressValid(address))
+                        address = Keys.toChecksumAddress(address);
                     RequestOptions options = new RequestOptions()
                             .error(R.drawable.ether_big);
                     Glide.with(mActivity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenList.get(position).address)))
+                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
                             .apply(options)
                             .into(viewHolder.tokenImage);
                 } else {

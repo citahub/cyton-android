@@ -15,27 +15,27 @@ import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
+import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.activity.transactionList.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionList.presenter.TransactionListPresenter;
-import org.nervos.neuron.activity.TransferActivity;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
+import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.nervos.neuron.activity.TransactionDetailActivity.EXTRA_TRANSACTION;
-
 public class TransactionListActivity extends NBaseActivity {
 
-    public static final String EXTRA_TOKEN = "extra_token";
+    public static final String TRANSACTION_TOKEN = "TRANSACTION_TOKEN";
 
     private List<TransactionItem> transactionItemList = new ArrayList<>();
     private WalletItem walletItem;
@@ -76,7 +76,7 @@ public class TransactionListActivity extends NBaseActivity {
     @Override
     protected void initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        tokenItem = getIntent().getParcelableExtra(EXTRA_TOKEN);
+        tokenItem = getIntent().getParcelableExtra(TRANSACTION_TOKEN);
         titleBar.setTitle(tokenItem.symbol);
         showProgressBar();
         presenter = new TransactionListPresenter(this, tokenItem, listener);
@@ -105,10 +105,13 @@ public class TransactionListActivity extends NBaseActivity {
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
-            Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-            intent.putExtra(EXTRA_TRANSACTION, transactionItemList.get(position));
-            intent.putExtra(EXTRA_TOKEN, tokenItem);
-            startActivity(intent);
+            TransactionItem item = transactionItemList.get(position);
+            if (item.status != 2) {
+                Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
+                intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, item);
+                intent.putExtra(TRANSACTION_TOKEN, tokenItem);
+                startActivity(intent);
+            }
         });
     }
 
@@ -120,6 +123,8 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenDesRoot.setVisibility(View.VISIBLE);
                 tokenDesText.setText(R.string.ETH_Describe);
                 presenter.getBalance();
+                tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", "ethereum")));
+
             }
         }
     }
@@ -159,7 +164,11 @@ public class TransactionListActivity extends NBaseActivity {
                     tokenDesRoot.setVisibility(View.VISIBLE);
                     presenter.setTokenLogo(tokenLogoImage);
                     initBalance();
-                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", tokenItem.contractAddress)));
+                    String address = tokenItem.contractAddress;
+                    if (AddressUtil.isAddressValid(address))
+                        address = Keys.toChecksumAddress(address);
+                    String finalAddress = address;
+                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_ERC20_DETAIL.replace("@address", finalAddress)));
                 } else
                     tokenDesRoot.setVisibility(View.GONE);
             });

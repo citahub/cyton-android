@@ -103,9 +103,15 @@ public class SettingsFragment extends NBaseFragment {
                 Toast.makeText(getActivity(), R.string.copy_weixin_success, Toast.LENGTH_SHORT).show();
             }
         });
-        forumsSBV.setOpenListener(()->{
+        forumsSBV.setOpenListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_FORUMS);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
     AuthenticateResultCallback authenticateResultCallback = new AuthenticateResultCallback() {

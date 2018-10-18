@@ -19,6 +19,7 @@
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
+                android:padding="11dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/title_close" />
 
@@ -27,6 +28,7 @@
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
+                android:padding="11dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/title_more"
                 android:visibility="invisible" />

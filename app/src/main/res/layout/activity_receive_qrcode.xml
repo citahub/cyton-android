@@ -75,16 +75,14 @@
 
             <TextView
                 android:id="@+id/qrcode_wallet_address"
-                android:layout_width="wrap_content"
+                android:layout_width="215dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/receive_qrcode_image"
                 android:layout_centerHorizontal="true"
-                android:ellipsize="middle"
-                android:maxEms="12"
-                android:singleLine="true"
-                android:text="0x12345454645342422334343534343"
                 android:textColor="@color/font_title_second"
                 android:textSize="14sp"
+                android:gravity="center_horizontal"
+
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 

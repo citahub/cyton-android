@@ -19,7 +19,9 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.web3j.crypto.Keys;
 
 import java.util.List;
 
@@ -56,10 +58,13 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         if (TextUtils.isEmpty(tokenItem.avatar)) {
             if (tokenItem.chainId < 0) {
                 if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                    String address = tokenItem.contractAddress;
+                    if (AddressUtil.isAddressValid(address))
+                        address = Keys.toChecksumAddress(address);
                     RequestOptions options = new RequestOptions()
                             .error(R.drawable.ether_big);
                     Glide.with(activity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", tokenItem.contractAddress)))
+                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
                             .apply(options)
                             .into(holder.tokenImage);
                 } else {

@@ -54,8 +54,9 @@ public class WebAppUtil {
 
     /**
      * get app information from manifest.json and getMetaData from each http provider host
+     *
      * @param webView
-     * @param url           the web url from the third part
+     * @param url     the web url from the third part
      */
     public static Observable<ChainItem> getHttpManifest(WebView webView, String url) {
         return Observable.fromCallable(new Callable<String>() {
@@ -63,7 +64,7 @@ public class WebAppUtil {
             public String call() throws IOException {
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByTag("link");
-                for(Element element: elements) {
+                for (Element element : elements) {
                     if (MANIFEST.equals(element.attr("rel"))) {
                         return element.attr("href");
                     }
@@ -84,8 +85,12 @@ public class WebAppUtil {
                 URI uri = URI.create(url);
                 String manifestUrl = path;
                 if (!path.startsWith("http")) {
-                    manifestUrl = uri.getAuthority() + "/" + uri.getPath() + "/" +
-                            (path.indexOf(".") == 0? path.substring(1) : path);
+                    if (path.startsWith(".")) {
+                        manifestUrl = uri.getAuthority() + "/" + uri.getPath() + "/" + path.substring(1);
+                    } else {
+                        manifestUrl = uri.getAuthority() + "/" + path;
+                    }
+
                     manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
                 }
 
@@ -115,7 +120,7 @@ public class WebAppUtil {
                     return Observable.error(new Throwable(
                             "Manifest chain set is null, please provide chain id and host"));
                 }
-                for(Map.Entry<String, String> entry : chainSet.entrySet()) {
+                for (Map.Entry<String, String> entry : chainSet.entrySet()) {
                     ChainItem item = new ChainItem();
                     item.chainId = Integer.parseInt(entry.getKey());
                     item.httpProvider = entry.getValue();
@@ -142,11 +147,11 @@ public class WebAppUtil {
                 return Observable.just(chainItem);
             }
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static String formatUrl(String url) {
-        if (url.contains("///")){
+        if (url.contains("///")) {
             url = url.replace("///", "/");
         }
         if (url.contains("//")) {
@@ -184,7 +189,7 @@ public class WebAppUtil {
             URI uri = URI.create(webView.getUrl());
             String icon = uri.getAuthority() + "/" + uri.getPath() + "/" + WEB_ICON_PATH;
             icon = uri.getScheme() + "://" + formatUrl(icon);
-            icon = UrlUtil.exists(icon)? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
+            icon = UrlUtil.exists(icon) ? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
             mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,7 +226,7 @@ public class WebAppUtil {
         } else {
             webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-        String cacheDirPath = context.getFilesDir().getAbsolutePath()+"cache/";
+        String cacheDirPath = context.getFilesDir().getAbsolutePath() + "cache/";
         webSettings.setAppCachePath(cacheDirPath);
         webSettings.setAppCacheEnabled(true);
     }
