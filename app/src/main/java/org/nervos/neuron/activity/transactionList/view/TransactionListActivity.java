@@ -23,8 +23,10 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
+import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -164,7 +166,11 @@ public class TransactionListActivity extends NBaseActivity {
                     tokenDesRoot.setVisibility(View.VISIBLE);
                     presenter.setTokenLogo(tokenLogoImage);
                     initBalance();
-                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_ERC20_DETAIL.replace("@address", tokenItem.contractAddress)));
+                    String address = tokenItem.contractAddress;
+                    if (AddressUtil.isAddressValid(address))
+                        address = Keys.toChecksumAddress(address);
+                    String finalAddress = address;
+                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_ERC20_DETAIL.replace("@address", finalAddress)));
                 } else
                     tokenDesRoot.setVisibility(View.GONE);
             });
