@@ -199,6 +199,7 @@ public class TransferActivity extends NBaseActivity {
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
                 dismissProgressCircle();
             }
@@ -238,10 +239,15 @@ public class TransferActivity extends NBaseActivity {
     @SuppressLint("SetTextI18n")
     private void initTransferFeeView() {
         mTransferFee = NumberUtil.getEthFromWei(mGas);
-        if (mTokenPrice > 0 && currencyItem != null) {
-            feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
-                    + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
-                    + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
+        if (currencyItem != null) {
+            if (mTokenPrice > 0) {
+                feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
+                        + getFeeTokenUnit() + " = " + currencyItem.getSymbol());
+
+            } else {
+                feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
+                        + getFeeTokenUnit());
+            }
         }
         if (isNativeToken()) {
             initAdvancedSetup();
