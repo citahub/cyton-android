@@ -331,20 +331,7 @@ public class AppWebActivity extends NBaseActivity {
             return new Gson().toJson(walletNames);
         }
 
-        @JavascriptInterface
-        public void getTokenPrice(String symbol, String callback) {
-            TokenService.getCurrency(symbol, CurrencyUtil.getCurrencyItem(mActivity).getName())
-                    .subscribe(new NeuronSubscriber<String>() {
-                        @Override
-                        public void onNext(String price) {
-                            if (!TextUtils.isEmpty(price)) {
-                                JSLoadUtils.loadFunc(callback, "");
-                            } else {
-                                JSLoadUtils.loadFunc(callback, price);
-                            }
-                        }
-                    });
-        }
+
     }
 
     public class WebTitleBar {
