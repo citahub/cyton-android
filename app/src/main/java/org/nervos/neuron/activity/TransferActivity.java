@@ -219,7 +219,7 @@ public class TransferActivity extends NBaseActivity {
      */
     private void initTokenPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
+        TokenService.getCurrency(ConstUtil.ETH, currencyItem.getName())
             .subscribe(new NeuronSubscriber<String>() {
                 @Override
                 public void onNext(String price) {
