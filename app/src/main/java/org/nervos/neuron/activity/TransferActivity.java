@@ -242,8 +242,8 @@ public class TransferActivity extends NBaseActivity {
         if (currencyItem != null) {
             if (mTokenPrice > 0) {
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
-                        + getFeeTokenUnit() + " = " + currencyItem.getSymbol());
-
+                        + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
+                        + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
             } else {
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
                         + getFeeTokenUnit());
