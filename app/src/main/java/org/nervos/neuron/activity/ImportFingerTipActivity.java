@@ -79,7 +79,6 @@ public class ImportFingerTipActivity extends NBaseActivity {
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing())
                 authFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
             Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mActivity, MainActivity.class);
             intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
@@ -92,4 +91,10 @@ public class ImportFingerTipActivity extends NBaseActivity {
             Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_lock_failed), Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    public void finish() {
+        SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
+        super.finish();
+    }
 }
