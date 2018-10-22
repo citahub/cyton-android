@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.RootUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class SplashActivity extends BaseActivity {
 
@@ -18,29 +22,41 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    sleep(1000);
-                    if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                        if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
-                            Intent intent = new Intent(mActivity, FingerPrintActivity.class);
-                            intent.putExtra(LOCK_TO_MAIN, true);
-                            startActivity(intent);
-                        } else {
-                            startActivity(new Intent(mActivity, MainActivity.class));
-                        }
-                    } else {
-                        Intent intent = new Intent(mActivity, AddWalletActivity.class);
-                        startActivity(intent);
-                    }
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        if (RootUtil.isDeviceRooted()) {
+            try {
+                JSONObject object = new JSONObject();
+                object.put("title", R.string.safe_hint);
+                object.put("info", R.string.root_hint);
+                ToastSingleButtonDialog.getInstance(this, object).setOnCancelClickListener((dialog ->
+                        finish()));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }.start();
+        } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        sleep(1000);
+                        if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
+                            if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                                Intent intent = new Intent(mActivity, FingerPrintActivity.class);
+                                intent.putExtra(LOCK_TO_MAIN, true);
+                                startActivity(intent);
+                            } else {
+                                startActivity(new Intent(mActivity, MainActivity.class));
+                            }
+                        } else {
+                            Intent intent = new Intent(mActivity, AddWalletActivity.class);
+                            startActivity(intent);
+                        }
+                        finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
     }
 }
