@@ -76,7 +76,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     break;
                 case 1:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_success);
-                    viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.font_title_third));
+                    viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.assist_color));
                     break;
                 case 2:
                 default:
