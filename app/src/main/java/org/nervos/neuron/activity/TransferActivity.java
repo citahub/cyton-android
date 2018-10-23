@@ -498,14 +498,18 @@ public class TransferActivity extends NBaseActivity {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (isETH()) {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, ConstUtil.ETH, "2");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value,
+                            receiveAddressEdit.getText().toString().trim(),
+                            walletItem.address, ConstUtil.ETH, "2");
                     if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                         transferEth(password, value);
                     } else {
                         transferEthErc20(password, value);
                     }
                 } else {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, tokenItem.chainName, "2");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value,
+                            receiveAddressEdit.getText().toString().trim(),
+                            walletItem.address, tokenItem.chainName, "2");
                     if (TextUtils.isEmpty(tokenItem.contractAddress)) {
                         transferAppChainToken(password, Double.valueOf(value));
                     } else {
