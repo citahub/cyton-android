@@ -126,9 +126,11 @@ public class ImportKeystoreFragment extends NBaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false) &&
+                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
+                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT_TIP, true);
             } else {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);

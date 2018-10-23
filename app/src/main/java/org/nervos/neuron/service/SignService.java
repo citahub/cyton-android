@@ -3,14 +3,12 @@ package org.nervos.neuron.service;
 import android.content.Context;
 
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
-import java.security.GeneralSecurityException;
 import java.util.concurrent.Callable;
 
 import rx.Observable;
