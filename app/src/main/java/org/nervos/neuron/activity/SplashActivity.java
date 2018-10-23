@@ -24,7 +24,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         inLoginPage = true;
         if (RootUtil.isDeviceRooted()) {
-            ToastSingleButtonDialog toastSingleButtonDialog = ToastSingleButtonDialog.getInstance(this, getResources().getString(R.string.safe_hint), getResources().getString(R.string.root_hint));
+            ToastSingleButtonDialog toastSingleButtonDialog = ToastSingleButtonDialog.getInstance(this, getString(R.string.safe_hint), getString(R.string.root_hint));
             toastSingleButtonDialog.setOnCancelClickListener((dialog ->
                     finish()));
             toastSingleButtonDialog.setCanceledOnTouchOutside(false);

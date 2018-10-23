@@ -81,13 +81,13 @@ public class ToastDoubleButtonDialog extends Dialog {
 
     private void initData() {
         if (jsonInfo != null) {
-            String info = jsonInfo.optString("info");
+            String info = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_INFO);
             if (!TextUtils.isEmpty(info))
                 messageText.setText(info);
-            String ok = jsonInfo.optString("ok");
+            String ok = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_OK_BTN);
             if (!TextUtils.isEmpty(ok))
                 okText.setText(ok);
-            String cancel = jsonInfo.optString("cancel");
+            String cancel = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_CANCEL_BTN);
             if (!TextUtils.isEmpty(cancel))
                 cancelText.setText(cancel);
         }

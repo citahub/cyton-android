@@ -19,6 +19,11 @@ import org.nervos.neuron.util.ScreenUtils;
  */
 public class ToastSingleButtonDialog extends Dialog {
 
+    public static final String DIALOG_TITLE = "title";
+    public static final String DIALOG_INFO = "info";
+    public static final String DIALOG_OK_BTN = "ok";
+    public static final String DIALOG_CANCEL_BTN = "cancel";
+
     private TextView messageText, okText, titleText;
     private JSONObject jsonInfo = null;
     private String info = null;
@@ -83,13 +88,13 @@ public class ToastSingleButtonDialog extends Dialog {
 
     private void initData() {
         if (jsonInfo != null) {
-            String title = jsonInfo.optString("title");
+            String title = jsonInfo.optString(DIALOG_TITLE);
             if (!TextUtils.isEmpty(title))
                 titleText.setText(title);
-            String info = jsonInfo.optString("info");
+            String info = jsonInfo.optString(DIALOG_INFO);
             if (!TextUtils.isEmpty(info))
                 messageText.setText(info);
-            String ok = jsonInfo.optString("ok");
+            String ok = jsonInfo.optString(DIALOG_OK_BTN);
             if (!TextUtils.isEmpty(ok))
                 okText.setText(ok);
         }
@@ -116,8 +121,8 @@ public class ToastSingleButtonDialog extends Dialog {
     public void setMsg(String title, String msg) {
         try {
             JSONObject object = new JSONObject();
-            object.put("title", title);
-            object.put("info", msg);
+            object.put(DIALOG_TITLE, title);
+            object.put(DIALOG_INFO, msg);
             this.jsonInfo = object;
         } catch (JSONException e) {
             e.printStackTrace();
