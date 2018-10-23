@@ -10,7 +10,6 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
