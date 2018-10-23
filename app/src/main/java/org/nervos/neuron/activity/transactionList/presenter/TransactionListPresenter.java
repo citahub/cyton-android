@@ -104,12 +104,10 @@ public class TransactionListPresenter {
                                 DecimalFormat df = new DecimalFormat("######0.00");
                                 DecimalFormat formater = new DecimalFormat("0.####");
                                 formater.setRoundingMode(RoundingMode.FLOOR);
-                                listener.getCurrency(formater.format(tokenItem.balance)
-                                        + tokenItem.symbol + "≈"
-                                        + CurrencyUtil.getCurrencyItem(activity).getSymbol()
+                                listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
                                         + Double.parseDouble(df.format(price * tokenItem.balance)));
                             } else
-                                listener.getCurrency("0" + tokenItem.symbol);
+                                listener.getCurrency("0");
                         }
                     });
         }
