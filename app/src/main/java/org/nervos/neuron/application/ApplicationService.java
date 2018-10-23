@@ -5,13 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
-
-import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.util.SensorIDRandomUtils;
-import org.nervos.neuron.util.crypto.AESCrypt;
-import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;

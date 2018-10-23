@@ -5,8 +5,6 @@ import android.text.TextUtils;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -14,7 +12,6 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
