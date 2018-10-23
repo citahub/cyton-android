@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
@@ -37,6 +38,13 @@ public class ToastSingleButtonDialog extends Dialog {
         return dialog;
     }
 
+    public static ToastSingleButtonDialog getInstance(@NonNull Context context, String title, String msg) {
+        dialog = new ToastSingleButtonDialog(context);
+        dialog.show();
+        dialog.setMsg(title, msg);
+        return dialog;
+    }
+
     /**
      * @param context
      * @param msg     object.put("info", "14124124");
@@ -49,6 +57,7 @@ public class ToastSingleButtonDialog extends Dialog {
         dialog.setMsg(msg);
         return dialog;
     }
+
 
     public void setOnCancelClickListener(OnDialogOKClickListener okClickListener) {
         this.okClickListener = okClickListener;
@@ -101,6 +110,18 @@ public class ToastSingleButtonDialog extends Dialog {
 
     public void setMsg(String info) {
         this.info = info;
+        initData();
+    }
+
+    public void setMsg(String title, String msg) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", title);
+            object.put("info", msg);
+            this.jsonInfo = object;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         initData();
     }
 

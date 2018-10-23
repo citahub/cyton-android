@@ -22,16 +22,13 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        inLoginPage = true;
         if (RootUtil.isDeviceRooted()) {
-            try {
-                JSONObject object = new JSONObject();
-                object.put("title", R.string.safe_hint);
-                object.put("info", R.string.root_hint);
-                ToastSingleButtonDialog.getInstance(this, object).setOnCancelClickListener((dialog ->
-                        finish()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            ToastSingleButtonDialog toastSingleButtonDialog = ToastSingleButtonDialog.getInstance(this, getResources().getString(R.string.safe_hint), getResources().getString(R.string.root_hint));
+            toastSingleButtonDialog.setOnCancelClickListener((dialog ->
+                    finish()));
+            toastSingleButtonDialog.setCanceledOnTouchOutside(false);
+            toastSingleButtonDialog.setCancelable(false);
         } else {
             new Thread() {
                 @Override
