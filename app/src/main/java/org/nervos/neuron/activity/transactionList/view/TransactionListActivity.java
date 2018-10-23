@@ -7,9 +7,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,10 +26,8 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
-import org.web3j.abi.datatypes.Int;
 import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
@@ -61,7 +57,7 @@ public class TransactionListActivity extends NBaseActivity {
 
     private TransactionListPresenter presenter;
 
-    private String Describe;
+    private String describe;
 
     @Override
     protected int getContentLayout() {
@@ -130,7 +126,7 @@ public class TransactionListActivity extends NBaseActivity {
                 presenter.getTokenDescribe();
             } else {
                 tokenDesRoot.setVisibility(View.VISIBLE);
-                Describe = getResources().getString(R.string.ETH_Describe);
+                describe = getResources().getString(R.string.ETH_Describe);
                 tokenDesTextFirst.setText(R.string.ETH_Describe);
                 tokenSymbol.setText(ConstUtil.ETH);
                 setDesSecondLine();
@@ -166,7 +162,7 @@ public class TransactionListActivity extends NBaseActivity {
 
         @Override
         public void getTokenDescribe(EthErc20TokenInfoItem item) {
-            Describe = item.overView.zh;
+            describe = item.overView.zh;
             tokenDesTextFirst.post(() -> {
                 tokenSymbol.setText(item.symbol);
                 tokenDesTextFirst.setText(item.overView.zh);
@@ -200,19 +196,16 @@ public class TransactionListActivity extends NBaseActivity {
     private void setDesSecondLine() {
         tokenDesTextFirst.postDelayed(() -> {
             Layout layout = tokenDesTextFirst.getLayout();
-            StringBuilder SrcStr = new StringBuilder(tokenDesTextFirst.getLayout().getText().toString());
-            String lineStr = SrcStr.subSequence(layout.getLineStart(0), layout.getLineEnd(0)).toString();
+            StringBuilder srcStr = new StringBuilder(tokenDesTextFirst.getLayout().getText().toString());
+            String lineStr = srcStr.subSequence(layout.getLineStart(0), layout.getLineEnd(0)).toString();
             int length = lineStr.length();
-            LogUtil.d(lineStr);
-            LogUtil.d(length + "");
-            if (length > 0 && Describe.length() > length && tokenDesTextSecond.getText().toString().length() == 0) {
+            if (length > 0 && describe.length() > length && tokenDesTextSecond.getText().toString().length() == 0) {
                 String secondText;
-                if ((int) (length * 1.5) > Describe.length()) {
-                    secondText = Describe.substring(length);
+                if ((int) (length * 1.5) > describe.length()) {
+                    secondText = describe.substring(length);
                 } else {
-                    secondText = Describe.substring(length, (int) (length * 1.5)) + "...";
+                    secondText = describe.substring(length, (int) (length * 1.5)) + "...";
                 }
-                LogUtil.d(secondText);
                 tokenDesTextSecond.setText(secondText);
             }
         }, 300);
