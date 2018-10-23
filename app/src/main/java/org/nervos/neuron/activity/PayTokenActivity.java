@@ -231,10 +231,12 @@ public class PayTokenActivity extends BaseActivity {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (transactionInfo.isEthereum()) {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "", walletItem.address, ConstUtil.ETH, "1");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "",
+                            walletItem.address, ConstUtil.ETH, "1");
                     transferEth(password, progressBar);
                 } else {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "", walletItem.address, tokenItem.chainName, "1");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, "", "",
+                            walletItem.address, tokenItem.chainName, "1");
                     transferAppChain(password, progressBar);
                 }
             }

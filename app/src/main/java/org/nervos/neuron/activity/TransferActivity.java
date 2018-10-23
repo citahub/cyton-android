@@ -219,7 +219,7 @@ public class TransferActivity extends NBaseActivity {
      */
     private void initTokenPrice() {
         currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(tokenItem.symbol, currencyItem.getName())
+        TokenService.getCurrency(ConstUtil.ETH, currencyItem.getName())
             .subscribe(new NeuronSubscriber<String>() {
                 @Override
                 public void onNext(String price) {
@@ -242,8 +242,8 @@ public class TransferActivity extends NBaseActivity {
         if (currencyItem != null) {
             if (mTokenPrice > 0) {
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
-                        + getFeeTokenUnit() + " = " + currencyItem.getSymbol());
-
+                        + getFeeTokenUnit() + " = " + currencyItem.getSymbol()
+                        + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice));
             } else {
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee)
                         + getFeeTokenUnit());
@@ -498,14 +498,18 @@ public class TransferActivity extends NBaseActivity {
                 transferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (isETH()) {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, ConstUtil.ETH, "2");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value,
+                            receiveAddressEdit.getText().toString().trim(),
+                            walletItem.address, ConstUtil.ETH, "2");
                     if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                         transferEth(password, value);
                     } else {
                         transferEthErc20(password, value);
                     }
                 } else {
-                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value, receiveAddressEdit.getText().toString().trim(), walletItem.address, tokenItem.chainName, "2");
+                    SensorDataTrackUtils.transferAccount(tokenItem.symbol, value,
+                            receiveAddressEdit.getText().toString().trim(),
+                            walletItem.address, tokenItem.chainName, "2");
                     if (TextUtils.isEmpty(tokenItem.contractAddress)) {
                         transferAppChainToken(password, Double.valueOf(value));
                     } else {

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -17,7 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson.JSONObject;
 
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.view.webview.item.Address;
@@ -31,8 +30,12 @@ import java.io.InputStream;
 
 public class NeuronWebView extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";
-    private static final String JS_PROTOCOL_ON_SUCCESSFUL = "onSignSuccessful(%1$s, %2$s)";
-    private static final String JS_PROTOCOL_ON_FAILURE = "onSignError(%1$s, %2$s)";
+    private static final String JS_PROTOCOL_ON_SUCCESSFUL = "onSignSuccessful(%1$s, \"%2$s\")";
+    private static final String JS_PROTOCOL_ON_FAILURE = "onSignError(%1$s, \"%2$s\")";
+
+    private static final String JS_PROTOCOL_JSON_ON_SUCCESSFUL = "onSignSuccessful(%1$s, %2$s)";
+    private static final String JS_PROTOCOL_JSON_ON_FAILURE = "onSignError(%1$s, %2$s)";
+
     @Nullable
     private OnSignTransactionListener onSignTransactionListener;
     @Nullable
@@ -56,7 +59,6 @@ public class NeuronWebView extends WebView {
 
     public NeuronWebView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         init();
     }
 
@@ -147,27 +149,27 @@ public class NeuronWebView extends WebView {
 
     public void onSignTransactionSuccessful(Transaction transaction, String signHex) {
         long callbackId = transaction.leafPosition;
-        callbackToJS(callbackId, JS_PROTOCOL_ON_SUCCESSFUL, signHex);
+        callbackToJS(callbackId, getSuccessFunction(signHex), signHex);
     }
 
     public void onSignMessageSuccessful(Message message, String signHex) {
         long callbackId = message.leafPosition;
-        callbackToJS(callbackId, JS_PROTOCOL_ON_SUCCESSFUL, signHex);
+        callbackToJS(callbackId, getSuccessFunction(signHex), signHex);
     }
 
     public void onSignPersonalMessageSuccessful(Message message, String signHex) {
         long callbackId = message.leafPosition;
-        callbackToJS(callbackId, JS_PROTOCOL_ON_SUCCESSFUL, signHex);
+        callbackToJS(callbackId, getSuccessFunction(signHex), signHex);
     }
 
     public void onSignError(Transaction transaction, String error) {
         long callbackId = transaction.leafPosition;
-        callbackToJS(callbackId, JS_PROTOCOL_ON_FAILURE, error);
+        callbackToJS(callbackId, getFailFunction(error), error);
     }
 
     public void onSignError(Message message, String error) {
         long callbackId = message.leafPosition;
-        callbackToJS(callbackId, JS_PROTOCOL_ON_FAILURE, error);
+        callbackToJS(callbackId, getFailFunction(error), error);
     }
 
     public void onSignCancel(Transaction transaction) {
@@ -183,6 +185,14 @@ public class NeuronWebView extends WebView {
     private void callbackToJS(long callbackId, String function, String param) {
         String callback = String.format(function, callbackId, param);
         post(() -> evaluateJavascript(callback, value -> Log.d("WEB_VIEW", value)));
+    }
+
+    private String getSuccessFunction(String param) {
+        return isJson(param)? JS_PROTOCOL_JSON_ON_SUCCESSFUL : JS_PROTOCOL_ON_SUCCESSFUL;
+    }
+
+    private String getFailFunction(String param) {
+        return isJson(param)? JS_PROTOCOL_JSON_ON_FAILURE : JS_PROTOCOL_ON_FAILURE;
     }
 
     private final OnSignTransactionListener innerOnSignTransactionListener = new OnSignTransactionListener() {
@@ -276,6 +286,15 @@ public class NeuronWebView extends WebView {
                 response = internalClient.shouldInterceptRequest(view, request);
             }
             return response;
+        }
+    }
+
+    private static boolean isJson(String value) {
+        try {
+            JSONObject.parseObject(value);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
