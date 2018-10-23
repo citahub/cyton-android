@@ -65,6 +65,7 @@ public class AppWebActivity extends NBaseActivity {
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
     public static final String EXTRA_URL = "extra_url";
+    public static final String RECEIVER_WEBSITE = "RECEIVER_WEBSITE";
     private static final int REQUEST_CODE = 0x01;
     public static final int RESULT_CODE_SUCCESS = 0x02;
     public static final int RESULT_CODE_FAIL = 0x01;
@@ -274,17 +275,20 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void signTxAction(Transaction transaction) {
-        this.signTransaction = transaction;
-        if (walletItem == null) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(mActivity, AddWalletActivity.class));
-        } else {
-            Intent intent = new Intent(mActivity, PayTokenActivity.class);
-            intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-            intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ?
-                    new AppItem(url) : WebAppUtil.getAppItem());
-            startActivityForResult(intent, REQUEST_CODE);
-        }
+        handler.post(() -> {
+            this.signTransaction = transaction;
+            if (walletItem == null) {
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(mActivity, AddWalletActivity.class));
+            } else {
+                Intent intent = new Intent(mActivity, PayTokenActivity.class);
+                intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ?
+                        new AppItem(url) : WebAppUtil.getAppItem());
+                intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
     }
 
     private void initInjectWebView() {
