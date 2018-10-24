@@ -29,6 +29,7 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.plugin.NeuronDAppPlugin;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
@@ -287,7 +288,7 @@ public class AppWebActivity extends NBaseActivity {
         webView.setChainId(1);
         webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
         webView.setWalletAddress(new Address(walletItem.address));
-        webView.addJavascriptInterface(new Neuron(), "neuron");
+        webView.addJavascriptInterface(new NeuronDAppPlugin(mActivity), "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
@@ -300,26 +301,6 @@ public class AppWebActivity extends NBaseActivity {
             isPersonalSign = true;
             showSignMessageDialog(message);
         });
-    }
-
-    private class Neuron {
-
-        @JavascriptInterface
-        public String getAccount() {
-            return walletItem.address;
-        }
-
-        @JavascriptInterface
-        public String getAccounts() {
-            List<WalletItem> walletItems = DBWalletUtil.getAllWallet(mActivity);
-            List<String> walletNames = new ArrayList<>();
-            for (WalletItem item : walletItems) {
-                walletNames.add(item.address);
-            }
-            return new Gson().toJson(walletNames);
-        }
-
-
     }
 
     public class WebTitleBar {

@@ -26,6 +26,7 @@ import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
+import org.nervos.neuron.plugin.AppTabPlugin;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
@@ -89,16 +90,8 @@ public class AppFragment extends Fragment {
             }
         });
 
-        webView.addJavascriptInterface(new AppHybrid(), "appHybrid");
+        webView.addJavascriptInterface(new AppTabPlugin(getContext()), "appHybrid");
 
-    }
-
-    private class AppHybrid {
-
-        @JavascriptInterface
-        public void startAddWebsitePage() {
-            startActivity(new Intent(getActivity(), AddWebsiteActivity.class));
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

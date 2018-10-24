@@ -1,6 +1,5 @@
 package org.nervos.neuron.plugin;
 
-import android.app.Activity;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -14,19 +13,17 @@ import org.nervos.neuron.util.JSLoadUtils;
 /**
  * Created by BaojunCZ on 2018/10/19.
  */
-public class NativePlugin {
+public class TokenPricePlugin {
 
-    private Activity mContext;
     private WebView mWebView;
 
-    public NativePlugin(Activity context, WebView webView) {
-        mContext = context;
+    public TokenPricePlugin(WebView webView) {
         mWebView = webView;
     }
 
     @JavascriptInterface
     public void getTokenPrice(String symbol, String callback) {
-        CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mContext);
+        CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mWebView.getContext());
         TokenService.getCurrency(symbol, currencyItem.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
