@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
+import org.json.JSONObject;
 import org.nervos.neuron.util.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -38,6 +40,9 @@ public class ApplicationService extends IntentService {
             SensorsDataAPI.sharedInstance().identify(SensorIDRandomUtils.getID());
         }
         try {
+            JSONObject properties = new JSONObject();
+            properties.put("$ip", "");
+            SensorsDataAPI.sharedInstance().registerSuperProperties(properties);
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
             List<SensorsDataAPI.AutoTrackEventType> eventTypeList = new ArrayList<>();
             // $AppStart
