@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
+import org.json.JSONObject;
 import org.nervos.neuron.util.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -15,6 +17,8 @@ import java.util.List;
  * Created by BaojunCZ on 2018/9/19.
  */
 public class ApplicationService extends IntentService {
+
+    private static final String SENSOR_IP = "$ip";
 
     private String SA_SERVER_URL_DEBUG = "https://banana.cryptape.com:8106/sa?project=default";
     private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=production";
@@ -38,6 +42,9 @@ public class ApplicationService extends IntentService {
             SensorsDataAPI.sharedInstance().identify(SensorIDRandomUtils.getID());
         }
         try {
+            JSONObject properties = new JSONObject();
+            properties.put(SENSOR_IP, "");
+            SensorsDataAPI.sharedInstance().registerSuperProperties(properties);
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
             List<SensorsDataAPI.AutoTrackEventType> eventTypeList = new ArrayList<>();
             // $AppStart
