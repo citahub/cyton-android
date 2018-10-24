@@ -39,8 +39,10 @@ public class TransferDialog {
         this.listener = listener;
         dialog = new BottomSheetDialog(context);
         view = LayoutInflater.from(context).inflate(R.layout.dialog_transfer, null);
-        confirmView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_transfer, null);
-        pwdView = LayoutInflater.from(context).inflate(R.layout.dialog_transfer_password, null);
+        confirmView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_confirm_transfer, null);
+        pwdView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_transfer_password, null);
         dialog.setContentView(view);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
@@ -66,7 +68,8 @@ public class TransferDialog {
         viewPager.setScroll(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset
+                    , int positionOffsetPixels) {
 
             }
 
@@ -84,22 +87,10 @@ public class TransferDialog {
 
             }
         });
-//        try {
-//            Field mScroller = null;
-//            mScroller = ViewPager.class.getDeclaredField("mScroller");
-//            mScroller.setAccessible(true);
-//            FixedSpeedScroller scroller = new FixedSpeedScroller(viewPager.getContext(), 1500);
-//            mScroller.set(viewPager, scroller);
-//        } catch (NoSuchFieldException e) {
-//
-//        } catch (IllegalArgumentException e) {
-//
-//        } catch (IllegalAccessException e) {
-//
-//        }
     }
 
-    public void setConfirmData(String address, String receiveAddress, String value, String feeSeek) {
+    public void setConfirmData(String address, String receiveAddress
+            , String value, String feeSeek) {
         ((TextView) confirmView.findViewById(R.id.from_address)).setText(address);
         ((TextView) confirmView.findViewById(R.id.to_address)).setText(receiveAddress);
         ((TextView) confirmView.findViewById(R.id.transfer_value)).setText(value);

@@ -5,16 +5,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -36,7 +33,6 @@ import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
 import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -44,19 +40,15 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.WebMenuPopupWindow;
-import org.nervos.neuron.view.dialog.SimpleDialog;
+import org.nervos.neuron.view.dialog.SignDialog;
 import org.nervos.neuron.view.webview.NeuronWebView;
-import org.nervos.neuron.view.webview.OnSignMessageListener;
-import org.nervos.neuron.view.webview.OnSignPersonalMessageListener;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
-import org.web3j.utils.Numeric;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -73,7 +65,7 @@ public class AppWebActivity extends NBaseActivity {
     private NeuronWebView webView;
     private TextView titleText;
     private ProgressBar progressBar;
-    private BottomSheetDialog sheetDialog;
+    private SignDialog mSignDialog;
     private ImageView rightMenuView;
     private ImageView leftView;
     private WebErrorView webErrorView;
@@ -106,7 +98,8 @@ public class AppWebActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion
+                    , Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
         WebAppUtil.init();
@@ -118,7 +111,8 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         leftView.setOnClickListener(v -> {
-            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
+            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK
+                    , titleItem.left.type)) {
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
@@ -128,13 +122,7 @@ public class AppWebActivity extends NBaseActivity {
                 finish();
             }
         });
-        rightMenuView.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onClick(View v) {
-                initMenuView();
-            }
-        });
+        rightMenuView.setOnClickListener(v -> initMenuView());
         webErrorView.setImpl(() -> {
             webView.reload();
             webView.setVisibility(View.VISIBLE);
@@ -143,7 +131,8 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false
+                , true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -185,7 +174,8 @@ public class AppWebActivity extends NBaseActivity {
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            public void onReceivedError(WebView view, WebResourceRequest request
+                    , WebResourceError error) {
                 webView.post(() -> {
                     webErrorView.setVisibility(View.VISIBLE);
                     webView.setVisibility(View.GONE);
@@ -193,7 +183,8 @@ public class AppWebActivity extends NBaseActivity {
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            public void onReceivedError(WebView view, int errorCode, String description
+                    , String failingUrl) {
                 webView.post(() -> {
                     webErrorView.setVisibility(View.VISIBLE);
                     webView.setVisibility(View.GONE);
@@ -267,7 +258,8 @@ public class AppWebActivity extends NBaseActivity {
                                 DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                             }
                         } else {
-                            Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(webView.getContext(), chainItem.errorMessage
+                                    , Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -296,19 +288,13 @@ public class AppWebActivity extends NBaseActivity {
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
         });
-        webView.setOnSignMessageListener(new OnSignMessageListener() {
-            @Override
-            public void onSignMessage(Message<Transaction> message) {
-                isPersonalSign = false;
-                showSignMessageDialog(message);
-            }
+        webView.setOnSignMessageListener(message -> {
+            isPersonalSign = false;
+            showSignMessageDialog(message);
         });
-        webView.setOnSignPersonalMessageListener(new OnSignPersonalMessageListener() {
-            @Override
-            public void onSignPersonalMessage(Message<Transaction> message) {
-                isPersonalSign = true;
-                showSignMessageDialog(message);
-            }
+        webView.setOnSignPersonalMessageListener(message -> {
+            isPersonalSign = true;
+            showSignMessageDialog(message);
         });
     }
 
@@ -365,8 +351,8 @@ public class AppWebActivity extends NBaseActivity {
 
     @Override
     public void onDestroy() {
-        if (sheetDialog != null && sheetDialog.isShowing()) {
-            sheetDialog.dismiss();
+        if (mSignDialog != null && mSignDialog.isShowing()) {
+            mSignDialog.dismiss();
         }
         webView = null;
         super.onDestroy();
@@ -377,96 +363,37 @@ public class AppWebActivity extends NBaseActivity {
             Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         } else {
-            sheetDialog = new BottomSheetDialog(mActivity);
-            sheetDialog.setCanceledOnTouchOutside(true);
-            sheetDialog.setContentView(getSignMessageView(message));
-            sheetDialog.show();
+            mSignDialog = new SignDialog(mActivity, message, mSignListener);
         }
     }
 
-    private View getSignMessageView(Message<Transaction> message) {
-        View view = getLayoutInflater().inflate(R.layout.dialog_sign_message, null);
-        TextView walletNameText = view.findViewById(R.id.wallet_name);
-        TextView walletAddressText = view.findViewById(R.id.wallet_address);
-        TextView payOwnerText = view.findViewById(R.id.pay_owner);
-        TextView payDataText = view.findViewById(R.id.pay_data);
-        CircleImageView photoImage = view.findViewById(R.id.wallet_photo);
-        ProgressBar progressBar = view.findViewById(R.id.sign_progress);
-
-        payDataText.setMovementMethod(ScrollingMovementMethod.getInstance());
-
-        walletNameText.setText(walletItem.name);
-        walletAddressText.setText(walletItem.address);
-        payOwnerText.setText(WebAppUtil.getAppItem() == null ?
-                url : WebAppUtil.getAppItem().entry);
-        payDataText.setText(message.value.data);
-        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
-        if (WebAppUtil.getAppItem() != null) {
-            payOwnerText.setText(WebAppUtil.getAppItem().provider);
+    private SignDialog.OnSignDataListener mSignListener = new SignDialog.OnSignDataListener() {
+        @Override
+        public void send(String pwd, ProgressBar progressBar, Message<Transaction> message) {
+            showPasswordConfirmView(pwd, progressBar, message);
         }
-        view.findViewById(R.id.sign_hex_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.findViewById(R.id.pay_data_left_line).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.pay_data_right_line).setVisibility(View.GONE);
-                payDataText.setText(message.value.data);
-            }
-        });
 
-        view.findViewById(R.id.sign_utf8_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.findViewById(R.id.pay_data_left_line).setVisibility(View.GONE);
-                view.findViewById(R.id.pay_data_right_line).setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(message.value.data) &&
-                        Numeric.containsHexPrefix(message.value.data)) {
-                    payDataText.setText(NumberUtil.hexToUtf8(message.value.data));
-                }
-            }
-        });
-        view.findViewById(R.id.pay_reject).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sheetDialog.dismiss();
-                webView.onSignCancel(message);
-            }
-        });
-        view.findViewById(R.id.pay_approve).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPasswordConfirmView(progressBar, message);
-            }
-        });
-        return view;
-    }
+        @Override
+        public void reject(Message<Transaction> message) {
+            webView.onSignCancel(message);
+        }
+    };
 
-    private void showPasswordConfirmView(ProgressBar progressBar, Message<Transaction> message) {
-        SimpleDialog simpleDialog = new SimpleDialog(mActivity);
-        simpleDialog.setTitle(R.string.input_password_hint);
-        simpleDialog.setMessageHint(R.string.input_password_hint);
-        simpleDialog.setEditInputType(SimpleDialog.PASSWORD);
-        simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
-            @Override
-            public void onOkClick() {
-                String password = simpleDialog.getMessage();
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
-                    Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                simpleDialog.dismiss();
-                if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
-                    actionSignEth(password, message);
-                } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)) {
-                    actionSignAppChain(password, message);
-                }
-            }
-        });
-        simpleDialog.setOnCancelClickListener(() -> simpleDialog.dismiss());
-        simpleDialog.show();
+    private void showPasswordConfirmView(String password, ProgressBar progressBar
+            , Message<Transaction> message) {
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
+            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
+            actionSignEth(password, message);
+        } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)) {
+            actionSignAppChain(password, message);
+        }
     }
 
     private void actionSignEth(String password, Message<Transaction> message) {
@@ -480,13 +407,13 @@ public class AppWebActivity extends NBaseActivity {
         observable.subscribe(new Subscriber<String>() {
             @Override
             public void onCompleted() {
-                sheetDialog.dismiss();
+                mSignDialog.dismiss();
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                sheetDialog.dismiss();
+                mSignDialog.dismiss();
                 webView.onSignError(message, e.getMessage());
             }
 
@@ -502,13 +429,13 @@ public class AppWebActivity extends NBaseActivity {
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {
-                        sheetDialog.dismiss();
+                        mSignDialog.dismiss();
                         webView.onSignError(message, e.getMessage());
                     }
 
                     @Override
                     public void onNext(String hexSign) {
-                        sheetDialog.dismiss();
+                        mSignDialog.dismiss();
                         webView.onSignMessageSuccessful(message, hexSign);
                     }
                 });

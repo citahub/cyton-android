@@ -104,6 +104,7 @@
     <string name="transfer_amount">转账金额</string>
     <string name="transfer_sum">请求费用总和（含手续费）</string>
     <string name="pay_detail">支付详情</string>
+    <string name="dialog_sign_title">DApp签名信息确认</string>
     <string name="transfer_to_address">收款地址</string>
     <string name="pay_wallet">付款地址</string>
     <string name="transfer_fee">交易费用</string>
