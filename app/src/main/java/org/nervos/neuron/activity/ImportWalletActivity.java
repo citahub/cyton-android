@@ -112,15 +112,7 @@ public class ImportWalletActivity extends NBaseActivity {
         }
 
         tabLayout.setupWithViewPager(viewPager);
-
-        try {
-            JSONObject object = new JSONObject();
-            object.put("title", getString(R.string.forbidden_screen_shoot));
-            object.put("info", getString(R.string.forbidden_screen_shoot_import));
-            ToastSingleButtonDialog.getInstance(this, object);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot), getString(R.string.forbidden_screen_shoot_import));
     }
 
     @Override

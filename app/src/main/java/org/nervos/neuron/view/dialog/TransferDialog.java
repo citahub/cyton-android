@@ -39,10 +39,10 @@ public class TransferDialog {
         this.listener = listener;
         dialog = new BottomSheetDialog(context);
         view = LayoutInflater.from(context).inflate(R.layout.dialog_transfer, null);
-        confirmView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_transfer
-                , null);
-        pwdView = LayoutInflater.from(context).inflate(R.layout.dialog_transfer_password
-                , null);
+        confirmView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_confirm_transfer, null);
+        pwdView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_transfer_password, null);
         dialog.setContentView(view);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
@@ -89,8 +89,8 @@ public class TransferDialog {
         });
     }
 
-    public void setConfirmData(String address, String receiveAddress, String value
-            , String feeSeek) {
+    public void setConfirmData(String address, String receiveAddress
+            , String value, String feeSeek) {
         ((TextView) confirmView.findViewById(R.id.from_address)).setText(address);
         ((TextView) confirmView.findViewById(R.id.to_address)).setText(receiveAddress);
         ((TextView) confirmView.findViewById(R.id.transfer_value)).setText(value);
