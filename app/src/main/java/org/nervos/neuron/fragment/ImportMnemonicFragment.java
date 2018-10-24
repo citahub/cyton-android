@@ -48,10 +48,10 @@ public class ImportMnemonicFragment extends BaseFragment {
     List<String> paths;
     int currentIndex;
     private TextView pathText, formatText;
-    private EditText pathEditText;
     private SelectorDialog selectorDialog;
     private LinearLayout pathLL;
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private String mDiyPath = "";
 
     private AppCompatEditText walletNameEdit;
     private AppCompatEditText passwordEdit;
@@ -71,10 +71,8 @@ public class ImportMnemonicFragment extends BaseFragment {
         rePasswordEdit = view.findViewById(R.id.edit_wallet_repassword);
         mnemonicEdit = view.findViewById(R.id.edit_wallet_mnemonic);
         pathLL = view.findViewById(R.id.ll_path);
-        pathEditText = view.findViewById(R.id.et_path);
         return view;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -117,23 +115,22 @@ public class ImportMnemonicFragment extends BaseFragment {
         selectorDialog.setTitleText(getString(R.string.path));
         selectorDialog.setRecyclerView(new RecyclerAdapter());
         selectorDialog.setOkListner(view1 -> {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             if (currentIndex != paths.size() - 1) {
                 pathText.setText(paths.get(currentIndex));
-                pathText.setVisibility(View.VISIBLE);
-                pathEditText.setVisibility(View.GONE);
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 formatText.setText(formats.get(currentIndex));
                 selectorDialog.dismiss();
             } else {
-                pathEditText.setText(paths.get(currentIndex));
-                pathText.setVisibility(View.GONE);
-                pathEditText.setVisibility(View.VISIBLE);
-                pathEditText.setFocusable(true);
-                pathEditText.setFocusableInTouchMode(true);
-                pathEditText.requestFocus();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                formatText.setText(formats.get(currentIndex));
-                selectorDialog.dismiss();
+                if (!TextUtils.isEmpty(mDiyPath)) {
+                    pathText.setText(getString(R.string.mnemonic_pre_path) + mDiyPath);
+                    formatText.setText(formats.get(currentIndex));
+                    selectorDialog.dismiss();
+                } else {
+                    currentIndex = 0;
+                    pathText.setText(paths.get(currentIndex));
+                    formatText.setText(formats.get(currentIndex));
+                    selectorDialog.dismiss();
+                }
             }
         });
     }
@@ -146,7 +143,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             if (currentIndex != paths.size() - 1) {
                 path = paths.get(currentIndex);
             } else {
-                path = pathEditText.getText().toString().trim();
+                path = mDiyPath;
                 if (TextUtils.isEmpty(path)) {
                     ImportWalletActivity.track("2", false, "");
                     passwordEdit.post(() -> {
@@ -260,32 +257,87 @@ public class ImportMnemonicFragment extends BaseFragment {
         }
     }
 
-    class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
+    class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int VIEW_TYPE_COMMON = 0;
+        private static final int VIEW_TYPE_DIY = 1;
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_path, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            RecyclerView.ViewHolder vh = null;
+            if (viewType == VIEW_TYPE_COMMON) {
+                vh = new CommonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_path, parent, false));
+            } else {
+                vh = new DiyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mnemonic_path, parent, false));
+            }
+            return vh;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (position == 0) {
-                holder.tv.setText(paths.get(position) + "\n" + formats.get(position));
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof CommonViewHolder) {
+                if (position == 0) {
+                    ((CommonViewHolder) holder).mTvPath.setText(paths.get(position) + "\n" + formats.get(position));
+                } else {
+                    ((CommonViewHolder) holder).mTvPath.setText(paths.get(position) + " " + formats.get(position));
+                }
+                if (currentIndex == position)
+                    ((CommonViewHolder) holder).mSelectIv.setVisibility(View.VISIBLE);
+                else
+                    ((CommonViewHolder) holder).mSelectIv.setVisibility(View.GONE);
+                ((CommonViewHolder) holder).mRoot.setOnClickListener(view -> {
+                    currentIndex = position;
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    notifyDataSetChanged();
+                });
             } else {
-                holder.tv.setText(paths.get(position) + " " + formats.get(position));
+                ((DiyViewHolder) holder).mTvPath.setText(paths.get(position) + " " + formats.get(position));
+                if (currentIndex == position) {
+                    ((DiyViewHolder) holder).mSelectIv.setVisibility(View.VISIBLE);
+                    ((DiyViewHolder) holder).mLineEt.setVisibility(View.VISIBLE);
+                    ((DiyViewHolder) holder).mEtPath.setVisibility(View.VISIBLE);
+                    ((DiyViewHolder) holder).mTvPrePath.setVisibility(View.VISIBLE);
+                    ((DiyViewHolder) holder).mEtPath.setFocusable(true);
+                    ((DiyViewHolder) holder).mEtPath.setFocusableInTouchMode(true);
+                    ((DiyViewHolder) holder).mEtPath.requestFocus();
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    ((DiyViewHolder) holder).mEtPath.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            mDiyPath = charSequence.toString();
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                } else {
+                    ((DiyViewHolder) holder).mSelectIv.setVisibility(View.GONE);
+                    ((DiyViewHolder) holder).mLineEt.setVisibility(View.GONE);
+                    ((DiyViewHolder) holder).mEtPath.setVisibility(View.GONE);
+                    ((DiyViewHolder) holder).mTvPrePath.setVisibility(View.GONE);
+                }
+                mDiyPath = "";
+                ((DiyViewHolder) holder).mRoot.setOnClickListener(view -> {
+                    currentIndex = position;
+                    notifyDataSetChanged();
+                });
             }
-            if (currentIndex == position)
-                holder.iv.setVisibility(View.VISIBLE);
-            else
-                holder.iv.setVisibility(View.GONE);
-            holder.root.setOnClickListener(view -> {
-                currentIndex = position;
-                notifyDataSetChanged();
-            });
-            if (position == paths.size() - 1)
-                holder.line.setVisibility(View.GONE);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == paths.size() - 1) {
+                return VIEW_TYPE_DIY;
+            } else {
+                return VIEW_TYPE_COMMON;
+            }
         }
 
         @Override
@@ -294,19 +346,36 @@ public class ImportMnemonicFragment extends BaseFragment {
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class CommonViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tv;
-        private ConstraintLayout root;
-        private ImageView iv;
-        private View line;
+        private TextView mTvPath;
+        private ConstraintLayout mRoot;
+        private ImageView mSelectIv;
 
-        public ViewHolder(View itemView) {
+        public CommonViewHolder(View itemView) {
             super(itemView);
-            tv = itemView.findViewById(R.id.tv);
-            root = itemView.findViewById(R.id.root);
-            iv = itemView.findViewById(R.id.iv);
-            line = itemView.findViewById(R.id.line);
+            mTvPath = itemView.findViewById(R.id.tv);
+            mRoot = itemView.findViewById(R.id.root);
+            mSelectIv = itemView.findViewById(R.id.iv);
+        }
+    }
+
+    class DiyViewHolder extends RecyclerView.ViewHolder {
+        private TextView mTvPath;
+        private ConstraintLayout mRoot;
+        private ImageView mSelectIv;
+        private View mLineEt;
+        private TextView mTvPrePath;
+        private EditText mEtPath;
+
+        public DiyViewHolder(View itemView) {
+            super(itemView);
+            mTvPath = itemView.findViewById(R.id.tv);
+            mRoot = itemView.findViewById(R.id.root);
+            mSelectIv = itemView.findViewById(R.id.iv);
+            mLineEt = itemView.findViewById(R.id.line_et);
+            mTvPrePath = itemView.findViewById(R.id.tv_pre_path);
+            mEtPath = itemView.findViewById(R.id.et_path);
         }
     }
 }

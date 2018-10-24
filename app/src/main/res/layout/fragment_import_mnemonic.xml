@@ -76,28 +76,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <FrameLayout
+                <TextView
+                    android:id="@+id/tv_path"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right">
-
-                    <TextView
-                        android:id="@+id/tv_path"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_title"
-                        android:textSize="15sp" />
-
-                    <EditText
-                        android:id="@+id/et_path"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:textColor="@color/font_title"
-                        android:textSize="15sp"
-                        android:visibility="gone" />
-                </FrameLayout>
-
+                    android:layout_gravity="right"
+                    android:textColor="@color/font_title"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_format"
