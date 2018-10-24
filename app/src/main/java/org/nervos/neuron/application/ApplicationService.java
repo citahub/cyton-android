@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class ApplicationService extends IntentService {
 
+    private static final String SENSOR_IP = "$ip";
+
     private String SA_SERVER_URL_DEBUG = "https://banana.cryptape.com:8106/sa?project=default";
     private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=production";
     private String SensorID = "sensor_id";
@@ -41,7 +43,7 @@ public class ApplicationService extends IntentService {
         }
         try {
             JSONObject properties = new JSONObject();
-            properties.put("$ip", "");
+            properties.put(SENSOR_IP, "");
             SensorsDataAPI.sharedInstance().registerSuperProperties(properties);
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
             List<SensorsDataAPI.AutoTrackEventType> eventTypeList = new ArrayList<>();
