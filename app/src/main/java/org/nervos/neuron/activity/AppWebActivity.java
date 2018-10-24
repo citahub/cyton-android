@@ -32,7 +32,11 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
+import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -314,6 +318,8 @@ public class AppWebActivity extends NBaseActivity {
             }
             return new Gson().toJson(walletNames);
         }
+
+
     }
 
     public class WebTitleBar {
