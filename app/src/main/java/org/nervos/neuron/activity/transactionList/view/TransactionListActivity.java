@@ -95,18 +95,21 @@ public class TransactionListActivity extends NBaseActivity {
 
     @Override
     protected void initAction() {
-        receiveButton.setOnClickListener(v -> startActivity(new Intent(mActivity, ReceiveQrCodeActivity.class)));
+        receiveButton.setOnClickListener(v -> startActivity(new Intent(mActivity
+                , ReceiveQrCodeActivity.class)));
         transferButton.setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, TransferActivity.class);
             intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList(walletItem.address));
+        swipeRefreshLayout.setOnRefreshListener(() ->
+                presenter.getTransactionList(walletItem.address));
     }
 
     private void initAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address);
+        transactionAdapter = new TransactionAdapter(this, transactionItemList
+                , walletItem.address);
         recyclerView.setAdapter(transactionAdapter);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
@@ -131,8 +134,8 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenSymbol.setText(ConstUtil.ETH);
                 setDesSecondLine();
                 presenter.getBalance();
-                tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_DETAIL.replace("@address", "ethereum")));
-
+                tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity
+                        , HttpUrls.TOKEN_DETAIL.replace("@address", "ethereum")));
             }
         }
     }
@@ -143,7 +146,8 @@ public class TransactionListActivity extends NBaseActivity {
         }
     }
 
-    private TransactionListPresenter.TransactionListPresenterImpl listener = new TransactionListPresenter.TransactionListPresenterImpl() {
+    private TransactionListPresenter.TransactionListPresenterImpl listener
+            = new TransactionListPresenter.TransactionListPresenterImpl() {
         @Override
         public void hideProgressBar() {
             swipeRefreshLayout.post(() -> dismissProgressBar());
@@ -181,7 +185,10 @@ public class TransactionListActivity extends NBaseActivity {
                     if (AddressUtil.isAddressValid(address))
                         address = Keys.toChecksumAddress(address);
                     String finalAddress = address;
-                    tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity, HttpUrls.TOKEN_ERC20_DETAIL.replace("@address", finalAddress)));
+                    tokenDesRoot.setOnClickListener(view ->
+                            SimpleWebActivity.gotoSimpleWeb(mActivity
+                                    , HttpUrls.TOKEN_ERC20_DETAIL.replace("@address"
+                                            , finalAddress)));
                 } else
                     tokenDesRoot.setVisibility(View.GONE);
             });
@@ -196,10 +203,13 @@ public class TransactionListActivity extends NBaseActivity {
     private void setDesSecondLine() {
         tokenDesTextFirst.postDelayed(() -> {
             Layout layout = tokenDesTextFirst.getLayout();
-            StringBuilder srcStr = new StringBuilder(tokenDesTextFirst.getLayout().getText().toString());
-            String lineStr = srcStr.subSequence(layout.getLineStart(0), layout.getLineEnd(0)).toString();
+            String mDesText = tokenDesTextFirst.getLayout().getText().toString();
+            StringBuilder srcStr = new StringBuilder(mDesText);
+            String lineStr = srcStr.subSequence(layout.getLineStart(0)
+                    , layout.getLineEnd(0)).toString();
             int length = lineStr.length();
-            if (length > 0 && describe.length() > length && tokenDesTextSecond.getText().toString().length() == 0) {
+            if (length > 0 && describe.length() > length
+                    && tokenDesTextSecond.getText().toString().length() == 0) {
                 String secondText;
                 if ((int) (length * 1.5) > describe.length()) {
                     secondText = describe.substring(length);
