@@ -84,7 +84,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
                     });
                     authFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(this, getResources().getString(R.string.dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(this, getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(dialog1 -> {
                         FingerPrintController.openFingerPrintSettingPage(this);
                         dialog1.dismiss();

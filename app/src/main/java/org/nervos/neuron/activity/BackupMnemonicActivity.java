@@ -36,14 +36,7 @@ public class BackupMnemonicActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
-        try {
-            JSONObject object = new JSONObject();
-            object.put("title", getString(R.string.forbidden_screen_shoot));
-            object.put("info", getString(R.string.forbidden_screen_shoot_backup));
-            ToastSingleButtonDialog.getInstance(this, object);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot), getString(R.string.forbidden_screen_shoot_backup));
         mnemonic = getIntent().getStringExtra(CreateWalletActivity.EXTRA_MNEMONIC);
         mnemonicText.setText(mnemonic);
 
@@ -51,8 +44,8 @@ public class BackupMnemonicActivity extends NBaseActivity {
         titleBar.setOnLeftClickListener(() -> {
             try {
                 JSONObject object = new JSONObject();
-                object.put("info", getString(R.string.backup_mnemonic_back_tips));
-                object.put("cancel", getString(R.string.reject));
+                object.put(ToastSingleButtonDialog.DIALOG_TITLE, getString(R.string.backup_mnemonic_back_tips));
+                object.put(ToastSingleButtonDialog.DIALOG_CANCEL_BTN, getString(R.string.reject));
                 ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(this, object);
                 dialog.setOnCancelClickListener(dialog1 -> {
                     dialog1.dismiss();

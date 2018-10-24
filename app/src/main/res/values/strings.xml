@@ -244,6 +244,8 @@
     <string name="transaction_status_failed">交易失败</string>
     <string name="transaction_status_success">交易成功</string>
     <string name="transaction_status_pending">交易进行中</string>
+    <string name="safe_hint">安全提示</string>
+    <string name="root_hint">您的手机已root，可能造成财产损失，请替换手机登陆。</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
