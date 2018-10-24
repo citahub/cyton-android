@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.plugin.NativePlugin;
+import org.nervos.neuron.plugin.TokenPricePlugin;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.WebErrorView;
@@ -54,7 +54,7 @@ public class SimpleWebActivity extends BaseActivity {
         webErrorView = findViewById(R.id.view_web_error);
         SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
-        webView.addJavascriptInterface(new NativePlugin(this, webView), "native");
+        webView.addJavascriptInterface(new TokenPricePlugin(webView), "tokenPricePlugin");
         webErrorView.setImpl(() -> {
             webView.reload();
             webView.setVisibility(View.VISIBLE);
