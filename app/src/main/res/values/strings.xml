@@ -95,7 +95,7 @@
     <string name="empty_no_collection_data">您还没有藏品数据</string>
     <string name="empty_no_transaction_data">您还没有交易数据</string>
     <string name="empty_no_history_data">您还没有历史浏览记录</string>
-    <string name="confirm_pay">确认支付</string>
+    <string name="confirm_pay">支付详情</string>
     <string name="loading">正在加载</string>
     <string name="reject">拒绝</string>
     <string name="approve">同意</string>
@@ -225,6 +225,10 @@
     <string name="sum_value">费用总计（含矿工费）</string>
     <string name="advanced_setup">高级设置</string>
     <string name="gas_price">Gas Price</string>
+    <string name="total_price">总费用</string>
+    <string name="pay_token_receiver_website">收款地址</string>
+    <string name="pay_token_receiver_address">接收地址</string>
+    <string name="pay_token_sender_address">支付地址</string>
     <string name="gas_limit">Gas Limit</string>
     <string name="quota">Quota</string>
     <string name="hex">HEX</string>
