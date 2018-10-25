@@ -160,7 +160,11 @@ public class ImportMnemonicFragment extends BaseFragment {
             ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {
                 dismissProgressBar();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(e.getMessage())) {
+                    Toast.makeText(getContext(), getString(R.string.mnemonic_import_failed), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             });
             return;
         }

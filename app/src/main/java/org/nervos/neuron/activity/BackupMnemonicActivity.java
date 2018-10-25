@@ -44,7 +44,7 @@ public class BackupMnemonicActivity extends NBaseActivity {
         titleBar.setOnLeftClickListener(() -> {
             try {
                 JSONObject object = new JSONObject();
-                object.put(ToastSingleButtonDialog.DIALOG_TITLE, getString(R.string.backup_mnemonic_back_tips));
+                object.put(ToastSingleButtonDialog.DIALOG_INFO, getString(R.string.backup_mnemonic_back_tips));
                 object.put(ToastSingleButtonDialog.DIALOG_CANCEL_BTN, getString(R.string.reject));
                 ToastDoubleButtonDialog dialog = ToastDoubleButtonDialog.getInstance(this, object);
                 dialog.setOnCancelClickListener(dialog1 -> {
