@@ -92,7 +92,6 @@ public class AppWebActivity extends NBaseActivity {
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
         titleText = findViewById(R.id.title_bar_center);
-        titleText.setText(R.string.dapp);
         rightMenuView = findViewById(R.id.title_bar_right);
         leftView = findViewById(R.id.title_left_close);
         webErrorView = findViewById(R.id.view_web_error);

@@ -32,9 +32,11 @@ import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.dialog.DAppAdvanceSetupDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -43,6 +45,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static org.web3j.utils.Convert.Unit.GWEI;
 
 public class PayTokenActivity extends NBaseActivity implements View.OnClickListener {
 
@@ -54,13 +58,13 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private WalletItem mWalletItem;
     private TokenItem mTokenItem;
     private AppItem mAppItem;
-    private TextView mTvValue, mTvSymbol, mTvPayFeeTitle, mTvPayFee, mTvTotalFee,
+    private TextView mTvValue, mTvSymbol, mTvPayFee, mTvPayFeeTitle, mTvTotalFee,
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
 
     @Override
     protected int getContentLayout() {
-        return R.layout.activity_paytoken;
+        return R.layout.activity_pay_token;
     }
 
     @SuppressLint("SetTextI18n")
@@ -86,7 +90,14 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         }
         mWalletItem = DBWalletUtil.getCurrentWallet(mActivity);
         mAppItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
+
         initRemoteData();
+        updateView();
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateView() {
         mTvValue.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()));
         mTvSymbol.setText(getNativeToken());
         mTvSenderAddress.setText(mWalletItem.address);
@@ -108,6 +119,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     @Override
     protected void initAction() {
         findViewById(R.id.btn_next).setOnClickListener(this);
+        mTvPayFee.setOnClickListener(this);
         TitleBar titleBar = findViewById(R.id.title);
         titleBar.setOnLeftClickListener(() -> {
             setResult(AppWebActivity.RESULT_CODE_CANCEL);
@@ -174,36 +186,31 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
-        if (!TextUtils.isEmpty(mTransactionInfo.gasLimit)
-                && !TextUtils.isEmpty(mTransactionInfo.gasPrice)) {
-            mTvPayFee.setText(
-                    NumberUtil.getDecimal8ENotation(
-                            mTransactionInfo.getGas()) + getNativeToken());
-            mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
-                    mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas())
-                    + getNativeToken());
-            CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-            TokenService.getCurrency(ConstUtil.ETH,
-                    currencyItem.getName())
-                    .subscribe(new NeuronSubscriber<String>() {
-                        @Override
-                        public void onNext(String price) {
-                            if (TextUtils.isEmpty(price)) return;
-                            try {
-                                Double mTokenPrice = Double.parseDouble(price);
-                                String mCurrencyPrice = NumberUtil.getDecimalValid_2(
-                                        mTransactionInfo.getGas() * mTokenPrice);
-                                mTvPayFee.setText(
-                                        NumberUtil.getDecimal8ENotation(
-                                                mTransactionInfo.getGas()) + getNativeToken()
-                                                + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
+        if (TextUtils.isEmpty(mTransactionInfo.gasLimit) || TextUtils.isEmpty(mTransactionInfo.gasPrice)) return;
+
+        mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
+        mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
+                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas()) + getNativeToken());
+        CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
+        TokenService.getCurrency(ConstUtil.ETH, currencyItem.getName())
+                .subscribe(new NeuronSubscriber<String>() {
+                    @Override
+                    public void onNext(String price) {
+                        if (TextUtils.isEmpty(price)) return;
+                        try {
+                            String mCurrencyPrice = NumberUtil.getDecimalValid_2(
+                                    mTransactionInfo.getGas() * Double.parseDouble(price));
+                            mTvPayFee.setText(
+                                    NumberUtil.getDecimal8ENotation(
+                                            mTransactionInfo.getGas()) + getNativeToken()
+                                            + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
                         }
-                    });
-        }
+                    }
+                });
     }
 
     private void initBalance() {
@@ -233,13 +240,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 }
             }
         });
-        String fee = "";
-        if (mTransactionInfo.isEthereum()) {
-            fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken();
-        } else {
-            fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleQuota())
-                    + getNativeToken();
-        }
+
+        String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()?
+                mTransactionInfo.getGas() : mTransactionInfo.getDoubleQuota()) + getNativeToken();
+
         mTransferDialog.setConfirmData(mWalletItem.address, mTransactionInfo.to,
                 NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue())
                         + getNativeToken(), fee);
@@ -272,8 +276,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         e.printStackTrace();
-                        Toast.makeText(mActivity, R.string.operation_fail
-                                , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
                         gotoSignFail(getCommonError());
                     }
 
@@ -390,6 +393,31 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             case R.id.btn_next:
                 if (!isFastDoubleClick())
                     getConfirmTransferView();
+                break;
+            case R.id.tv_gas_price:
+                String gasPriceDefault = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
+                DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick(View v, String gasPrice) {
+                        if (TextUtils.isEmpty(gasPrice)) {
+                            Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
+                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                            Toast.makeText(mActivity,
+                                    String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
+                            setEthGasPrice();
+                        }
+                    }
+                });
+                dialog.setTransactionData(mTransactionInfo.data);
+                dialog.setGasPriceDefault(gasPriceDefault);
+                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceDefault, mTransactionInfo.getGas());
+                dialog.show();
+                break;
+            default:
                 break;
         }
     }

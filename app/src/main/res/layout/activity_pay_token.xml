@@ -1,313 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <FrameLayout
-        android:id="@+id/pay_title_layout"
+    <org.nervos.neuron.view.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <org.nervos.neuron.view.TitleBar
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/white"
-            app:title="@string/confirm_pay"
-            app:isShowLeft="true"
-            app:isShowBottomLine="true"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="48dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/wallet_photo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/wallet_photo"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/line_input"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:layout_toEndOf="@id/wallet_photo"
-                android:layout_marginStart="@dimen/default_margin"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/wallet_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/font_title"
-                    android:text="Watson"/>
-
-                <TextView
-                    android:id="@+id/wallet_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/font_title_third"
-                    android:singleLine="true"
-                    android:ellipsize="middle"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="@dimen/default_margin"/>
-            </LinearLayout>
-
-        </RelativeLayout>
-    </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/pay_button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_margin="@dimen/default_margin"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <View
-            android:id="@+id/pay_button_separate"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"/>
-
-        <Button
-            android:id="@+id/pay_reject"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toStartOf="@id/pay_button_separate"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:text="@string/reject"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:background="@drawable/button_blue_line_shape"/>
-
-        <Button
-            android:id="@+id/pay_approve"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@id/pay_button_separate"
-            android:layout_marginStart="@dimen/default_margin"
-            android:text="@string/approve"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:background="@drawable/button_corner_blue_shape"/>
-
-    </RelativeLayout>
+        android:layout_height="48dp"
+        android:background="@color/white"
+        app:isShowBottomLine="true"
+        app:isShowLeft="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:left_img="@drawable/title_close"
+        app:title="@string/confirm_pay" />
 
     <ScrollView
-        android:layout_below="@id/pay_title_layout"
-        android:layout_above="@id/pay_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/default_margin"
+        app:layout_constraintBottom_toTopOf="@id/btn_next"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/default_margin"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tv_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/requester"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/pay_owner"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/default_margin"
-                android:textSize="15sp"
+                android:layout_marginTop="30dp"
                 android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:textSize="36sp"
+                app:layout_constraintEnd_toStartOf="@id/tv_value_symbol"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/tv_value_symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/receive_address"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/font_title"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_value" />
 
             <TextView
-                android:id="@+id/pay_address"
+                android:id="@+id/tv_gas_price_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginTop="39dp"
+                android:text="@string/gas_price"
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_value_symbol" />
+
+            <ImageView
+                android:id="@+id/iv_right"
+                android:layout_width="6dp"
+                android:layout_height="11dp"
+                android:layout_marginRight="@dimen/default_margin"
+                android:background="@drawable/right_arrow"
+                app:layout_constraintBottom_toBottomOf="@id/tv_gas_price_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_gas_price_title" />
+
+            <TextView
+                android:id="@+id/tv_gas_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginEnd="5dp"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/font_title"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_gas_price_title"
+                app:layout_constraintEnd_toStartOf="@id/iv_right"
+                app:layout_constraintTop_toTopOf="@id/tv_gas_price_title" />
+
+            <View
+                android:id="@+id/line1"
+                style="@style/separateLineShort"
+                android:layout_marginTop="19dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_gas_price_title" />
+
+            <TextView
+                android:id="@+id/tv_total_fee_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/total_price"
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="@id/tv_gas_price_title"
+                app:layout_constraintTop_toBottomOf="@id/line1" />
+
+            <TextView
+                android:id="@+id/tv_total_fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_title"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="@id/iv_right"
+                app:layout_constraintTop_toTopOf="@id/tv_total_fee_title" />
+
+            <View
+                android:id="@+id/line2"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/default_background"
+                app:layout_constraintTop_toBottomOf="@id/tv_total_fee" />
+
+            <TextView
+                android:id="@+id/tv_receiver_website_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="14dp"
+                android:text="@string/pay_token_receiver_website"
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2" />
+
+            <TextView
+                android:id="@+id/tv_receriver_name"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:ellipsize="end"
-                android:lines="1"
-                android:paddingStart="@dimen/default_margin"
-                android:gravity="center_vertical"
-                android:paddingEnd="@dimen/default_margin"
+                android:gravity="right"
+                android:textColor="@color/font_title_third"
                 android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_receiver_website_title" />
+
+            <TextView
+                android:id="@+id/tv_receiver_website"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:singleLine="true"
                 android:textColor="@color/font_title"
-                android:background="@drawable/rectangle_border_gray_corner"/>
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_receriver_name" />
+
+            <View
+                android:id="@+id/line3"
+                style="@style/separateLineShort"
+                android:layout_marginTop="15dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_receiver_website" />
 
             <TextView
+                android:id="@+id/tv_receiver_address_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/transfer_amount"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="15dp"
+                android:text="@string/pay_token_receiver_address"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp">
-
-                <TextView
-                    android:id="@+id/pay_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:paddingStart="@dimen/default_margin"
-                    android:textSize="15sp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/font_title"
-                    android:background="@drawable/rectangle_border_gray_corner"/>
-
-                <TextView
-                    android:id="@+id/pay_amount_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_vertical|end"
-                    android:textColor="@color/font_title_third"/>
-            </FrameLayout>
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line3" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_receiver_address"
+                android:layout_width="222dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/transfer_fee"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:gravity="left"
+                android:textColor="@color/font_title"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_receiver_address_title" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="6dp">
-                <TextView
-                    android:id="@+id/pay_fee"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:paddingStart="@dimen/default_margin"
-                    android:textSize="15sp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/font_title"
-                    android:background="@drawable/rectangle_border_gray_corner"/>
-
-                <TextView
-                    android:id="@+id/pay_fee_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_vertical|end"
-                    android:textColor="@color/font_title_third"/>
-            </FrameLayout>
+            <View
+                android:id="@+id/line4"
+                style="@style/separateLineShort"
+                android:layout_marginTop="15dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_receiver_address" />
 
             <TextView
+                android:id="@+id/tv_sender_address_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="包含数据"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="15dp"
+                android:text="@string/pay_token_sender_address"
                 android:textColor="@color/font_title_third"
-                android:textSize="15sp"/>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginTop="6dp"
-                android:orientation="vertical"
-                android:background="@drawable/rectangle_border_gray_corner">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/rectangle_border_gray_corner">
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line4" />
 
-                    <View
-                        android:id="@+id/pay_separate"
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/line_input"
-                        android:layout_centerInParent="true"/>
-
-                    <LinearLayout
-                        android:id="@+id/sign_hex_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_toStartOf="@id/pay_separate"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="37dp"
-                            android:gravity="center"
-                            android:text="HEX"
-                            android:textColor="@color/font_title_second"
-                            android:textSize="15sp"/>
-                        
-                        <View
-                            android:id="@+id/pay_data_left_line"
-                            android:layout_width="match_parent"
-                            android:layout_height="3dp"
-                            android:background="@color/assist_color"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/sign_utf8_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_toEndOf="@id/pay_separate"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="37dp"
-                            android:gravity="center"
-                            android:text="UTF8"
-                            android:textColor="@color/font_title_second"
-                            android:textSize="15sp"/>
-
-                        <View
-                            android:id="@+id/pay_data_right_line"
-                            android:layout_width="match_parent"
-                            android:layout_height="3dp"
-                            android:visibility="gone"
-                            android:background="@color/assist_color"/>
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/pay_data"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:padding="10dp"
-                    android:scrollbars="vertical"
-                    android:fadeScrollbars="false"
-                    android:lines="60"
-                    android:textSize="15sp"
-                    android:textColor="@color/font_title"/>
-
-            </LinearLayout>
-            
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_sender_address"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:gravity="left"
+                android:text=""
+                android:textColor="@color/font_title"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_sender_address_title" />
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-</RelativeLayout>
+    <org.nervos.neuron.view.button.CommonButton
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:text="@string/next_action" />
+
+</android.support.constraint.ConstraintLayout>

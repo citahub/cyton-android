@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.web3j.crypto.Keys;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
@@ -49,6 +50,22 @@ public class NumberUtil {
         String decimal = value.substring(index + 1);
         decimal = decimal.substring(0, 8);
         return integer + "." + decimal;
+    }
+
+    /**
+     * WARNING: not very sure
+     * @param value
+     * @return
+     */
+    public static boolean isHex(String value) {
+        for (int i = 0; i < value.length(); i ++) {
+            if (('0' > value.charAt(i) || '9' < value.charAt(i))
+                    && ('A' > value.charAt(i) || 'F' < value.charAt(i))
+                    && ('a' > value.charAt(i) || 'f' < value.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String hexToUtf8(String hex) {

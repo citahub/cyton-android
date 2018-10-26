@@ -39,6 +39,7 @@ public class TransactionInfo implements Parcelable {
     }
 
     public BigInteger getBigIntegerValue() {
+        if (TextUtils.isEmpty(value)) return BigInteger.ZERO;
         return Numeric.toBigInt(value);
     }
 
