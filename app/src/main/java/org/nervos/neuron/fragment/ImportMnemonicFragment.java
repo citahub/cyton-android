@@ -94,8 +94,7 @@ public class ImportMnemonicFragment extends BaseFragment {
         importButton.setOnClickListener(v -> {
             if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
-                    rePasswordEdit.getText().toString().trim())) {
+            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(), rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
             } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
@@ -154,8 +153,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 }
             }
             String password = passwordEdit.getText().toString().trim();
-            walletEntity = WalletEntity.fromMnemonic(
-                    mnemonicEdit.getText().toString().trim(), path, password);
+            walletEntity = WalletEntity.fromMnemonic(mnemonicEdit.getText().toString().trim(), path, password);
         } catch (Exception e) {
             ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {
@@ -185,8 +183,8 @@ public class ImportMnemonicFragment extends BaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false) &&
-                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
+            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil
+                    .FingerPrint, false) && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
                 SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT_TIP, true);
@@ -219,8 +217,8 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
-                        && passwordEdit.getText().toString().trim().length() >= 8;
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) && passwordEdit.getText().toString().trim().length
+                        () >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });
@@ -228,8 +226,8 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
-                        && rePasswordEdit.getText().toString().trim().length() >= 8;
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) && rePasswordEdit.getText().toString().trim()
+                        .length() >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });
@@ -285,10 +283,8 @@ public class ImportMnemonicFragment extends BaseFragment {
                 } else {
                     ((CommonViewHolder) holder).mTvPath.setText(paths.get(position) + " " + formats.get(position));
                 }
-                if (currentIndex == position)
-                    ((CommonViewHolder) holder).mSelectIv.setVisibility(View.VISIBLE);
-                else
-                    ((CommonViewHolder) holder).mSelectIv.setVisibility(View.GONE);
+                if (currentIndex == position) ((CommonViewHolder) holder).mSelectIv.setVisibility(View.VISIBLE);
+                else ((CommonViewHolder) holder).mSelectIv.setVisibility(View.GONE);
                 ((CommonViewHolder) holder).mRoot.setOnClickListener(view -> {
                     currentIndex = position;
                     getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
