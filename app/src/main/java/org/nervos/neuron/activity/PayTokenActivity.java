@@ -155,6 +155,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
+                dismissProgressCircle();
             }
 
             @SuppressLint("SetTextI18n")
@@ -170,6 +171,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         EthRpcService.getEthGasLimit(mTransactionInfo)
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
+                        dismissProgressCircle();
                         mTransactionInfo.gasLimit = ConstUtil.GAS_ERC20_LIMIT.toString(16);
                         setEthGasPrice();
                     }
@@ -185,9 +187,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
+        dismissProgressCircle();
         if (TextUtils.isEmpty(mTransactionInfo.gasLimit) || TextUtils.isEmpty(mTransactionInfo.gasPrice)) return;
 
-        dismissProgressCircle();
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
         mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
                 mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas()) + getNativeToken());
