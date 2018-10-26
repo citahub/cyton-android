@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,6 +45,7 @@ import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
+import org.nervos.neuron.view.dialog.TransferAdvanceSetupDialog;
 import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.nervos.neuron.view.dialog.listener.OnDialogCancelClickListener;
@@ -259,46 +258,26 @@ public class TransferActivity extends NBaseActivity {
      * handle transfer advanced setup
      */
     private void initAdvancedSetupDialog() {
-        BottomSheetDialog dialog = new BottomSheetDialog(mActivity);
-        View view = getLayoutInflater().inflate(R.layout.dialog_advance_setup, null);
-        EditText gasPriceEdit = view.findViewById(R.id.edit_gas_price);
-        TextView gasPriceDefaultText = view.findViewById(R.id.default_gas_price_text);
-        TextView gasLimitDefaultText = view.findViewById(R.id.default_gas_limit_text);
-        CommonButton confirmButton = view.findViewById(R.id.advanced_setup_button);
-        view.findViewById(R.id.close_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
         String gasPriceDefault = NumberUtil.getDecimalValid_2(
                 Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
-        gasPriceDefaultText.setText(
-                String.format(getString(R.string.default_eth_gas_price), gasPriceDefault));
-        gasLimitDefaultText.setText(mGasLimit.toString());
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
             @Override
-            public void onClick(View v) {
-                String gasPrice = gasPriceEdit.getText().toString().trim();
+            public void onOkClick(View v, String gasPrice) {
                 if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                    return;
                 } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
                     Toast.makeText(mActivity,
                             String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
                             Toast.LENGTH_SHORT).show();
-                    return;
                 } else {
-                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger()
-                            .multiply(mGasLimit);
+                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger().multiply(mGasLimit);
                     initTransferFeeView();
                 }
-                dialog.dismiss();
             }
         });
-        dialog.setContentView(view);
+        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price),
+                gasPriceDefault));
+        dialog.setGasLimitDefault(mGasLimit.toString());
         dialog.show();
     }
 
