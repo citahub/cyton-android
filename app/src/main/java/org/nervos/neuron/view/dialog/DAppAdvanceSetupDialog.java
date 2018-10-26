@@ -22,6 +22,7 @@ public class DAppAdvanceSetupDialog {
     private TextView gasPriceDefaultText, gasFeeTokenText, gasFeeSumText, tvTransactionData;
     private EditText mGasPriceEdit;
     private OnOkClickListener mListener;
+    private String mTransactionData;
 
     public DAppAdvanceSetupDialog(Context context, OnOkClickListener listener) {
         mContext = context;
@@ -52,6 +53,9 @@ public class DAppAdvanceSetupDialog {
                         ContextCompat.getColor(mContext, R.color.colorPrimary));
                 view.findViewById(R.id.utf8_selector).setBackgroundColor(
                         ContextCompat.getColor(mContext, R.color.line_form));
+                if (!TextUtils.isEmpty(mTransactionData)) {
+                    tvTransactionData.setText(mTransactionData);
+                }
             }
         });
         view.findViewById(R.id.utf8_item).setOnClickListener(new View.OnClickListener() {
@@ -61,8 +65,8 @@ public class DAppAdvanceSetupDialog {
                         ContextCompat.getColor(mContext, R.color.colorPrimary));
                 view.findViewById(R.id.hex_selector).setBackgroundColor(
                         ContextCompat.getColor(mContext, R.color.line_form));
-                if (!TextUtils.isEmpty(tvTransactionData.getText().toString().trim())) {
-                    tvTransactionData.setText(NumberUtil.hexToUtf8(tvTransactionData.getText().toString().trim()));
+                if (!TextUtils.isEmpty(mTransactionData)) {
+                    tvTransactionData.setText(NumberUtil.hexToUtf8(mTransactionData));
                 }
             }
         });
@@ -89,6 +93,7 @@ public class DAppAdvanceSetupDialog {
     }
 
     public void setTransactionData(String data) {
+        mTransactionData = data;
         tvTransactionData.setMovementMethod(ScrollingMovementMethod.getInstance());
         tvTransactionData.setText(data);
     }

@@ -135,6 +135,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void initRemoteData() {
         initBalance();
+        showProgressCircle();
         if (mTransactionInfo.isEthereum()) {
             if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
                     || "0".equals(mTransactionInfo.gasPrice)) {
@@ -145,11 +146,12 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     || "0".equals(mTransactionInfo.gasLimit)) {
                 getEtherGasLimit();
             }
+
+            setEthGasPrice();
         }
     }
 
     private void getEtherGasPrice() {
-        showProgressCircle();
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
@@ -159,7 +161,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
-                dismissProgressCircle();
                 mTransactionInfo.gasPrice = gasPrice.toString(16);
                 setEthGasPrice();
             }
@@ -167,7 +168,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void getEtherGasLimit() {
-        showProgressCircle();
         EthRpcService.getEthGasLimit(mTransactionInfo)
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
@@ -179,7 +179,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        dismissProgressCircle();
                         mTransactionInfo.gasLimit = gasLimit.toString(16);
                         setEthGasPrice();
                     }
@@ -188,6 +187,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
+        dismissProgressCircle();
         if (TextUtils.isEmpty(mTransactionInfo.gasLimit) || TextUtils.isEmpty(mTransactionInfo.gasPrice)) return;
 
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
