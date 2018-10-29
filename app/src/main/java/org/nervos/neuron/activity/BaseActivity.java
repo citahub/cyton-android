@@ -24,8 +24,8 @@ import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseActivity extends AppCompatActivity {
 
-    private static final int timeInterval = 20000;
-    private static final int timeDownInterval = 1000;
+    private static final int INERVAL_TIME = 20000;
+    private static final int INERVAL_DOWN_TIME = 1000;
     private ProgressingDialog dialog = null;
     private ProgressCircleDialog circleDialog = null;
     protected boolean mIsSafeLast;
@@ -164,7 +164,7 @@ public class BaseActivity extends AppCompatActivity {
     private class TimeCount extends CountDownTimer {
 
         public TimeCount() {
-            super(timeInterval, timeDownInterval);
+            super(INERVAL_TIME, INERVAL_DOWN_TIME);
         }
 
         @Override
