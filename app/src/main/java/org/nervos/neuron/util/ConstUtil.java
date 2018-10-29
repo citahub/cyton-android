@@ -29,6 +29,8 @@ public class ConstUtil {
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
     public static final BigInteger QUOTA_ERC20 = new BigInteger("100000");
 
+    public static final BigInteger GAS_LIMIT_PARAMETER = BigInteger.valueOf(4);
+
 
     // ERC20 method hashes
     public static final String ZERO_16 = "000000000000000000000000";
@@ -36,6 +38,7 @@ public class ConstUtil {
     public static final String SYMBOL_HASH = "95d89b41";
     public static final String DECIMALS_HASH = "313ce567";
     public static final String BALANCE_OF_HASH = "70a08231";
+
 
     public static final String FINGERPRINT_TIP = "FINGERPRINT_TIP";
     public static final String FingerPrint = "FingerPrint";

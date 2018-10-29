@@ -179,7 +179,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.gasLimit = gasLimit.toString(16);
+                        mTransactionInfo.gasLimit = gasLimit.multiply(ConstUtil.GAS_LIMIT_PARAMETER).toString(16);
                         setEthGasPrice();
                     }
                 });

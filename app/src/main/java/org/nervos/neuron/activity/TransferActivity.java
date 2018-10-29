@@ -422,7 +422,7 @@ public class TransferActivity extends NBaseActivity {
 
             @Override
             public void onNext(BigInteger gasLimit) {
-                mGasLimit = gasLimit.multiply(BigInteger.valueOf(2));
+                mGasLimit = gasLimit.multiply(ConstUtil.GAS_LIMIT_PARAMETER);
                 mGas = mGasPrice.multiply(mGasLimit);
                 initTransferFeeView();
             }
