@@ -47,10 +47,10 @@ public class SettingsFragment extends NBaseFragment {
         currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
-            if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+            if (SharePrefUtil.getBoolean(ConstUtil.Fingerprint, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
-                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
+                SharePrefUtil.putBoolean(ConstUtil.Fingerprint, false);
                 fingerPrintSBV.setSwitch(false);
             }
         } else {
@@ -67,9 +67,9 @@ public class SettingsFragment extends NBaseFragment {
         fingerPrintSBV.setSwitchListener((is) -> {
             if (is) {
                 //setting fingerprint
-                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
-                    if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(getActivity());
+                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance
+                        (getActivity()).getEnrolledFingerprints().size() > 0) {
+                    if (authFingerDialog == null) authFingerDialog = new AuthFingerDialog(getActivity());
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
                     });
@@ -78,7 +78,8 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     authFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string
+                            .dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();
@@ -86,7 +87,7 @@ public class SettingsFragment extends NBaseFragment {
                 }
             } else {
                 //close fingerprint
-                SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
+                SharePrefUtil.putBoolean(ConstUtil.Fingerprint, false);
                 fingerPrintSBV.setSwitch(false);
             }
 
@@ -123,9 +124,8 @@ public class SettingsFragment extends NBaseFragment {
         @Override
         public void onAuthenticationSucceeded() {
             fingerPrintSBV.setSwitch(true);
-            if (authFingerDialog != null && authFingerDialog.isShowing())
-                authFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
+            if (authFingerDialog != null && authFingerDialog.isShowing()) authFingerDialog.dismiss();
+            SharePrefUtil.putBoolean(ConstUtil.Fingerprint, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
 

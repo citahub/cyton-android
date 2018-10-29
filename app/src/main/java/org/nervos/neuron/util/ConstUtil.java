@@ -38,7 +38,7 @@ public class ConstUtil {
     public static final String BALANCE_OF_HASH = "70a08231";
 
     public static final String FINGERPRINT_TIP = "FINGERPRINT_TIP";
-    public static final String FingerPrint = "FingerPrint";
+    public static final String Fingerprint = "Fingerprint";
     public static final String Currency = "Currency";
     public static final String Protocol = "Protocol";
 }

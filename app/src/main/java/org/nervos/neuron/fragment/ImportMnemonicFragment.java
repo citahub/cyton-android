@@ -184,7 +184,7 @@ public class ImportMnemonicFragment extends BaseFragment {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
             if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil
-                    .FingerPrint, false) && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
+                    .Fingerprint, false) && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
                 SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT_TIP, true);
@@ -217,8 +217,8 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) && passwordEdit.getText().toString().trim().length
-                        () >= 8;
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) &&
+                        passwordEdit.getText().toString().trim().length() >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });
@@ -226,8 +226,8 @@ public class ImportMnemonicFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) && rePasswordEdit.getText().toString().trim()
-                        .length() >= 8;
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) &&
+                        rePasswordEdit.getText().toString().trim().length() >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });
