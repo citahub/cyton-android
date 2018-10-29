@@ -57,18 +57,6 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void initData() {
         fMgr = getSupportFragmentManager();
-        if (SharePrefUtil.getFirstIn()) {
-            SharePrefUtil.putFirstIn(false);
-            new AlertDialog.Builder(mActivity)
-                    .setTitle(R.string.dialog_title_tip)
-                    .setMessage(R.string.dialog_tip_message)
-                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-        }
         startCheckTransaction();
     }
 

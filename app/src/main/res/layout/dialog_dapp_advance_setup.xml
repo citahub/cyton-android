@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="450dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="450dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <FrameLayout
+                android:id="@+id/close_layout"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:background="@drawable/delete" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/advanced_setup"
+                android:textColor="@color/font_title"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/line_form" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="82dp"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/gas_price"
+                android:textColor="@color/font_title"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/default_dapp_gas_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_alignParentRight="true"
+                android:text="@string/default_eth_gas_price"
+                android:textColor="@color/font_title_second"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/edit_dapp_gas_price"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/default_dapp_gas_price_text"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:inputType="number"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:hint="@string/please_input_gas_price"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@color/font_title"
+                android:textSize="15sp"/>
+
+
+        </RelativeLayout>
+
+        <View
+            style="@style/separateLineLong"
+            android:layout_marginLeft="@dimen/default_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin">
+            <TextView
+                android:id="@+id/tv_gas_fee_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gas_fee_token_value"
+                android:textColor="@color/font_title"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_gas_fee_sum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_title_second"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/transaction_data"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/default_margin"/>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:background="@drawable/rectangle_border_gray_corner">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/hex_item"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:text="@string/hex"
+                    android:textColor="@color/font_title"
+                    android:textSize="13sp"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/line_form"/>
+
+                <TextView
+                    android:id="@+id/utf8_item"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:text="@string/utf8"
+                    android:textColor="@color/font_title"
+                    android:textSize="13sp"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:orientation="horizontal">
+                <View
+                    android:id="@+id/hex_selector"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"/>
+
+                <View
+                    android:id="@+id/utf8_selector"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/line_form"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_transaction_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="300"
+                android:layout_margin="@dimen/default_margin"
+                android:textSize="12sp"
+                android:textColor="@color/font_title"/>
+
+        </LinearLayout>
+
+        <org.nervos.neuron.view.button.CommonButton
+            android:id="@+id/advanced_setup_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            app:status="true"
+            app:text="@string/confirm_action" />
+    </LinearLayout>
+
+
+
+</FrameLayout>
