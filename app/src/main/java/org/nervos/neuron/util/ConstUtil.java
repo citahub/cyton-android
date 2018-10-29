@@ -41,7 +41,7 @@ public class ConstUtil {
 
 
     public static final String FINGERPRINT_TIP = "FINGERPRINT_TIP";
-    public static final String FingerPrint = "FingerPrint";
-    public static final String Currency = "Currency";
-    public static final String Protocol = "Protocol";
+    public static final String FINGERPRINT = "Fingerprint";
+    public static final String CURRENCY = "Currency";
+    public static final String PROTOCOL = "Protocol";
 }
