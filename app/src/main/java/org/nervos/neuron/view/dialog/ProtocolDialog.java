@@ -46,7 +46,7 @@ public class ProtocolDialog extends Dialog {
         });
         ok.setOnClickListener(view -> {
             if (checked) {
-                SharePrefUtil.putBoolean(ConstUtil.Protocol, true);
+                SharePrefUtil.putBoolean(ConstUtil.PROTOCOL, true);
                 dismiss();
             } else {
                 Toast.makeText(context, context.getString(R.string.protocol_error_toast), Toast.LENGTH_SHORT).show();

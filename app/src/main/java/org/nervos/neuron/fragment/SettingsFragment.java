@@ -44,13 +44,13 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
-        currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+        currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.CURRENCY, "CNY"));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
-            if (SharePrefUtil.getBoolean(ConstUtil.Fingerprint, false)) {
+            if (SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
                 fingerPrintSBV.setSwitch(true);
             } else {
-                SharePrefUtil.putBoolean(ConstUtil.Fingerprint, false);
+                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, false);
                 fingerPrintSBV.setSwitch(false);
             }
         } else {
@@ -87,7 +87,7 @@ public class SettingsFragment extends NBaseFragment {
                 }
             } else {
                 //close fingerprint
-                SharePrefUtil.putBoolean(ConstUtil.Fingerprint, false);
+                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, false);
                 fingerPrintSBV.setSwitch(false);
             }
 
@@ -125,7 +125,7 @@ public class SettingsFragment extends NBaseFragment {
         public void onAuthenticationSucceeded() {
             fingerPrintSBV.setSwitch(true);
             if (authFingerDialog != null && authFingerDialog.isShowing()) authFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(ConstUtil.Fingerprint, true);
+            SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
 
@@ -141,7 +141,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.CURRENCY, "CNY"));
                     break;
             }
         }

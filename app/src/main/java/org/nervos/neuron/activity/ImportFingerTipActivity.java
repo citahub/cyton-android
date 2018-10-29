@@ -94,7 +94,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
 
     @Override
     public void finish() {
-        SharePrefUtil.putBoolean(ConstUtil.Fingerprint, true);
+        SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, true);
         super.finish();
     }
 }

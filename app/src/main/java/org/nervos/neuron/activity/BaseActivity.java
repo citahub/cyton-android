@@ -56,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private boolean isShouldTimeOut() {
-        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.Fingerprint, false);
+        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gotoLogin() {
-        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.Fingerprint, false)) {
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
             Intent intent = new Intent(mActivity, FingerPrintActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
