@@ -57,14 +57,14 @@ public class BaseActivity extends AppCompatActivity {
         return getResources().getColor(R.color.white);
     }
 
-    private boolean isShouldTimeOut() {
+    private boolean shouldTimeOut() {
         return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isShouldTimeOut()) {
+        if (shouldTimeOut()) {
             if (needLogin) {
                 gotoLogin();
                 needLogin = false;
@@ -76,7 +76,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (isShouldTimeOut()) {
+        if (shouldTimeOut()) {
             mIsSafeLast = AntiHijackingUtil.checkActivity(this);
             if (!mIsSafeLast) {
                 timeCount.start();
