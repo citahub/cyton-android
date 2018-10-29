@@ -67,6 +67,7 @@
     <string name="qrcode_transfer">扫一扫向我付款</string>
     <string name="qrcode_address">收款地址</string>
     <string name="copy_address">复制地址</string>
+    <string name="token_warning_message">该token无任何价值，仅做开发者测试使用</string>
     <string name="backup_mnemonic_warning1">助记词将被用来恢复钱包或重置钱包密码</string>
     <string name="backup_mnemonic_warning2">- 如您的助记词被他人获取，您的财产可能受到损失</string>
     <string name="backup_mnemonic_warning3">- 不要截图或传送给他人</string>

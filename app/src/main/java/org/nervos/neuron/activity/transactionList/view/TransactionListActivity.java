@@ -51,7 +51,7 @@ public class TransactionListActivity extends NBaseActivity {
     private TokenItem tokenItem;
 
     private ImageView tokenLogoImage;
-    private TextView tokenDesTextFirst, tokenDesTextSecond, tokenBalanceText, tokenSymbol;
+    private TextView tokenDesTextFirst, tokenDesTextSecond, tokenBalanceText, tokenSymbol, tvTokenWarning;
     private ConstraintLayout tokenDesRoot;
     private TransactionAdapter transactionAdapter;
 
@@ -77,6 +77,7 @@ public class TransactionListActivity extends NBaseActivity {
         tokenBalanceText = findViewById(R.id.tv_balance);
         tokenDesRoot = findViewById(R.id.cl_token_des);
         tokenSymbol = findViewById(R.id.tv_token_symbol);
+        tvTokenWarning = findViewById(R.id.tv_token_warning);
     }
 
     @Override
@@ -91,6 +92,8 @@ public class TransactionListActivity extends NBaseActivity {
         initDescribe();
         DecimalFormat formater = new DecimalFormat("0.####");
         formater.setRoundingMode(RoundingMode.FLOOR);
+
+        tvTokenWarning.setVisibility(isTestToken()? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -219,6 +222,10 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenDesTextSecond.setText(secondText);
             }
         }, 300);
+    }
+
+    private boolean isTestToken() {
+        return "NATT".equalsIgnoreCase(tokenItem.symbol) || "MBA".equalsIgnoreCase(tokenItem.symbol);
     }
 
 }
