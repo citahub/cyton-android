@@ -25,6 +25,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
+    private static final int TRANSACTION_FETCH_PERIOD = 3000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -126,7 +127,7 @@ public class MainActivity extends NBaseActivity {
         TransactionListService.enqueueWork(mActivity, new Intent());
 
         TransactionListService.impl = () -> {
-            handler.postDelayed(() -> startCheckTransaction(), 3000);
+            handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
         };
     }
 
