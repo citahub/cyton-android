@@ -8,6 +8,7 @@ import org.nervos.appchain.utils.Numeric;
 import org.nervos.neuron.item.AppChainTransactionDBItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil.TokenType;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -21,8 +22,8 @@ import rx.schedulers.Schedulers;
  * Created by BaojunCZ on 2018/10/11.
  */
 public class AppChainTransactionService {
-    private static Observable<AppChainTransactionDBItem> query(Context context, boolean pending, int type, String contractAddress) {
-        List<AppChainTransactionDBItem> list = DBAppChainTransactionsUtil.getAll(context, pending, type, contractAddress);
+    private static Observable<AppChainTransactionDBItem> query(Context context, boolean pending, TokenType type, String contractAddress) {
+        List<AppChainTransactionDBItem> list = DBAppChainTransactionsUtil.getAllTransactions(context, pending, type, contractAddress);
         return Observable
                 .from(list)
                 .subscribeOn(Schedulers.newThread())
@@ -30,7 +31,7 @@ public class AppChainTransactionService {
     }
 
     public static void checkResult(Context context, CheckImpl impl) {
-        query(context, true, 0, "")
+        query(context, true, TokenType.ALL, "")
                 .subscribe(new Subscriber<AppChainTransactionDBItem>() {
                     @Override
                     public void onCompleted() {
@@ -65,8 +66,8 @@ public class AppChainTransactionService {
                 });
     }
 
-    public static List<TransactionItem> getTransactionList(Context context, boolean type, String chain, String contractAddress, List<TransactionItem> list, String from) {
-        List<AppChainTransactionDBItem> allList = DBAppChainTransactionsUtil.getChainAll(context, chain, type, contractAddress);
+    public static List<TransactionItem> getTransactionList(Context context, TokenType type, String chain, String contractAddress, List<TransactionItem> list, String from) {
+        List<AppChainTransactionDBItem> allList = DBAppChainTransactionsUtil.getAllTransactionWithChain(context, chain, type, contractAddress);
         if (allList.size() > 0) {
             for (AppChainTransactionDBItem item : allList) {
                 boolean isReceive = false;

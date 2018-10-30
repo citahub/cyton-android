@@ -8,11 +8,16 @@ import java.util.Locale;
  */
 public class AppChainTransactionDBItem {
 
+    public static final int FAILED = 0;
+    public static final int SUCCESS = 1;
+    public static final int PENDING = 2;
+
     public String hash;
     public long timestamp;
     public String validUntilBlock;
     public boolean isNativeToken;
     public String contractAddress;
+    // blockchain http provider
     public String chain;
 
     public String from;
