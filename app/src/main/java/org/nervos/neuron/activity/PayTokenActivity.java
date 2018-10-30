@@ -135,8 +135,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void initRemoteData() {
         initBalance();
-        showProgressCircle();
         if (mTransactionInfo.isEthereum()) {
+            showProgressCircle();
             if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
                     || "0".equals(mTransactionInfo.gasPrice)) {
                 getEtherGasPrice();
