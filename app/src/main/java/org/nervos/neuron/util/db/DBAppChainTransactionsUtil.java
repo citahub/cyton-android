@@ -48,7 +48,6 @@ public class DBAppChainTransactionsUtil extends DBUtil {
                     pendingKey = pendingKey.replace("native", item.contractAddress);
                     db.put(pendingKey, item);
                 }
-//                LogUtil.d("save>>>" + pendingKey);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
