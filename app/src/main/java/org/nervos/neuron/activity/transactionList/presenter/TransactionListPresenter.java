@@ -21,6 +21,8 @@ import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil.TokenType;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.web3j.crypto.Keys;
 
@@ -85,7 +87,7 @@ public class TransactionListPresenter {
     }
 
     public void getBalance() {
-        if (tokenItem.balance != 0.0 && isEthereum(tokenItem)) {
+        if (tokenItem.balance > 0.0 && isEthereum(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
                         @Override
@@ -102,8 +104,8 @@ public class TransactionListPresenter {
                             if (!TextUtils.isEmpty(s)) {
                                 double price = Double.parseDouble(s.trim());
                                 DecimalFormat df = new DecimalFormat("######0.00");
-                                DecimalFormat formater = new DecimalFormat("0.####");
-                                formater.setRoundingMode(RoundingMode.FLOOR);
+                                DecimalFormat format = new DecimalFormat("0.####");
+                                format.setRoundingMode(RoundingMode.FLOOR);
                                 listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
                                         + Double.parseDouble(df.format(price * tokenItem.balance)));
                             } else
@@ -152,10 +154,12 @@ public class TransactionListPresenter {
                     listener.refreshList(list);
                 } else {
                     for (TransactionItem item : list) {
-                        item.status = TextUtils.isEmpty(item.errorMessage) ? 1 : 0;
+                        item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
                     ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
-                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, isNativeToken(tokenItem), chain.httpProvider, tokenItem.contractAddress, list, from);
+                    TokenType tokenType = isNativeToken(tokenItem)? TokenType.NATIVE : TokenType.TOKEN;
+                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, tokenType,
+                            chain.httpProvider, tokenItem.contractAddress, list, from);
                     listener.refreshList(allList);
                 }
             }
