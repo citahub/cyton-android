@@ -132,6 +132,7 @@
     <string name="settings_title">设置</string>
     <string name="setting_currency">默认货币单位</string>
     <string name="setting_fingerprint">指纹设置</string>
+    <string name="setting_select_eth_net">切换以太坊网络</string>
     <string name="dialog_finger_msg">请验证已有指纹</string>
     <string name="fingerprint_setting_sucess">指纹设置成功！</string>
     <string name="fingerprint_setting_failed">指纹设置失败！</string>

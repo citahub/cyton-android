@@ -1,6 +1,7 @@
 package org.nervos.neuron.view.dialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class SelectorDialog {
     private Context context;
     private BottomSheetDialog dialog;
     private View view;
+    private View.OnClickListener closeListener = null;
 
     public SelectorDialog(@NonNull Context context) {
         this.context = context;
@@ -49,7 +51,17 @@ public class SelectorDialog {
     }
 
     private void initAction() {
-        closeImg.setOnClickListener(view -> dialog.dismiss());
+        closeImg.setOnClickListener(view -> {
+            if (closeListener != null) {
+                closeListener.onClick(view);
+            } else {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public void setCloseListener(View.OnClickListener listener) {
+        this.closeListener = listener;
     }
 
     public void setTitleText(String title) {
@@ -60,13 +72,17 @@ public class SelectorDialog {
         okBtn.setText(text);
     }
 
-    public void setOkListner(View.OnClickListener listner) {
+    public void setOkListener(View.OnClickListener listner) {
         okBtn.setOnClickListener(listner);
     }
 
     public void setRecyclerView(RecyclerView.Adapter adapter) {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
+    }
+
+    public void setOnDissmissListener(DialogInterface.OnDismissListener listener) {
+        dialog.setOnDismissListener(listener);
     }
 
     public void dismiss() {

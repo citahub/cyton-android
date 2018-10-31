@@ -12,6 +12,13 @@ public class ConstUtil {
     public static final String GWEI = "GWei";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
+    public static final String DEFAULT_CURRENCY="CNY";
+
+    public static final String ETH_NET = "ETH_NET";
+    public static final String ETH_NET_MAIN = "Main_Ethereum_Network";
+    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten_Text_Network";
+    public static final String ETH_NET_KOVAN_TEST = "Kovan_Text_Network";
+    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby_Text_Network";
 
     public static final int CMB_CHAIN_ID = 2;
     public static final String CMB_CHAIN_NAME = "mba-testnet";
