@@ -22,6 +22,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
     private CommonButton openBtn;
     private TextView cancelBtn;
     private AuthFingerDialog authFingerDialog = null;
+    private FingerPrintController mFingerPrintController;
 
     @Override
     protected int getContentLayout() {
@@ -36,7 +37,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
-
+        mFingerPrintController = new FingerPrintController(this);
     }
 
     @Override
@@ -48,14 +49,14 @@ public class ImportFingerTipActivity extends NBaseActivity {
             finish();
         });
         openBtn.setOnClickListener((v) -> {
-            if (FingerPrintController.getInstance(mActivity).hasEnrolledFingerprints() &&
-                    FingerPrintController.getInstance(mActivity).getEnrolledFingerprints().size() > 0) {
+            if (mFingerPrintController.hasEnrolledFingerprints() &&
+                    mFingerPrintController.getEnrolledFingerprints().size() > 0) {
                 if (authFingerDialog == null) authFingerDialog = new AuthFingerDialog(mActivity);
                 authFingerDialog.setOnShowListener((dialogInterface) -> {
-                    FingerPrintController.getInstance(mActivity).authenticate(authenticateResultCallback);
+                    mFingerPrintController.authenticate(authenticateResultCallback);
                 });
                 authFingerDialog.setOnDismissListener((dialog) -> {
-                    FingerPrintController.getInstance(mActivity).cancelAuth();
+                    mFingerPrintController.cancelAuth();
                 });
                 authFingerDialog.show();
             } else {

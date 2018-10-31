@@ -83,8 +83,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         importButton.setOnClickListener(view -> {
             if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
-                    rePasswordEdit.getText().toString().trim())) {
+            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(), rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
             } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
@@ -95,15 +94,11 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         scanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AndPermission.with(getActivity())
-                        .runtime().permission(Permission.Group.CAMERA)
-                        .rationale(new RuntimeRationale())
+                AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
                         .onGranted(permissions -> {
-                            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        })
-                        .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                        .start();
+                    Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start();
             }
         });
     }
@@ -141,7 +136,8 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
+            if (new FingerPrintController(getActivity()).isSupportFingerprint() &&
+                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
                     !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
@@ -175,8 +171,8 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
-                        && passwordEdit.getText().toString().trim().length() >= 8;
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) &&
+                        passwordEdit.getText().toString().trim().length() >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });
@@ -185,8 +181,8 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
-                        && rePasswordEdit.getText().toString().trim().length() >= 8;
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) &&
+                        rePasswordEdit.getText().toString().trim().length() >= 8;
                 importButton.setClickAble(isWalletValid());
             }
         });

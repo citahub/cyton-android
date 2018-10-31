@@ -27,6 +27,7 @@ public class SettingsFragment extends NBaseFragment {
     private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV, forumsSBV;
     private static final int Currency_Code = 10001;
     private AuthFingerDialog authFingerDialog = null;
+    private FingerPrintController mFingerPrintController;
 
     @Override
     protected int getContentLayout() {
@@ -44,8 +45,9 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
+        mFingerPrintController = new FingerPrintController(getActivity());
         currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.CURRENCY, "CNY"));
-        if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
+        if (mFingerPrintController.isSupportFingerprint()) {
             fingerPrintSBV.setVisibility(View.VISIBLE);
             if (SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
                 fingerPrintSBV.setSwitch(true);
@@ -67,14 +69,13 @@ public class SettingsFragment extends NBaseFragment {
         fingerPrintSBV.setSwitchListener((is) -> {
             if (is) {
                 //setting fingerprint
-                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance
-                        (getActivity()).getEnrolledFingerprints().size() > 0) {
+                if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null) authFingerDialog = new AuthFingerDialog(getActivity());
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
-                        FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
+                        mFingerPrintController.authenticate(authenticateResultCallback);
                     });
                     authFingerDialog.setOnDismissListener((dialog) -> {
-                        FingerPrintController.getInstance(getActivity()).cancelAuth();
+                        mFingerPrintController.cancelAuth();
                     });
                     authFingerDialog.show();
                 } else {

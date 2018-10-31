@@ -23,7 +23,6 @@ public class ToastDoubleButtonDialog extends Dialog {
     private JSONObject jsonInfo = null;
     private String info = null;
     private Context context;
-    private static ToastDoubleButtonDialog dialog = null;
     private OnDialogOKClickListener okClickListener = null;
     private OnDialogCancelClickListener cancelClickListener = null;
 
@@ -33,7 +32,7 @@ public class ToastDoubleButtonDialog extends Dialog {
     }
 
     public static ToastDoubleButtonDialog getInstance(@NonNull Context context, String msg) {
-        dialog = new ToastDoubleButtonDialog(context);
+        ToastDoubleButtonDialog dialog = new ToastDoubleButtonDialog(context);
         dialog.show();
         dialog.setMsg(msg);
         return dialog;
@@ -47,7 +46,7 @@ public class ToastDoubleButtonDialog extends Dialog {
      * @return
      */
     public static ToastDoubleButtonDialog getInstance(@NonNull Context context, JSONObject msg) {
-        dialog = new ToastDoubleButtonDialog(context);
+        ToastDoubleButtonDialog dialog = new ToastDoubleButtonDialog(context);
         dialog.show();
         dialog.setMsg(msg);
         return dialog;
@@ -82,14 +81,11 @@ public class ToastDoubleButtonDialog extends Dialog {
     private void initData() {
         if (jsonInfo != null) {
             String info = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_INFO);
-            if (!TextUtils.isEmpty(info))
-                messageText.setText(info);
+            if (!TextUtils.isEmpty(info)) messageText.setText(info);
             String ok = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_OK_BTN);
-            if (!TextUtils.isEmpty(ok))
-                okText.setText(ok);
+            if (!TextUtils.isEmpty(ok)) okText.setText(ok);
             String cancel = jsonInfo.optString(ToastSingleButtonDialog.DIALOG_CANCEL_BTN);
-            if (!TextUtils.isEmpty(cancel))
-                cancelText.setText(cancel);
+            if (!TextUtils.isEmpty(cancel)) cancelText.setText(cancel);
         }
 
         if (!TextUtils.isEmpty(info)) {
@@ -99,16 +95,12 @@ public class ToastDoubleButtonDialog extends Dialog {
 
     private void initAction() {
         okText.setOnClickListener(view -> {
-            if (okClickListener != null)
-                okClickListener.onClick(this);
-            else
-                dismiss();
+            if (okClickListener != null) okClickListener.onClick(this);
+            else dismiss();
         });
         cancelText.setOnClickListener(view -> {
-            if (cancelClickListener != null)
-                cancelClickListener.onClick(this);
-            else
-                dismiss();
+            if (cancelClickListener != null) cancelClickListener.onClick(this);
+            else dismiss();
         });
     }
 

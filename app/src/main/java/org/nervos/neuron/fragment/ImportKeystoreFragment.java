@@ -81,16 +81,12 @@ public class ImportKeystoreFragment extends NBaseFragment {
             }
             cachedThreadPool.execute(() -> generateAndSaveWallet());
         });
-        scanImage.setOnClickListener(v -> AndPermission.with(getActivity())
-                .runtime().permission(Permission.Group.CAMERA)
-                .rationale(new RuntimeRationale())
-                .onGranted(permissions -> {
-                    Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                    intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
-                    startActivityForResult(intent, REQUEST_CODE);
-                })
-                .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                .start());
+        scanImage.setOnClickListener(v -> AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new
+                RuntimeRationale()).onGranted(permissions -> {
+            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+            intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
+            startActivityForResult(intent, REQUEST_CODE);
+        }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start());
     }
 
 
@@ -98,8 +94,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
         try {
-            walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(),
-                    keystoreEdit.getText().toString().trim());
+            walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(), keystoreEdit.getText().toString().trim());
         } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
@@ -126,7 +121,8 @@ public class ImportKeystoreFragment extends NBaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
+            if (new FingerPrintController(getActivity()).isSupportFingerprint() &&
+                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
                     !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
