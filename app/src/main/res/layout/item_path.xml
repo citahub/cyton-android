@@ -22,7 +22,7 @@
         android:id="@+id/iv"
         android:layout_width="19dp"
         android:layout_height="13dp"
-        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
         android:src="@drawable/ic_currency_selected"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -36,7 +36,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="ADT"
                 android:textColor="@color/font_title_second"
                 android:textSize="13sp" />
 
@@ -48,7 +47,6 @@
                 android:ellipsize="middle"
                 android:maxEms="16"
                 android:singleLine="true"
-                android:text="0x12243sdsdsdsdsdfadfsdad342323"
                 android:textColor="@color/font_title_third"
                 android:textSize="13sp" />
 
@@ -60,7 +58,7 @@
             android:layout_height="18dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:scaleType="centerInside"
             android:src="@drawable/ic_setting_onoff_off" />
 

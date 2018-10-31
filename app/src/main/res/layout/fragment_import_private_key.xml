@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:paddingBottom="6dp"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin"
             android:paddingTop="@dimen/default_margin">
 
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_wallet_name"
             android:maxLength="15"
             android:paddingStart="@dimen/default_margin"
@@ -73,7 +73,7 @@
 
             <View
                 style="@style/inputSeparateLine"
-                android:layout_marginLeft="@dimen/default_margin" />
+                android:layout_marginStart="@dimen/default_margin" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_password_hint"
             android:inputType="textPassword"
             android:paddingStart="@dimen/default_margin"
@@ -96,7 +96,7 @@
 
             <View
                 style="@style/inputSeparateLine"
-                android:layout_marginLeft="@dimen/default_margin" />
+                android:layout_marginStart="@dimen/default_margin" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_new_password_again_hint"
             android:inputType="textPassword"
             android:paddingStart="@dimen/default_margin"
@@ -115,8 +115,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:layout_marginTop="8dp"
             android:text="@string/password_suggestion"
             android:textColor="@color/font_title_third"

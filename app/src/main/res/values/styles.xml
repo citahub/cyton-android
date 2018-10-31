@@ -22,10 +22,6 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="tab_bottom_radio_button_style">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
@@ -66,16 +62,6 @@
     </style>
 
 
-    <style name="TransferDialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowBackground">@null</item>
-        <item name="android:background">@drawable/dialog_background</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-    </style>
-
     <style name="separateLineLong">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -96,20 +82,10 @@
         <item name="android:background">@color/line_input</item>
     </style>
 
-    <style name="ConfirmDialog">
-        <item name="android:windowEnterAnimation">@anim/dialog_confirm_anim_in</item>
-        <item name="android:windowExitAnimation">@anim/dialog_confirm_anim_out</item>
-    </style>
-
-    <style name="PasswordDialog">
-        <item name="android:windowEnterAnimation">@anim/dialog_password_anim_in</item>
-        <item name="android:windowExitAnimation">@anim/dialog_password_anim_out</item>
-    </style>
-
     <style name="TransactionDetailTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginStart">15dp</item>
         <item name="android:layout_marginTop">17dp</item>
         <item name="android:textColor">@color/font_title_third</item>
         <item name="android:textSize">14sp</item>
@@ -119,7 +95,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_marginTop">7dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
         <item name="android:textColor">@color/font_title</item>
         <item name="android:textSize">14sp</item>
     </style>

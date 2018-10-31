@@ -14,7 +14,6 @@ import org.nervos.neuron.R;
 public class ProgressingDialog extends Dialog {
 
     private TextView msgTv;
-    private static ProgressingDialog dialog = null;
 
     public ProgressingDialog(@NonNull Context context) {
         super(context, R.style.ProgressDialog);

@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * Created by BaojunCZ on 2018/8/7.
  */
-public class SelectWalletPopupwWindow extends PopupWindow {
+public class SelectWalletPopupWindow extends PopupWindow {
 
     private RecyclerView recyclerView;
     private List<WalletItem> walletItems;
     private onClickImpl listener;
 
-    public SelectWalletPopupwWindow(Activity activity, List<WalletItem> walletItems, onClickImpl listener) {
+    public SelectWalletPopupWindow(Activity activity, List<WalletItem> walletItems, onClickImpl listener) {
         super(activity);
         this.walletItems = walletItems;
         this.listener = listener;

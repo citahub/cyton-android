@@ -16,7 +16,6 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/ll_total_money"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/white">
@@ -26,7 +25,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:text="@string/wallet_token_total_money"
                     android:textColor="@color/font_title_third"
                     android:textSize="14sp" />
@@ -36,9 +35,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/tv_total_money_title"
-                    android:text="0"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/tv_total_money_title"
                     android:textColor="@color/font_title_third"
                     android:textSize="14sp" />
 
@@ -46,16 +44,15 @@
                     android:id="@+id/rl_add_image"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true">
 
                     <ImageView
-                        android:id="@+id/iv_add"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
                         android:src="@drawable/ic_wallet_token_add" />
                 </RelativeLayout>
 

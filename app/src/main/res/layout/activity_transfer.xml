@@ -47,7 +47,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
                     app:civ_border_color="@color/line_input"
                     app:civ_border_width="1dp" />
 
@@ -125,7 +125,6 @@
                 android:paddingStart="@dimen/default_margin">
 
                 <TextView
-                    android:id="@+id/transfer_address_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -137,7 +136,7 @@
                     android:id="@+id/transfer_address_scan"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/scan" />
 
@@ -155,13 +154,12 @@
                 android:textSize="12sp" />
 
             <RelativeLayout
-                android:id="@+id/fee_layout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="@dimen/default_margin"
                 android:background="@color/white"
                 android:paddingEnd="@dimen/default_margin"
-                android:paddingLeft="@dimen/default_margin">
+                android:paddingStart="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"

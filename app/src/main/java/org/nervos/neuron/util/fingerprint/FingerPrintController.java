@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
@@ -113,8 +114,6 @@ public class FingerPrintController {
 
         if (fpManager == null)
             throw new NotSupportFingerprintException("Your device is not support fingerprint");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-            return;
         if (cancellationSignal != null && !cancellationSignal.isCanceled())
             cancellationSignal.cancel();
     }

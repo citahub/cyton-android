@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.service.httpservice.WalletService;
-import org.nervos.neuron.view.SelectWalletPopupwWindow;
+import org.nervos.neuron.view.SelectWalletPopupWindow;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -30,7 +30,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
     private List<WalletItem> walletItems = new ArrayList<>();
     private TextView cancelTv, walletNameTv, walletSelectTv;
     private AppCompatEditText walletPwdEt;
-    private ImageView walletSelectImg, otherImg, arrowImg;
+    private ImageView walletSelectImg, otherImg;
     private CommonButton authBtn;
     private WalletItem walletItem;
     private Boolean needToFinger = false;
@@ -50,7 +50,6 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         walletSelectImg = findViewById(R.id.iv_down_arrow);
         otherImg = findViewById(R.id.iv_other);
         authBtn = findViewById(R.id.password_button);
-        arrowImg = findViewById(R.id.iv_down_arrow);
     }
 
     @Override
@@ -75,7 +74,6 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
         walletSelectImg.setOnClickListener(this);
         otherImg.setOnClickListener(this);
         authBtn.setOnClickListener(this);
-        arrowImg.setOnClickListener(this);
         walletNameTv.setOnClickListener(this);
         walletPwdEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -105,11 +103,11 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
             case R.id.iv_down_arrow:
             case R.id.tv_select_hint:
             case R.id.tv_wallet_name:
-                SelectWalletPopupwWindow popupwWindow = new SelectWalletPopupwWindow(this, walletItems, walletItem -> {
+                SelectWalletPopupWindow popupWindow = new SelectWalletPopupWindow(this, walletItems, walletItem -> {
                     this.walletItem = walletItem;
                     walletNameTv.setText(walletItem.name);
                 });
-                popupwWindow.showAsDropDown(walletNameTv, 0, 10);
+                popupWindow.showAsDropDown(walletNameTv, 0, 10);
                 break;
             case R.id.iv_other:
                 Intent intent = new Intent(this, FingerPrintActivity.class);

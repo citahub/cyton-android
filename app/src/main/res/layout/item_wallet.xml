@@ -10,7 +10,7 @@
         android:id="@+id/iv_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="16dip"
+        android:layout_marginStart="16dip"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,8 +19,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:layout_toRightOf="@id/iv_photo"
+        android:layout_marginStart="10dip"
+        android:layout_toEndOf="@id/iv_photo"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_photo"
@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="wallet"
             android:textColor="@color/font_title"
             android:textSize="16sp" />
 
@@ -43,7 +42,6 @@
             android:ellipsize="middle"
             android:maxEms="12"
             android:singleLine="true"
-            android:text="address"
             android:textColor="@color/font_title_third"
             android:textSize="13sp" />
     </LinearLayout>
@@ -52,7 +50,7 @@
         android:id="@+id/iv_default"
         android:layout_width="13dp"
         android:layout_height="14dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="@color/dark_background"
         android:src="@drawable/ic_wallet_default"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +60,7 @@
         android:layout_width="12dp"
         android:layout_height="18dp"
         android:layout_centerVertical="true"
-        android:layout_marginRight="17dp"
+        android:layout_marginEnd="17dp"
         android:src="@drawable/right_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

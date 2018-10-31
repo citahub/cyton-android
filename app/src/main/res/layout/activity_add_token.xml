@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/default_margin"
+        android:paddingStart="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin">
 
         <RelativeLayout
@@ -33,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="区块链"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp" />
 
@@ -70,7 +69,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="合约地址"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp" />
 
@@ -91,8 +89,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toLeftOf="@id/add_token_contract_address_scan"
-                android:layout_toRightOf="@id/add_token_contract_address_text"
+                android:layout_toStartOf="@id/add_token_contract_address_scan"
+                android:layout_toEndOf="@id/add_token_contract_address_text"
                 android:background="@null"
                 android:ellipsize="end"
                 android:gravity="end|center_vertical"
