@@ -270,7 +270,8 @@ public class TransferActivity extends NBaseActivity {
                             String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger().multiply(mGasLimit);
+                    mGasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger();
+                    mGas = mGasPrice.multiply(mGasLimit);
                     initTransferFeeView();
                 }
             }
