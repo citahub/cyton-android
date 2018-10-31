@@ -473,4 +473,6 @@ Nervos基金会\n
     <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
     <string name="transaction_data">包含数据</string>
     <string name="local_currency">本地货币</string>
+    <string name="blockchain">区块链</string>
+    <string name="contract_address">合约地址</string>
 </resources>

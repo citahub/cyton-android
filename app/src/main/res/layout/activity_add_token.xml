@@ -33,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:text="@string/blockchain"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp" />
 
@@ -69,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:text="@string/contract_address"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp" />
 
