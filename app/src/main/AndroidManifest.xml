@@ -59,7 +59,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.transactionList.view.TransactionListActivity"
+            android:name=".activity.transactionlist.view.TransactionListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

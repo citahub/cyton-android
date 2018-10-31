@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.transactionList.presenter;
+package org.nervos.neuron.activity.transactionlist.presenter;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.transactionList.model.TokenDescribeModel;
+import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;

@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.TokenManageActivity;
-import org.nervos.neuron.activity.transactionList.view.TransactionListActivity;
+import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.token.model.TokenAdapter;

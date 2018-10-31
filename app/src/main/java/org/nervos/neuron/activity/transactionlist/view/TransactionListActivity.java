@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.transactionList.view;
+package org.nervos.neuron.activity.transactionlist.view;
 
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
@@ -17,8 +17,8 @@ import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.activity.TransferActivity;
-import org.nervos.neuron.activity.transactionList.model.TransactionAdapter;
-import org.nervos.neuron.activity.transactionList.presenter.TransactionListPresenter;
+import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
+import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;

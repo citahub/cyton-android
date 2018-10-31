@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.transactionList.model;
+package org.nervos.neuron.activity.transactionlist.model;
 
 import android.text.TextUtils;
 
