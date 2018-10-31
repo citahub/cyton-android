@@ -29,7 +29,7 @@ import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;

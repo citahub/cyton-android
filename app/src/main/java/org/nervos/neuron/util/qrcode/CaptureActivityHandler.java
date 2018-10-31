@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.nervos.neuron.util.QRUtils;
+package org.nervos.neuron.util.qrcode;
 
 import android.app.Activity;
 import android.content.Intent;

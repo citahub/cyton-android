@@ -1,4 +1,4 @@
-package org.nervos.neuron.util.FingerPrint;
+package org.nervos.neuron.util.fingerprint;
 
 import org.json.JSONException;
 import org.json.JSONObject;

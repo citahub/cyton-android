@@ -1,4 +1,4 @@
-package org.nervos.neuron.util.QRUtils;
+package org.nervos.neuron.util.qrcode;
 
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.KeyStoreUtil;

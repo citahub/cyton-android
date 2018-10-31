@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.sensor;
 
 /**
  * Created by BaojunCZ on 2018/10/12.

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.view.SelectWalletPopupwWindow;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.db.DBWalletUtil;

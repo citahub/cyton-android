@@ -1,4 +1,4 @@
-package org.nervos.neuron.service;
+package org.nervos.neuron.service.httpservice;
 
 public class HttpUrls {
 

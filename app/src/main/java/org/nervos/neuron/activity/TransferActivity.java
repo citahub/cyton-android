@@ -24,20 +24,20 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.service.TokenService;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.EthRpcService;
+import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
+import org.nervos.neuron.service.httpservice.TokenService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
-import org.nervos.neuron.util.SensorDataTrackUtils;
+import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -668,7 +668,7 @@ public class TransferActivity extends NBaseActivity {
                 if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                        case org.nervos.neuron.util.QRUtils.CodeUtils.STRING_ADDRESS:
+                        case org.nervos.neuron.util.qrcode.CodeUtils.STRING_ADDRESS:
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
                             receiveAddressEdit.setText(result);
                             break;

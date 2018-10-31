@@ -1,4 +1,4 @@
-package org.nervos.neuron.util.QRUtils;
+package org.nervos.neuron.util.qrcode;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

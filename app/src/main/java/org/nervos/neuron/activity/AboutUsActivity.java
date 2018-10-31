@@ -6,7 +6,7 @@ import android.widget.TextView;
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 
 /**
  * Created by 包俊 on 2018/7/30.

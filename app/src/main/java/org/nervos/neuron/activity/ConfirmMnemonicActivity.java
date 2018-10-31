@@ -20,7 +20,7 @@ import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;

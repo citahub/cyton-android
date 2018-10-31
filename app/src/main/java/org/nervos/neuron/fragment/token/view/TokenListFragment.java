@@ -23,8 +23,8 @@ import org.nervos.neuron.fragment.token.presenter.TokenListFragmentPresenter;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.service.httpservice.WalletService;
+import org.nervos.neuron.service.httpservice.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
 
 import java.text.DecimalFormat;

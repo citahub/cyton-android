@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
-import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 /**

@@ -14,10 +14,10 @@ import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 

@@ -22,8 +22,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.token.model.TokenAdapter;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;

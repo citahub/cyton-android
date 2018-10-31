@@ -1,4 +1,4 @@
-package org.nervos.neuron.util;
+package org.nervos.neuron.util.sensor;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 

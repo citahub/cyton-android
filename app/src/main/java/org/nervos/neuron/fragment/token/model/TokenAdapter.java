@@ -18,7 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.crypto.Keys;

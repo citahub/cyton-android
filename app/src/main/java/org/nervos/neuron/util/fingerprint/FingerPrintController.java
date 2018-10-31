@@ -1,4 +1,4 @@
-package org.nervos.neuron.util.FingerPrint;
+package org.nervos.neuron.util.fingerprint;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
