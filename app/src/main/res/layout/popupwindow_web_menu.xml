@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/menu_layout"
     android:layout_width="150dp"
     android:layout_height="106dp"
     android:layout_gravity="end"
@@ -11,7 +10,7 @@
         android:id="@+id/menu_collect"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="4dp"
         android:gravity="center_vertical|left"
         android:text="@string/cancel_collect"
@@ -20,14 +19,14 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp" />
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp" />
 
     <TextView
         android:id="@+id/menu_reload"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:gravity="center_vertical|left"
         android:text="@string/reload"
         android:textColor="@color/font_title"

@@ -26,7 +26,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.db.DBHistoryUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;

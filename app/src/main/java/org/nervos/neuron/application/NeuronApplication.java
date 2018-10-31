@@ -7,7 +7,7 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.service.EthRpcService;
+import org.nervos.neuron.service.httpservice.EthRpcService;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 

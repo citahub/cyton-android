@@ -53,7 +53,7 @@
             android:id="@+id/tv_token_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="23dp"
             android:textColor="@color/font_title"
             android:textSize="18sp"

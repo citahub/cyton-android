@@ -8,7 +8,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.sensorsdata.analytics.android.sdk.util.SensorsDataUtils;
 
 import org.json.JSONObject;
-import org.nervos.neuron.util.SensorIDRandomUtils;
+import org.nervos.neuron.util.sensor.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;

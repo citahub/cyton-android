@@ -7,7 +7,6 @@
     <ImageView
         android:layout_width="61dip"
         android:layout_height="65dip"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:src="@drawable/ic_finger_print_logo" />

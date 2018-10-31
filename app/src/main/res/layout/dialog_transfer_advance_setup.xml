@@ -16,7 +16,7 @@
                 android:id="@+id/close_layout"
                 android:layout_width="40dp"
                 android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:clickable="true">
 
@@ -46,7 +46,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="82dp"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:text="@string/default_eth_gas_price"
                 android:textColor="@color/font_title_second"
                 android:textSize="12sp" />
@@ -88,13 +88,13 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
             <TextView
                 android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
                 android:id="@+id/default_gas_limit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:text="@string/default_eth_gas_limit_value"
                 android:textColor="@color/font_title_second"
                 android:textSize="12sp" />

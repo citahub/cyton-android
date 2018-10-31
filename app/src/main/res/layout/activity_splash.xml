@@ -51,17 +51,15 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
-                    android:text="Secured by"
                     android:textColor="@color/font_title_third"
                     android:textSize="10sp" />
 
                 <ImageView
-                    android:id="@+id/iv_peck_shield"
                     android:layout_width="64dp"
                     android:layout_height="14dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@id/tv_secured_by"
+                    android:layout_marginStart="3dp"
+                    android:layout_toEndOf="@id/tv_secured_by"
                     android:src="@drawable/ic_splash_peckshield_logo" />
             </RelativeLayout>
 

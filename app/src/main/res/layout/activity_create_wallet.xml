@@ -46,7 +46,7 @@
 
         <View
             style="@style/inputSeparateLine"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatEditText
@@ -68,7 +68,7 @@
 
         <View
             style="@style/inputSeparateLine"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatEditText
@@ -86,8 +86,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginTop="8dp"
         android:text="@string/password_suggestion"
         android:textColor="@color/font_title_third"

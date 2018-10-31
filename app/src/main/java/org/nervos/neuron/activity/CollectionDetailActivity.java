@@ -28,7 +28,7 @@ import org.nervos.neuron.view.button.CommonButton;
 public class CollectionDetailActivity extends NBaseActivity implements View.OnClickListener {
 
     private TextView nameText, tokenIdText, contractNameText, describeText, moreText,
-            collectionDescTitleText, descMoreText, collectionDescText;
+            collectionDescTitleText;
     private ImageView collectionImage;
     private CommonButton checkBtn;
     private RelativeLayout imageRl;
@@ -57,8 +57,6 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
         imageRl = findViewById(R.id.rl_image);
         attrsRecycler = findViewById(R.id.rv_attrs);
         collectionDescTitleText = findViewById(R.id.tv_collection_desc_title);
-        descMoreText = findViewById(R.id.tv_desc_more);
-        collectionDescText = findViewById(R.id.tv_collection_desc);
         line = findViewById(R.id.view_line2);
     }
 
@@ -72,8 +70,8 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
             describeText.setText(collectionItem.description);
         else {
             collectionDescTitleText.setVisibility(View.GONE);
-            descMoreText.setVisibility(View.GONE);
-            collectionDescText.setVisibility(View.GONE);
+            describeText.setVisibility(View.GONE);
+            moreText.setVisibility(View.GONE);
             line.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(collectionItem.backgroundColor))

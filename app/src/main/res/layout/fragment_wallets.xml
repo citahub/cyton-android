@@ -11,7 +11,6 @@
         app:elevation="0dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -48,9 +47,9 @@
                         android:id="@+id/iv_right"
                         android:layout_width="22dip"
                         android:layout_height="22dip"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:src="@drawable/ic_wallet_exchange" />
 
                     <View

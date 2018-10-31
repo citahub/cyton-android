@@ -13,9 +13,9 @@
             android:id="@+id/close_layout"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/delete" />
 
         <TextView
@@ -35,7 +35,6 @@
         android:id="@+id/tv_sign_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="11111"
         android:textColor="@color/font_title_second"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/btn_sign"

@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,11 +14,11 @@ import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 import org.nervos.neuron.service.intentservice.TransactionListService;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
 public class MainActivity extends NBaseActivity {

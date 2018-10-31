@@ -14,7 +14,7 @@ import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.item.response.CollectionResponse;
-import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.service.httpservice.TokenService;
 
 import java.util.ArrayList;
 import java.util.List;

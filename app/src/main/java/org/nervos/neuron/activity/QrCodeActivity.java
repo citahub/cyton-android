@@ -10,8 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.CaptureFragment;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
-import org.nervos.neuron.util.QRUtils.QRResultCheck;
+import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.qrcode.QRResultCheck;
 
 public class QrCodeActivity extends NBaseActivity {
 

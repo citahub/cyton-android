@@ -20,9 +20,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="15sp"
-                android:drawableLeft="@drawable/black_back"
+                android:drawableStart="@drawable/black_back"
                 android:textColor="@color/font_title_second"
-                android:paddingLeft="@dimen/default_margin"
+                android:paddingStart="@dimen/default_margin"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
@@ -47,7 +47,7 @@
                 android:singleLine="true"
                 android:ellipsize="none"
                 android:background="@drawable/rectangle_border_gray_corner"
-                android:drawableLeft="@drawable/add_website_hint_image"
+                android:drawableStart="@drawable/add_website_hint_image"
                 android:drawablePadding="5dp"
                 android:imeOptions="actionDone"
                 android:hint="@string/input_app_website_hint"

@@ -25,7 +25,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_value"
@@ -43,7 +43,7 @@
                 android:id="@+id/tv_value_symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/font_title"
                 android:textSize="24sp"
@@ -55,7 +55,7 @@
                 android:id="@+id/tv_gas_price_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="39dp"
                 android:text="@string/gas_price"
                 android:textColor="@color/font_title_third"
@@ -67,7 +67,7 @@
                 android:id="@+id/iv_right"
                 android:layout_width="6dp"
                 android:layout_height="11dp"
-                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:background="@drawable/right_arrow"
                 app:layout_constraintBottom_toBottomOf="@id/tv_gas_price_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:ellipsize="end"
-                android:gravity="right"
+                android:gravity="end"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +151,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:ellipsize="end"
-                android:gravity="right"
+                android:gravity="end"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
                 android:textSize="15sp"
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:gravity="left"
+                android:gravity="start"
                 android:textColor="@color/font_title"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:gravity="left"
+                android:gravity="start"
                 android:text=""
                 android:textColor="@color/font_title"
                 android:textSize="15sp"

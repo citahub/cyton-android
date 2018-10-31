@@ -30,14 +30,10 @@ import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.service.SignService;
-import org.nervos.neuron.service.TokenService;
-import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.JSLoadUtils;
+import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
+import org.nervos.neuron.service.httpservice.SignService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -50,9 +46,6 @@ import org.nervos.neuron.view.webview.NeuronWebView;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;

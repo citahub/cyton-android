@@ -58,6 +58,7 @@ public class NumberUtil {
      * @return
      */
     public static boolean isHex(String value) {
+        value = Numeric.cleanHexPrefix(value);
         for (int i = 0; i < value.length(); i ++) {
             if (('0' > value.charAt(i) || '9' < value.charAt(i))
                     && ('A' > value.charAt(i) || 'F' < value.charAt(i))
