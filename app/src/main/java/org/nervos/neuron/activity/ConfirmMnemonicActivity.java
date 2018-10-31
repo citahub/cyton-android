@@ -120,7 +120,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
             if (confirmList.equals(originList)) {
                 EventBus.getDefault().post(new WalletSaveEvent());
                 Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
-                if (FingerPrintController.getInstance(this).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
+                if (new FingerPrintController(this).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
                         !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, ImportFingerTipActivity.class);
                     startActivity(intent);

@@ -11,21 +11,21 @@ import android.widget.Toast;
 
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.runtime.PermissionRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.ConfirmMnemonicActivity;
 import org.nervos.neuron.activity.ImportFingerTipActivity;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
-import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -81,16 +81,16 @@ public class ImportKeystoreFragment extends NBaseFragment {
             }
             cachedThreadPool.execute(() -> generateAndSaveWallet());
         });
-        scanImage.setOnClickListener(v -> AndPermission.with(getActivity())
-                .runtime().permission(Permission.Group.CAMERA)
-                .rationale(new RuntimeRationale())
-                .onGranted(permissions -> {
-                    Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                    intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
-                    startActivityForResult(intent, REQUEST_CODE);
-                })
-                .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
-                .start());
+        scanImage.setOnClickListener(v -> {
+            PermissionRequest request = AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA);
+            request.rationale(new RuntimeRationale()).onGranted(permissions -> {
+                Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
+                startActivityForResult(intent, REQUEST_CODE);
+            });
+            request.onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions));
+            request.start();
+        });
     }
 
 
@@ -98,8 +98,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
         try {
-            walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(),
-                    keystoreEdit.getText().toString().trim());
+            walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(), keystoreEdit.getText().toString().trim());
         } catch (Exception e) {
             e.printStackTrace();
             passwordEdit.post(() -> {
@@ -126,7 +125,8 @@ public class ImportKeystoreFragment extends NBaseFragment {
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
-            if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
+            if (new FingerPrintController(getActivity()).isSupportFingerprint() &&
+                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
                     !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);

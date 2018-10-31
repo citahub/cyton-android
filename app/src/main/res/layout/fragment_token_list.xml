@@ -84,7 +84,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="90dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/empty" />
+                        android:src="@drawable/no_history" />
 
                     <TextView
                         android:id="@+id/empty_text"

@@ -23,23 +23,6 @@ public class FingerPrintController {
     private Activity activity;
     private CancellationSignal cancellationSignal;
 
-    private volatile static FingerPrintController instance = null;
-
-    public static FingerPrintController getInstance(Activity activity) {
-        if (instance == null) {
-            synchronized (FingerPrintController.class) {
-                if (instance == null) {
-                    instance = new FingerPrintController(activity);
-                }
-            }
-        }
-        return instance;
-    }
-
-    private FingerPrintController() {
-
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
     @SuppressWarnings("ResourceType")
     public FingerPrintController(Activity activity) {
@@ -89,6 +72,7 @@ public class FingerPrintController {
      *
      * @param callback
      */
+    @TargetApi(Build.VERSION_CODES.M)
     public void authenticate(final AuthenticateResultCallback callback) {
         if (fpManager == null)
             throw new NotSupportFingerprintException("Your device is not support fingerprint");
@@ -106,7 +90,7 @@ public class FingerPrintController {
             @Override
             public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
                 super.onAuthenticationHelp(helpCode, helpString);
-                Toast.makeText(FingerPrintController.this.activity, helpString.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, helpString.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
