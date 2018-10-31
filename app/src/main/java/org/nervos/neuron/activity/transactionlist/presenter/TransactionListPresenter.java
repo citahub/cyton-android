@@ -117,6 +117,10 @@ public class TransactionListPresenter {
     public void getTransactionList(String from) {
         Observable<List<TransactionItem>> observable;
         if (isNativeToken(tokenItem)) {
+            if (tokenItem.chainId != 1) {
+                getUnofficialNoneData();       // Now only support chainId = 1 (225 NATT)
+                return;
+            }
             observable = isEthereum(tokenItem) ?
                     HttpService.getETHTransactionList(activity) :
                     HttpService.getAppChainTransactionList(activity);
@@ -148,7 +152,7 @@ public class TransactionListPresenter {
                 Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
                 if (isEthereum(tokenItem)) {
                     for (TransactionItem item : list) {
-                        item.status = 1;
+                        item.status = TransactionItem.SUCCESS;
                     }
                     listener.refreshList(list);
                 } else {
@@ -163,6 +167,11 @@ public class TransactionListPresenter {
                 }
             }
         });
+    }
+
+    private void getUnofficialNoneData() {
+        listener.hideProgressBar();
+        listener.setRefreshing(false);
     }
 
     public boolean isNativeToken(TokenItem tokenItem) {
