@@ -330,7 +330,7 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
             } else if (mNativeTokenBalance < mTransferFee) {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
-                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
+                        getFeeTokenUnit()), Toast.LENGTH_SHORT).show();
             } else if (checkTransferValueMoreBalance()) {
                 handleBigTransferValue();
             } else {
