@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
@@ -35,14 +36,13 @@ public class SignDialog {
     private View mViewSign, mViewPwd;
     private NoScrollViewPager mViewPager;
     private CommonButton mCbtnSign, mCbtnPwd;
-    private ImageView mIvSignClose, mIvTransferClos;
+    private RelativeLayout mRlSignClose, mRlTransferClose;
     private ProgressBar mProgressBar;
     private AppCompatEditText mEtPassword;
     private Message<Transaction> mMessage;
     private OnSignDataListener mListener;
 
-    public SignDialog(@Nullable Activity context, Message<Transaction> message
-            , OnSignDataListener listener) {
+    public SignDialog(@Nullable Activity context, Message<Transaction> message, OnSignDataListener listener) {
         this.mMessage = message;
         this.mListener = listener;
         mDialog = new BottomSheetDialog(context);
@@ -63,8 +63,8 @@ public class SignDialog {
         mViewPager = view.findViewById(R.id.viewPager);
         mCbtnSign = mViewSign.findViewById(R.id.btn_sign);
         mCbtnPwd = mViewPwd.findViewById(R.id.transfer_send_button);
-        mIvSignClose = mViewSign.findViewById(R.id.close_layout);
-        mIvTransferClos = mViewPwd.findViewById(R.id.close_layout);
+        mRlSignClose = mViewSign.findViewById(R.id.rl_close);
+        mRlTransferClose = mViewPwd.findViewById(R.id.rl_close);
         mProgressBar = mViewPwd.findViewById(R.id.transfer_progress);
         mEtPassword = mViewPwd.findViewById(R.id.wallet_password_edit);
     }
@@ -74,8 +74,7 @@ public class SignDialog {
         mViewPager.setScroll(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset
-                    , int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
@@ -93,10 +92,8 @@ public class SignDialog {
 
             }
         });
-        if (!TextUtils.isEmpty(mMessage.value.data) &&
-                Numeric.containsHexPrefix(mMessage.value.data)) {
-            ((TextView) mViewSign.findViewById(R.id.tv_sign_message))
-                    .setText(NumberUtil.hexToUtf8(mMessage.value.data));
+        if (!TextUtils.isEmpty(mMessage.value.data) && Numeric.containsHexPrefix(mMessage.value.data)) {
+            ((TextView) mViewSign.findViewById(R.id.tv_sign_message)).setText(NumberUtil.hexToUtf8(mMessage.value.data));
         }
 
     }
@@ -106,20 +103,17 @@ public class SignDialog {
             mCbtnSign.setClickable(false);
             mViewPager.setCurrentItem(1);
         });
-        mIvSignClose.setOnClickListener(view1 -> {
-            if (mListener != null)
-                mListener.reject(mMessage);
+        mRlSignClose.setOnClickListener(view1 -> {
+            if (mListener != null) mListener.reject(mMessage);
             mDialog.dismiss();
         });
-        mIvTransferClos.setOnClickListener(view1 -> {
-            if (mListener != null)
-                mListener.reject(mMessage);
+        mRlTransferClose.setOnClickListener(view1 -> {
+            if (mListener != null) mListener.reject(mMessage);
             mDialog.dismiss();
         });
         mCbtnPwd.setOnClickListener(view1 -> {
             String password = mEtPassword.getText().toString().trim();
-            if (mListener != null)
-                mListener.send(password, mProgressBar, mMessage);
+            if (mListener != null) mListener.send(password, mProgressBar, mMessage);
         });
     }
 
