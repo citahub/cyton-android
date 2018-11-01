@@ -116,10 +116,15 @@ public class AddTokenActivity extends BaseActivity {
         findViewById(R.id.add_token_contract_address_scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AndPermission.with(mActivity).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale()).onGranted(permissions -> {
-                    Intent intent = new Intent(mActivity, QrCodeActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }).onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions)).start();
+                AndPermission.with(mActivity)
+                        .runtime().permission(Permission.Group.CAMERA)
+                        .rationale(new RuntimeRationale())
+                        .onGranted(permissions -> {
+                            Intent intent = new Intent(mActivity, QrCodeActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE);
+                        })
+                        .onDenied(permissions -> PermissionUtil.showSettingDialog(mActivity, permissions))
+                        .start();
             }
         });
 
