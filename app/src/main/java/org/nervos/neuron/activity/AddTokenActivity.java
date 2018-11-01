@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.httpservice.EthRpcService;
 import org.nervos.neuron.service.httpservice.HttpUrls;
@@ -22,6 +23,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -29,9 +31,13 @@ import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -81,8 +87,7 @@ public class AddTokenActivity extends BaseActivity {
 
         String[] chainNames = new String[chainNameList.size()];
         chainNames = chainNameList.toArray(chainNames);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.spinner_item, chainNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, chainNames);
         blockChainSpinner.setAdapter(adapter);
     }
 
@@ -94,14 +99,16 @@ public class AddTokenActivity extends BaseActivity {
                 Toast.makeText(mActivity, R.string.contract_address_error, Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress)
-                    || TextUtils.isEmpty(tokenItem.name) || TextUtils.isEmpty(tokenItem.symbol)) {
+            if (tokenItem == null || TextUtils.isEmpty(tokenItem.contractAddress) || TextUtils.isEmpty(tokenItem.name) ||
+                    TextUtils.isEmpty(tokenItem.symbol)) {
                 Toast.makeText(mActivity, R.string.input_token_info, Toast.LENGTH_SHORT).show();
             } else {
-                DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
-                DBTokenUtil.saveToken(mActivity, tokenItem);
-                setResult(TokenManageActivity.RESULT_CODE);
-                finish();
+                if (checkRepetitionContract(tokenItem)) {
+                    DBWalletUtil.addTokenToWallet(mActivity, walletItem.name, tokenItem);
+                    DBTokenUtil.saveToken(mActivity, tokenItem);
+                    setResult(TokenManageActivity.RESULT_CODE);
+                    finish();
+                } else Toast.makeText(this, R.string.exist_erc20_token, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -196,5 +203,24 @@ public class AddTokenActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    private boolean checkRepetitionContract(TokenItem tokenItem) {
+        if (tokenItem.chainId < 0) {
+            String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
+            Type type = new TypeToken<List<TokenEntity>>() {}.getType();
+            ArrayList<TokenItem> tokenList = new Gson().fromJson(tokens, type);
+            for (TokenItem item : tokenList) {
+                if (item.contractAddress.equalsIgnoreCase(tokenItem.contractAddress)) return false;
+            }
+        } else {
+            List<TokenItem> customList = DBTokenUtil.getAllTokens(mActivity);
+            if (customList != null && customList.size() > 0) {
+                for (int i = 0; i < customList.size(); i++) {
+                    if (new TokenEntity(customList.get(i)).address.equalsIgnoreCase(tokenItem.contractAddress)) return false;
+                }
+            }
+        }
+        return true;
     }
 }

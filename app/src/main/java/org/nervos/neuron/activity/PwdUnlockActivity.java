@@ -148,6 +148,10 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 }

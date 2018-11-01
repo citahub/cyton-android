@@ -151,6 +151,7 @@
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">请输入完整的代币信息</string>
+    <string name="exist_erc20_token">请勿添加重复Token</string>
     <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
