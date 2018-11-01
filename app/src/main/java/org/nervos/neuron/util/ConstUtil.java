@@ -16,9 +16,9 @@ public class ConstUtil {
 
     public static final String ETH_NET = "ETH_NET";
     public static final String ETH_NET_MAIN = "Main_Ethereum_Network";
-    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten_Text_Network";
-    public static final String ETH_NET_KOVAN_TEST = "Kovan_Text_Network";
-    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby_Text_Network";
+    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten_Test_Network";
+    public static final String ETH_NET_KOVAN_TEST = "Kovan_Test_Network";
+    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby_Test_Network";
 
     public static final int CMB_CHAIN_ID = 2;
     public static final String CMB_CHAIN_NAME = "mba-testnet";
