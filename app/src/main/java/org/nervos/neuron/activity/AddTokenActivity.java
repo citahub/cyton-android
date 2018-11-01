@@ -209,16 +209,15 @@ public class AddTokenActivity extends BaseActivity {
         if (tokenItem.chainId < 0) {
             String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
             Type type = new TypeToken<List<TokenEntity>>() {}.getType();
-            ArrayList<TokenItem> tokenList = new Gson().fromJson(tokens, type);
-            for (TokenItem item : tokenList) {
-                if (item.contractAddress.equalsIgnoreCase(tokenItem.contractAddress)) return false;
+            ArrayList<TokenEntity> tokenList = new Gson().fromJson(tokens, type);
+            for (TokenEntity item : tokenList) {
+                if (item.address.equalsIgnoreCase(tokenItem.contractAddress)) return false;
             }
-        } else {
-            List<TokenItem> customList = DBTokenUtil.getAllTokens(mActivity);
-            if (customList != null && customList.size() > 0) {
-                for (int i = 0; i < customList.size(); i++) {
-                    if (new TokenEntity(customList.get(i)).address.equalsIgnoreCase(tokenItem.contractAddress)) return false;
-                }
+        }
+        List<TokenItem> customList = DBTokenUtil.getAllTokens(mActivity);
+        if (customList != null && customList.size() > 0) {
+            for (TokenItem item : customList) {
+                if (item.contractAddress.equalsIgnoreCase(tokenItem.contractAddress)) return false;
             }
         }
         return true;

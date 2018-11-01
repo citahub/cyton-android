@@ -1,6 +1,10 @@
 package org.nervos.neuron.activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -10,6 +14,8 @@ import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
+
+import java.util.List;
 
 /**
  * Created by BaojunCZ on 2018/8/6.
@@ -72,8 +78,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_finger_print:
-                if (mFingerPrintController.hasEnrolledFingerprints() &&
-                        mFingerPrintController.getEnrolledFingerprints().size() > 0) {
+                if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
                     if (authFingerDialog == null) authFingerDialog = new AuthFingerDialog(this);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
                         mFingerPrintController.authenticate(authenticateResultCallback);
@@ -111,12 +116,15 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
         if (authFingerDialog != null && !authFingerDialog.isShowing()) authFingerDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
+        for (ActivityManager.AppTask appTask : appTaskList) {
+            appTask.finishAndRemoveTask();
+        }
+        //        appTaskList.get(0).finishAndRemoveTask();
+        System.exit(0);
     }
 }
