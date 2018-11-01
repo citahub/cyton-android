@@ -122,7 +122,7 @@ public class HttpService {
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_IP);
+                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_URL);
                 return AppChainRpcService.getMetaData().getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
@@ -158,7 +158,7 @@ public class HttpService {
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_IP);
+                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_URL);
                 return AppChainRpcService.getMetaData().getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {

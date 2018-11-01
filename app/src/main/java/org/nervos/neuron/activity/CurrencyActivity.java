@@ -67,7 +67,7 @@ public class CurrencyActivity extends NBaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CurrencyItem currency = currencyArray.get(position);
-            if (SharePrefUtil.getString(ConstUtil.Currency, "CNY").equals(currency.getName())) {
+            if (SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
                 holder.currency.setRightImageShow(true);
             } else {
                 holder.currency.setRightImageShow(false);

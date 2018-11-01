@@ -62,7 +62,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_IP);
+        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
     }
 
     private void initView() {

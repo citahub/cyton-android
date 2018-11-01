@@ -151,6 +151,6 @@ public class SettingButtonView extends ConstraintLayout {
     }
 
     public interface switchListener {
-        void click(boolean is);
+        void click(boolean chosen);
     }
 }

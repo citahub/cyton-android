@@ -30,9 +30,9 @@ import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class SettingsFragment extends NBaseFragment {
 
+    private static final int Currency_Code = 10001;
     public static final String TAG = SettingsFragment.class.getName();
     private SettingButtonView mSbvCurrency, mSbvAboutUs, mSbvContactUs, mSbvFingerPrint, mSbvForums, mSbvSelectEth;
-    private static final int Currency_Code = 10001;
     private AuthFingerDialog mAuthFingerDialog = null;
     private SelectorDialog mEthNodeDialog = null;
     private SparseArray<String> ethNodeList = new SparseArray<>();
@@ -78,8 +78,8 @@ public class SettingsFragment extends NBaseFragment {
             Intent intent = new Intent(getActivity(), CurrencyActivity.class);
             startActivityForResult(intent, Currency_Code);
         });
-        mSbvFingerPrint.setSwitchListener((is) -> {
-            if (is) {
+        mSbvFingerPrint.setSwitchListener((chosen) -> {
+            if (chosen) {
                 //setting fingerprint
                 if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() &&
                         FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
@@ -92,8 +92,7 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     mAuthFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string
-                            .dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();
@@ -196,7 +195,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY));
                     break;
             }
         }
@@ -219,11 +218,9 @@ public class SettingsFragment extends NBaseFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (mIndex == position) {
-                holder.mSbvEthNode.setRightImageShow(true);
-            } else {
-                holder.mSbvEthNode.setRightImageShow(false);
-            }
+            if (mIndex == position) holder.mSbvEthNode.setRightImageShow(true);
+            else holder.mSbvEthNode.setRightImageShow(false);
+
             holder.mSbvEthNode.setNameText(ethNodeList.get(position).replace("_", " "));
             holder.mSbvEthNode.setOpenListener(() -> {
                 mIndex = position;

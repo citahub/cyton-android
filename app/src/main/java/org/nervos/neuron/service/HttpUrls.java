@@ -30,23 +30,23 @@ public class HttpUrls {
 
 
     // node host
-    public static final String APPCHAIN_NODE_IP = "http://121.196.200.225:1337";
-    public static final String ETH_NODE_MAIN_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-    public static final String ETH_NODE_IP_RINKEBY = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
-    public static final String ETH_NODE_IP_KOVAN = "https://kovan.infura.io/llyrtzQ3YhkdESt2Fzrk";
-    public static final String ETH_NODE_IP_ROPSTEN = "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String APPCHAIN_NODE_URL = "http://121.196.200.225:1337";
+    public static final String ETH_NODE_MAIN_URL = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+    public static final String ETH_NODE_URL_RINKEBY = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_URL_KOVAN = "https://kovan.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_URL_ROPSTEN = "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
     public static String getEthNodeIP() {
         switch (SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN)) {
             case ConstUtil.ETH_NET_MAIN:
             default:
-                return ETH_NODE_MAIN_IP;
+                return ETH_NODE_MAIN_URL;
             case ConstUtil.ETH_NET_RINKEBY_TEST:
-                return ETH_NODE_IP_RINKEBY;
+                return ETH_NODE_URL_RINKEBY;
             case ConstUtil.ETH_NET_KOVAN_TEST:
-                return ETH_NODE_IP_KOVAN;
+                return ETH_NODE_URL_KOVAN;
             case ConstUtil.ETH_NET_ROPSTEN_TEST:
-                return ETH_NODE_IP_ROPSTEN;
+                return ETH_NODE_URL_ROPSTEN;
 
         }
     }
