@@ -36,7 +36,7 @@ public class HttpUrls {
     public static final String ETH_NODE_URL_KOVAN = "https://kovan.infura.io/llyrtzQ3YhkdESt2Fzrk";
     public static final String ETH_NODE_URL_ROPSTEN = "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk";
 
-    public static String getEthNodeIP() {
+    public static String getEthNodeUrl() {
         switch (SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN)) {
             case ConstUtil.ETH_NET_MAIN:
             default:

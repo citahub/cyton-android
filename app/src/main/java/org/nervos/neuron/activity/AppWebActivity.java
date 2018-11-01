@@ -282,7 +282,7 @@ public class AppWebActivity extends NBaseActivity {
 
     private void initInjectWebView() {
         webView.setChainId(1);
-        webView.setRpcUrl(HttpUrls.getEthNodeIP());
+        webView.setRpcUrl(HttpUrls.getEthNodeUrl());
         webView.setWalletAddress(new Address(walletItem.address));
         webView.addJavascriptInterface(new NeuronDAppPlugin(mActivity), "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");

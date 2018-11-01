@@ -56,12 +56,12 @@ public class EthRpcService {
     private static Web3j service;
 
     public static void init(Context context) {
-        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeIP()));
+        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeUrl()));
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
     public static void initHttp() {
-        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeIP()));
+        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeUrl()));
     }
 
     public static double getEthBalance(String address) throws Exception {
