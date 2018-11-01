@@ -78,7 +78,7 @@ public class TransferActivity extends NBaseActivity {
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
-    private BigInteger mGasPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
+    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
     private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance, mTransferFee;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
@@ -205,7 +205,7 @@ public class TransferActivity extends NBaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
-                mGasPrice = gasPrice;
+                mEthGasDefaultPrice = mGasPrice = gasPrice;
                 mGas = mGasPrice.multiply(mGasLimit);
                 initTransferFeeView();
             }
@@ -258,16 +258,16 @@ public class TransferActivity extends NBaseActivity {
      * handle transfer advanced setup
      */
     private void initAdvancedSetupDialog() {
-        String gasPriceDefault = NumberUtil.getDecimalValid_2(
+        String gasPriceValue = NumberUtil.getDecimalValid_2(
                 Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
         TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
             @Override
             public void onOkClick(View v, String gasPrice) {
                 if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceValue)) {
                     Toast.makeText(mActivity,
-                            String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                            String.format(getString(R.string.gas_price_too_low), gasPriceValue),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     mGasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger();
@@ -276,8 +276,9 @@ public class TransferActivity extends NBaseActivity {
                 }
             }
         });
+
         dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price),
-                gasPriceDefault));
+                NumberUtil.getDecimalValid_2(Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue())));
         dialog.setGasLimitDefault(mGasLimit.toString());
         dialog.show();
     }

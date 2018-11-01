@@ -61,6 +61,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private TextView mTvValue, mTvSymbol, mTvPayFee, mTvPayFeeTitle, mTvTotalFee,
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
+    private String mEthDefaultPrice;
 
     @Override
     protected int getContentLayout() {
@@ -161,7 +162,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
-                mTransactionInfo.gasPrice = gasPrice.toString(16);
+                mEthDefaultPrice = gasPrice.toString(16);
+                mTransactionInfo.gasPrice = mEthDefaultPrice;
                 setEthGasPrice();
             }
         });
@@ -202,8 +204,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         try {
                             String mCurrencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
-                            mTvPayFee.setText(
-                                    NumberUtil.getDecimal8ENotation(
+                            mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
                                             mTransactionInfo.getGas()) + getNativeToken()
                                             + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
                         } catch (NumberFormatException e) {
@@ -395,16 +396,16 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     getConfirmTransferView();
                 break;
             case R.id.tv_gas_price:
-                String gasPriceDefault = NumberUtil.getDecimalValid_2(
+                String gasPriceValue = NumberUtil.getDecimalValid_2(
                         Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
                 DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(View v, String gasPrice) {
                         if (TextUtils.isEmpty(gasPrice)) {
                             Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceValue)) {
                             Toast.makeText(mActivity,
-                                    String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                                    String.format(getString(R.string.gas_price_too_low), gasPriceValue),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
@@ -413,8 +414,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     }
                 });
                 dialog.setTransactionData(mTransactionInfo.data);
-                dialog.setGasPriceDefault(gasPriceDefault);
-                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceDefault, mTransactionInfo.getGas());
+                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
+                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
+                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
                 dialog.show();
                 break;
             default:
