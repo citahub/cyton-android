@@ -258,16 +258,16 @@ public class TransferActivity extends NBaseActivity {
      * handle transfer advanced setup
      */
     private void initAdvancedSetupDialog() {
-        String gasPriceValue = NumberUtil.getDecimalValid_2(
-                Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
+        String gasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+                Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
         TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
             @Override
             public void onOkClick(View v, String gasPrice) {
                 if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceValue)) {
+                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefaultValue)) {
                     Toast.makeText(mActivity,
-                            String.format(getString(R.string.gas_price_too_low), gasPriceValue),
+                            String.format(getString(R.string.gas_price_too_low), gasPriceDefaultValue),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     mGasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger();
@@ -277,8 +277,7 @@ public class TransferActivity extends NBaseActivity {
             }
         });
 
-        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price),
-                NumberUtil.getDecimalValid_2(Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue())));
+        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price), gasPriceDefaultValue));
         dialog.setGasLimitDefault(mGasLimit.toString());
         dialog.show();
     }

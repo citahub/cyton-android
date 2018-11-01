@@ -406,16 +406,16 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     getConfirmTransferView();
                 break;
             case R.id.tv_gas_price:
-                String gasPriceValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
+                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
                 DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(View v, String gasPrice) {
                         if (TextUtils.isEmpty(gasPrice)) {
                             Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceValue)) {
+                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(ethGasPriceDefaultValue)) {
                             Toast.makeText(mActivity,
-                                    String.format(getString(R.string.gas_price_too_low), gasPriceValue),
+                                    String.format(getString(R.string.gas_price_too_low), ethGasPriceDefaultValue),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
@@ -424,9 +424,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     }
                 });
                 dialog.setTransactionData(mTransactionInfo.data);
-                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
                 dialog.setGasPriceDefault(ethGasPriceDefaultValue);
+                String gasPriceValue = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
                 dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
                 dialog.show();
                 break;
