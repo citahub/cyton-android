@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
     private String mEthDefaultPrice;
+    private ImageView arrowImage;
 
     @Override
     protected int getContentLayout() {
@@ -80,6 +82,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverName = findViewById(R.id.tv_receriver_name);
         mTvReceiverWebsite = findViewById(R.id.tv_receiver_website);
         mTvReceiverAddress = findViewById(R.id.tv_receiver_address);
+        arrowImage = findViewById(R.id.iv_right);
     }
 
     @Override
@@ -105,16 +108,23 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
         mTvReceiverAddress.setText(mTransactionInfo.to);
         mTvReceiverName.setText(mAppItem.name);
+        initTxFeeView();
+
         if (mTransactionInfo.isEthereum()) {
-            mTvPayFeeTitle.setText(R.string.gas_price);
+            mTvPayFeeTitle.setText(R.string.gas_fee);
         } else {
             mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
                     mTransactionInfo.getDoubleValue() + mTransactionInfo.getDoubleQuota())
                     + getNativeToken());
             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleQuota())
                     + getNativeToken());
-            mTvPayFeeTitle.setText(R.string.quota);
+            mTvPayFeeTitle.setText(R.string.quota_fee);
         }
+    }
+
+    private void initTxFeeView() {
+        arrowImage.setVisibility(mTransactionInfo.isEthereum()? View.VISIBLE : View.INVISIBLE);
+        mTvPayFee.setEnabled(mTransactionInfo.isEthereum());
     }
 
     @Override

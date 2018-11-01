@@ -164,6 +164,8 @@
     <string name="fee_value">矿工费用</string>
     <string name="advanced_setup">高级设置</string>
     <string name="gas_price">Gas Price</string>
+    <string name="gas_fee">Gas费用</string>
+    <string name="quota_fee">Quota费用</string>
     <string name="total_price">总费用</string>
     <string name="pay_token_receiver_website">DApp信息</string>
     <string name="pay_token_receiver_address">接收地址</string>

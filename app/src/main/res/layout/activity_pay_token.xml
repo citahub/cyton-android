@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="39dp"
-                android:text="@string/gas_price"
+                android:text="@string/gas_fee"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
