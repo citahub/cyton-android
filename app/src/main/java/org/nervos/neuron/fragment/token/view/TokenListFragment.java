@@ -23,8 +23,8 @@ import org.nervos.neuron.fragment.token.presenter.TokenListFragmentPresenter;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.service.TokenService;
+import org.nervos.neuron.service.WalletService;
 import org.nervos.neuron.util.CurrencyUtil;
 
 import java.text.DecimalFormat;
@@ -102,8 +102,7 @@ public class TokenListFragment extends NBaseFragment {
     }
 
     private void setCurrency() {
-        if (currencyItem == null ||
-                !currencyItem.getName().equals(CurrencyUtil.getCurrencyItem(getContext()).getName())) {
+        if (currencyItem == null || !currencyItem.getName().equals(CurrencyUtil.getCurrencyItem(getContext()).getName())) {
             currencyItem = CurrencyUtil.getCurrencyItem(getContext());
             totalText.setText(getResources().getString(R.string.wallet_total_money) + "(" + currencyItem.getUnit() + ")");
             getPrice();
@@ -113,7 +112,6 @@ public class TokenListFragment extends NBaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(TokenRefreshEvent event) {
         initWalletData(true);
-        moneyText.setText("0");
         adapter.refresh(tokenItemList);
     }
 
@@ -122,6 +120,7 @@ public class TokenListFragment extends NBaseFragment {
     }
 
     private void initWalletData(boolean showProgress) {
+        moneyText.setText("0");
         if (showProgress) showProgressBar();
         WalletService.getWalletTokenBalance(getContext(), new WalletService.OnGetWalletTokenListener() {
             @Override
@@ -135,6 +134,7 @@ public class TokenListFragment extends NBaseFragment {
                     }
                 });
             }
+
             @Override
             public void onGetWalletError(String message) {
                 recyclerView.post(() -> {
@@ -159,29 +159,27 @@ public class TokenListFragment extends NBaseFragment {
     private void getPrice() {
         for (TokenItem item : this.tokenItemList) {
             if (item.balance != 0.0 && item.chainId < 0)
-                TokenService.getCurrency(item.symbol, currencyItem.getName())
-                    .subscribe(new Subscriber<String>() {
-                        @Override
-                        public void onCompleted() {
-                            adapter.notifyDataSetChanged();
-                            moneyText.setText(presenter.getTotalMoney(tokenItemList));
-                        }
+                TokenService.getCurrency(item.symbol, currencyItem.getName()).subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        adapter.notifyDataSetChanged();
+                        moneyText.setText(presenter.getTotalMoney(tokenItemList));
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
 
-                        @Override
-                        public void onNext(String s) {
-                            if (!TextUtils.isEmpty(s)) {
-                                double price = Double.parseDouble(s.trim());
-                                DecimalFormat df = new DecimalFormat("######0.00");
-                                item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
-                            } else
-                                item.currencyPrice = 0.00;
-                        }
-                    });
+                    @Override
+                    public void onNext(String s) {
+                        if (!TextUtils.isEmpty(s)) {
+                            double price = Double.parseDouble(s.trim());
+                            DecimalFormat df = new DecimalFormat("######0.00");
+                            item.currencyPrice = Double.parseDouble(df.format(price * item.balance));
+                        } else item.currencyPrice = 0.00;
+                    }
+                });
         }
     }
 

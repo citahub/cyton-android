@@ -1,5 +1,8 @@
 package org.nervos.neuron.service;
 
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
+
 public class HttpUrls {
 
     public static final String ETHER_SCAN_API_KEY = "T9GV1IF4V7YDXQ8F53U1FK2KHCE2KUUD8Z";
@@ -27,9 +30,26 @@ public class HttpUrls {
 
 
     // node host
-    public static final String APPCHAIN_NODE_IP = "http://121.196.200.225:1337";
-    public static final String ETH_NODE_IP = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
-//    public static final String ETH_NODE_IP = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String APPCHAIN_NODE_URL = "http://121.196.200.225:1337";
+    public static final String ETH_NODE_MAIN_URL = "https://mainnet.infura.io/h3iIzGIN6msu3KeUrdlt";
+    public static final String ETH_NODE_URL_RINKEBY = "https://rinkeby.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_URL_KOVAN = "https://kovan.infura.io/llyrtzQ3YhkdESt2Fzrk";
+    public static final String ETH_NODE_URL_ROPSTEN = "https://ropsten.infura.io/llyrtzQ3YhkdESt2Fzrk";
+
+    public static String getEthNodeUrl() {
+        switch (SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN)) {
+            case ConstUtil.ETH_NET_MAIN:
+            default:
+                return ETH_NODE_MAIN_URL;
+            case ConstUtil.ETH_NET_RINKEBY_TEST:
+                return ETH_NODE_URL_RINKEBY;
+            case ConstUtil.ETH_NET_KOVAN_TEST:
+                return ETH_NODE_URL_KOVAN;
+            case ConstUtil.ETH_NET_ROPSTEN_TEST:
+                return ETH_NODE_URL_ROPSTEN;
+
+        }
+    }
 
 
     // discover page config information

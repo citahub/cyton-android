@@ -137,7 +137,7 @@ public class MainActivity extends NBaseActivity {
     }
 
     private void startCheckTransaction() {
-        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_IP);
+        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
         Intent serverIntent = new Intent(this, TransactionListService.class);
         startService(serverIntent);
         TransactionListService.impl = () -> {

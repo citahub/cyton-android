@@ -33,11 +33,7 @@ import org.nervos.neuron.plugin.NeuronDAppPlugin;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.service.NeuronSubscriber;
 import org.nervos.neuron.service.SignService;
-import org.nervos.neuron.service.TokenService;
 import org.nervos.neuron.service.WalletService;
-import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -50,9 +46,6 @@ import org.nervos.neuron.view.webview.NeuronWebView;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -289,7 +282,7 @@ public class AppWebActivity extends NBaseActivity {
 
     private void initInjectWebView() {
         webView.setChainId(1);
-        webView.setRpcUrl(HttpUrls.ETH_NODE_IP);
+        webView.setRpcUrl(HttpUrls.getEthNodeUrl());
         webView.setWalletAddress(new Address(walletItem.address));
         webView.addJavascriptInterface(new NeuronDAppPlugin(mActivity), "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");

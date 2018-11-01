@@ -5,28 +5,39 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
-import org.nervos.neuron.view.SettingButtonView;
-import org.nervos.neuron.view.dialog.AuthFingerDialog;
+import org.nervos.neuron.service.EthRpcService;
 import org.nervos.neuron.service.HttpUrls;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
 import org.nervos.neuron.util.FingerPrint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.SettingButtonView;
+import org.nervos.neuron.view.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.dialog.SelectorDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 public class SettingsFragment extends NBaseFragment {
 
-    public static final String TAG = SettingsFragment.class.getName();
-    private SettingButtonView currencySBV, aboutUsSBV, contactUsSBV, fingerPrintSBV, forumsSBV;
     private static final int Currency_Code = 10001;
-    private AuthFingerDialog authFingerDialog = null;
+    public static final String TAG = SettingsFragment.class.getName();
+    private SettingButtonView mSbvCurrency, mSbvAboutUs, mSbvContactUs, mSbvFingerPrint, mSbvForums, mSbvSelectEth;
+    private AuthFingerDialog mAuthFingerDialog = null;
+    private SelectorDialog mEthNodeDialog = null;
+    private SparseArray<String> ethNodeList = new SparseArray<>();
+    private int ethNodeIndex;
+    private EthNodeAdapter mEthNodeAdapter;
 
     @Override
     protected int getContentLayout() {
@@ -35,48 +46,51 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initView() {
-        currencySBV = (SettingButtonView) findViewById(R.id.sbv_local_coin);
-        aboutUsSBV = (SettingButtonView) findViewById(R.id.sbv_about_us);
-        contactUsSBV = (SettingButtonView) findViewById(R.id.sbv_contact_us);
-        fingerPrintSBV = (SettingButtonView) findViewById(R.id.sbv_fingerprint);
-        forumsSBV = (SettingButtonView) findViewById(R.id.sbv_forums);
+        mSbvCurrency = (SettingButtonView) findViewById(R.id.sbv_local_coin);
+        mSbvAboutUs = (SettingButtonView) findViewById(R.id.sbv_about_us);
+        mSbvContactUs = (SettingButtonView) findViewById(R.id.sbv_contact_us);
+        mSbvFingerPrint = (SettingButtonView) findViewById(R.id.sbv_fingerprint);
+        mSbvForums = (SettingButtonView) findViewById(R.id.sbv_forums);
+        mSbvSelectEth = (SettingButtonView) findViewById(R.id.sbv_eth_select);
     }
 
     @Override
     public void initData() {
-        currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+        initEthNode();
+        mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY));
+        mSbvSelectEth.setRightText(SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN).replace("_", " "));
         if (FingerPrintController.getInstance(getActivity()).isSupportFingerprint()) {
-            fingerPrintSBV.setVisibility(View.VISIBLE);
+            mSbvFingerPrint.setVisibility(View.VISIBLE);
             if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
-                fingerPrintSBV.setSwitch(true);
+                mSbvFingerPrint.setSwitch(true);
             } else {
                 SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
-                fingerPrintSBV.setSwitch(false);
+                mSbvFingerPrint.setSwitch(false);
             }
         } else {
-            fingerPrintSBV.setVisibility(View.GONE);
+            mSbvFingerPrint.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void initAction() {
-        currencySBV.setOpenListener(() -> {
+        mSbvAboutUs.setOpenListener(() -> {
             Intent intent = new Intent(getActivity(), CurrencyActivity.class);
             startActivityForResult(intent, Currency_Code);
         });
-        fingerPrintSBV.setSwitchListener((is) -> {
-            if (is) {
+        mSbvFingerPrint.setSwitchListener((chosen) -> {
+            if (chosen) {
                 //setting fingerprint
-                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() && FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
-                    if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(getActivity());
-                    authFingerDialog.setOnShowListener((dialogInterface) -> {
+                if (FingerPrintController.getInstance(getActivity()).hasEnrolledFingerprints() &&
+                        FingerPrintController.getInstance(getActivity()).getEnrolledFingerprints().size() > 0) {
+                    if (mAuthFingerDialog == null) mAuthFingerDialog = new AuthFingerDialog(getActivity());
+                    mAuthFingerDialog.setOnShowListener((dialogInterface) -> {
                         FingerPrintController.getInstance(getActivity()).authenticate(authenticateResultCallback);
                     });
-                    authFingerDialog.setOnDismissListener((dialog) -> {
+                    mAuthFingerDialog.setOnDismissListener((dialog) -> {
                         FingerPrintController.getInstance(getActivity()).cancelAuth();
                     });
-                    authFingerDialog.show();
+                    mAuthFingerDialog.show();
                 } else {
                     ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
@@ -87,15 +101,15 @@ public class SettingsFragment extends NBaseFragment {
             } else {
                 //close fingerprint
                 SharePrefUtil.putBoolean(ConstUtil.FingerPrint, false);
-                fingerPrintSBV.setSwitch(false);
+                mSbvFingerPrint.setSwitch(false);
             }
 
         });
-        aboutUsSBV.setOpenListener(() -> {
+        mSbvAboutUs.setOpenListener(() -> {
             Intent intent = new Intent(getActivity(), AboutUsActivity.class);
             startActivity(intent);
         });
-        contactUsSBV.setOpenListener(() -> {
+        mSbvContactUs.setOpenListener(() -> {
             ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData mClipData = ClipData.newPlainText("contact", "Nervos-Neuron");
             if (cm != null) {
@@ -103,9 +117,50 @@ public class SettingsFragment extends NBaseFragment {
                 Toast.makeText(getActivity(), R.string.copy_weixin_success, Toast.LENGTH_SHORT).show();
             }
         });
-        forumsSBV.setOpenListener(() -> {
+        mSbvForums.setOpenListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_FORUMS);
         });
+        mSbvSelectEth.setOpenListener(() -> {
+            mEthNodeDialog = new SelectorDialog(getActivity());
+            mEthNodeDialog.setTitleText(getString(R.string.setting_select_eth_net));
+            mEthNodeDialog.setRecyclerView(mEthNodeAdapter);
+            mEthNodeDialog.setOkListener((view -> {
+                ethNodeIndex = mEthNodeAdapter.mIndex;
+                SharePrefUtil.putString(ConstUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
+                mEthNodeDialog.dismiss();
+            }));
+            mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
+                EthRpcService.initHttp();
+                initEthNode();
+                String node = SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_MAINNET);
+                node = node.replace("_", " ");
+                mSbvSelectEth.setRightText(node);
+                mEthNodeDialog.dismiss();
+            });
+        });
+    }
+
+    private void initEthNode() {
+        ethNodeList.put(0, ConstUtil.ETH_MAINNET);
+        ethNodeList.put(1, ConstUtil.ETH_NET_ROPSTEN_TEST);
+        ethNodeList.put(2, ConstUtil.ETH_NET_KOVAN_TEST);
+        ethNodeList.put(3, ConstUtil.ETH_NET_RINKEBY_TEST);
+        switch (SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN)) {
+            case ConstUtil.ETH_NET_MAIN:
+            default:
+                ethNodeIndex = 0;
+                break;
+            case ConstUtil.ETH_NET_ROPSTEN_TEST:
+                ethNodeIndex = 1;
+                break;
+            case ConstUtil.ETH_NET_KOVAN_TEST:
+                ethNodeIndex = 2;
+                break;
+            case ConstUtil.ETH_NET_RINKEBY_TEST:
+                ethNodeIndex = 3;
+                break;
+        }
+        mEthNodeAdapter = new EthNodeAdapter(ethNodeIndex);
     }
 
     @Override
@@ -122,9 +177,8 @@ public class SettingsFragment extends NBaseFragment {
 
         @Override
         public void onAuthenticationSucceeded() {
-            fingerPrintSBV.setSwitch(true);
-            if (authFingerDialog != null && authFingerDialog.isShowing())
-                authFingerDialog.dismiss();
+            mSbvFingerPrint.setSwitch(true);
+            if (mAuthFingerDialog != null && mAuthFingerDialog.isShowing()) mAuthFingerDialog.dismiss();
             SharePrefUtil.putBoolean(ConstUtil.FingerPrint, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
@@ -141,9 +195,52 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    currencySBV.setRightText(SharePrefUtil.getString(ConstUtil.Currency, "CNY"));
+                    mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY));
                     break;
             }
+        }
+    }
+
+    class EthNodeAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+        public int mIndex;
+
+        public EthNodeAdapter(int index) {
+            mIndex = index;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_currency, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            if (mIndex == position) holder.mSbvEthNode.setRightImageShow(true);
+            else holder.mSbvEthNode.setRightImageShow(false);
+
+            holder.mSbvEthNode.setNameText(ethNodeList.get(position).replace("_", " "));
+            holder.mSbvEthNode.setOpenListener(() -> {
+                mIndex = position;
+                notifyDataSetChanged();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return ethNodeList.size();
+        }
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        SettingButtonView mSbvEthNode;
+
+        public ViewHolder(View view) {
+            super(view);
+            mSbvEthNode = view.findViewById(R.id.currency);
         }
     }
 }

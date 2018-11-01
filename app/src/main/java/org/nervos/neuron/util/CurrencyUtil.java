@@ -22,7 +22,7 @@ public class CurrencyUtil {
     public static CurrencyItem getCurrencyItem(Context context) {
         CurrencyItem currencyItem = null;
         List<CurrencyItem> list = getCurrencyList(context);
-        String currencyName = SharePrefUtil.getString(ConstUtil.Currency, "CNY");
+        String currencyName = SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY);
         for (CurrencyItem item : list) {
             if (item.getName().equals(currencyName)) {
                 currencyItem = item;

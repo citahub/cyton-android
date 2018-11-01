@@ -37,7 +37,7 @@ class JsInjectorClient {
 
     private int chainId = 1;
     private Address walletAddress;
-    private String rpcUrl = HttpUrls.ETH_NODE_IP;
+    private String rpcUrl = HttpUrls.getEthNodeUrl();
 
     JsInjectorClient(Context context) {
         this.context = context;

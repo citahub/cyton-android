@@ -117,7 +117,7 @@ public class TransferActivity extends NBaseActivity {
         titleBar.setTitle(tokenItem.symbol + getString(R.string.title_transfer));
 
         EthRpcService.init(mActivity);
-        AppChainRpcService.init(mActivity, HttpUrls.APPCHAIN_NODE_IP);
+        AppChainRpcService.init(mActivity, HttpUrls.APPCHAIN_NODE_URL);
 
         walletItem = DBWalletUtil.getCurrentWallet(this);
         walletAddressText.setText(walletItem.address);
