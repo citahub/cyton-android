@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -98,11 +100,23 @@ public class SimpleWebActivity extends BaseActivity {
                 return false;
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 try {
-                    webErrorView.setVisibility(View.VISIBLE);
-                    webView.setVisibility(View.GONE);
+                    switch (error.getErrorCode()) {
+                        case ERROR_AUTHENTICATION:
+                        case ERROR_BAD_URL:
+                        case ERROR_CONNECT:
+                        case ERROR_FAILED_SSL_HANDSHAKE:
+                        case ERROR_HOST_LOOKUP:
+                        case ERROR_PROXY_AUTHENTICATION:
+                        case ERROR_TIMEOUT:
+                        case ERROR_UNKNOWN:
+                            webErrorView.setVisibility(View.VISIBLE);
+                            webView.setVisibility(View.GONE);
+                            break;
+                    }
                 } catch (Exception e) {
 
                 }
@@ -111,8 +125,19 @@ public class SimpleWebActivity extends BaseActivity {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 try {
-                    webErrorView.setVisibility(View.VISIBLE);
-                    webView.setVisibility(View.GONE);
+                    switch (errorCode) {
+                        case ERROR_AUTHENTICATION:
+                        case ERROR_BAD_URL:
+                        case ERROR_CONNECT:
+                        case ERROR_FAILED_SSL_HANDSHAKE:
+                        case ERROR_HOST_LOOKUP:
+                        case ERROR_PROXY_AUTHENTICATION:
+                        case ERROR_TIMEOUT:
+                        case ERROR_UNKNOWN:
+                            webErrorView.setVisibility(View.VISIBLE);
+                            webView.setVisibility(View.GONE);
+                            break;
+                    }
                 } catch (Exception e) {
 
                 }
