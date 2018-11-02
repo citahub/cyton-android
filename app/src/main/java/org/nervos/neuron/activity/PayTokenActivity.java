@@ -330,16 +330,19 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
      */
     private void handleTransfer(EthSendTransaction ethSendTransaction) {
         mTransferDialog.setButtonClickAble(true);
-        if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-            mTransferDialog.dismiss();
-            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
+        if (ethSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
             gotoSignFail(new Gson().toJson(ethSendTransaction.getError()));
+        } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+            mTransferDialog.dismiss();
+            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
         } else {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
@@ -347,22 +350,25 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     /**
-     * handle nervos transfer result
+     * handle appchain transfer result
      *
-     * @param appSendTransaction result of nervos transaction
+     * @param appSendTransaction result of appchain transaction
      */
     private void handleTransfer(AppSendTransaction appSendTransaction) {
         mTransferDialog.setButtonClickAble(true);
-        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            mTransferDialog.dismiss();
-            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));
+        if (appSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
             gotoSignFail(new Gson().toJson(appSendTransaction.getError()));
+        } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
+            mTransferDialog.dismiss();
+            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));
         } else {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
