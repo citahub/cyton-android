@@ -25,11 +25,14 @@ public class ConstUtil {
     public static final BigInteger GAS_LIMIT = new BigInteger("21000");        // default eth gas limit is 21000
     public static final BigInteger GAS_ERC20_LIMIT = new BigInteger("100000");  // default eth gas limit is 100000
     public static final BigInteger GAS_PRICE = Numeric.toBigInt("0x2540BE400");
+    public static final BigInteger GAS_LIMIT_PARAMETER = BigInteger.valueOf(4);
     public static final String RPC_RESULT_ZERO = "0x";
+
+    public static final String QUOTA_PRICE_DEFAULT = "1";
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
     public static final BigInteger QUOTA_ERC20 = new BigInteger("100000");
 
-    public static final BigInteger GAS_LIMIT_PARAMETER = BigInteger.valueOf(4);
+
 
 
     // ERC20 method hashes

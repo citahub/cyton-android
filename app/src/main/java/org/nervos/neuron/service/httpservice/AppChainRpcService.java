@@ -23,6 +23,7 @@ import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.exception.TransactionErrorException;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
@@ -129,7 +130,7 @@ public class AppChainRpcService {
             public String call() {
                 try {
                     String price = new NervosjSysContract(service).getQuotaPrice(from).getValue();
-                    price = price.equals("0x")? "1" : price;
+                    price = price.equals(ConstUtil.RPC_RESULT_ZERO)? ConstUtil.QUOTA_PRICE_DEFAULT : price;
                     return price;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -162,10 +163,17 @@ public class AppChainRpcService {
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
                     AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
-                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
+                    if (appSendTransaction.getError() != null) {
+                        Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                    }
+                    if (appSendTransaction.getSendTransactionResult() != null) {
+                        SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(),
+                                validUntilBlock.toString());
+                    }
                     return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Observable.error(new TransactionErrorException(e.getMessage()));
                 }
                 return Observable.just(null);
             }
@@ -195,10 +203,14 @@ public class AppChainRpcService {
                             WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                     String rawTx = transaction.sign(privateKey, false, false);
                     AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                    if (appSendTransaction.getError() != null) {
+                        Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                    }
                     SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
                     return Observable.just(appSendTransaction);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Observable.error(new TransactionErrorException(e.getMessage()));
                 }
                 return Observable.just(null);
             }

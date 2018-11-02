@@ -78,7 +78,7 @@ public class TransferActivity extends NBaseActivity {
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
-    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
+    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mQuotaLimit, mGas;
     private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance, mTransferFee;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
@@ -295,9 +295,9 @@ public class TransferActivity extends NBaseActivity {
             }
             @Override
             public void onNext(String quotaPrice) {
-                mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
+                mQuotaLimit = TextUtils.isEmpty(tokenItem.contractAddress) ?
                         ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
-                mQuota = mQuota.multiply(Numeric.toBigInt(quotaPrice));
+                mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
                 mTransferFee = NumberUtil.getEthFromWei(mQuota);
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
             }
@@ -543,7 +543,7 @@ public class TransferActivity extends NBaseActivity {
                 NumberUtil.getDecimal8ENotation(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
             AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
+                receiveAddressEdit.getText().toString().trim(), value, mQuotaLimit.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -563,14 +563,16 @@ public class TransferActivity extends NBaseActivity {
 
     private void transferAppChainNormal(AppSendTransaction appSendTransaction) {
         progressBar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-            transferDialog.dismiss();
-            finish();
+        if (appSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
+        } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
+            Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            transferDialog.dismiss();
+            finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         }
@@ -630,14 +632,16 @@ public class TransferActivity extends NBaseActivity {
 
     private void transferEthereumNormal(EthSendTransaction ethSendTransaction) {
         progressBar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-            transferDialog.dismiss();
-            finish();
+        if (ethSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
+        } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            transferDialog.dismiss();
+            finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         }
