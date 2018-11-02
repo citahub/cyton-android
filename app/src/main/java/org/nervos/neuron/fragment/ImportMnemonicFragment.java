@@ -138,22 +138,22 @@ public class ImportMnemonicFragment extends BaseFragment {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
         try {
-            String path = null;
-            if (currentIndex != paths.size() - 1) {
-                path = paths.get(currentIndex);
-            } else {
-                path = mDiyPath;
-                if (TextUtils.isEmpty(path)) {
-                    ImportWalletActivity.track("2", false, "");
-                    passwordEdit.post(() -> {
-                        dismissProgressBar();
-                        Toast.makeText(getContext(), R.string.import_mnemonic_path_err, Toast.LENGTH_SHORT).show();
-                    });
-                    return;
-                }
-            }
+            //            String path = null;
+            //            if (currentIndex != paths.size() - 1) {
+            //                path = paths.get(currentIndex);
+            //            } else {
+            //                path = mDiyPath;
+            //                if (TextUtils.isEmpty(path)) {
+            //                    ImportWalletActivity.track("2", false, "");
+            //                    passwordEdit.post(() -> {
+            //                        dismissProgressBar();
+            //                        Toast.makeText(getContext(), R.string.import_mnemonic_path_err, Toast.LENGTH_SHORT).show();
+            //                    });
+            //                    return;
+            //                }
+            //            }
             String password = passwordEdit.getText().toString().trim();
-            walletEntity = WalletEntity.fromMnemonic(mnemonicEdit.getText().toString().trim(), path, password);
+            walletEntity = WalletEntity.fromMnemonic(mnemonicEdit.getText().toString().trim(), paths.get(0), password);
         } catch (Exception e) {
             ImportWalletActivity.track("2", false, "");
             passwordEdit.post(() -> {

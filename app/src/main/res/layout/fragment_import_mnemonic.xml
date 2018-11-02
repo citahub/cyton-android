@@ -53,7 +53,8 @@
             android:layout_height="55dp"
             android:background="@android:color/white"
             android:paddingStart="@dimen/default_margin"
-            android:paddingEnd="@dimen/default_margin">
+            android:paddingEnd="@dimen/default_margin"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv"
@@ -97,7 +98,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <View
                 style="@style/inputSeparateLine"
