@@ -172,13 +172,23 @@ public class AppWebActivity extends NBaseActivity {
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request
-                    , WebResourceError error) {
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                try {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description
-                    , String failingUrl) {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                try {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         });

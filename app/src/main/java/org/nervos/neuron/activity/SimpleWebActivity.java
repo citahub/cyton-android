@@ -100,14 +100,22 @@ public class SimpleWebActivity extends BaseActivity {
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                try {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                } catch (Exception e) {
+
+                }
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                try {
+                    webErrorView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                } catch (Exception e) {
+
+                }
             }
         });
     }

@@ -63,7 +63,7 @@ public class WalletManageActivity extends BaseActivity {
             simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                 @Override
                 public void onOkClick() {
-                    if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
+                    if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage().trim())) {
                         Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show();
                     } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
                         Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
