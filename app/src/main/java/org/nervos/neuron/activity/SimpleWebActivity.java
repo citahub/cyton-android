@@ -24,6 +24,7 @@ import org.nervos.neuron.plugin.TokenPricePlugin;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.WebErrorView;
+import org.nervos.neuron.view.webview.SimpleWebViewClient;
 
 
 public class SimpleWebActivity extends BaseActivity {
@@ -79,7 +80,7 @@ public class SimpleWebActivity extends BaseActivity {
                 titleBar.setTitle(title);
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("weixin://") || url.startsWith("alipay")) {
@@ -98,49 +99,6 @@ public class SimpleWebActivity extends BaseActivity {
                     webView.loadUrl(url);
                 }
                 return false;
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                try {
-                    switch (error.getErrorCode()) {
-                        case ERROR_AUTHENTICATION:
-                        case ERROR_BAD_URL:
-                        case ERROR_CONNECT:
-                        case ERROR_FAILED_SSL_HANDSHAKE:
-                        case ERROR_HOST_LOOKUP:
-                        case ERROR_PROXY_AUTHENTICATION:
-                        case ERROR_TIMEOUT:
-                        case ERROR_UNKNOWN:
-                            webErrorView.setVisibility(View.VISIBLE);
-                            webView.setVisibility(View.GONE);
-                            break;
-                    }
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                try {
-                    switch (errorCode) {
-                        case ERROR_AUTHENTICATION:
-                        case ERROR_BAD_URL:
-                        case ERROR_CONNECT:
-                        case ERROR_FAILED_SSL_HANDSHAKE:
-                        case ERROR_HOST_LOOKUP:
-                        case ERROR_PROXY_AUTHENTICATION:
-                        case ERROR_TIMEOUT:
-                        case ERROR_UNKNOWN:
-                            webErrorView.setVisibility(View.VISIBLE);
-                            webView.setVisibility(View.GONE);
-                            break;
-                    }
-                } catch (Exception e) {
-
-                }
             }
         });
     }
