@@ -42,14 +42,14 @@
 
     <View
         style="@style/separateLineLong"
-        android:layout_marginLeft="@dimen/default_margin" />
+        android:layout_marginStart="@dimen/default_margin" />
 
     <RelativeLayout
         android:id="@+id/wallet_name_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingLeft="@dimen/default_margin"
+        android:paddingStart="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin">
 
         <TextView
@@ -80,7 +80,7 @@
         <View
             style="@style/separateLineLong"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
     </RelativeLayout>
 
 
@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:paddingLeft="@dimen/default_margin"
+        android:paddingStart="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin">
 
         <TextView

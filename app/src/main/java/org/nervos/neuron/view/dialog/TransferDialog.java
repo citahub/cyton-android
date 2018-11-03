@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
@@ -30,7 +31,7 @@ public class TransferDialog {
     private View confirmView, pwdView;
     private NoScrollViewPager viewPager;
     private CommonButton confirmButton, pwdButton;
-    private ImageView closeImage, closeImage1;
+    private RelativeLayout mRlConfirmClose, mRlTransferClose;
     private ProgressBar progressBar;
     private AppCompatEditText passwordEdit;
     private OnSendPwdListener listener = null;
@@ -39,10 +40,8 @@ public class TransferDialog {
         this.listener = listener;
         dialog = new BottomSheetDialog(context);
         view = LayoutInflater.from(context).inflate(R.layout.dialog_transfer, null);
-        confirmView = LayoutInflater.from(context)
-                .inflate(R.layout.dialog_confirm_transfer, null);
-        pwdView = LayoutInflater.from(context)
-                .inflate(R.layout.dialog_transfer_password, null);
+        confirmView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_transfer, null);
+        pwdView = LayoutInflater.from(context).inflate(R.layout.dialog_transfer_password, null);
         dialog.setContentView(view);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
@@ -57,8 +56,8 @@ public class TransferDialog {
         viewPager = view.findViewById(R.id.viewPager);
         confirmButton = confirmView.findViewById(R.id.transfer_confirm_button);
         pwdButton = pwdView.findViewById(R.id.transfer_send_button);
-        closeImage = confirmView.findViewById(R.id.close_layout);
-        closeImage1 = pwdView.findViewById(R.id.close_layout);
+        mRlConfirmClose = confirmView.findViewById(R.id.rl_close);
+        mRlTransferClose = pwdView.findViewById(R.id.rl_close);
         progressBar = pwdView.findViewById(R.id.transfer_progress);
         passwordEdit = pwdView.findViewById(R.id.wallet_password_edit);
     }
@@ -68,8 +67,7 @@ public class TransferDialog {
         viewPager.setScroll(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset
-                    , int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
@@ -89,8 +87,7 @@ public class TransferDialog {
         });
     }
 
-    public void setConfirmData(String address, String receiveAddress
-            , String value, String feeSeek) {
+    public void setConfirmData(String address, String receiveAddress, String value, String feeSeek) {
         ((TextView) confirmView.findViewById(R.id.from_address)).setText(address);
         ((TextView) confirmView.findViewById(R.id.to_address)).setText(receiveAddress);
         ((TextView) confirmView.findViewById(R.id.transfer_value)).setText(value);
@@ -102,8 +99,8 @@ public class TransferDialog {
             confirmButton.setClickable(false);
             viewPager.setCurrentItem(1);
         });
-        closeImage.setOnClickListener(view1 -> dialog.dismiss());
-        closeImage1.setOnClickListener(view1 -> dialog.dismiss());
+        mRlConfirmClose.setOnClickListener(view1 -> dialog.dismiss());
+        mRlTransferClose.setOnClickListener(view1 -> dialog.dismiss());
         pwdButton.setOnClickListener(view1 -> {
             if (listener != null) {
                 String password = passwordEdit.getText().toString().trim();

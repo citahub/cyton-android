@@ -2,10 +2,6 @@
 <resources>
     <color name="colorPrimary">#456cff</color>
     <color name="colorPrimaryDark">#456cff</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorAccentLight">#55FF4081</color>
-    <color name="main_color2">#10456cff</color>
-    <color name="main_color3">#15345cff</color>
 
     <color name="assist_color">#03c58b</color>
     <color name="warning_background">#fdfbe5</color>
@@ -23,7 +19,6 @@
     <color name="default_background">#F8F8FA</color>
     <color name="dark_background">#242c4a</color>
 
-    <color name="transparent_color1">#50000000</color>
     <color name="transparent_color2">#80000000</color>
 
     <color name="white">#ffffff</color>

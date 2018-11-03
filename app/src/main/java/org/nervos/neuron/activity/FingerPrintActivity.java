@@ -1,15 +1,21 @@
 package org.nervos.neuron.activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
-import org.nervos.neuron.util.FingerPrint.AuthenticateResultCallback;
-import org.nervos.neuron.util.FingerPrint.FingerPrintController;
+import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
+
+import java.util.List;
 
 /**
  * Created by BaojunCZ on 2018/8/6.
@@ -18,6 +24,7 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     private ImageView fingerImg, otherImg;
     private AuthFingerDialog authFingerDialog = null;
+    private FingerPrintController mFingerPrintController;
 
     @Override
     protected int getContentLayout() {
@@ -33,12 +40,13 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
 
     @Override
     protected void initData() {
-        fingerImg.setOnClickListener(this);
-        otherImg.setOnClickListener(this);
+        mFingerPrintController = new FingerPrintController(this);
     }
 
     @Override
     protected void initAction() {
+        fingerImg.setOnClickListener(this);
+        otherImg.setOnClickListener(this);
         fingerImg.performClick();
     }
 
@@ -50,16 +58,13 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     AuthenticateResultCallback authenticateResultCallback = new AuthenticateResultCallback() {
         @Override
         public void onAuthenticationError(String errorMsg) {
-            if (!errorMsg.contains("取消"))
-                Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
+            if (!errorMsg.contains("取消")) Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onAuthenticationSucceeded() {
-            if (authFingerDialog != null && authFingerDialog.isShowing())
-                authFingerDialog.dismiss();
-            if (getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false))
-                startActivity(new Intent(mActivity, MainActivity.class));
+            if (authFingerDialog != null && authFingerDialog.isShowing()) authFingerDialog.dismiss();
+            if (getIntent().getBooleanExtra(SplashActivity.LOCK_TO_MAIN, false)) startActivity(new Intent(mActivity, MainActivity.class));
             finish();
         }
 
@@ -73,14 +78,13 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_finger_print:
-                if (FingerPrintController.getInstance(this).hasEnrolledFingerprints() && FingerPrintController.getInstance(this).getEnrolledFingerprints().size() > 0) {
-                    if (authFingerDialog == null)
-                        authFingerDialog = new AuthFingerDialog(this);
+                if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
+                    if (authFingerDialog == null) authFingerDialog = new AuthFingerDialog(this);
                     authFingerDialog.setOnShowListener((dialogInterface) -> {
-                        FingerPrintController.getInstance(this).authenticate(authenticateResultCallback);
+                        mFingerPrintController.authenticate(authenticateResultCallback);
                     });
                     authFingerDialog.setOnDismissListener((dialog) -> {
-                        FingerPrintController.getInstance(this).cancelAuth();
+                        mFingerPrintController.cancelAuth();
                     });
                     authFingerDialog.show();
                 } else {
@@ -103,23 +107,24 @@ public class FingerPrintActivity extends NBaseActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        if (authFingerDialog != null && authFingerDialog.isShowing())
-            authFingerDialog.dismiss();
+        if (authFingerDialog != null && authFingerDialog.isShowing()) authFingerDialog.dismiss();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (authFingerDialog != null && !authFingerDialog.isShowing())
-            authFingerDialog.show();
+        if (authFingerDialog != null && !authFingerDialog.isShowing()) authFingerDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
+        for (ActivityManager.AppTask appTask : appTaskList) {
+            appTask.finishAndRemoveTask();
+        }
+        //        appTaskList.get(0).finishAndRemoveTask();
+        System.exit(0);
     }
 }

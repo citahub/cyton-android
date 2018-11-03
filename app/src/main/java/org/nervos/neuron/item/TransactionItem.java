@@ -8,6 +8,10 @@ import java.util.Locale;
 
 public class TransactionItem implements Parcelable {
 
+    public static final int FAILED = 0;
+    public static final int SUCCESS = 1;
+    public static final int PENDING = 2;
+
     public String hash;
     public String from;
     public String to;

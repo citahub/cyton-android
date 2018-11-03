@@ -16,6 +16,8 @@ import com.yanzhenjie.permission.Permission;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SharePicUtils;
@@ -93,15 +95,23 @@ public class TransactionDetailActivity extends NBaseActivity {
             tokenUnitText.setText(transactionItem.symbol);
             transactionGasPrice.setVisibility(View.GONE);
             transactionGasPriceTitle.setVisibility(View.GONE);
+
             try {
-                transactionGas.setText(
-                        NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed))
-                                + transactionItem.nativeSymbol);
                 int blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem.blockNumber), 16);
                 transactionBlockNumberText.setText(String.valueOf(blockNumber));
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
+
+            AppChainRpcService.getQuotaPrice(transactionItem.from).subscribe(new NeuronSubscriber<String>(){
+                @Override
+                public void onNext(String price) {
+                    super.onNext(price);
+                    transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(
+                            Numeric.toBigInt(transactionItem.gasUsed).multiply(Numeric.toBigInt(price)))
+                                    + transactionItem.nativeSymbol);
+                }
+            });
         }
 
         transactionBlockTimeText.setText(transactionItem.getDate());

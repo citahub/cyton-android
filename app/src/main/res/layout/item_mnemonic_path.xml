@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="14dp"
+        android:singleLine="false"
+        android:textColor="@color/font_title_second"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="19dp"
+        android:layout_height="13dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:src="@drawable/ic_currency_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv" />
+
+    <TextView
+        android:id="@+id/tv_pre_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/mnemonic_pre_path"
+        android:textColor="@color/font_title"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/tv"
+        app:layout_constraintTop_toBottomOf="@id/tv" />
+
+
+    <EditText
+        android:id="@+id/et_path"
+        android:layout_width="173dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:background="@null"
+        android:hint="@string/mnemonic_pre_hint"
+        android:textColor="@color/font_title"
+        android:textColorHint="@color/font_title_third"
+        android:textSize="16sp"
+        android:inputType="text"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_pre_path"
+        app:layout_constraintStart_toEndOf="@id/tv_pre_path"
+        app:layout_constraintTop_toTopOf="@id/tv_pre_path" />
+
+    <View
+        android:id="@+id/line_et"
+        android:layout_width="173dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="14dp"
+        android:background="@color/line_input"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/et_path"
+        app:layout_constraintTop_toBottomOf="@id/et_path" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="49dp" />
+
+</android.support.constraint.ConstraintLayout>

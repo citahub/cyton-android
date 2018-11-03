@@ -20,11 +20,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_left"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="15dip"
+                android:layout_marginStart="15dip"
                 android:src="@drawable/ic_wallet_top_left" />
         </RelativeLayout>
 
@@ -48,7 +47,7 @@
                     android:layout_width="15dp"
                     android:layout_height="13dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:src="@drawable/ic_wallet_rec_array" />
 
                 <TextView
@@ -56,8 +55,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/iv"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/iv"
                     android:text="@string/wallet_top_change_wallet"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
@@ -79,7 +78,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_centerInParent="true"
-                android:layout_marginRight="15dip"
+                android:layout_marginEnd="15dip"
                 android:src="@drawable/ic_wallet_right" />
         </RelativeLayout>
     </android.support.constraint.ConstraintLayout>
@@ -108,7 +107,6 @@
             android:ellipsize="middle"
             android:gravity="center"
             android:singleLine="true"
-            android:text="wallet"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -124,7 +122,6 @@
             android:ellipsize="middle"
             android:maxEms="12"
             android:singleLine="true"
-            android:text="0x12345454645342422334343534343"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -142,7 +139,6 @@
             app:layout_constraintTop_toTopOf="@id/qrcode_wallet_address">
 
             <ImageView
-                android:id="@+id/iv_copy"
                 android:layout_width="12dp"
                 android:layout_height="15dip"
                 android:layout_centerInParent="true"

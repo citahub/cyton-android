@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.WalletItem;
@@ -23,8 +23,6 @@ import org.nervos.neuron.view.SettingButtonView;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static org.nervos.neuron.activity.MainActivity.EXTRA_TAG;
 
 public class WalletManageActivity extends BaseActivity {
 
@@ -65,7 +63,7 @@ public class WalletManageActivity extends BaseActivity {
             simpleDialog.setOnOkClickListener(new SimpleDialog.OnOkClickListener() {
                 @Override
                 public void onOkClick() {
-                    if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage())) {
+                    if (simpleDialog.getMessage() == null || TextUtils.isEmpty(simpleDialog.getMessage().trim())) {
                         Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show();
                     } else if (DBWalletUtil.checkWalletName(mActivity, simpleDialog.getMessage())) {
                         Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();

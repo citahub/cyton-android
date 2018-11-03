@@ -30,10 +30,10 @@ import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.service.SignService;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
+import org.nervos.neuron.service.httpservice.SignService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -43,6 +43,7 @@ import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.WebMenuPopupWindow;
 import org.nervos.neuron.view.dialog.SignDialog;
 import org.nervos.neuron.view.webview.NeuronWebView;
+import org.nervos.neuron.view.webview.SimpleWebViewClient;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
@@ -151,7 +152,7 @@ public class AppWebActivity extends NBaseActivity {
                 initViewWhenWebFinish();
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 titleItem = null;
@@ -170,25 +171,6 @@ public class AppWebActivity extends NBaseActivity {
                 }
                 return false;
             }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request
-                    , WebResourceError error) {
-                webView.post(() -> {
-                    webErrorView.setVisibility(View.VISIBLE);
-                    webView.setVisibility(View.GONE);
-                });
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description
-                    , String failingUrl) {
-                webView.post(() -> {
-                    webErrorView.setVisibility(View.VISIBLE);
-                    webView.setVisibility(View.GONE);
-                });
-            }
-
         });
     }
 

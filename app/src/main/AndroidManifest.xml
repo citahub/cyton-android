@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.nervos.neuron">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,9 +25,16 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        tools:replace="android:allowBackup"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="SD_CHANNEL_ID"
+            android:value="${InstallChannelValue}" />
+
         <activity
             android:name=".activity.SplashActivity"
             android:noHistory="true"
@@ -51,7 +59,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.transactionList.view.TransactionListActivity"
+            android:name=".activity.transactionlist.view.TransactionListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -182,7 +190,9 @@
         </provider>
 
         <service android:name=".application.ApplicationService" />
-        <service android:name=".service.intentService.TransactionListService" />
+        <service android:name=".service.intentservice.TransactionListService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.sensorsdata.analytics.android.DisableTrackDeviceId"

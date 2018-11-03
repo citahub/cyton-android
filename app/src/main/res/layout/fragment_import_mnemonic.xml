@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingTop="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin"
             android:paddingBottom="6dp">
@@ -53,7 +53,8 @@
             android:layout_height="55dp"
             android:background="@android:color/white"
             android:paddingStart="@dimen/default_margin"
-            android:paddingEnd="@dimen/default_margin">
+            android:paddingEnd="@dimen/default_margin"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv"
@@ -76,34 +77,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <FrameLayout
+                <TextView
+                    android:id="@+id/tv_path"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right">
-
-                    <TextView
-                        android:id="@+id/tv_path"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_title"
-                        android:textSize="15sp" />
-
-                    <EditText
-                        android:id="@+id/et_path"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:textColor="@color/font_title"
-                        android:textSize="15sp"
-                        android:visibility="gone" />
-                </FrameLayout>
-
+                    android:layout_gravity="end"
+                    android:textColor="@color/font_title"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_format"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:textColor="@color/font_title" />
             </LinearLayout>
 
@@ -112,11 +98,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <View
                 style="@style/inputSeparateLine"
-                android:layout_marginLeft="@dimen/default_margin" />
+                android:layout_marginStart="@dimen/default_margin" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
@@ -124,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_wallet_name_hint"
             android:maxLength="15"
             android:paddingStart="@dimen/default_margin"
@@ -140,7 +127,7 @@
 
             <View
                 style="@style/inputSeparateLine"
-                android:layout_marginLeft="@dimen/default_margin" />
+                android:layout_marginStart="@dimen/default_margin" />
         </LinearLayout>
 
 
@@ -149,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_password_hint"
             android:inputType="textPassword"
             android:paddingStart="@dimen/default_margin"
@@ -165,7 +152,7 @@
 
             <View
                 style="@style/inputSeparateLine"
-                android:layout_marginLeft="@dimen/default_margin" />
+                android:layout_marginStart="@dimen/default_margin" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
@@ -173,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
-            android:gravity="left|center_vertical"
+            android:gravity="start|center_vertical"
             android:hint="@string/input_new_password_again_hint"
             android:inputType="textPassword"
             android:paddingStart="@dimen/default_margin"
@@ -185,9 +172,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:text="@string/password_suggestion"
             android:textColor="@color/font_title_third"
             android:textSize="12sp" />

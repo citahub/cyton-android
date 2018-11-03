@@ -28,7 +28,6 @@ public class ToastSingleButtonDialog extends Dialog {
     private JSONObject jsonInfo = null;
     private String info = null;
     private Context context;
-    private static ToastSingleButtonDialog dialog = null;
     private OnDialogOKClickListener okClickListener = null;
 
     private ToastSingleButtonDialog(@NonNull Context context) {
@@ -37,14 +36,14 @@ public class ToastSingleButtonDialog extends Dialog {
     }
 
     public static ToastSingleButtonDialog getInstance(@NonNull Context context, String msg) {
-        dialog = new ToastSingleButtonDialog(context);
+        ToastSingleButtonDialog dialog = new ToastSingleButtonDialog(context);
         dialog.show();
         dialog.setMsg(msg);
         return dialog;
     }
 
     public static ToastSingleButtonDialog getInstance(@NonNull Context context, String title, String msg) {
-        dialog = new ToastSingleButtonDialog(context);
+        ToastSingleButtonDialog dialog = new ToastSingleButtonDialog(context);
         dialog.show();
         dialog.setMsg(title, msg);
         return dialog;
@@ -57,7 +56,7 @@ public class ToastSingleButtonDialog extends Dialog {
      * @return
      */
     public static ToastSingleButtonDialog getInstance(@NonNull Context context, JSONObject msg) {
-        dialog = new ToastSingleButtonDialog(context);
+        ToastSingleButtonDialog dialog = new ToastSingleButtonDialog(context);
         dialog.show();
         dialog.setMsg(msg);
         return dialog;
@@ -89,14 +88,11 @@ public class ToastSingleButtonDialog extends Dialog {
     private void initData() {
         if (jsonInfo != null) {
             String title = jsonInfo.optString(DIALOG_TITLE);
-            if (!TextUtils.isEmpty(title))
-                titleText.setText(title);
+            if (!TextUtils.isEmpty(title)) titleText.setText(title);
             String info = jsonInfo.optString(DIALOG_INFO);
-            if (!TextUtils.isEmpty(info))
-                messageText.setText(info);
+            if (!TextUtils.isEmpty(info)) messageText.setText(info);
             String ok = jsonInfo.optString(DIALOG_OK_BTN);
-            if (!TextUtils.isEmpty(ok))
-                okText.setText(ok);
+            if (!TextUtils.isEmpty(ok)) okText.setText(ok);
         }
 
         if (!TextUtils.isEmpty(info)) {
@@ -106,10 +102,8 @@ public class ToastSingleButtonDialog extends Dialog {
 
     private void initAction() {
         okText.setOnClickListener(view -> {
-            if (okClickListener != null)
-                okClickListener.onClick(this);
-            else
-                dismiss();
+            if (okClickListener != null) okClickListener.onClick(this);
+            else dismiss();
         });
     }
 

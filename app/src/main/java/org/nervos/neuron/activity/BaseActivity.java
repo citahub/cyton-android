@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -23,6 +24,8 @@ import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 public class BaseActivity extends AppCompatActivity {
 
+    private static final int INTERVAL_TIME = 20000;
+    private static final int INTERVAL_DOWN_TIME = 1000;
     private ProgressingDialog dialog = null;
     private ProgressCircleDialog circleDialog = null;
     protected boolean mIsSafeLast;
@@ -30,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     Handler handler = new Handler();
     public boolean inLoginPage = false;
     private boolean needLogin = false;
+    private TimeCount timeCount = new TimeCount();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,10 +41,8 @@ public class BaseActivity extends AppCompatActivity {
         mActivity = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && getStatusBarColor() == getResources().getColor(R.color.white)) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getStatusBarColor() == getResources().getColor(R.color.white)) {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -55,25 +57,29 @@ public class BaseActivity extends AppCompatActivity {
         return getResources().getColor(R.color.white);
     }
 
-    private boolean isShouldTimeOut() {
-        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false);
+    private boolean shouldTimeOut() {
+        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isShouldTimeOut() && needLogin) {
-            gotoLogin();
-            needLogin = false;
+        if (shouldTimeOut()) {
+            if (needLogin) {
+                gotoLogin();
+                needLogin = false;
+            } else {
+                timeCount.cancel();
+            }
         }
     }
 
     @Override
     protected void onStop() {
-        if (isShouldTimeOut()) {
+        if (shouldTimeOut()) {
             mIsSafeLast = AntiHijackingUtil.checkActivity(this);
             if (!mIsSafeLast) {
-                needLogin = true;
+                timeCount.start();
             }
         }
         super.onStop();
@@ -87,7 +93,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gotoLogin() {
-        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
             Intent intent = new Intent(mActivity, FingerPrintActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -98,21 +104,18 @@ public class BaseActivity extends AppCompatActivity {
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        if (dialog == null)
-            dialog = new ProgressingDialog(this);
+        if (dialog == null) dialog = new ProgressingDialog(this);
         dialog.show();
     }
 
     protected void showProgressBar(@StringRes int message) {
-        if (dialog == null)
-            dialog = new ProgressingDialog(this);
+        if (dialog == null) dialog = new ProgressingDialog(this);
         dialog.show();
         dialog.setMsg(getString(message));
     }
 
     protected void showProgressBar(String message) {
-        if (dialog == null)
-            dialog = new ProgressingDialog(this);
+        if (dialog == null) dialog = new ProgressingDialog(this);
         dialog.show();
         dialog.setMsg(message);
     }
@@ -121,8 +124,7 @@ public class BaseActivity extends AppCompatActivity {
      * 隐藏Progress Bar
      */
     protected void dismissProgressBar() {
-        if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
     }
 
 
@@ -131,8 +133,7 @@ public class BaseActivity extends AppCompatActivity {
      */
 
     protected void showProgressCircle() {
-        if (circleDialog == null)
-            circleDialog = new ProgressCircleDialog(this);
+        if (circleDialog == null) circleDialog = new ProgressCircleDialog(this);
         circleDialog.show();
     }
 
@@ -140,8 +141,7 @@ public class BaseActivity extends AppCompatActivity {
      * hide Progress circle
      */
     protected void dismissProgressCircle() {
-        if (circleDialog != null && circleDialog.isShowing())
-            circleDialog.dismiss();
+        if (circleDialog != null && circleDialog.isShowing()) circleDialog.dismiss();
     }
 
     private long lastClickTime;
@@ -159,5 +159,21 @@ public class BaseActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEvent(Object object) {
+    }
+
+    private class TimeCount extends CountDownTimer {
+
+        public TimeCount() {
+            super(INTERVAL_TIME, INTERVAL_DOWN_TIME);
+        }
+
+        @Override
+        public void onTick(long l) {
+        }
+
+        @Override
+        public void onFinish() {
+            needLogin = true;
+        }
     }
 }

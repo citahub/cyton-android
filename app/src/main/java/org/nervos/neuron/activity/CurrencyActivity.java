@@ -67,14 +67,14 @@ public class CurrencyActivity extends NBaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CurrencyItem currency = currencyArray.get(position);
-            if (SharePrefUtil.getString(ConstUtil.Currency, ConstUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
+            if (SharePrefUtil.getString(ConstUtil.CURRENCY, ConstUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
                 holder.currency.setRightImageShow(true);
             } else {
                 holder.currency.setRightImageShow(false);
             }
             holder.currency.setNameText(currency.getName());
             holder.currency.setOpenListener(() -> {
-                SharePrefUtil.putString(ConstUtil.Currency, currency.getName());
+                SharePrefUtil.putString(ConstUtil.CURRENCY, currency.getName());
                 notifyDataSetChanged();
                 finish();
             });

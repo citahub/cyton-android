@@ -1,7 +1,5 @@
 package org.nervos.neuron.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -16,19 +14,17 @@ import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.response.AppChainTransactionResponse;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.intentService.TransactionListService;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.intentservice.TransactionListService;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
+    private static final int TRANSACTION_FETCH_PERIOD = 3000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -57,18 +53,6 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void initData() {
         fMgr = getSupportFragmentManager();
-        if (SharePrefUtil.getFirstIn()) {
-            SharePrefUtil.putFirstIn(false);
-            new AlertDialog.Builder(mActivity)
-                    .setTitle(R.string.dialog_title_tip)
-                    .setMessage(R.string.dialog_tip_message)
-                    .setPositiveButton(R.string.have_known, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-        }
         startCheckTransaction();
     }
 
@@ -138,10 +122,11 @@ public class MainActivity extends NBaseActivity {
 
     private void startCheckTransaction() {
         AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
-        Intent serverIntent = new Intent(this, TransactionListService.class);
-        startService(serverIntent);
+
+        TransactionListService.enqueueWork(mActivity, new Intent());
+
         TransactionListService.impl = () -> {
-            handler.postDelayed(() -> startCheckTransaction(), 3000);
+            handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
         };
     }
 

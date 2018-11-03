@@ -2,16 +2,16 @@ package org.nervos.neuron.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -22,14 +22,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.AddWebsiteActivity;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.plugin.AppTabPlugin;
-import org.nervos.neuron.service.HttpUrls;
+import org.nervos.neuron.service.httpservice.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
+import org.nervos.neuron.view.webview.SimpleWebViewClient;
 
 public class AppFragment extends Fragment {
 
@@ -69,24 +69,13 @@ public class AppFragment extends Fragment {
 
     private void initWebView() {
 
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Intent intent = new Intent(getContext(), AppWebActivity.class);
                 intent.putExtra(AppWebActivity.EXTRA_URL, url);
                 startActivity(intent);
                 return true;
-            }
-
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
             }
         });
 

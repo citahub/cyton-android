@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/protocol_neuron_name"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="7dp"
@@ -16,23 +15,22 @@
         android:textSize="16sp" />
 
     <ScrollView
-        android:id="@+id/sl_protocol"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:text="@string/protocol_neuron1"
                 android:textColor="@color/font_title"
                 android:textSize="14sp" />
@@ -40,8 +38,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:text="@string/protocol_neuron2"
                 android:textColor="@color/font_title"
                 android:textSize="14sp" />
@@ -68,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_check"
+            android:layout_toEndOf="@id/iv_check"
             android:text="@string/approve_protocol"
             android:textColor="@color/font_title"
             android:textSize="12sp" />

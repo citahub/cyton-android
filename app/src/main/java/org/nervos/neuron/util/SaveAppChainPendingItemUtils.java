@@ -21,7 +21,7 @@ public class SaveAppChainPendingItemUtils {
         appChainTransactionDBItem.to = to;
         appChainTransactionDBItem.value = value;
         appChainTransactionDBItem.chainName = DBChainUtil.getChain(context, chainId).name;
-        appChainTransactionDBItem.status = 2;
+        appChainTransactionDBItem.status = AppChainTransactionDBItem.PENDING;
         appChainTransactionDBItem.isNativeToken = true;
     }
 
@@ -32,7 +32,7 @@ public class SaveAppChainPendingItemUtils {
         appChainTransactionDBItem.to = to;
         appChainTransactionDBItem.value = value;
         appChainTransactionDBItem.chainName = DBChainUtil.getChain(context, chainId).name;
-        appChainTransactionDBItem.status = 2;
+        appChainTransactionDBItem.status = AppChainTransactionDBItem.PENDING;
         appChainTransactionDBItem.contractAddress = contractAddress;
         appChainTransactionDBItem.isNativeToken = false;
     }

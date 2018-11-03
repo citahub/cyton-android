@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +19,16 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.service.TokenService;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.EthRpcService;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
+import org.nervos.neuron.service.httpservice.TokenService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
-import org.nervos.neuron.util.SensorDataTrackUtils;
+import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -61,6 +62,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private TextView mTvValue, mTvSymbol, mTvPayFee, mTvPayFeeTitle, mTvTotalFee,
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
+    private String mEthDefaultPrice;
+    private ImageView arrowImage;
 
     @Override
     protected int getContentLayout() {
@@ -79,6 +82,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverName = findViewById(R.id.tv_receriver_name);
         mTvReceiverWebsite = findViewById(R.id.tv_receiver_website);
         mTvReceiverAddress = findViewById(R.id.tv_receiver_address);
+        arrowImage = findViewById(R.id.iv_right);
     }
 
     @Override
@@ -104,16 +108,23 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
         mTvReceiverAddress.setText(mTransactionInfo.to);
         mTvReceiverName.setText(mAppItem.name);
+        initTxFeeView();
+
         if (mTransactionInfo.isEthereum()) {
-            mTvPayFeeTitle.setText(R.string.gas_price);
+            mTvPayFeeTitle.setText(R.string.gas_fee);
         } else {
             mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
                     mTransactionInfo.getDoubleValue() + mTransactionInfo.getDoubleQuota())
                     + getNativeToken());
             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleQuota())
                     + getNativeToken());
-            mTvPayFeeTitle.setText(R.string.quota);
+            mTvPayFeeTitle.setText(R.string.quota_fee);
         }
+    }
+
+    private void initTxFeeView() {
+        arrowImage.setVisibility(mTransactionInfo.isEthereum()? View.VISIBLE : View.INVISIBLE);
+        mTvPayFee.setEnabled(mTransactionInfo.isEthereum());
     }
 
     @Override
@@ -135,8 +146,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void initRemoteData() {
         initBalance();
-        showProgressCircle();
         if (mTransactionInfo.isEthereum()) {
+            showProgressCircle();
             if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
                     || "0".equals(mTransactionInfo.gasPrice)) {
                 getEtherGasPrice();
@@ -161,7 +172,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
-                mTransactionInfo.gasPrice = gasPrice.toString(16);
+                mEthDefaultPrice = gasPrice.toString(16);
+                mTransactionInfo.gasPrice = mEthDefaultPrice;
                 setEthGasPrice();
             }
         });
@@ -202,8 +214,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         try {
                             String mCurrencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
-                            mTvPayFee.setText(
-                                    NumberUtil.getDecimal8ENotation(
+                            mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
                                             mTransactionInfo.getGas()) + getNativeToken()
                                             + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
                         } catch (NumberFormatException e) {
@@ -319,16 +330,19 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
      */
     private void handleTransfer(EthSendTransaction ethSendTransaction) {
         mTransferDialog.setButtonClickAble(true);
-        if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-            mTransferDialog.dismiss();
-            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
+        if (ethSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
             gotoSignFail(new Gson().toJson(ethSendTransaction.getError()));
+        } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+            mTransferDialog.dismiss();
+            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
         } else {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
@@ -336,22 +350,25 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     /**
-     * handle nervos transfer result
+     * handle appchain transfer result
      *
-     * @param appSendTransaction result of nervos transaction
+     * @param appSendTransaction result of appchain transaction
      */
     private void handleTransfer(AppSendTransaction appSendTransaction) {
         mTransferDialog.setButtonClickAble(true);
-        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            mTransferDialog.dismiss();
-            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));
+        if (appSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
+            gotoSignFail(getCommonError());
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
             gotoSignFail(new Gson().toJson(appSendTransaction.getError()));
+        } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
+            mTransferDialog.dismiss();
+            Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
+            gotoSignSuccess(new Gson().toJson(appSendTransaction.getSendTransactionResult()));
         } else {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
@@ -395,16 +412,16 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     getConfirmTransferView();
                 break;
             case R.id.tv_gas_price:
-                String gasPriceDefault = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
+                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
                 DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(View v, String gasPrice) {
                         if (TextUtils.isEmpty(gasPrice)) {
                             Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(ethGasPriceDefaultValue)) {
                             Toast.makeText(mActivity,
-                                    String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                                    String.format(getString(R.string.gas_price_too_low), ethGasPriceDefaultValue),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
@@ -413,8 +430,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     }
                 });
                 dialog.setTransactionData(mTransactionInfo.data);
-                dialog.setGasPriceDefault(gasPriceDefault);
-                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceDefault, mTransactionInfo.getGas());
+                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
+                String gasPriceValue = NumberUtil.getDecimalValid_2(
+                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
+                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
                 dialog.show();
                 break;
             default:

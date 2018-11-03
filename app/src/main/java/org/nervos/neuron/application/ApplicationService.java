@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+import com.sensorsdata.analytics.android.sdk.util.SensorsDataUtils;
 
 import org.json.JSONObject;
-import org.nervos.neuron.util.SensorIDRandomUtils;
+import org.nervos.neuron.util.sensor.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ import java.util.List;
 public class ApplicationService extends IntentService {
 
     private static final String SENSOR_IP = "$ip";
+    private static final String SENSOR_CHANNEL_KEY = "DownloadChannel";
+    private static final String CHANNEL_META = "SD_CHANNEL_ID";
+    private static final String EVENT_CHANNEL_META = "AppInstall";
 
     private String SA_SERVER_URL_DEBUG = "https://banana.cryptape.com:8106/sa?project=default";
     private String SA_SERVER_URL = "https://banana.cryptape.com:8106/sa?project=production";
@@ -45,6 +49,12 @@ public class ApplicationService extends IntentService {
             JSONObject properties = new JSONObject();
             properties.put(SENSOR_IP, "");
             SensorsDataAPI.sharedInstance().registerSuperProperties(properties);
+
+            String downloadChannel = SensorsDataUtils.getApplicationMetaData(this, CHANNEL_META);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(SENSOR_CHANNEL_KEY, downloadChannel);
+            SensorsDataAPI.sharedInstance().trackInstallation(EVENT_CHANNEL_META, properties);
+
             // 打开自动采集, 并指定追踪哪些 AutoTrack 事件
             List<SensorsDataAPI.AutoTrackEventType> eventTypeList = new ArrayList<>();
             // $AppStart
@@ -56,6 +66,7 @@ public class ApplicationService extends IntentService {
             // $AppClick
             eventTypeList.add(SensorsDataAPI.AutoTrackEventType.APP_CLICK);
             SensorsDataAPI.sharedInstance().enableAutoTrack(eventTypeList);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

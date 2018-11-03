@@ -24,20 +24,20 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.AppChainRpcService;
-import org.nervos.neuron.service.EthRpcService;
-import org.nervos.neuron.service.HttpUrls;
-import org.nervos.neuron.service.NeuronSubscriber;
-import org.nervos.neuron.service.TokenService;
-import org.nervos.neuron.service.WalletService;
+import org.nervos.neuron.service.httpservice.AppChainRpcService;
+import org.nervos.neuron.service.httpservice.EthRpcService;
+import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.httpservice.NeuronSubscriber;
+import org.nervos.neuron.service.httpservice.TokenService;
+import org.nervos.neuron.service.httpservice.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.QRUtils.CodeUtils;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
-import org.nervos.neuron.util.SensorDataTrackUtils;
+import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -78,7 +78,7 @@ public class TransferActivity extends NBaseActivity {
 
     private WalletItem walletItem;
     private TokenItem tokenItem;
-    private BigInteger mGasPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mGas;
+    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstUtil.GAS_LIMIT, mQuota, mQuotaLimit, mGas;
     private double mTokenPrice = 0.0f, mTokenBalance, mNativeTokenBalance, mTransferFee;
     private CurrencyItem currencyItem;
     private TitleBar titleBar;
@@ -205,7 +205,7 @@ public class TransferActivity extends NBaseActivity {
             @Override
             public void onNext(BigInteger gasPrice) {
                 dismissProgressCircle();
-                mGasPrice = gasPrice;
+                mEthGasDefaultPrice = mGasPrice = gasPrice;
                 mGas = mGasPrice.multiply(mGasLimit);
                 initTransferFeeView();
             }
@@ -258,25 +258,26 @@ public class TransferActivity extends NBaseActivity {
      * handle transfer advanced setup
      */
     private void initAdvancedSetupDialog() {
-        String gasPriceDefault = NumberUtil.getDecimalValid_2(
-                Convert.fromWei(mGasPrice.toString(), GWEI).doubleValue());
+        String gasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+                Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
         TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
             @Override
             public void onOkClick(View v, String gasPrice) {
                 if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefault)) {
+                } else if(Double.parseDouble(gasPrice) < Double.parseDouble(gasPriceDefaultValue)) {
                     Toast.makeText(mActivity,
-                            String.format(getString(R.string.gas_price_too_low), gasPriceDefault),
+                            String.format(getString(R.string.gas_price_too_low), gasPriceDefaultValue),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    mGas = Convert.toWei(gasPrice, GWEI).toBigInteger().multiply(mGasLimit);
+                    mGasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger();
+                    mGas = mGasPrice.multiply(mGasLimit);
                     initTransferFeeView();
                 }
             }
         });
-        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price),
-                gasPriceDefault));
+
+        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price), gasPriceDefaultValue));
         dialog.setGasLimitDefault(mGasLimit.toString());
         dialog.show();
     }
@@ -294,9 +295,9 @@ public class TransferActivity extends NBaseActivity {
             }
             @Override
             public void onNext(String quotaPrice) {
-                mQuota = TextUtils.isEmpty(tokenItem.contractAddress) ?
+                mQuotaLimit = TextUtils.isEmpty(tokenItem.contractAddress) ?
                         ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
-                mQuota = mQuota.multiply(Numeric.toBigInt(quotaPrice));
+                mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
                 mTransferFee = NumberUtil.getEthFromWei(mQuota);
                 feeValueText.setText(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
             }
@@ -329,7 +330,7 @@ public class TransferActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.transfer_amount_not_null, Toast.LENGTH_SHORT).show();
             } else if (mNativeTokenBalance < mTransferFee) {
                 Toast.makeText(mActivity, String.format(getString(R.string.balance_not_enough_fee),
-                        tokenItem.symbol), Toast.LENGTH_SHORT).show();
+                        getFeeTokenUnit()), Toast.LENGTH_SHORT).show();
             } else if (checkTransferValueMoreBalance()) {
                 handleBigTransferValue();
             } else {
@@ -542,7 +543,7 @@ public class TransferActivity extends NBaseActivity {
                 NumberUtil.getDecimal8ENotation(Double.valueOf(transferValueEdit.getText().toString().trim())));
         try {
             AppChainRpcService.transferErc20(mActivity, tokenItem, tokenItem.contractAddress,
-                receiveAddressEdit.getText().toString().trim(), value, mQuota.longValue(), tokenItem.chainId, password)
+                receiveAddressEdit.getText().toString().trim(), value, mQuotaLimit.longValue(), tokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -562,14 +563,16 @@ public class TransferActivity extends NBaseActivity {
 
     private void transferAppChainNormal(AppSendTransaction appSendTransaction) {
         progressBar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
-            Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-            transferDialog.dismiss();
-            finish();
+        if (appSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         } else if (appSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
+        } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
+            Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            transferDialog.dismiss();
+            finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         }
@@ -629,14 +632,16 @@ public class TransferActivity extends NBaseActivity {
 
     private void transferEthereumNormal(EthSendTransaction ethSendTransaction) {
         progressBar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
-            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
-            transferDialog.dismiss();
-            finish();
+        if (ethSendTransaction == null) {
+            Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         } else if (ethSendTransaction.getError() != null &&
                 !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
+        } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
+            Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
+            transferDialog.dismiss();
+            finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         }
@@ -668,7 +673,7 @@ public class TransferActivity extends NBaseActivity {
                 if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                        case org.nervos.neuron.util.QRUtils.CodeUtils.STRING_ADDRESS:
+                        case org.nervos.neuron.util.qrcode.CodeUtils.STRING_ADDRESS:
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
                             receiveAddressEdit.setText(result);
                             break;

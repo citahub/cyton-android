@@ -12,6 +12,7 @@ android {
         versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        manifestPlaceholders = [InstallChannelValue: "cryptape"]
 
     }
 
@@ -43,15 +44,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "IS_DEBUG", "false"
+
         }
     }
 
-    applicationVariants.all {
-        variant ->
+    applicationVariants.all { variant ->
             variant.outputs.all { output ->
-                println "buildType: " + variant.buildType.name
                 if (variant.buildType.name == 'release') {
-                    def apkName = "neuron_v${getVersionName(false)}.apk"
+                    def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
                     outputFileName = new File(apkName)
                 } else {
                     def apkName = "neuron_v${getVersionName(true)}.apk"
@@ -60,8 +60,26 @@ android {
             }
     }
 
+
+    // 渠道配置
+
+    flavorDimensions "default"
     productFlavors {
+        yingyongbao {dimension "default"}
+        _360 {dimension "default"}
+        oppo {dimension "default"}
+        baidu {dimension "default"}
+        huawei {dimension "default"}
+        xiaomi {dimension "default"}
+        vivo {dimension "default"}
+        wandoujia {dimension "default"}
+        others  {dimension "default"}
     }
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [InstallChannelValue: name] // 动态地修改AndroidManifest中的渠道名
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -78,12 +96,12 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.56'
     implementation 'org.abstractj.kalium:kalium:0.7.0'
-    implementation 'com.google.protobuf:protobuf-java:3.4.0'
+    implementation 'com.google.protobuf:protobuf-java:3.5.1'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
     implementation 'com.esotericsoftware.kryo:kryo:2.24.0'

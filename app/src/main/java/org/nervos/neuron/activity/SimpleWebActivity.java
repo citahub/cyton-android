@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -22,6 +24,7 @@ import org.nervos.neuron.plugin.TokenPricePlugin;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.WebErrorView;
+import org.nervos.neuron.view.webview.SimpleWebViewClient;
 
 
 public class SimpleWebActivity extends BaseActivity {
@@ -77,7 +80,7 @@ public class SimpleWebActivity extends BaseActivity {
                 titleBar.setTitle(title);
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("weixin://") || url.startsWith("alipay")) {
@@ -96,18 +99,6 @@ public class SimpleWebActivity extends BaseActivity {
                     webView.loadUrl(url);
                 }
                 return false;
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webErrorView.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
             }
         });
     }

@@ -39,7 +39,7 @@ public class SplashActivity extends BaseActivity {
                     try {
                         sleep(1000);
                         if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                            if (SharePrefUtil.getBoolean(ConstUtil.FingerPrint, false)) {
+                            if (SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
                                 Intent intent = new Intent(mActivity, FingerPrintActivity.class);
                                 intent.putExtra(LOCK_TO_MAIN, true);
                                 startActivity(intent);

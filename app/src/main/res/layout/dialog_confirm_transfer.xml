@@ -15,14 +15,21 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            <ImageView
-                android:id="@+id/close_layout"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/default_margin"
-                android:background="@drawable/delete" />
+            <RelativeLayout
+                android:id="@+id/rl_close"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/close_layout"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:background="@drawable/delete" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,8 +50,8 @@
             android:id="@+id/transfer_value"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
             android:gravity="center"
             android:textColor="@color/font_title"
             android:textSize="35sp" />
@@ -53,11 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
-                android:id="@+id/to_address_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -81,13 +87,13 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView
@@ -112,14 +118,13 @@
 
         <View
             style="@style/separateLineLong"
-            android:layout_marginLeft="@dimen/default_margin" />
+            android:layout_marginStart="@dimen/default_margin" />
 
         <LinearLayout
-            android:id="@+id/confirm_fee_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
             android:paddingRight="@dimen/default_margin">
 
             <TextView

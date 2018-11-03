@@ -77,14 +77,6 @@ public class CreateWalletActivity extends NBaseActivity {
             startActivity(new Intent(this, AddWalletActivity.class));
             finish();
         });
-
-        if (SharePrefUtil.getFirstIn()) {
-            SharePrefUtil.putFirstIn(false);
-            new AlertDialog.Builder(mActivity)
-                    .setTitle(R.string.dialog_title_tip)
-                    .setMessage(R.string.dialog_tip_message)
-                    .setPositiveButton(R.string.have_known, (dialog, which) -> dialog.dismiss()).show();
-        }
     }
 
     @Override

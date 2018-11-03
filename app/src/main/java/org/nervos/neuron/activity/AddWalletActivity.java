@@ -48,7 +48,7 @@ public class AddWalletActivity extends NBaseActivity {
         initGuideList();
         initIndicate();
         viewPager.setAdapter(new PagerAadapter());
-        if (!SharePrefUtil.getBoolean(ConstUtil.Protocol, false))
+        if (!SharePrefUtil.getBoolean(ConstUtil.PROTOCOL, false))
             handler.postDelayed(() -> {
                 ProtocolDialog dialog = new ProtocolDialog(mActivity);
                 dialog.show();
@@ -127,12 +127,7 @@ public class AddWalletActivity extends NBaseActivity {
     }
 
     private void goBack() {
-        if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
-//            Intent intent = new Intent(mActivity, MainActivity.class);
-//            intent.putExtra(MainActivity.EXTRA_TAG, AppFragment.TAG);
-//            startActivity(intent);
-//            finish();
-        } else {
+        if (DBWalletUtil.getCurrentWallet(mActivity) != null) {
             finish();
         }
     }

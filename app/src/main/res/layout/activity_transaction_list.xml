@@ -14,11 +14,27 @@
         app:isShowBottomLine="true"
         app:isShowLeft="true" />
 
+    <TextView
+        android:id="@+id/tv_token_warning"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/title"
+        android:background="@color/warning_background"
+        android:drawableStart="@drawable/warning"
+        android:drawablePadding="5dp"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_margin"
+        android:text="@string/token_warning_message"
+        android:textColor="@color/warning_font"
+        android:textSize="12sp" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_token_des"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
+        android:layout_below="@id/tv_token_warning"
         android:visibility="gone">
 
         <ImageView
@@ -37,7 +53,7 @@
             android:id="@+id/tv_token_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="23dp"
             android:textColor="@color/font_title"
             android:textSize="18sp"
