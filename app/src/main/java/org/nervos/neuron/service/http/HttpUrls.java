@@ -1,4 +1,4 @@
-package org.nervos.neuron.service.httpservice;
+package org.nervos.neuron.service.http;
 
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;

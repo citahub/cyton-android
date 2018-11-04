@@ -1,4 +1,4 @@
-package org.nervos.neuron.service.httpservice;
+package org.nervos.neuron.service.http;
 
 
 import android.content.Context;

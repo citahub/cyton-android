@@ -1,4 +1,4 @@
-package org.nervos.neuron.service.httpservice;
+package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -21,7 +21,6 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.exception.TransactionErrorException;
 import org.web3j.abi.FunctionEncoder;

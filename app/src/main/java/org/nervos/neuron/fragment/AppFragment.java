@@ -2,18 +2,13 @@ package org.nervos.neuron.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -26,7 +21,7 @@ import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.event.AppCollectEvent;
 import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.plugin.AppTabPlugin;
-import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.webview.SimpleWebViewClient;
