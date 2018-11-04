@@ -27,13 +27,14 @@ public class SimpleWebViewClient extends WebViewClient {
                 case ERROR_HOST_LOOKUP:
                 case ERROR_PROXY_AUTHENTICATION:
                 case ERROR_TIMEOUT:
-                case ERROR_UNKNOWN:
                     mWebErrorView.setVisibility(View.VISIBLE);
                     view.setVisibility(View.GONE);
                     break;
+                default:
+                    break;
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
