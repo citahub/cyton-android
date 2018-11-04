@@ -224,7 +224,7 @@ public class SettingsFragment extends NBaseFragment {
 
             holder.mSbvEthNode.setNameText(ethNodeList.get(position).replace("_", " "));
             holder.mSbvEthNode.setOpenListener(() -> {
-                mIndex = position;
+                mIndex = holder.getAdapterPosition();
                 notifyDataSetChanged();
             });
         }

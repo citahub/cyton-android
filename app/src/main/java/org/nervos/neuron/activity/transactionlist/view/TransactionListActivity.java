@@ -16,7 +16,7 @@ import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
-import org.nervos.neuron.activity.TransferActivity;
+import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
@@ -46,7 +46,6 @@ public class TransactionListActivity extends NBaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private TitleBar titleBar;
-
     private AppCompatButton receiveButton, transferButton;
     private TokenItem tokenItem;
 

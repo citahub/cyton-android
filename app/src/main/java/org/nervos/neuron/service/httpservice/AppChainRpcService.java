@@ -143,7 +143,7 @@ public class AppChainRpcService {
 
 
     public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
-           String contractAddress, String address, double value, long quota, int chainId, String password){
+                       String address, double value, long quota, int chainId, String password){
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
         return Observable.fromCallable(new Callable<BigInteger>() {
@@ -155,7 +155,7 @@ public class AppChainRpcService {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
-                        NumberUtil.toLowerCaseWithout0x(contractAddress),
+                        NumberUtil.toLowerCaseWithout0x(tokenItem.contractAddress),
                         randomNonce(), quota, validUntilBlock.longValue(),
                         version, chainId, BigInteger.ZERO.toString(), data);
                 try {

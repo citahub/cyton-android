@@ -95,7 +95,6 @@ public class BaseActivity extends AppCompatActivity {
     private void gotoLogin() {
         if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
             Intent intent = new Intent(mActivity, FingerPrintActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
@@ -104,7 +103,9 @@ public class BaseActivity extends AppCompatActivity {
      * 显示Progress Bar
      */
     protected void showProgressBar() {
-        if (dialog == null) dialog = new ProgressingDialog(this);
+        if (dialog == null) {
+            dialog = new ProgressingDialog(this);
+        }
         dialog.show();
     }
 

@@ -141,15 +141,16 @@ public class TokenManageActivity extends BaseActivity {
                 viewHolder.tokenSelectImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        tokenList.get(position).isSelected = !tokenList.get(position).isSelected;
-                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
+                        int mPosition = holder.getAdapterPosition();
+                        tokenList.get(mPosition).isSelected = !tokenList.get(mPosition).isSelected;
+                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(mPosition).isSelected ?
                                 R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
-                        if (tokenList.get(position).isSelected) {
+                        if (tokenList.get(mPosition).isSelected) {
                             DBWalletUtil.addTokenToCurrentWallet(mActivity,
-                                    new TokenItem(tokenList.get(position)));
+                                    new TokenItem(tokenList.get(mPosition)));
                         } else {
                             DBWalletUtil.deleteTokenFromCurrentWallet(mActivity,
-                                    new TokenItem(tokenList.get(position)));
+                                    new TokenItem(tokenList.get(mPosition)));
                         }
                     }
                 });
