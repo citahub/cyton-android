@@ -46372,8 +46372,8 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
     // come from personal_sign of ethereum  
     case 'neuron_sign':
       // process normally
-      const first_neuron = payload.params[0]
-      const second_neuron = payload.params[1]
+      const first_neuron = payload.params[1]
+      const second_neuron = payload.params[2]
 
       // We initially incorrectly ordered these parameters.
       // To gracefully respect users who adopted this API early,
@@ -46389,16 +46389,16 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         warning += `Please switch this param order for smooth behavior in the future.`
         console.warn(warning)
 
-        address = payload.params[0]
-        message = payload.params[1]
-      } else {
-        message = payload.params[0]
         address = payload.params[1]
+        message = payload.params[2]
+      } else {
+        message = payload.params[1]
+        address = payload.params[2]
       }
 
       // non-standard "extraParams" to be appended to our "msgParams" obj
       // good place for metadata
-      extraParams = payload.params[2] || {}
+      extraParams = payload.params[0] || {}
       msgParams = extend(extraParams, {
         from: address,
         data: message,
