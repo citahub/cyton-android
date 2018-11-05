@@ -8,17 +8,20 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.nervos.neuron.view.WebErrorView;
+
 public class SimpleWebViewClient extends WebViewClient {
 
-    private View mWebErrorView;
+    private WebErrorView mWebErrorView;
 
-    public SimpleWebViewClient(View webErrorView) {
+    public SimpleWebViewClient(WebErrorView webErrorView) {
         mWebErrorView = webErrorView;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         try {
+            mWebErrorView.setReloadUrl(view.getUrl());
             switch (error.getErrorCode()) {
                 case ERROR_AUTHENTICATION:
                 case ERROR_BAD_URL:
@@ -32,6 +35,8 @@ public class SimpleWebViewClient extends WebViewClient {
                     view.setVisibility(View.GONE);
                     break;
             }
+            final String htmlText = "<html><head><title>Error</title></head><body></body></html>";
+            view.loadDataWithBaseURL("about:blank", htmlText, "text/html", "utf-8", null);
         } catch (Exception e) {
 
         }

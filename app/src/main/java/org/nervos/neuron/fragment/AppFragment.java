@@ -53,8 +53,8 @@ public class AppFragment extends Fragment {
         webView.loadUrl(HttpUrls.DISCOVER_URL);
         initWebSettings();
         initWebView();
-        webErrorView.setImpl(() -> {
-            webView.reload();
+        webErrorView.setImpl((reloadUrl) -> {
+            webView.loadUrl(reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });
@@ -62,7 +62,8 @@ public class AppFragment extends Fragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance()
+                .showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         WebAppUtil.initWebViewCache(getContext(), webView.getSettings());
     }
@@ -102,13 +103,15 @@ public class AppFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        EventBus.getDefault()
+                .register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault()
+                .unregister(this);
     }
 
     public boolean canGoBack() {
