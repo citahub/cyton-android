@@ -26,15 +26,15 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.BitmapUtils;
-import org.nervos.neuron.util.PickPic;
-import org.nervos.neuron.util.qrcode.BitmapDecoder;
-import org.nervos.neuron.util.qrcode.CaptureActivityHandler;
-import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.BitmapDecoder;
+import org.nervos.neuron.util.qrcode.CaptureActivityHandler;
+import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.view.TitleBar;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -151,7 +151,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data.getData() != null) {
-            String path = PickPic.getPath(getActivity().getApplicationContext(), data.getData());
+            String path = PickPicUtils.getPath(getActivity().getApplicationContext(), data.getData());
             if (!TextUtils.isEmpty(path)) {
                 Bitmap img = BitmapUtils.getCompressedBitmap(path);
                 BitmapDecoder decoder = new BitmapDecoder(getActivity());

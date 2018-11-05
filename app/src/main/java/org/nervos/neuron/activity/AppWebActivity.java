@@ -2,6 +2,8 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -22,6 +24,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.NeuronDApp.TakePhotoItem;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -30,6 +33,7 @@ import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
+import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -44,6 +48,11 @@ import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import rx.Observable;
 import rx.Subscriber;
 
@@ -56,6 +65,7 @@ public class AppWebActivity extends NBaseActivity {
     public static final int RESULT_CODE_SUCCESS = 0x02;
     public static final int RESULT_CODE_FAIL = 0x01;
     public static final int RESULT_CODE_CANCEL = 0x00;
+    public static final int RESULT_CODE_TAKE_PHOTO = 0x03;
 
     private NeuronWebView webView;
     private TextView titleText;
@@ -70,6 +80,9 @@ public class AppWebActivity extends NBaseActivity {
     private Transaction signTransaction;
     private String url;
     private boolean isPersonalSign = false;
+    private NeuronDAppPlugin mNeuronDAppPlugin = null;
+    private String mQuality, mCallback;
+    private Uri mImageUri;
 
     @Override
     protected int getContentLayout() {
@@ -92,10 +105,12 @@ public class AppWebActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion
-                    , Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                    .show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
+        mNeuronDAppPlugin = new NeuronDAppPlugin(this, webView);
+        mNeuronDAppPlugin.setImpl(mNeuronDAppPluginImpl);
         WebAppUtil.init();
         webView.loadUrl(url);
         initManifest(url);
@@ -124,8 +139,8 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false,
-                true);
+        SensorsDataAPI.sharedInstance()
+                .showUpWebView(webView, false, true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -172,8 +187,7 @@ public class AppWebActivity extends NBaseActivity {
     private void initMenuView() {
         WebMenuPopupWindow popupWindow = new WebMenuPopupWindow(this);
         popupWindow.showAsDropDown(rightMenuView, 0, 10);
-        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView)
-                ? getString(R.string.cancel_collect) : getString(R.string.collect));
+        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
         popupWindow.setListener(new WebMenuPopupWindow.WebMenuListener() {
             @Override
             public void reload(PopupWindow pop) {
@@ -188,8 +202,7 @@ public class AppWebActivity extends NBaseActivity {
                 } else {
                     WebAppUtil.collectApp(webView);
                 }
-                pop.setCollectText(WebAppUtil.isCollectApp(webView) ?
-                        getString(R.string.cancel_collect) : getString(R.string.collect));
+                pop.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
                 pop.dismiss();
             }
         });
@@ -234,8 +247,8 @@ public class AppWebActivity extends NBaseActivity {
                                 DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                             }
                         } else {
-                            Toast.makeText(webView.getContext(), chainItem.errorMessage
-                                    , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT)
+                                    .show();
                         }
                     }
                 });
@@ -245,13 +258,13 @@ public class AppWebActivity extends NBaseActivity {
         handler.post(() -> {
             this.signTransaction = transaction;
             if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                        .show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ?
-                        new AppItem(url) : WebAppUtil.getAppItem());
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
                 intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -262,7 +275,7 @@ public class AppWebActivity extends NBaseActivity {
         webView.setChainId(1);
         webView.setRpcUrl(HttpUrls.getEthNodeUrl());
         webView.setWalletAddress(new Address(walletItem.address));
-        webView.addJavascriptInterface(new NeuronDAppPlugin(mActivity), "neuron");
+        webView.addJavascriptInterface(mNeuronDAppPlugin, "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
@@ -321,7 +334,8 @@ public class AppWebActivity extends NBaseActivity {
 
     private void showSignMessageDialog(Message<Transaction> message) {
         if (walletItem == null) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                    .show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         } else {
             mSignDialog = new SignDialog(mActivity, message, mSignListener);
@@ -340,13 +354,14 @@ public class AppWebActivity extends NBaseActivity {
         }
     };
 
-    private void showPasswordConfirmView(String password, ProgressBar progressBar
-            , Message<Transaction> message) {
+    private void showPasswordConfirmView(String password, ProgressBar progressBar, Message<Transaction> message) {
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT)
+                    .show();
             return;
         } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
-            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT)
+                    .show();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
@@ -360,8 +375,7 @@ public class AppWebActivity extends NBaseActivity {
     private void actionSignEth(String password, Message<Transaction> message) {
         Observable<String> observable;
         if (isPersonalSign) {
-            observable = SignService.signPersonalMessage(mActivity,
-                    NumberUtil.hexToUtf8(message.value.data), password);
+            observable = SignService.signPersonalMessage(mActivity, NumberUtil.hexToUtf8(message.value.data), password);
         } else {
             observable = SignService.signEthMessage(mActivity, message.value.data, password);
         }
@@ -405,18 +419,55 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            switch (resultCode) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case RESULT_CODE_CANCEL:
                     webView.onSignCancel(signTransaction);
                     break;
                 case RESULT_CODE_SUCCESS:
-                    webView.onSignTransactionSuccessful(signTransaction,
-                            data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
+                    webView.onSignTransactionSuccessful(signTransaction, data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
                     break;
                 case RESULT_CODE_FAIL:
-                    webView.onSignError(signTransaction,
-                            data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
+                    webView.onSignError(signTransaction, data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
+                    break;
+                case RESULT_CODE_TAKE_PHOTO:
+                    TakePhotoItem takePhotoItem;
+                    try {
+                        File file = new File(NeuronDAppPlugin.TAKE_PHOTO_TEMP_PATH);
+                        FileOutputStream stream = new FileOutputStream(file);
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(mImageUri));
+                        if (mQuality.equals(NeuronDAppPlugin.TAKE_PHOTO_QUALITY_HIGH)) {
+                            InputStream fosFrom = getContentResolver().openInputStream(mImageUri);
+                            OutputStream fosTo = new FileOutputStream(file);
+                            byte bt[] = new byte[1024];
+                            int c;
+                            while ((c = fosFrom.read(bt)) > 0) {
+                                fosTo.write(bt, 0, c);
+                            }
+                            fosFrom.close();
+                            fosTo.close();
+                        } else if (mQuality.equals(NeuronDAppPlugin.TAKE_PHOTO_QUALITY_LOW)) {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                        } else {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+                        }
+                        stream.close();
+                        takePhotoItem = new TakePhotoItem("1", "", "", NeuronDAppPlugin.TAKE_PHOTO_TEMP_PATH);
+                        JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
+                    } catch (Exception e) {
+                        takePhotoItem = new TakePhotoItem("0", "1", "Call Method Error", "");
+                        JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (resultCode) {
+                case RESULT_CODE_TAKE_PHOTO:
+                    TakePhotoItem takePhotoItem = new TakePhotoItem("0", "1", "Call Method Error", "");
+                    JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
                     break;
                 default:
                     break;
@@ -437,5 +488,14 @@ public class AppWebActivity extends NBaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    private NeuronDAppPlugin.NeuronDAppPluginImpl mNeuronDAppPluginImpl = new NeuronDAppPlugin.NeuronDAppPluginImpl() {
+        @Override
+        public void takePhoto(Uri imageUri, String quality, String callback) {
+            mQuality = quality;
+            mImageUri = imageUri;
+            mCallback = callback;
+        }
+    };
 
 }
