@@ -19,6 +19,7 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: 'checkstyle'
     repositories {
         google()
         jcenter()
@@ -27,6 +28,18 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/zouyuhan/maven'
         }
+    }
+
+    checkstyle {
+        toolVersion = "7.7"
+        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+    }
+
+    task checkStyle(type: Checkstyle) {
+        configFile file("config/checkstyle.xml")
+        source fileTree('src')
+        include '**/*.java'
+        exclude '**/gen/**'
     }
 }
 

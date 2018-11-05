@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.httpservice.WalletService;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.view.dialog.SimpleDialog;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.item.WalletItem;

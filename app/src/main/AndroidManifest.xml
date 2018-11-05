@@ -70,7 +70,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.TransferActivity"
+            android:name=".activity.transfer.TransferActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -190,7 +190,7 @@
         </provider>
 
         <service android:name=".application.ApplicationService" />
-        <service android:name=".service.intentservice.TransactionListService"
+        <service android:name=".service.intent.TransactionListService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 

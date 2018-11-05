@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.httpservice.WalletService;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.Blockies;

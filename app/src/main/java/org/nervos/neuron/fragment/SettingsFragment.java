@@ -17,8 +17,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
-import org.nervos.neuron.service.httpservice.EthRpcService;
-import org.nervos.neuron.service.httpservice.HttpUrls;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.util.ConstUtil;
@@ -224,7 +224,7 @@ public class SettingsFragment extends NBaseFragment {
 
             holder.mSbvEthNode.setNameText(ethNodeList.get(position).replace("_", " "));
             holder.mSbvEthNode.setOpenListener(() -> {
-                mIndex = position;
+                mIndex = holder.getAdapterPosition();
                 notifyDataSetChanged();
             });
         }

@@ -50,6 +50,9 @@ android {
 
     applicationVariants.all { variant ->
             variant.outputs.all { output ->
+                def lintTask = tasks["lint${variant.name.capitalize()}"]
+                output.assemble.dependsOn lintTask
+
                 if (variant.buildType.name == 'release') {
                     def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
                     outputFileName = new File(apkName)
@@ -58,6 +61,28 @@ android {
                     outputFileName = new File(apkName)
                 }
             }
+    }
+
+    android {
+        lintOptions {
+            abortOnError false
+            lintConfig file('lint.xml')
+            // Turns off checks for the issue IDs you specify.
+            disable 'TypographyFractions','TypographyQuotes'
+            // Turns on checks for the issue IDs you specify. These checks are in
+            // addition to the default lint checks.
+            enable 'RtlHardcoded','RtlCompat', 'RtlEnabled'
+            // To enable checks for only a subset of issue IDs and ignore all others,
+            // list the issue IDs with the 'check' property instead. This property overrides
+            // any issue IDs you enable or disable using the properties above.
+            check 'NewApi', 'InlinedApi'
+            // If set to true, turns off analysis progress reporting by lint.
+            quiet true
+            // if set to true (default), stops the build if errors are found.
+            abortOnError false
+            // if true, only report errors.
+            ignoreWarnings true
+        }
     }
 
 

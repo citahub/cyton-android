@@ -4,16 +4,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -30,10 +26,10 @@ import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.service.httpservice.HttpUrls;
-import org.nervos.neuron.service.httpservice.NeuronSubscriber;
-import org.nervos.neuron.service.httpservice.SignService;
-import org.nervos.neuron.service.httpservice.WalletService;
+import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.service.http.NeuronSubscriber;
+import org.nervos.neuron.service.http.SignService;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -52,7 +48,6 @@ import rx.Observable;
 import rx.Subscriber;
 
 public class AppWebActivity extends NBaseActivity {
-
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
     public static final String EXTRA_URL = "extra_url";
@@ -110,8 +105,7 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         leftView.setOnClickListener(v -> {
-            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK
-                    , titleItem.left.type)) {
+            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
@@ -130,8 +124,8 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false
-                , true);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false,
+                true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -167,6 +161,7 @@ public class AppWebActivity extends NBaseActivity {
                             return true;
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 return false;
@@ -174,12 +169,11 @@ public class AppWebActivity extends NBaseActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initMenuView() {
         WebMenuPopupWindow popupWindow = new WebMenuPopupWindow(this);
         popupWindow.showAsDropDown(rightMenuView, 0, 10);
-        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ?
-                getString(R.string.cancel_collect) : getString(R.string.collect));
+        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView)
+                ? getString(R.string.cancel_collect) : getString(R.string.collect));
         popupWindow.setListener(new WebMenuPopupWindow.WebMenuListener() {
             @Override
             public void reload(PopupWindow pop) {
@@ -200,11 +194,13 @@ public class AppWebActivity extends NBaseActivity {
             }
         });
         findViewById(R.id.menu_background).setVisibility(View.VISIBLE);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.grey_background));
-        popupWindow.setOnDismissListener(() -> {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-            findViewById(R.id.menu_background).setVisibility(View.GONE);
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.grey_background));
+            popupWindow.setOnDismissListener(() -> {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+                findViewById(R.id.menu_background).setVisibility(View.GONE);
+            });
+        }
     }
 
     private void initViewWhenWebFinish() {

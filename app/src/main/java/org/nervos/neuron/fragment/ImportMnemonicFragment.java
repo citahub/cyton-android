@@ -286,7 +286,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 if (currentIndex == position) ((CommonViewHolder) holder).mSelectIv.setVisibility(View.VISIBLE);
                 else ((CommonViewHolder) holder).mSelectIv.setVisibility(View.GONE);
                 ((CommonViewHolder) holder).mRoot.setOnClickListener(view -> {
-                    currentIndex = position;
+                    currentIndex = holder.getAdapterPosition();
                     getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     notifyDataSetChanged();
                 });
@@ -325,7 +325,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 }
                 mDiyPath = "";
                 ((DiyViewHolder) holder).mRoot.setOnClickListener(view -> {
-                    currentIndex = position;
+                    currentIndex = holder.getAdapterPosition();
                     notifyDataSetChanged();
                 });
             }

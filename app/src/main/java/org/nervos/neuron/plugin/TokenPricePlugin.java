@@ -5,8 +5,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.service.httpservice.NeuronSubscriber;
-import org.nervos.neuron.service.httpservice.TokenService;
+import org.nervos.neuron.service.http.NeuronSubscriber;
+import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 
