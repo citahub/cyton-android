@@ -13,7 +13,6 @@ import org.nervos.neuron.view.WebErrorView;
 public class SimpleWebViewClient extends WebViewClient {
 
     private WebErrorView mWebErrorView;
-    private String mReloadUrl;
 
     public SimpleWebViewClient(WebErrorView webErrorView) {
         mWebErrorView = webErrorView;
