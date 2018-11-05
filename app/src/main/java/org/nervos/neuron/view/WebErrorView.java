@@ -16,19 +16,24 @@ import org.nervos.neuron.util.ScreenUtils;
 public class WebErrorView extends ConstraintLayout {
 
     private WebErrorViewImpl impl;
+    private String mReloadUrl;
 
     public WebErrorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.view_web_error, this);
+        LayoutInflater.from(context)
+                .inflate(R.layout.view_web_error, this);
         ImageView iv = findViewById(R.id.iv);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                (int) (ScreenUtils.getScreenWidth(context) * 0.73),
-                (int) (ScreenUtils.getScreenWidth(context) * 0.73 / 1.4723));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (ScreenUtils.getScreenWidth(context) * 0.73), (int) (
+                ScreenUtils.getScreenWidth(context) * 0.73 / 1.4723));
         params.topMargin = (int) (ScreenUtils.getScreenHeight(context) * 0.24);
         iv.setLayoutParams(params);
         findViewById(R.id.btn).setOnClickListener((view) -> {
-            impl.click();
+            impl.click(mReloadUrl);
         });
+    }
+
+    public void setReloadUrl(String reloadUrl) {
+        mReloadUrl = reloadUrl;
     }
 
     public void setImpl(WebErrorViewImpl impl) {
@@ -36,6 +41,6 @@ public class WebErrorView extends ConstraintLayout {
     }
 
     public interface WebErrorViewImpl {
-        void click();
+        void click(String reload);
     }
 }

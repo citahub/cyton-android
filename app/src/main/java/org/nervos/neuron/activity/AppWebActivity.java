@@ -97,8 +97,8 @@ public class AppWebActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion
-                    , Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                    .show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
         WebAppUtil.init();
@@ -110,8 +110,7 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         leftView.setOnClickListener(v -> {
-            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK
-                    , titleItem.left.type)) {
+            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
@@ -122,16 +121,16 @@ public class AppWebActivity extends NBaseActivity {
             }
         });
         rightMenuView.setOnClickListener(v -> initMenuView());
-        webErrorView.setImpl(() -> {
-            webView.reload();
+        webErrorView.setImpl((reloadUrl) -> {
+            webView.loadUrl(reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false
-                , true);
+        SensorsDataAPI.sharedInstance()
+                .showUpWebView(webView, false, true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -178,8 +177,7 @@ public class AppWebActivity extends NBaseActivity {
     private void initMenuView() {
         WebMenuPopupWindow popupWindow = new WebMenuPopupWindow(this);
         popupWindow.showAsDropDown(rightMenuView, 0, 10);
-        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ?
-                getString(R.string.cancel_collect) : getString(R.string.collect));
+        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
         popupWindow.setListener(new WebMenuPopupWindow.WebMenuListener() {
             @Override
             public void reload(PopupWindow pop) {
@@ -194,8 +192,7 @@ public class AppWebActivity extends NBaseActivity {
                 } else {
                     WebAppUtil.collectApp(webView);
                 }
-                pop.setCollectText(WebAppUtil.isCollectApp(webView) ?
-                        getString(R.string.cancel_collect) : getString(R.string.collect));
+                pop.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
                 pop.dismiss();
             }
         });
@@ -238,8 +235,8 @@ public class AppWebActivity extends NBaseActivity {
                                 DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                             }
                         } else {
-                            Toast.makeText(webView.getContext(), chainItem.errorMessage
-                                    , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT)
+                                    .show();
                         }
                     }
                 });
@@ -249,13 +246,13 @@ public class AppWebActivity extends NBaseActivity {
         handler.post(() -> {
             this.signTransaction = transaction;
             if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                        .show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
                 intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ?
-                        new AppItem(url) : WebAppUtil.getAppItem());
+                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
                 intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -325,7 +322,8 @@ public class AppWebActivity extends NBaseActivity {
 
     private void showSignMessageDialog(Message<Transaction> message) {
         if (walletItem == null) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
+                    .show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         } else {
             mSignDialog = new SignDialog(mActivity, message, mSignListener);
@@ -344,13 +342,14 @@ public class AppWebActivity extends NBaseActivity {
         }
     };
 
-    private void showPasswordConfirmView(String password, ProgressBar progressBar
-            , Message<Transaction> message) {
+    private void showPasswordConfirmView(String password, ProgressBar progressBar, Message<Transaction> message) {
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT)
+                    .show();
             return;
         } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
-            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT)
+                    .show();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
@@ -364,8 +363,7 @@ public class AppWebActivity extends NBaseActivity {
     private void actionSignEth(String password, Message<Transaction> message) {
         Observable<String> observable;
         if (isPersonalSign) {
-            observable = SignService.signPersonalMessage(mActivity,
-                    NumberUtil.hexToUtf8(message.value.data), password);
+            observable = SignService.signPersonalMessage(mActivity, NumberUtil.hexToUtf8(message.value.data), password);
         } else {
             observable = SignService.signEthMessage(mActivity, message.value.data, password);
         }
@@ -415,12 +413,10 @@ public class AppWebActivity extends NBaseActivity {
                     webView.onSignCancel(signTransaction);
                     break;
                 case RESULT_CODE_SUCCESS:
-                    webView.onSignTransactionSuccessful(signTransaction,
-                            data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
+                    webView.onSignTransactionSuccessful(signTransaction, data.getStringExtra(PayTokenActivity.EXTRA_HEX_HASH));
                     break;
                 case RESULT_CODE_FAIL:
-                    webView.onSignError(signTransaction,
-                            data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
+                    webView.onSignError(signTransaction, data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
                     break;
                 default:
                     break;
