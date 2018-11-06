@@ -1,15 +1,22 @@
 package org.nervos.neuron.activity;
 
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -20,7 +27,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
@@ -33,11 +44,16 @@ import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
+import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.permission.PermissionUtil;
+import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.WebMenuPopupWindow;
@@ -66,6 +82,8 @@ public class AppWebActivity extends NBaseActivity {
     public static final int RESULT_CODE_FAIL = 0x01;
     public static final int RESULT_CODE_CANCEL = 0x00;
     public static final int RESULT_CODE_TAKE_PHOTO = 0x03;
+    public static final int RESULT_CODE_INPUT_FILE_CHOOSE = 0x04;
+    public static ValueCallback<Uri[]> mFilePathCallbacks;
 
     private NeuronWebView webView;
     private TextView titleText;
@@ -82,7 +100,7 @@ public class AppWebActivity extends NBaseActivity {
     private boolean isPersonalSign = false;
     private NeuronDAppPlugin mNeuronDAppPlugin = null;
     private String mQuality, mCallback;
-    private Uri mImageUri;
+    private String mPhotoPath;
 
     @Override
     protected int getContentLayout() {
@@ -159,6 +177,14 @@ public class AppWebActivity extends NBaseActivity {
                 super.onReceivedTitle(view, title);
                 titleText.setText(title);
                 initViewWhenWebFinish();
+            }
+
+            // For Lollipop 5.0+ Devices
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+                mFilePathCallbacks = filePathCallback;
+                chooseImage();
+                return true;
             }
         });
         webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
@@ -399,6 +425,63 @@ public class AppWebActivity extends NBaseActivity {
         });
     }
 
+    private void chooseImage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("图片来源");
+        builder.setNegativeButton("取消", (dialog, which) -> {
+            if (mFilePathCallbacks != null) {
+                mFilePathCallbacks.onReceiveValue(null);
+            }
+            mFilePathCallbacks = null;
+        });
+        builder.setCancelable(false);
+        builder.setItems(new String[]{"拍照", "相册"}, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    String[] permissionList = new String[]{Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA};
+                    AndPermission.with(this)
+                            .runtime()
+                            .permission(permissionList)
+                            .rationale(new RuntimeRationale())
+                            .onGranted(permissions -> {
+                                mPhotoPath = ConstUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg";
+                                File file = new File(mPhotoPath);
+                                Uri imageUri;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    imageUri = FileProvider.getUriForFile(this, "org.nervos.neuron.fileprovider", file);
+                                } else {
+                                    imageUri = Uri.fromFile(file);
+                                }
+                                Intent intent = new Intent();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                }
+                                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                startActivityForResult(intent, AppWebActivity.RESULT_CODE_TAKE_PHOTO);
+                            })
+                            .onDenied(permissions -> {
+                                if (mFilePathCallbacks != null) {
+                                    mFilePathCallbacks.onReceiveValue(null);
+                                }
+                                mFilePathCallbacks = null;
+                            })
+                            .start();
+                    break;
+                case 1:
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "File Chooser"), RESULT_CODE_INPUT_FILE_CHOOSE);
+                    break;
+                default:
+                    break;
+            }
+        });
+        builder.create()
+                .show();
+    }
+
     private void actionSignAppChain(String password, Message<Transaction> message) {
         SignService.signAppChainMessage(mActivity, message.value.data, password)
                 .subscribe(new NeuronSubscriber<String>() {
@@ -431,34 +514,24 @@ public class AppWebActivity extends NBaseActivity {
                     webView.onSignError(signTransaction, data.getStringExtra(PayTokenActivity.EXTRA_PAY_ERROR));
                     break;
                 case RESULT_CODE_TAKE_PHOTO:
-                    TakePhotoItem takePhotoItem;
-                    try {
-                        File file = new File(NeuronDAppPlugin.TAKE_PHOTO_TEMP_PATH);
-                        FileOutputStream stream = new FileOutputStream(file);
-                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(mImageUri));
-                        if (mQuality.equals(NeuronDAppPlugin.TAKE_PHOTO_QUALITY_HIGH)) {
-                            InputStream fosFrom = getContentResolver().openInputStream(mImageUri);
-                            OutputStream fosTo = new FileOutputStream(file);
-                            byte bt[] = new byte[1024];
-                            int c;
-                            while ((c = fosFrom.read(bt)) > 0) {
-                                fosTo.write(bt, 0, c);
-                            }
-                            fosFrom.close();
-                            fosTo.close();
-                        } else if (mQuality.equals(NeuronDAppPlugin.TAKE_PHOTO_QUALITY_LOW)) {
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                        } else {
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+                    if (mFilePathCallbacks != null) {
+                        if (mPhotoPath != null) {
+                            Uri picUri = Uri.fromFile(new File(mPhotoPath));
+                            mFilePathCallbacks.onReceiveValue(new Uri[]{picUri});
                         }
-                        stream.close();
-                        takePhotoItem = new TakePhotoItem("1", "", "", NeuronDAppPlugin.TAKE_PHOTO_TEMP_PATH);
-                        JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
-                    } catch (Exception e) {
-                        takePhotoItem = new TakePhotoItem("0", "1", "Call Method Error", "");
-                        JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
-                        e.printStackTrace();
                     }
+                    mFilePathCallbacks = null;
+                    break;
+                case RESULT_CODE_INPUT_FILE_CHOOSE:
+                    if (mFilePathCallbacks != null) {
+                        Uri result = data == null ? null : data.getData();
+                        if (result != null) {
+                            String path = PickPicUtils.getPath(getApplicationContext(), result);
+                            Uri picUri = Uri.fromFile(new File(path));
+                            mFilePathCallbacks.onReceiveValue(new Uri[]{picUri});
+                        }
+                    }
+                    mFilePathCallbacks = null;
                     break;
                 default:
                     break;
@@ -466,8 +539,11 @@ public class AppWebActivity extends NBaseActivity {
         } else {
             switch (resultCode) {
                 case RESULT_CODE_TAKE_PHOTO:
-                    TakePhotoItem takePhotoItem = new TakePhotoItem("0", "1", "Call Method Error", "");
-                    JSLoadUtils.loadFunc(webView, mCallback, new Gson().toJson(takePhotoItem));
+                case RESULT_CODE_INPUT_FILE_CHOOSE:
+                    if (mFilePathCallbacks != null) {
+                        mFilePathCallbacks.onReceiveValue(null);
+                    }
+                    mFilePathCallbacks = null;
                     break;
                 default:
                     break;
@@ -493,7 +569,6 @@ public class AppWebActivity extends NBaseActivity {
         @Override
         public void takePhoto(Uri imageUri, String quality, String callback) {
             mQuality = quality;
-            mImageUri = imageUri;
             mCallback = callback;
         }
     };
