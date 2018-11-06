@@ -75,8 +75,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         surfaceHolder = surfaceView.getHolder();
         titleBar = (TitleBar) findViewById(R.id.title);
-        if (!isShowRight)
-            titleBar.hideRight();
+        if (!isShowRight) titleBar.hideRight();
+        titleBar.setOnLeftClickListener(() -> analyzeCallback.onAnalyzeFailed());
     }
 
     @Override
@@ -96,7 +96,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         super.initAction();
         titleBar.setOnRightClickListener(() -> {
             AndPermission.with(getActivity())
-                    .runtime().permission(Permission.Group.STORAGE)
+                    .runtime()
+                    .permission(Permission.Group.STORAGE)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
                         Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -139,7 +140,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
             handler.quitSynchronously();
             handler = null;
         }
-        CameraManager.get().closeDriver();
+        CameraManager.get()
+                .closeDriver();
     }
 
     @Override
@@ -157,13 +159,16 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
                 BitmapDecoder decoder = new BitmapDecoder(getActivity());
                 Result result = decoder.getRawResult(img);
                 if (result != null) {
-                    String qr = ResultParser.parseResult(result).toString();
+                    String qr = ResultParser.parseResult(result)
+                            .toString();
                     analyzeCallback.onAnalyzeSuccess(img, qr);
                 } else {
-                    Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG)
+                            .show();
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG)
+                        .show();
             }
         }
     }
@@ -191,8 +196,10 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
-            CameraManager.get().openDriver(surfaceHolder);
-            camera = CameraManager.get().getCamera();
+            CameraManager.get()
+                    .openDriver(surfaceHolder);
+            camera = CameraManager.get()
+                    .getCamera();
         } catch (Exception e) {
             if (callBack != null) {
                 callBack.callBack(e);
@@ -208,8 +215,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
     }
 
@@ -226,14 +232,21 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
         if (camera != null) {
-            if (camera != null && CameraManager.get().isPreviewing()) {
-                if (!CameraManager.get().isUseOneShotPreviewCallback()) {
+            if (camera != null && CameraManager.get()
+                    .isPreviewing()) {
+                if (!CameraManager.get()
+                        .isUseOneShotPreviewCallback()) {
                     camera.setPreviewCallback(null);
                 }
                 camera.stopPreview();
-                CameraManager.get().getPreviewCallback().setHandler(null, 0);
-                CameraManager.get().getAutoFocusCallback().setHandler(null, 0);
-                CameraManager.get().setPreviewing(false);
+                CameraManager.get()
+                        .getPreviewCallback()
+                        .setHandler(null, 0);
+                CameraManager.get()
+                        .getAutoFocusCallback()
+                        .setHandler(null, 0);
+                CameraManager.get()
+                        .setPreviewing(false);
             }
         }
     }
@@ -257,11 +270,9 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnCompletionListener(beepListener);
 
-            AssetFileDescriptor file = getResources().openRawResourceFd(
-                    R.raw.beep);
+            AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
             try {
-                mediaPlayer.setDataSource(file.getFileDescriptor(),
-                        file.getStartOffset(), file.getLength());
+                mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
                 file.close();
                 mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
                 mediaPlayer.prepare();

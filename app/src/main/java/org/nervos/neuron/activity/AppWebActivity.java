@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -30,11 +31,14 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem;
+import org.nervos.neuron.item.NeuronDApp.QrCodeItem;
 import org.nervos.neuron.item.NeuronDApp.TakePhotoItem;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
@@ -54,6 +58,7 @@ import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.WebMenuPopupWindow;
@@ -83,6 +88,7 @@ public class AppWebActivity extends NBaseActivity {
     public static final int RESULT_CODE_CANCEL = 0x00;
     public static final int RESULT_CODE_TAKE_PHOTO = 0x03;
     public static final int RESULT_CODE_INPUT_FILE_CHOOSE = 0x04;
+    public static final int RESULT_CODE_SCAN_QRCODE = 0x05;
     public static ValueCallback<Uri[]> mFilePathCallbacks;
 
     private NeuronWebView webView;
@@ -461,6 +467,7 @@ public class AppWebActivity extends NBaseActivity {
                                 startActivityForResult(intent, AppWebActivity.RESULT_CODE_TAKE_PHOTO);
                             })
                             .onDenied(permissions -> {
+                                PermissionUtil.showSettingDialog(this, permissions);
                                 if (mFilePathCallbacks != null) {
                                     mFilePathCallbacks.onReceiveValue(null);
                                 }
@@ -533,6 +540,25 @@ public class AppWebActivity extends NBaseActivity {
                     }
                     mFilePathCallbacks = null;
                     break;
+                case RESULT_CODE_SCAN_QRCODE:
+                    if (null != data) {
+                        boolean fail = true;
+                        Bundle bundle = data.getExtras();
+                        if (null != bundle && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                            if (!TextUtils.isEmpty(mCallback)) {
+                                fail = false;
+                                QrCodeItem qrCodeItem = new QrCodeItem(bundle.getString(CodeUtils.RESULT_STRING));
+                                JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(qrCodeItem));
+                            }
+                        }
+                        if (fail) {
+                            if (!TextUtils.isEmpty(mCallback)) {
+                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem("0", "1", "User Cancel");
+                                JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
+                            }
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -544,6 +570,12 @@ public class AppWebActivity extends NBaseActivity {
                         mFilePathCallbacks.onReceiveValue(null);
                     }
                     mFilePathCallbacks = null;
+                    break;
+                case RESULT_CODE_SCAN_QRCODE:
+                    if (!TextUtils.isEmpty(mCallback)) {
+                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem("0", "1", "Unknow Error");
+                        JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
+                    }
                     break;
                 default:
                     break;
@@ -566,6 +598,11 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private NeuronDAppPlugin.NeuronDAppPluginImpl mNeuronDAppPluginImpl = new NeuronDAppPlugin.NeuronDAppPluginImpl() {
+        @Override
+        public void scanCode(@NotNull String callback) {
+            mCallback = callback;
+        }
+
         @Override
         public void takePhoto(Uri imageUri, String quality, String callback) {
             mQuality = quality;

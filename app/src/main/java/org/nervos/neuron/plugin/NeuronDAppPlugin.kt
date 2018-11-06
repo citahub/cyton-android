@@ -16,7 +16,10 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 
 import org.nervos.neuron.activity.AppWebActivity
+import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
+import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.item.NeuronDApp.FileToBase64Item
+import org.nervos.neuron.item.NeuronDApp.QrCodeItem
 import org.nervos.neuron.item.NeuronDApp.TakePhotoItem
 import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.util.ConstUtil
@@ -41,6 +44,10 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
 
     private var mImpl: NeuronDAppPluginImpl? = null
 
+    fun setImpl(impl: NeuronDAppPluginImpl) {
+        mImpl = impl
+    }
+
     val account: String
         @JavascriptInterface
         get() {
@@ -59,8 +66,23 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
             return Gson().toJson(walletNames)
         }
 
-    fun setImpl(impl: NeuronDAppPluginImpl) {
-        mImpl = impl
+    @JavascriptInterface
+    fun scanCode(callback: String) {
+        AndPermission.with(mContext)
+                .runtime().permission(*Permission.Group.CAMERA)
+                .rationale(RuntimeRationale())
+                .onGranted {
+                    val intent = Intent(mContext, QrCodeActivity::class.java)
+                    mContext.startActivityForResult(intent, RESULT_CODE_SCAN_QRCODE)
+                    if (mImpl != null)
+                        mImpl!!.scanCode(callback)
+                }
+                .onDenied { permissions ->
+                    PermissionUtil.showSettingDialog(mContext, permissions)
+                    var qrCodeItem = QrCodeItem("0", "0", "Permission Denied", "")
+                    JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(qrCodeItem))
+                }
+                .start()
     }
 
     @JavascriptInterface
@@ -75,9 +97,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
         } else {
             item = FileToBase64Item("0", "3", "Find No File", "")
         }
-        val finalBase6 = base64
-        LogUtil.e(finalBase6)
-        mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, finalBase6!!) }
+        mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(item)) }
     }
 
     @JavascriptInterface
@@ -88,7 +108,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
                     .runtime()
                     .permission(*permissionList)
                     .rationale(RuntimeRationale())
-                    .onGranted { permissions ->
+                    .onGranted {
                         val imageUri: Uri
                         val file = File(ConstUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg")
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -116,5 +136,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
 
     interface NeuronDAppPluginImpl {
         fun takePhoto(imageUri: Uri, quality: String, callback: String)
+
+        fun scanCode(callback: String)
     }
 }
