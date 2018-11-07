@@ -422,15 +422,15 @@ public class AppWebActivity extends NBaseActivity {
 
     private void chooseImage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("图片来源");
-        builder.setNegativeButton("取消", (dialog, which) -> {
+        builder.setTitle(R.string.pic_source);
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
             if (mFilePathCallbacks != null) {
                 mFilePathCallbacks.onReceiveValue(null);
             }
             mFilePathCallbacks = null;
         });
         builder.setCancelable(false);
-        builder.setItems(new String[]{"拍照", "相册"}, (dialog, which) -> {
+        builder.setItems(new String[]{getResources().getString(R.string.take_photo), getResources().getString(R.string.photo_album)}, (dialog, which) -> {
             switch (which) {
                 case 0:
                     String[] permissionList = new String[]{Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA};
@@ -542,8 +542,7 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         if (fail) {
                             if (!TextUtils.isEmpty(mCallback)) {
-                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(),
-                                        NeuronDAppCallback.INSTANCE.getUSER_CANCEL_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL());
+                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL());
                                 JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                             }
                         }
@@ -563,8 +562,7 @@ public class AppWebActivity extends NBaseActivity {
                     break;
                 case RESULT_CODE_SCAN_QRCODE:
                     if (!TextUtils.isEmpty(mCallback)) {
-                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(),
-                                NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR());
+                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR());
                         JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                     }
                     break;
