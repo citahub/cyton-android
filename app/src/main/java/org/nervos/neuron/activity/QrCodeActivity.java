@@ -34,7 +34,9 @@ public class QrCodeActivity extends NBaseActivity {
         captureFragment = new CaptureFragment();
         CodeUtils.setFragmentArgs(captureFragment, R.layout.capture_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
-        getSupportFragmentManager().beginTransaction().replace(R.id.capture_container, captureFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.capture_container, captureFragment)
+                .commit();
         captureFragment.setRight(getIntent().getBooleanExtra(SHOW_RIGHT, true));
     }
 
@@ -74,10 +76,22 @@ public class QrCodeActivity extends NBaseActivity {
             JSONObject object = new JSONObject();
             object.put("scan_type", type);
             object.put("scan_result", suc);
-            SensorsDataAPI.sharedInstance().track("scanQRcode", object);
+            SensorsDataAPI.sharedInstance()
+                    .track("scanQRcode", object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED);
+        bundle.putString(CodeUtils.RESULT_STRING, "");
+        resultIntent.putExtras(bundle);
+        mActivity.setResult(RESULT_OK, resultIntent);
+        mActivity.finish();
+        super.onBackPressed();
+    }
 }

@@ -1,15 +1,11 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -32,14 +28,11 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem;
 import org.nervos.neuron.item.NeuronDApp.QrCodeItem;
-import org.nervos.neuron.item.NeuronDApp.TakePhotoItem;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -49,9 +42,9 @@ import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.NeuronDAppCallback;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -70,9 +63,6 @@ import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -105,8 +95,7 @@ public class AppWebActivity extends NBaseActivity {
     private String url;
     private boolean isPersonalSign = false;
     private NeuronDAppPlugin mNeuronDAppPlugin = null;
-    private String mQuality, mCallback;
-    private String mPhotoPath;
+    private String mCallback, mPhotoPath;
 
     @Override
     protected int getContentLayout() {
@@ -553,7 +542,8 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         if (fail) {
                             if (!TextUtils.isEmpty(mCallback)) {
-                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem("0", "1", "User Cancel");
+                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(),
+                                        NeuronDAppCallback.INSTANCE.getUSER_CANCEL_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL());
                                 JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                             }
                         }
@@ -573,7 +563,8 @@ public class AppWebActivity extends NBaseActivity {
                     break;
                 case RESULT_CODE_SCAN_QRCODE:
                     if (!TextUtils.isEmpty(mCallback)) {
-                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem("0", "1", "Unknow Error");
+                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(),
+                                NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR());
                         JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                     }
                     break;
@@ -600,12 +591,6 @@ public class AppWebActivity extends NBaseActivity {
     private NeuronDAppPlugin.NeuronDAppPluginImpl mNeuronDAppPluginImpl = new NeuronDAppPlugin.NeuronDAppPluginImpl() {
         @Override
         public void scanCode(@NotNull String callback) {
-            mCallback = callback;
-        }
-
-        @Override
-        public void takePhoto(Uri imageUri, String quality, String callback) {
-            mQuality = quality;
             mCallback = callback;
         }
     };
