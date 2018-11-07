@@ -94,10 +94,16 @@ public class WebAppUtil {
                 if (code == 200) {
                     response = body.string();
                 }
+                if (body != null) {
+                    body.close();
+                }
             } catch (IOException e) {
-                body.close();
                 e.printStackTrace();
                 return Observable.error(new Throwable(e.getMessage()));
+            } finally {
+                if (body != null) {
+                    body.close();
+                }
             }
             mAppItem = new Gson().fromJson(response, AppItem.class);
             return Observable.just(mAppItem);
