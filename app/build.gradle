@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply from: "$rootDir/config.gradle"
 apply plugin: 'com.sensorsdata.analytics.android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
@@ -156,6 +158,10 @@ dependencies {
     implementation files('libs/utils-0.18-android.jar')
     implementation files('libs/infura-3.3.1-android.jar')
     implementation files('libs/core-0.19-android.jar')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
 
 def getVersionName(boolean isDebug) {
