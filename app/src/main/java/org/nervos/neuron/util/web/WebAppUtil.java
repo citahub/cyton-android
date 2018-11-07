@@ -37,6 +37,8 @@ import java.util.concurrent.Callable;
 
 import okhttp3.Call;
 import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -68,68 +70,54 @@ public class WebAppUtil {
                     if (MANIFEST.equals(element.attr("rel"))) {
                         return element.attr("href");
                     }
-                    if (MANIFEST.equals(element.attr("ref"))) {
-                        return element.attr("href");
-                    }
                 }
                 return "";
             }
-        }).filter(new Func1<String, Boolean>() {
-            @Override
-            public Boolean call(String path) {
-                return !TextUtils.isEmpty(path);
+        }).filter(path -> !TextUtils.isEmpty(path))
+          .flatMap((Func1<String, Observable<AppItem>>) path -> {
+            URI uri = URI.create(url);
+            String manifestUrl = path;
+            if (!path.startsWith("http")) {
+                manifestUrl = uri.getAuthority() + "/";
+                manifestUrl += path.startsWith(".")? uri.getPath() + "/" + path.substring(1) : path;
+                manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
             }
-        }).flatMap(new Func1<String, Observable<AppItem>>() {
-            @Override
-            public Observable<AppItem> call(String path) {
-                URI uri = URI.create(url);
-                String manifestUrl = path;
-                if (!path.startsWith("http")) {
-                    if (path.startsWith(".")) {
-                        manifestUrl = uri.getAuthority() + "/" + uri.getPath() + "/" + path.substring(1);
-                    } else {
-                        manifestUrl = uri.getAuthority() + "/" + path;
-                    }
 
-                    manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
+            Request request = new Request.Builder().url(manifestUrl).build();
+            Call call = HttpService.getHttpClient().newCall(request);
+            String response = "";
+            ResponseBody body = null;
+            try {
+                final Response resp = call.execute();
+                final int code = resp.code();
+                body = resp.body();
+                if (code == 200) {
+                    response = body.string();
                 }
-
-                Request request = new Request.Builder().url(manifestUrl).build();
-                Call call = HttpService.getHttpClient().newCall(request);
-                String response = "";
-                try {
-                    response = call.execute().body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return Observable.error(new Throwable(e.getMessage()));
-                }
-                mAppItem = new Gson().fromJson(response, AppItem.class);
-                return Observable.just(mAppItem);
+            } catch (IOException e) {
+                body.close();
+                e.printStackTrace();
+                return Observable.error(new Throwable(e.getMessage()));
             }
-        }).filter(new Func1<AppItem, Boolean>() {
-            @Override
-            public Boolean call(AppItem appItem) {
-                return appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5;
-            }
-        }).flatMap(new Func1<AppItem, Observable<ChainItem>>() {
-            @Override
-            public Observable<ChainItem> call(AppItem appItem) {
-                Map<String, String> chainSet = appItem.chainSet;
-                List<ChainItem> chainItemList = new ArrayList<>();
-                if (chainSet.size() == 0) {
-                    return Observable.error(new Throwable(
-                            "Manifest chain set is null, please provide chain id and host"));
-                }
-                for (Map.Entry<String, String> entry : chainSet.entrySet()) {
-                    ChainItem item = new ChainItem();
-                    item.chainId = Integer.parseInt(entry.getKey());
-                    item.httpProvider = entry.getValue();
-                    chainItemList.add(item);
-                    SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
-                }
-                return Observable.from(chainItemList);
-            }
-        }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
+            mAppItem = new Gson().fromJson(response, AppItem.class);
+            return Observable.just(mAppItem);
+        }).filter(appItem -> appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5)
+          .flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
+              Map<String, String> chainSet = appItem.chainSet;
+              List<ChainItem> chainItemList = new ArrayList<>();
+              if (chainSet.size() == 0) {
+                  return Observable.error(new Throwable(
+                          "Manifest chain set is null, please provide chain id and host"));
+              }
+              for (Map.Entry<String, String> entry : chainSet.entrySet()) {
+                  ChainItem item = new ChainItem();
+                  item.chainId = Integer.parseInt(entry.getKey());
+                  item.httpProvider = entry.getValue();
+                  chainItemList.add(item);
+                  SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
+              }
+              return Observable.from(chainItemList);
+          }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
             @Override
             public Observable<ChainItem> call(ChainItem chainItem) {
                 AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
