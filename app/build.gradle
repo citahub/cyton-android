@@ -3,19 +3,17 @@ apply plugin: 'kotlin-android'
 apply from: "$rootDir/config.gradle"
 apply plugin: 'com.sensorsdata.analytics.android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion appConfig.compileSdkVersion
     defaultConfig {
         applicationId "org.nervos.neuron"
-        minSdkVersion 20
-        targetSdkVersion 27
+        targetSdkVersion appConfig.targetSdkVersion
+        minSdkVersion appConfig.minSdkVersion
         versionCode appConfig.versionCode
-        versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
         manifestPlaceholders = [InstallChannelValue: "cryptape"]
-
     }
 
     signingConfigs {
@@ -51,6 +49,7 @@ android {
     }
 
     applicationVariants.all { variant ->
+        if (!variant.name.contains("dev")) {
             variant.outputs.all { output ->
                 def lintTask = tasks["lint${variant.name.capitalize()}"]
                 output.assemble.dependsOn lintTask
@@ -63,6 +62,7 @@ android {
                     outputFileName = new File(apkName)
                 }
             }
+        }
     }
 
     android {
@@ -70,10 +70,10 @@ android {
             abortOnError false
             lintConfig file('lint.xml')
             // Turns off checks for the issue IDs you specify.
-            disable 'TypographyFractions','TypographyQuotes'
+            disable 'TypographyFractions', 'TypographyQuotes'
             // Turns on checks for the issue IDs you specify. These checks are in
             // addition to the default lint checks.
-            enable 'RtlHardcoded','RtlCompat', 'RtlEnabled'
+            enable 'RtlHardcoded', 'RtlCompat', 'RtlEnabled'
             // To enable checks for only a subset of issue IDs and ignore all others,
             // list the issue IDs with the 'check' property instead. This property overrides
             // any issue IDs you enable or disable using the properties above.
@@ -85,26 +85,42 @@ android {
             // if true, only report errors.
             ignoreWarnings true
         }
-    }
 
+        dexOptions {
+            preDexLibraries true
+            maxProcessCount 8
+            javaMaxHeapSize "3072m"
+            // Instead of setting the heap size for the DEX process, increase Gradle's
+            // heap size to enable dex-in-process. To learm more, read the next section.
+            // javaMaxHeapSize "2048m"
+        }
+    }
 
     // 渠道配置
 
     flavorDimensions "default"
     productFlavors {
-        yingyongbao {dimension "default"}
-        _360 {dimension "default"}
-        oppo {dimension "default"}
-        baidu {dimension "default"}
-        huawei {dimension "default"}
-        xiaomi {dimension "default"}
-        vivo {dimension "default"}
-        wandoujia {dimension "default"}
-        others  {dimension "default"}
+        yingyongbao { dimension "default" }
+        _360 { dimension "default" }
+        oppo { dimension "default" }
+        baidu { dimension "default" }
+        huawei { dimension "default" }
+        xiaomi { dimension "default" }
+        vivo { dimension "default" }
+        wandoujia { dimension "default" }
+        others { dimension "default" }
+        dev {
+            versionName = appConfig.devVersionName
+            resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
+        }
     }
 
     productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [InstallChannelValue: name] // 动态地修改AndroidManifest中的渠道名
+        if (!name.equals("dev")) {
+            flavor.manifestPlaceholders = [InstallChannelValue: name]
+            flavor.versionName = getVersionName(appConfig.isDebug)
+            flavor.multiDexEnabled = true
+        }
     }
 
     compileOptions {
@@ -147,8 +163,8 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.0.3'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.1.2'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
