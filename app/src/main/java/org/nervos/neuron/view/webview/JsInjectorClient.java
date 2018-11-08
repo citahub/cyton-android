@@ -21,6 +21,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import org.nervos.neuron.service.http.HttpEtherUrls;
 import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.view.webview.item.Address;
 
@@ -37,7 +38,7 @@ class JsInjectorClient {
 
     private int chainId = 1;
     private Address walletAddress;
-    private String rpcUrl = HttpUrls.getEthNodeUrl();
+    private String rpcUrl = HttpEtherUrls.getEthNodeUrl();
 
     JsInjectorClient(Context context) {
         this.context = context;
