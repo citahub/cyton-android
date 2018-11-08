@@ -81,8 +81,8 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
         if (!TextUtils.isEmpty(base64)) {
             item = FileToBase64Item(base64!!)
         } else {
-            item = FileToBase64Item(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback
-                    .FIND_NO_FILE_CODE, NeuronDAppCallback.FIND_NO_FILE, "")
+            item = FileToBase64Item(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.FIND_NO_FILE_CODE,
+                    NeuronDAppCallback.FIND_NO_FILE, "")
         }
         mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(item)) }
     }
