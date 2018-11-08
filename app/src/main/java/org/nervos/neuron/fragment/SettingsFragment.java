@@ -119,7 +119,7 @@ public class SettingsFragment extends NBaseFragment {
             }
         });
         mSbvForums.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_FORUMS);
+            SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_TALK_URL);
         });
         mSbvSelectEth.setOpenListener(() -> {
             mEthNodeDialog = new SelectorDialog(getActivity());

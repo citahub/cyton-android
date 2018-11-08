@@ -56,12 +56,12 @@ public class EthRpcService {
     private static Web3j service;
 
     public static void init(Context context) {
-        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeUrl()));
+        service = Web3jFactory.build(new InfuraHttpService(HttpEtherUrls.getEthNodeUrl()));
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
     public static void initHttp() {
-        service = Web3jFactory.build(new InfuraHttpService(HttpUrls.getEthNodeUrl()));
+        service = Web3jFactory.build(new InfuraHttpService(HttpEtherUrls.getEthNodeUrl()));
     }
 
     public static double getEthBalance(String address) throws Exception {
@@ -89,14 +89,14 @@ public class EthRpcService {
 
     public static Observable<BigInteger> getEthGasLimit(TransactionInfo transactionInfo) {
         String data = TextUtils.isEmpty(transactionInfo.data) ? "" : Numeric.prependHexPrefix(transactionInfo.data);
-        Transaction transaction = new Transaction(walletItem.address, null, null, null, Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(), data);
+        Transaction transaction = new Transaction(walletItem.address, null, null, null,
+                Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(), data);
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() {
                 BigInteger gasLimit = ConstUtil.GAS_ERC20_LIMIT;
                 try {
                     EthEstimateGas ethEstimateGas = service.ethEstimateGas(transaction).send();
-                    LogUtil.d("ethEstimateGas" + new Gson().toJson(ethEstimateGas));
                     gasLimit = ethEstimateGas.getAmountUsed();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -106,14 +106,16 @@ public class EthRpcService {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice, BigInteger gasLimit, String data, String password) {
+    public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice,
+                                                             BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
         BigInteger finalGasLimit = gasLimit;
         String sdata = data == null ? "" : data;
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
-                EthGetTransactionCount ethGetTransactionCount = service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
+                EthGetTransactionCount ethGetTransactionCount =
+                        service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
                 return ethGetTransactionCount.getTransactionCount();
             }
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
@@ -122,7 +124,8 @@ public class EthRpcService {
                 try {
                     WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
                     Credentials credentials = Credentials.create(walletEntity.getPrivateKey());
-                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, address, NumberUtil.getWeiFromEth(value), sdata);
+                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, address,
+                            NumberUtil.getWeiFromEth(value), sdata);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (Exception e) {
@@ -150,7 +153,8 @@ public class EthRpcService {
      */
     public static TokenItem getTokenInfo(String contractAddress, String address) {
         try {
-            return new TokenItem(getErc20Name(address, contractAddress), getErc20Symbol(address, contractAddress), getErc20Decimal(address, contractAddress), contractAddress);
+            return new TokenItem(getErc20Name(address, contractAddress), getErc20Symbol(address, contractAddress),
+                    getErc20Decimal(address, contractAddress), contractAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -173,7 +177,8 @@ public class EthRpcService {
     }
 
 
-    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value, BigInteger gasPrice, BigInteger gasLimit, String password) {
+    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value,
+                                                               BigInteger gasPrice, BigInteger gasLimit, String password) {
         BigInteger transferValue = getTransferValue(tokenItem, value);
         String data = createTokenTransferData(address, transferValue);
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_ERC20_LIMIT : gasLimit;
@@ -181,7 +186,8 @@ public class EthRpcService {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
-                EthGetTransactionCount ethGetTransactionCount = service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
+                EthGetTransactionCount ethGetTransactionCount =
+                        service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
                 return ethGetTransactionCount.getTransactionCount();
             }
         }).flatMap(new Func1<BigInteger, Observable<String>>() {
@@ -190,7 +196,8 @@ public class EthRpcService {
                 try {
                     WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
                     Credentials credentials = Credentials.create(walletEntity.getPrivateKey());
-                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, tokenItem.contractAddress, data);
+                    RawTransaction rawTransaction =
+                            RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, tokenItem.contractAddress, data);
                     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
                     return Observable.just(Numeric.toHexString(signedMessage));
                 } catch (Exception e) {

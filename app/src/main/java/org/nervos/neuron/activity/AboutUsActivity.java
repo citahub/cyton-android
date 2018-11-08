@@ -60,15 +60,15 @@ public class AboutUsActivity extends NBaseActivity {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PRODUCT_AGREEMENT_URL);
         });
         NervosSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.NERVOS_NETWORK);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.NERVOS_WEB_URL);
         });
         InfuraSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.INFURA);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.INFURA_URL);
         });
         openSeaSBV.setOpenListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.OPEN_SEA);
+            SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.OPEN_SEA_URL);
         });
-        peckShieldSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PECKSHEILD));
-        citaSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.CITA));
+        peckShieldSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PECKSHEILD_URL));
+        citaSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.CITA_GITHUB_URL));
     }
 }

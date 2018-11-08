@@ -116,14 +116,16 @@ public class TransactionListPresenter {
     public void getTransactionList(String from) {
         Observable<List<TransactionItem>> observable;
         if (isNativeToken(tokenItem)) {
-            if (tokenItem.chainId != 1) {
-                getUnofficialNoneData();       // Now only support chainId = 1 (225 NATT)
+            if (tokenItem.chainId > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
+                getUnofficialNoneData();
                 return;
             }
-            observable = isEthereum(tokenItem) ? HttpService.getETHTransactionList(activity) : HttpService.getAppChainTransactionList(activity);
+            observable = isEthereum(tokenItem)
+                    ? HttpService.getEtherTransactionList(activity, 0) : HttpService.getAppChainTransactionList(activity, 0);
         } else {
             observable = isEthereum(tokenItem)
-                    ? HttpService.getETHERC20TransactionList(activity, tokenItem) : HttpService.getAppChainERC20TransactionList(activity, tokenItem);
+                    ? HttpService.getEtherERC20TransactionList(activity, tokenItem, 0)
+                    : HttpService.getAppChainERC20TransactionList(activity, tokenItem, 0);
         }
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override
