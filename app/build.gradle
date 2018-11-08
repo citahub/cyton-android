@@ -3,19 +3,17 @@ apply plugin: 'kotlin-android'
 apply from: "$rootDir/config.gradle"
 apply plugin: 'com.sensorsdata.analytics.android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion appConfig.compileSdkVersion
     defaultConfig {
         applicationId "org.nervos.neuron"
-        minSdkVersion 20
-        targetSdkVersion 27
+        targetSdkVersion appConfig.targetSdkVersion
+        minSdkVersion appConfig.minSdkVersion
         versionCode appConfig.versionCode
-        versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
         manifestPlaceholders = [InstallChannelValue: "cryptape"]
-
     }
 
     signingConfigs {
@@ -51,16 +49,18 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            def lintTask = tasks["lint${variant.name.capitalize()}"]
-            output.assemble.dependsOn lintTask
+        if (!variant.name.contains("dev")) {
+            variant.outputs.all { output ->
+                def lintTask = tasks["lint${variant.name.capitalize()}"]
+                output.assemble.dependsOn lintTask
 
-            if (variant.buildType.name == 'release') {
-                def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
-                outputFileName = new File(apkName)
-            } else {
-                def apkName = "neuron_v${getVersionName(true)}.apk"
-                outputFileName = new File(apkName)
+                if (variant.buildType.name == 'release') {
+                    def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
+                    outputFileName = new File(apkName)
+                } else {
+                    def apkName = "neuron_v${getVersionName(true)}.apk"
+                    outputFileName = new File(apkName)
+                }
             }
         }
     }
@@ -85,10 +85,18 @@ android {
             // if true, only report errors.
             ignoreWarnings true
         }
+
+        dexOptions {
+            preDexLibraries true
+            maxProcessCount 8
+            javaMaxHeapSize "3072m"
+            // Instead of setting the heap size for the DEX process, increase Gradle's
+            // heap size to enable dex-in-process. To learm more, read the next section.
+            // javaMaxHeapSize "2048m"
+        }
     }
 
     // 渠道配置
-
     flavorDimensions "default"
     productFlavors {
         yingyongbao { dimension "default" }
@@ -100,10 +108,18 @@ android {
         vivo { dimension "default" }
         wandoujia { dimension "default" }
         others { dimension "default" }
+        dev {
+            versionName = appConfig.devVersionName
+            resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
+        }
     }
 
     productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [InstallChannelValue: name] // 动态地修改AndroidManifest中的渠道名
+        if (!name.equals("dev")) {
+            flavor.manifestPlaceholders = [InstallChannelValue: name]
+            flavor.versionName = getVersionName(appConfig.isDebug)
+            flavor.multiDexEnabled = true
+        }
     }
 
     compileOptions {
@@ -146,8 +162,8 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
     implementation 'io.reactivex:rxjava:1.2.4'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.0.3'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.1.2'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
