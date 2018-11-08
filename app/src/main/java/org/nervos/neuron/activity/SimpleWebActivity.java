@@ -55,11 +55,12 @@ public class SimpleWebActivity extends BaseActivity {
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
         webErrorView = findViewById(R.id.view_web_error);
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance()
+                .showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new TokenPricePlugin(webView), "tokenPricePlugin");
-        webErrorView.setImpl(() -> {
-            webView.reload();
+        webErrorView.setImpl((reloadUrl) -> {
+            webView.loadUrl(reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });

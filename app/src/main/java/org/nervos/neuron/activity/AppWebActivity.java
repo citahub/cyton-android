@@ -144,8 +144,8 @@ public class AppWebActivity extends NBaseActivity {
             }
         });
         rightMenuView.setOnClickListener(v -> initMenuView());
-        webErrorView.setImpl(() -> {
-            webView.reload();
+        webErrorView.setImpl((reloadUrl) -> {
+            webView.loadUrl(reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });

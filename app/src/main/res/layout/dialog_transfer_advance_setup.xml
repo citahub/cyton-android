@@ -74,7 +74,7 @@
                 android:layout_below="@id/default_gas_price_text"
                 android:layout_marginTop="10dp"
                 android:background="@null"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:hint="@string/please_input_gas_price"
