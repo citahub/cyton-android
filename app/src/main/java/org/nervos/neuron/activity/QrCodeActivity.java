@@ -9,6 +9,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.fragment.CaptureFragment;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.qrcode.QRResultCheck;
@@ -72,12 +73,23 @@ public class QrCodeActivity extends NBaseActivity {
     public static void track(String type, boolean suc) {
         try {
             JSONObject object = new JSONObject();
-            object.put("scan_type", type);
-            object.put("scan_result", suc);
-            SensorsDataAPI.sharedInstance().track("scanQRcode", object);
+            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_TYPE(), type);
+            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_RESULT(), suc);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_SCAN_QR(), object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED);
+        bundle.putString(CodeUtils.RESULT_STRING, "");
+        resultIntent.putExtras(bundle);
+        mActivity.setResult(RESULT_OK, resultIntent);
+        mActivity.finish();
+        super.onBackPressed();
+    }
 }

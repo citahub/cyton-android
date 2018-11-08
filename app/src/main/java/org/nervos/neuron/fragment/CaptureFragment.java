@@ -26,15 +26,15 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.util.BitmapUtils;
-import org.nervos.neuron.util.PickPic;
-import org.nervos.neuron.util.qrcode.BitmapDecoder;
-import org.nervos.neuron.util.qrcode.CaptureActivityHandler;
-import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.BitmapDecoder;
+import org.nervos.neuron.util.qrcode.CaptureActivityHandler;
+import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.view.TitleBar;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -75,8 +75,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         surfaceHolder = surfaceView.getHolder();
         titleBar = (TitleBar) findViewById(R.id.title);
-        if (!isShowRight)
-            titleBar.hideRight();
+        if (!isShowRight) titleBar.hideRight();
+        titleBar.setOnLeftClickListener(() -> analyzeCallback.onAnalyzeFailed());
     }
 
     @Override
@@ -96,7 +96,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         super.initAction();
         titleBar.setOnRightClickListener(() -> {
             AndPermission.with(getActivity())
-                    .runtime().permission(Permission.Group.STORAGE)
+                    .runtime()
+                    .permission(Permission.Group.STORAGE)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
                         Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -151,7 +152,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data.getData() != null) {
-            String path = PickPic.getPath(getActivity().getApplicationContext(), data.getData());
+            String path = PickPicUtils.getPath(getActivity().getApplicationContext(), data.getData());
             if (!TextUtils.isEmpty(path)) {
                 Bitmap img = BitmapUtils.getCompressedBitmap(path);
                 BitmapDecoder decoder = new BitmapDecoder(getActivity());
@@ -208,8 +209,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
     }
 
@@ -257,11 +257,9 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnCompletionListener(beepListener);
 
-            AssetFileDescriptor file = getResources().openRawResourceFd(
-                    R.raw.beep);
+            AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
             try {
-                mediaPlayer.setDataSource(file.getFileDescriptor(),
-                        file.getStartOffset(), file.getLength());
+                mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
                 file.close();
                 mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
                 mediaPlayer.prepare();

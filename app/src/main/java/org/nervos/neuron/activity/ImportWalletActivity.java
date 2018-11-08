@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
@@ -112,7 +113,8 @@ public class ImportWalletActivity extends NBaseActivity {
         }
 
         tabLayout.setupWithViewPager(viewPager);
-        ToastSingleButtonDialog.getInstance(this, getString(R.string.forbidden_screen_shoot), getString(R.string.forbidden_screen_shoot_import));
+        ToastSingleButtonDialog
+                .getInstance(this, getString(R.string.forbidden_screen_shoot), getString(R.string.forbidden_screen_shoot_import));
     }
 
     @Override
@@ -156,8 +158,7 @@ public class ImportWalletActivity extends NBaseActivity {
                     }
 
                     int padding = (tabWidth - width - 40) / 2;
-                    if (padding < 0)
-                        padding = 0;
+                    if (padding < 0) padding = 0;
 
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabView.getLayoutParams();
                     params.width = width;
@@ -180,10 +181,10 @@ public class ImportWalletActivity extends NBaseActivity {
     public static void track(String id, boolean suc, String address) {
         try {
             JSONObject object = new JSONObject();
-            object.put("input_type", id);
-            object.put("input_result", suc);
-            object.put("input_address", address);
-            SensorsDataAPI.sharedInstance().track("inputWallet", object);
+            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_TYPE(), id);
+            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_RESULT(), suc);
+            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_ADDRESS(), address);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_INPUT_WALLET(), object);
         } catch (JSONException e) {
             e.printStackTrace();
         }

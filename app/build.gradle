@@ -97,7 +97,6 @@ android {
     }
 
     // 渠道配置
-
     flavorDimensions "default"
     productFlavors {
         yingyongbao { dimension "default" }

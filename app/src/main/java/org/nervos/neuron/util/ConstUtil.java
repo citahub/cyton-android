@@ -1,5 +1,7 @@
 package org.nervos.neuron.util;
 
+import android.os.Environment;
+
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -54,4 +56,6 @@ public class ConstUtil {
     public static final String FINGERPRINT = "Fingerprint";
     public static final String CURRENCY = "Currency";
     public static final String PROTOCOL = "Protocol";
+
+    public static final String IMG_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 }

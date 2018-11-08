@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -37,11 +36,8 @@ public class TransactionDetailActivity extends NBaseActivity {
     private WalletItem walletItem;
     private TransactionItem transactionItem;
     private TitleBar title;
-    private TextView transactionHashText, transactionValueText, transactionFromText,
-            transactionToText, transactionBlockNumberText, transactionBlockTimeText,
-            transactionGas, transactionGasPrice, transactionChainName,
-            transactionGasPriceTitle, tokenUnitText;
-    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
+    private TextView transactionHashText, transactionValueText, transactionFromText, transactionToText, transactionBlockNumberText;
+    private TextView transactionBlockTimeText, transactionGas, transactionGasPrice, transactionChainName, transactionGasPriceTitle, tokenUnitText;
 
     @Override
     protected int getContentLayout() {
@@ -78,19 +74,15 @@ public class TransactionDetailActivity extends NBaseActivity {
             BigInteger gasPriceBig = new BigInteger(transactionItem.gasPrice);
             BigInteger gasUsedBig = new BigInteger(transactionItem.gasUsed);
             transactionGas.setText(
-                    NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig))
-                            + transactionItem.nativeSymbol);
-            transactionGasPrice.setText(
-                    Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " " + ConstUtil.GWEI);
-            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
-                    "-" : "+") + transactionItem.value;
+                    NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionItem.nativeSymbol);
+            transactionGasPrice.setText(Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI) + " " + ConstUtil.GWEI);
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             tokenUnitText.setText(transactionItem.symbol);
             transactionBlockNumberText.setText(transactionItem.blockNumber);
         } else {
             transactionChainName.setText(transactionItem.chainName);
-            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ?
-                    "-" : "+") + transactionItem.value;
+            String value = (transactionItem.from.equalsIgnoreCase(walletItem.address) ? "-" : "+") + transactionItem.value;
             transactionValueText.setText(value);
             tokenUnitText.setText(transactionItem.symbol);
             transactionGasPrice.setVisibility(View.GONE);
@@ -103,15 +95,15 @@ public class TransactionDetailActivity extends NBaseActivity {
                 e.printStackTrace();
             }
 
-            AppChainRpcService.getQuotaPrice(transactionItem.from).subscribe(new NeuronSubscriber<String>(){
-                @Override
-                public void onNext(String price) {
-                    super.onNext(price);
-                    transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(
-                            Numeric.toBigInt(transactionItem.gasUsed).multiply(Numeric.toBigInt(price)))
-                                    + transactionItem.nativeSymbol);
-                }
-            });
+            AppChainRpcService.getQuotaPrice(transactionItem.from)
+                    .subscribe(new NeuronSubscriber<String>() {
+                        @Override
+                        public void onNext(String price) {
+                            super.onNext(price);
+                            transactionGas.setText(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem.gasUsed)
+                                    .multiply(Numeric.toBigInt(price))) + transactionItem.nativeSymbol);
+                        }
+                    });
         }
 
         transactionBlockTimeText.setText(transactionItem.getDate());
@@ -125,12 +117,14 @@ public class TransactionDetailActivity extends NBaseActivity {
     protected void initAction() {
         title.setOnRightClickListener(() -> {
             AndPermission.with(mActivity)
-                    .runtime().permission(Permission.Group.STORAGE)
+                    .runtime()
+                    .permission(Permission.Group.STORAGE)
                     .rationale(new RuntimeRationale())
                     .onGranted(permissions -> {
                         try {
-                            SharePicUtils.savePic(savePath + transactionItem.blockNumber + ".png", SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_screenshot)));
-                            SharePicUtils.SharePic(this, savePath + transactionItem.blockNumber + ".png");
+                            SharePicUtils.savePic(ConstUtil.IMG_SAVE_PATH + transactionItem.blockNumber +
+                                    ".png", SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_screenshot)));
+                            SharePicUtils.SharePic(this, ConstUtil.IMG_SAVE_PATH + transactionItem.blockNumber + ".png");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -151,7 +145,8 @@ public class TransactionDetailActivity extends NBaseActivity {
         ClipData mClipData = ClipData.newPlainText("value", value);
         if (cm != null) {
             cm.setPrimaryClip(mClipData);
-            Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 

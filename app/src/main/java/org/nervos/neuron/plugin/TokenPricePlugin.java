@@ -29,9 +29,9 @@ public class TokenPricePlugin {
                     @Override
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price)) {
-                            JSLoadUtils.loadFunc(mWebView, callback, "");
+                            JSLoadUtils.INSTANCE.loadFunc(mWebView, callback, "");
                         } else {
-                            JSLoadUtils.loadFunc(mWebView, callback
+                            JSLoadUtils.INSTANCE.loadFunc(mWebView, callback
                                     , currencyItem.getSymbol() + price);
                         }
                     }

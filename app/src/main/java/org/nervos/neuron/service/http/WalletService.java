@@ -7,6 +7,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -33,8 +34,7 @@ public class WalletService {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-    public static void getWalletTokenBalance(Context context,
-                                             OnGetWalletTokenListener listener) {
+    public static void getWalletTokenBalance(Context context, OnGetWalletTokenListener listener) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         if (walletItem == null || walletItem.tokenItems.size() == 0) return;
         List<TokenItem> tokenItemList = new ArrayList<>();
@@ -88,10 +88,10 @@ public class WalletService {
     private static void track(String chain, String type, double number) {
         try {
             JSONObject object = new JSONObject();
-            object.put("currency_chain", chain);
-            object.put("currency_type", type);
-            object.put("currency_number", number);
-            SensorsDataAPI.sharedInstance().track("possess_money", object);
+            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_CHAIN(), chain);
+            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_TYPE(), type);
+            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_NUMBER(), number);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_POSSESS_MONEY(), object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -114,8 +114,7 @@ public class WalletService {
                         if (ConstUtil.ETH.equals(tokenItem.symbol)) {
                             return EthRpcService.getEthBalance(walletItem.address);
                         } else {
-                            return EthRpcService.getERC20Balance(
-                                    tokenItem.contractAddress, walletItem.address);
+                            return EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                         }
                     } else {                                    // nervos
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
@@ -123,8 +122,7 @@ public class WalletService {
                         String httpProvider = chainItem.httpProvider;
                         AppChainRpcService.init(context, httpProvider);
                         if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            return AppChainRpcService.getErc20Balance(
-                                    tokenItem, walletItem.address);
+                            return AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
                         } else {
                             return AppChainRpcService.getBalance(walletItem.address);
                         }
@@ -135,8 +133,7 @@ public class WalletService {
                 }
                 return 0.0;
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Observable<Double> getBalanceWithNativeToken(Context context, TokenItem tokenItem) {
@@ -159,8 +156,7 @@ public class WalletService {
                 }
                 return 0.0;
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public static boolean checkPassword(Context context, String password, WalletItem walletItem) {

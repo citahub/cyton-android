@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
@@ -68,8 +69,7 @@ public class CreateWalletActivity extends NBaseActivity {
     @Override
     protected void initData() {
         checkWalletStatus();
-        if (getIntent() != null &&
-                getIntent().getBooleanExtra(SplashActivity.EXTRA_FIRST, false)) {
+        if (getIntent() != null && getIntent().getBooleanExtra(SplashActivity.EXTRA_FIRST, false)) {
             titleBar.hideLeft();
         }
 
@@ -82,8 +82,7 @@ public class CreateWalletActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         createWalletCbt.setOnClickListener(view -> {
-            if (!TextUtils.equals(passwordEdit.getText().toString().trim(),
-                    rePasswordEdit.getText().toString().trim())) {
+            if (!TextUtils.equals(passwordEdit.getText().toString().trim(), rePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
             } else if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_weak, Toast.LENGTH_SHORT).show();
@@ -96,14 +95,13 @@ public class CreateWalletActivity extends NBaseActivity {
                     rePasswordEdit.post(() -> {
                         try {
                             JSONObject object = new JSONObject();
-                            object.put("create_address", walletEntity.getAddress());
-                            SensorsDataAPI.sharedInstance().track("createWallet", object);
+                            object.put(SensorDataCons.INSTANCE.getTAG_CREATE_WALLET_ADDRESS(), walletEntity.getAddress());
+                            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_CREATE_WALLET(), object);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         dismissProgressBar();
-                        Intent intent = new Intent(CreateWalletActivity.this,
-                                BackupMnemonicActivity.class);
+                        Intent intent = new Intent(CreateWalletActivity.this, BackupMnemonicActivity.class);
                         intent.putExtra(EXTRA_MNEMONIC, walletEntity.getMnemonic());
                         startActivity(intent);
                     });
@@ -161,8 +159,8 @@ public class CreateWalletActivity extends NBaseActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim())
-                        && passwordEdit.getText().toString().trim().length() >= 8;
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) &&
+                        passwordEdit.getText().toString().trim().length() >= 8;
                 createWalletCbt.setClickAble(isWalletValid());
             }
         });
@@ -170,8 +168,8 @@ public class CreateWalletActivity extends NBaseActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim())
-                        && rePasswordEdit.getText().toString().trim().length() >= 8;
+                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) &&
+                        rePasswordEdit.getText().toString().trim().length() >= 8;
                 createWalletCbt.setClickAble(isWalletValid());
             }
         });

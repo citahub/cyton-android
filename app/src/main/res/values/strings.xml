@@ -185,6 +185,9 @@
     <string name="mnemonic_pre_path">m/44\'/60\'/</string>
     <string name="mnemonic_pre_hint">可手动输入</string>
     <string name="mnemonic_import_failed">导入失败</string>
+    <string name="pic_source">图片来源</string>
+    <string name="take_photo">拍照</string>
+    <string name="photo_album">相册</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
