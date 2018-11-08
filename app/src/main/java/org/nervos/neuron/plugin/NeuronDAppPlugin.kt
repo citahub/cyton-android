@@ -14,10 +14,9 @@ import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem
 import org.nervos.neuron.item.NeuronDApp.FileToBase64Item
-import org.nervos.neuron.item.NeuronDApp.QrCodeItem
 import org.nervos.neuron.util.FileUtil
 import org.nervos.neuron.util.JSLoadUtils
-import org.nervos.neuron.util.NeuronDAppCallback
+import org.nervos.neuron.constant.NeuronDAppCallback
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale

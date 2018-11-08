@@ -9,6 +9,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.fragment.CaptureFragment;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.qrcode.QRResultCheck;
@@ -34,9 +35,7 @@ public class QrCodeActivity extends NBaseActivity {
         captureFragment = new CaptureFragment();
         CodeUtils.setFragmentArgs(captureFragment, R.layout.capture_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.capture_container, captureFragment)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.capture_container, captureFragment).commit();
         captureFragment.setRight(getIntent().getBooleanExtra(SHOW_RIGHT, true));
     }
 
@@ -74,10 +73,9 @@ public class QrCodeActivity extends NBaseActivity {
     public static void track(String type, boolean suc) {
         try {
             JSONObject object = new JSONObject();
-            object.put("scan_type", type);
-            object.put("scan_result", suc);
-            SensorsDataAPI.sharedInstance()
-                    .track("scanQRcode", object);
+            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_TYPE(), type);
+            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_RESULT(), suc);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_SCAN_QR(), object);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package org.nervos.neuron.util
+package org.nervos.neuron.constant
 
 /**
  * Created by BaojunCZ on 2018/11/7.

@@ -140,8 +140,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
             handler.quitSynchronously();
             handler = null;
         }
-        CameraManager.get()
-                .closeDriver();
+        CameraManager.get().closeDriver();
     }
 
     @Override
@@ -159,16 +158,13 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
                 BitmapDecoder decoder = new BitmapDecoder(getActivity());
                 Result result = decoder.getRawResult(img);
                 if (result != null) {
-                    String qr = ResultParser.parseResult(result)
-                            .toString();
+                    String qr = ResultParser.parseResult(result).toString();
                     analyzeCallback.onAnalyzeSuccess(img, qr);
                 } else {
-                    Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG)
-                            .show();
+                    Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(getActivity(), R.string.qr_photo_failed, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -196,10 +192,8 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
-            CameraManager.get()
-                    .openDriver(surfaceHolder);
-            camera = CameraManager.get()
-                    .getCamera();
+            CameraManager.get().openDriver(surfaceHolder);
+            camera = CameraManager.get().getCamera();
         } catch (Exception e) {
             if (callBack != null) {
                 callBack.callBack(e);
@@ -232,21 +226,14 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
         if (camera != null) {
-            if (camera != null && CameraManager.get()
-                    .isPreviewing()) {
-                if (!CameraManager.get()
-                        .isUseOneShotPreviewCallback()) {
+            if (camera != null && CameraManager.get().isPreviewing()) {
+                if (!CameraManager.get().isUseOneShotPreviewCallback()) {
                     camera.setPreviewCallback(null);
                 }
                 camera.stopPreview();
-                CameraManager.get()
-                        .getPreviewCallback()
-                        .setHandler(null, 0);
-                CameraManager.get()
-                        .getAutoFocusCallback()
-                        .setHandler(null, 0);
-                CameraManager.get()
-                        .setPreviewing(false);
+                CameraManager.get().getPreviewCallback().setHandler(null, 0);
+                CameraManager.get().getAutoFocusCallback().setHandler(null, 0);
+                CameraManager.get().setPreviewing(false);
             }
         }
     }
