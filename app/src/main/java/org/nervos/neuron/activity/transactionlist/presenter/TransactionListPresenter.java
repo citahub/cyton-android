@@ -54,18 +54,16 @@ public class TransactionListPresenter {
             if (!isNativeToken(tokenItem)) {
                 if (TextUtils.isEmpty(tokenItem.avatar)) {
                     String address = tokenItem.contractAddress;
-                    if (AddressUtil.isAddressValid(address))
-                        address = Keys.toChecksumAddress(address);
-                    RequestOptions options = new RequestOptions()
-                            .error(R.drawable.ether_big);
+                    if (AddressUtil.isAddressValid(address)) address = Keys.toChecksumAddress(address);
+                    RequestOptions options = new RequestOptions().error(R.drawable.ether_big);
                     Glide.with(activity)
                             .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
-                            .apply(options)
-                            .into(tokenLogoImage);
-                } else
+                            .apply(options).into(tokenLogoImage);
+                } else {
                     Glide.with(activity)
                             .load(Uri.parse(tokenItem.avatar))
                             .into(tokenLogoImage);
+                }
             }
         }
     }
@@ -89,28 +87,29 @@ public class TransactionListPresenter {
         if (tokenItem.balance > 0.0 && isEthereum(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
-                        @Override
-                        public void onCompleted() {
-                        }
+                @Override
+                public void onCompleted() {
+                }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
 
-                        @Override
-                        public void onNext(String s) {
-                            if (!TextUtils.isEmpty(s)) {
-                                double price = Double.parseDouble(s.trim());
-                                DecimalFormat df = new DecimalFormat("######0.00");
-                                DecimalFormat format = new DecimalFormat("0.####");
-                                format.setRoundingMode(RoundingMode.FLOOR);
-                                listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
-                                        + Double.parseDouble(df.format(price * tokenItem.balance)));
-                            } else
-                                listener.getCurrency("0");
-                        }
-                    });
+                @Override
+                public void onNext(String s) {
+                    if (!TextUtils.isEmpty(s)) {
+                        double price = Double.parseDouble(s.trim());
+                        DecimalFormat df = new DecimalFormat("######0.00");
+                        DecimalFormat format = new DecimalFormat("0.####");
+                        format.setRoundingMode(RoundingMode.FLOOR);
+                        listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
+                                + Double.parseDouble(df.format(price * tokenItem.balance)));
+                    } else {
+                        listener.getCurrency("0");
+                    }
+                }
+            });
         }
     }
 
@@ -121,13 +120,10 @@ public class TransactionListPresenter {
                 getUnofficialNoneData();       // Now only support chainId = 1 (225 NATT)
                 return;
             }
-            observable = isEthereum(tokenItem) ?
-                    HttpService.getETHTransactionList(activity) :
-                    HttpService.getAppChainTransactionList(activity);
+            observable = isEthereum(tokenItem) ? HttpService.getETHTransactionList(activity) : HttpService.getAppChainTransactionList(activity);
         } else {
-            observable = isEthereum(tokenItem) ?
-                    HttpService.getETHERC20TransactionList(activity, tokenItem) :
-                    HttpService.getAppChainERC20TransactionList(activity, tokenItem);
+            observable = isEthereum(tokenItem)
+                    ? HttpService.getETHERC20TransactionList(activity, tokenItem) : HttpService.getAppChainERC20TransactionList(activity, tokenItem);
         }
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override
@@ -160,9 +156,9 @@ public class TransactionListPresenter {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
                     ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
-                    TokenType tokenType = isNativeToken(tokenItem)? TokenType.NATIVE : TokenType.TOKEN;
-                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, tokenType,
-                            chain.httpProvider, tokenItem.contractAddress, list, from);
+                    TokenType tokenType = isNativeToken(tokenItem) ? TokenType.NATIVE : TokenType.TOKEN;
+                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, tokenType, chain.httpProvider,
+                            tokenItem.contractAddress, list, from);
                     listener.refreshList(allList);
                 }
             }

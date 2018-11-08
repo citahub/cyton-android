@@ -167,8 +167,7 @@ public class DBWalletUtil extends DBUtil {
                 for (String name : names) {
                     WalletItem walletItem = getWallet(context, name);
                     isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
-                    if (isKeyExist)
-                        return true;
+                    if (isKeyExist) return true;
                 }
                 db.close();
                 return false;

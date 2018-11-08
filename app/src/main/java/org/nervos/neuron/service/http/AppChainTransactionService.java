@@ -66,7 +66,8 @@ public class AppChainTransactionService {
                 });
     }
 
-    public static List<TransactionItem> getTransactionList(Context context, TokenType type, String chain, String contractAddress, List<TransactionItem> list, String from) {
+    public static List<TransactionItem> getTransactionList(Context context, TokenType type, String chain,
+                                                           String contractAddress, List<TransactionItem> list, String from) {
         List<AppChainTransactionDBItem> allList = DBAppChainTransactionsUtil.getAllTransactionWithChain(context, chain, type, contractAddress);
         if (allList.size() > 0) {
             for (AppChainTransactionDBItem item : allList) {

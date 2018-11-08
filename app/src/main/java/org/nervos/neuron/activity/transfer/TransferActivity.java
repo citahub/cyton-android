@@ -221,7 +221,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     /**
      * Estimate Gas limit when address edit text and value edit text were not null
      */
-    private boolean isAddressOK = false, isValueOk = false;
+    private boolean isAddressOk = false, isValueOk = false;
 
     @Override
     public void initTransferEditValue() {
@@ -229,11 +229,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                isAddressOK = !TextUtils.isEmpty(s);
-                if (isAddressOK && isValueOk && mPresenter.isEthERC20()) {
-                    initAdvancedSetup();
-                    mPresenter.initGasLimit(getTransactionInfo());
-                }
+                isAddressOk = !TextUtils.isEmpty(s);
+                updateTransferEditValue();
             }
         });
         transferValueEdit.addTextChangedListener(new NeuronTextWatcher() {
@@ -241,19 +238,22 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
                 isValueOk = !TextUtils.isEmpty(s);
-                if (isAddressOK && isValueOk && mPresenter.isEthERC20()) {
-                    initAdvancedSetup();
-                    mPresenter.initGasLimit(getTransactionInfo());
-                }
+                updateTransferEditValue();
             }
         });
+    }
+
+    private void updateTransferEditValue() {
+        if (isAddressOk && isValueOk && mPresenter.isEthERC20()) {
+            initAdvancedSetup();
+            mPresenter.initGasLimit(getTransactionInfo());
+        }
     }
 
 
     private TransactionInfo getTransactionInfo() {
         TransactionInfo transactionInfo = new TransactionInfo(mPresenter.getTokenItem().contractAddress, "0");
-        transactionInfo.data = EthRpcService.createTokenTransferData(
-                receiveAddressEdit.getText().toString(),
+        transactionInfo.data = EthRpcService.createTokenTransferData(receiveAddressEdit.getText().toString(),
                 Convert.toWei(transferValueEdit.getText().toString(), Convert.Unit.ETHER).toBigInteger());
         return transactionInfo;
     }

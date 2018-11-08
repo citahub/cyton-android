@@ -16,7 +16,7 @@ public class DBUtil {
 
     static final Object dbObject = new Object();
 
-    static final Kryo kryo = new Kryo();
+    private static final Kryo kryo = new Kryo();
 
     static {
         kryo.setDefaultSerializer(CompatibleFieldSerializer.class);

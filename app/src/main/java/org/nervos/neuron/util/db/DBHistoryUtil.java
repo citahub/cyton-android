@@ -19,7 +19,7 @@ public class DBHistoryUtil extends DBUtil {
             try {
                 db = openDB(context, DB_HISTORY);
                 String[] keys = db.findKeys(DB_PREFIX);
-                for(String key: keys) {
+                for (String key : keys) {
                     historyList.add(db.get(key));
                 }
                 db.close();
@@ -31,7 +31,7 @@ public class DBHistoryUtil extends DBUtil {
     }
 
 
-    public static void saveHistory(Context context, String url){
+    public static void saveHistory(Context context, String url) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_HISTORY);

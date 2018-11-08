@@ -46,7 +46,7 @@ public class DBAppUtil extends DBUtil {
                 db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(DB_PREFIX);
                 db.close();
-                for(String key: keys) {
+                for (String key : keys) {
                     walletList.add(db.getObject(key, AppItem.class));
                 }
             } catch (SnappydbException e) {
