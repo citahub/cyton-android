@@ -80,20 +80,21 @@ public class TransferPresenter {
             }
         });
 
-        WalletService.getBalanceWithNativeToken(mActivity, mTokenItem).subscribe(new Subscriber<Double>(){
-            @Override
-            public void onNext(Double balance) {
-                mNativeTokenBalance = balance;
-                mTransferView.updateNativeTokenBalance(balance);
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onCompleted() {
+        WalletService.getBalanceWithNativeToken(mActivity, mTokenItem)
+                .subscribe(new Subscriber<Double>() {
+                    @Override
+                    public void onNext(Double balance) {
+                        mNativeTokenBalance = balance;
+                        mTransferView.updateNativeTokenBalance(balance);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
         });
 
     }
@@ -173,8 +174,8 @@ public class TransferPresenter {
             }
             @Override
             public void onNext(String quotaPrice) {
-                mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ?
-                        ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+                mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress)
+                        ? ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
                 mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
                 mTransferFee = NumberUtil.getEthFromWei(mQuota);
                 mTransferView.updateAppChainQuota(

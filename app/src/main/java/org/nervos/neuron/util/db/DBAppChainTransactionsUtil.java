@@ -43,8 +43,8 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                String pendingKey = isPending? DB_PRE_PENDING : DB_PRE_FAILED;
-                item.status = isPending? AppChainTransactionDBItem.PENDING : AppChainTransactionDBItem.FAILED;
+                String pendingKey = isPending ? DB_PRE_PENDING : DB_PRE_FAILED;
+                item.status = isPending ? AppChainTransactionDBItem.PENDING : AppChainTransactionDBItem.FAILED;
                 pendingKey = (pendingKey + item.hash).replace(DB_KEY_CHAIN, item.chain);
 
                 if (!item.isNativeToken) pendingKey = pendingKey.replace(DB_KEY_NATIVE, item.contractAddress);
