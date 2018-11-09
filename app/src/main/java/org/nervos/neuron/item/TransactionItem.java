@@ -31,6 +31,16 @@ public class TransactionItem implements Parcelable {
     public String symbol;
     public String nativeSymbol;
 
+    public TransactionItem(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
+        this.from = from;
+        this.to = to;
+        this.value = value;
+        this.chainName = chainName;
+        this.status = status;
+        this.setTimestamp(timestamp);
+        this.hash = hash;
+    }
+
 
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);

@@ -129,8 +129,7 @@ public class AppChainRpcService {
             public String call() {
                 try {
                     String price = new NervosjSysContract(service).getQuotaPrice(from).getValue();
-                    price = price.equals(ConstUtil.RPC_RESULT_ZERO)? ConstUtil.QUOTA_PRICE_DEFAULT : price;
-                    return price;
+                    return price.equals(ConstUtil.RPC_RESULT_ZERO)? ConstUtil.QUOTA_PRICE_DEFAULT : price;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -145,12 +144,7 @@ public class AppChainRpcService {
                        String address, double value, long quota, int chainId, String password){
         BigInteger ercValue = getERC20TransferValue(tokenItem, value);
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
-        return Observable.fromCallable(new Callable<BigInteger>() {
-            @Override
-            public BigInteger call() {
-                return getValidUntilBlock();
-            }
-        }).flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
+        return getValidUntilBlock().flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
             @Override
             public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
                 Transaction transaction = Transaction.createFunctionCallTransaction(
@@ -184,56 +178,62 @@ public class AppChainRpcService {
 
     public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
+        return getValidUntilBlock().flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
+                @Override
+                public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
+                    Transaction transaction = Transaction.createFunctionCallTransaction(
+                            NumberUtil.toLowerCaseWithout0x(toAddress),
+                            randomNonce(), quota ,
+                            validUntilBlock.longValue(), version, chainId,
+                            NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
+                    try {
+                        String privateKey = NumberUtil.toLowerCaseWithout0x(
+                                WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
+                        String rawTx = transaction.sign(privateKey, false, false);
+                        AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+                        if (appSendTransaction.getError() != null) {
+                            Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                        }
+                        SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(),
+                                validUntilBlock.longValue() + "");
+                        return Observable.just(appSendTransaction);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Observable.error(new TransactionErrorException(e.getMessage()));
+                    }
+                    return Observable.just(null);
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static TransactionReceipt getTransactionReceipt(String hash) {
+        try {
+            return service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static Observable<BigInteger> getValidUntilBlock() {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
-            public BigInteger call() {
-                return getValidUntilBlock();
+            public BigInteger call() throws Exception {
+                return BigInteger.valueOf((service.appBlockNumber().send())
+                        .getBlockNumber().longValue() + ConstUtil.VALID_BLOCK_NUMBER_DIFF);
             }
-        }).flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
-            @Override
-            public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
-                Transaction transaction = Transaction.createFunctionCallTransaction(
-                        NumberUtil.toLowerCaseWithout0x(toAddress),
-                        randomNonce(), quota ,
-                        validUntilBlock.longValue(), version, chainId,
-                        NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
-                try {
-                    String privateKey = NumberUtil.toLowerCaseWithout0x(
-                            WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
-                    String rawTx = transaction.sign(privateKey, false, false);
-                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
-                    if (appSendTransaction.getError() != null) {
-                        Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
-                    }
-                    SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(), validUntilBlock.longValue() + "");
-                    return Observable.just(appSendTransaction);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Observable.error(new TransactionErrorException(e.getMessage()));
-                }
-                return Observable.just(null);
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        });
     }
 
-
-    public static TransactionReceipt getTransactionReceipt(String hash) throws IOException {
-        return service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
-    }
-
-    private static BigInteger getValidUntilBlock() {
+    public static BigInteger getBlockNumber() {
         try {
-            return BigInteger.valueOf((service.appBlockNumber().send())
-                    .getBlockNumber().longValue() + ConstUtil.VALID_BLOCK_NUMBER_DIFF);
-        } catch (Exception e) {
+            return (service.appBlockNumber().send()).getBlockNumber();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return BigInteger.ZERO;
-    }
-
-    public static BigInteger getBlockNumber() throws IOException {
-        return (service.appBlockNumber().send()).getBlockNumber();
     }
 
     private static final String TRANSFER_METHOD = "transfer";
