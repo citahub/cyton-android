@@ -160,7 +160,7 @@ public class TransactionListPresenter {
                     ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
                     TokenType tokenType = isNativeToken(tokenItem) ? TokenType.NATIVE : TokenType.TOKEN;
                     List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, tokenType, chain.httpProvider,
-                            tokenItem.contractAddress, list, from);
+                            tokenItem.contractAddress, list);
                     listener.refreshList(allList);
                 }
             }

@@ -163,25 +163,20 @@ public class TransferPresenter {
 
 
     private void initAppChainQuota() {
-        AppChainRpcService.getQuotaPrice(mWalletItem.address).subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-
-            }
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onNext(String quotaPrice) {
-                mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress)
-                        ? ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
-                mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
-                mTransferFee = NumberUtil.getEthFromWei(mQuota);
-                mTransferView.updateAppChainQuota(
-                        NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
-            }
-        });
+        AppChainRpcService.getQuotaPrice(mWalletItem.address)
+                .subscribe(new NeuronSubscriber<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onNext(String quotaPrice) {
+                        mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstUtil.QUOTA_TOKEN : ConstUtil.QUOTA_ERC20;
+                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
+                        mTransferFee = NumberUtil.getEthFromWei(mQuota);
+                        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+                    }
+                });
 
     }
 
