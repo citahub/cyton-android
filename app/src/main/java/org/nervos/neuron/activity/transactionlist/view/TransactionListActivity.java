@@ -45,6 +45,7 @@ public class TransactionListActivity extends NBaseActivity {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerViewLoadMoreScroll scrollListener;
 
     private TitleBar titleBar;
     private AppCompatButton receiveButton, transferButton;
@@ -56,7 +57,6 @@ public class TransactionListActivity extends NBaseActivity {
     private TransactionAdapter transactionAdapter;
 
     private TransactionListPresenter presenter;
-    private RecyclerViewLoadMoreScroll scrollListener;
 
     private String describe;
     private int mPage = 0;
