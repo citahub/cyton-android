@@ -28,7 +28,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class ConfirmMnemonicActivity extends BaseActivity {
 
     private TagFlowLayout selectedTagLayout;

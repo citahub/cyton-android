@@ -1,15 +1,15 @@
 package org.nervos.neuron.service.http;
 
 import android.content.Context;
-import org.nervos.appchain.protocol.core.methods.response.AppBlock;
-import org.nervos.appchain.utils.Numeric;
+import android.text.TextUtils;
+
+import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import org.nervos.neuron.util.db.DBChainUtil;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import rx.Observable;
 
@@ -18,25 +18,28 @@ import rx.Observable;
  */
 public class AppChainTransactionService {
 
-    public static void checkTransactionStatus(Context context, CheckImpl impl) {
+    public static void checkTransactionStatus(Context context, OnCheckResultListener listener) {
         Observable.from(DBAppChainTransactionsUtil.getAllTransactions(context))
                 .subscribe(new NeuronSubscriber<TransactionItem>() {
                     @Override
                     public void onError(Throwable e) {
-                        impl.checkFinish();
+                        listener.checkFinish();
                     }
                     @Override
                     public void onNext(TransactionItem item) {
-                        impl.checkFinish();
-                        AppChainRpcService.setHttpProvider(Objects.requireNonNull(DBChainUtil.getChain(context, item.chainId)).httpProvider);
-                        AppBlock appBlock = AppChainRpcService.getAppBlock(item.hash);
-                        if (appBlock != null) {
-                            if (!appBlock.hasError()) {
+                        listener.checkFinish();
+                        TransactionReceipt receipt = AppChainRpcService.getTransactionReceipt(item.hash);
+                        if (receipt != null) {
+                            if (!TextUtils.isEmpty(receipt.getErrorMessage())) {
                                 item.status = TransactionItem.FAILED;
                                 DBAppChainTransactionsUtil.update(context, item);
-                            } else if (Numeric.decodeQuantity(item.validUntilBlock).compareTo(AppChainRpcService.getBlockNumber()) > 0) {
+                            } else {
                                 DBAppChainTransactionsUtil.delete(context, item);
                             }
+                        } else if (new BigInteger(item.validUntilBlock)
+                                .compareTo(AppChainRpcService.getBlockNumber()) < 0) {
+                            item.status = TransactionItem.FAILED;
+                            DBAppChainTransactionsUtil.update(context, item);
                         }
                     }
                 });
@@ -58,7 +61,7 @@ public class AppChainTransactionService {
         return list;
     }
 
-    public interface CheckImpl {
+    public interface OnCheckResultListener {
         void checkFinish();
     }
 

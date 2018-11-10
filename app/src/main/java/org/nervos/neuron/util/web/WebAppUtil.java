@@ -46,6 +46,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/5/24
+ */
 public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";

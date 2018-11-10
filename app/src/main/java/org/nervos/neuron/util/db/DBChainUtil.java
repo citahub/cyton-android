@@ -13,6 +13,9 @@ import org.nervos.neuron.util.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/5/24
+ */
 public class DBChainUtil extends DBUtil {
 
     private static final String DB_CHAIN = "db_chain";

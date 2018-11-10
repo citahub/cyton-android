@@ -37,6 +37,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class TokenManageActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;

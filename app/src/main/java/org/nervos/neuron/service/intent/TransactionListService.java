@@ -11,7 +11,7 @@ import org.nervos.neuron.service.http.AppChainTransactionService;
  */
 public class TransactionListService extends JobIntentService {
 
-    public static AppChainTransactionService.CheckImpl impl;
+    public static AppChainTransactionService.OnCheckResultListener impl;
 
     /**
      * Unique job ID for this service.

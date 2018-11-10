@@ -37,7 +37,9 @@ import org.web3j.utils.Numeric;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class ImportPrivateKeyFragment extends NBaseFragment {
 
     private static final int REQUEST_CODE = 0x01;

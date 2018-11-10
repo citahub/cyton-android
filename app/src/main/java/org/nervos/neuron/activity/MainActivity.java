@@ -22,6 +22,9 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";

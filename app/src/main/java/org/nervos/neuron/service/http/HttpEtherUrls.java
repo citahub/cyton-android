@@ -4,6 +4,9 @@ import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
+/**
+ * Created by duanyytop on 2018/11/18
+ */
 public class HttpEtherUrls {
 
     // Ether node host

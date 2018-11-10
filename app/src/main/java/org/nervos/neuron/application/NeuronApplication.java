@@ -11,7 +11,9 @@ import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
-
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class NeuronApplication extends Application {
 
     @Override

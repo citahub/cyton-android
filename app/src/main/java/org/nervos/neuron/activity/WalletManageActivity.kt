@@ -15,7 +15,9 @@ import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil
 
 import kotlinx.android.synthetic.main.activity_wallet_manage.*
-
+/**
+ * Created by duanyytop on 2018/11/7
+ */
 class WalletManageActivity : NBaseActivity() {
 
     private var walletItem: WalletItem? = null

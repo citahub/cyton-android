@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class AddTokenActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;

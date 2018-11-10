@@ -68,6 +68,9 @@ import java.io.File;
 import rx.Observable;
 import rx.Subscriber;
 
+/**
+ * Created by duanyytop on 2018/5/28
+ */
 public class AppWebActivity extends NBaseActivity {
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";

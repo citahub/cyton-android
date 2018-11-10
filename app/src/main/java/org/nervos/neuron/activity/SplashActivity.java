@@ -13,6 +13,9 @@ import org.nervos.neuron.util.RootUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
+/**
+ * Created by duanyytop on 2018/6/12
+ */
 public class SplashActivity extends BaseActivity {
 
     public static final String EXTRA_FIRST = "extra_first";

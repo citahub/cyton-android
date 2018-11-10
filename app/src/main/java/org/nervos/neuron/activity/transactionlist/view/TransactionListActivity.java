@@ -126,7 +126,7 @@ public class TransactionListActivity extends NBaseActivity {
     }
 
     private void initDescribe() {
-        if (presenter.isEthereum(tokenItem)) {
+        if (presenter.isEther(tokenItem)) {
             if (!presenter.isNativeToken(tokenItem)) {
                 presenter.getTokenDescribe();
             } else {
@@ -143,7 +143,7 @@ public class TransactionListActivity extends NBaseActivity {
     }
 
     private void initBalance() {
-        if (tokenItem.balance != 0.0 && presenter.isEthereum(tokenItem)) {
+        if (tokenItem.balance != 0.0 && presenter.isEther(tokenItem)) {
             presenter.getBalance();
         }
     }

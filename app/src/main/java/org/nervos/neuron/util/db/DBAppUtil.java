@@ -11,6 +11,9 @@ import org.nervos.neuron.item.AppItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/5/25
+ */
 public class DBAppUtil extends DBUtil {
 
     private static final String DB_APP = "db_app";

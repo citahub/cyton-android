@@ -9,6 +9,9 @@ import com.snappydb.SnappydbException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/6/17
+ */
 public class DBHistoryUtil extends DBUtil {
 
     private static final String DB_HISTORY = "db_history";

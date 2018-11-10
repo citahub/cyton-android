@@ -22,6 +22,9 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProgressCircleDialog;
 import org.nervos.neuron.view.dialog.ProgressingDialog;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class BaseActivity extends AppCompatActivity {
 
     private static final int INTERVAL_TIME = 20000;

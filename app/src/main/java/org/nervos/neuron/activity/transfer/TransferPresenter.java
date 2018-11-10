@@ -37,6 +37,9 @@ import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_ADDRESS
 import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_TOKEN;
 import static org.web3j.utils.Convert.Unit.GWEI;
 
+/**
+ * Created by duanyytop on 2018/11/4
+ */
 public class TransferPresenter {
 
 
@@ -267,7 +270,7 @@ public class TransferPresenter {
      */
     private void transferAppChainToken(String password, double transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        SaveAppChainPendingItemUtils.setTranaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
+        SaveAppChainPendingItemUtils.setTransaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
                 receiveAddress, NumberUtil.getDecimal8ENotation(transferValue));
         AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue,
                 "", ConstUtil.QUOTA_TOKEN.longValue(), mTokenItem.chainId, password)
@@ -292,7 +295,7 @@ public class TransferPresenter {
      */
     private void transferAppChainErc20(String password, double transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        SaveAppChainPendingItemUtils.setTranaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
+        SaveAppChainPendingItemUtils.setTransaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
                 receiveAddress, NumberUtil.getDecimal8ENotation(transferValue));
         try {
             AppChainRpcService.transferErc20(mActivity, mTokenItem,

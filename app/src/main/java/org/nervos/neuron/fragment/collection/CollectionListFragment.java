@@ -21,6 +21,9 @@ import java.util.List;
 
 import rx.Subscriber;
 
+/**
+ * Created by duanyytop on 2018/8/6
+ */
 public class CollectionListFragment extends NBaseFragment {
 
     public static final String EXTRA_COLLECTION = "collection";

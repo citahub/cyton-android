@@ -8,10 +8,10 @@ import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
-import org.nervos.appchain.protocol.core.methods.response.AppBlock;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.protocol.system.NervosjSysContract;
@@ -121,9 +121,9 @@ public class AppChainRpcService {
     }
 
 
-    public static AppBlock getAppBlock(String hash) {
+    public static AppTransaction getTransactionByHash(String hash) {
         try {
-            return  service.appGetBlockByHash(hash, true).send();
+            return  service.appGetTransactionByHash(hash).send();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -188,7 +188,7 @@ public class AppChainRpcService {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
                         }
 
-                        SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(),
+                        SaveAppChainPendingItemUtils.saveTransactionDB(context, appSendTransaction.getSendTransactionResult().getHash(),
                                 validUntilBlock.longValue() + "");
 
                         return Observable.just(appSendTransaction);
