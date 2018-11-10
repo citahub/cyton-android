@@ -25,7 +25,9 @@ public class TransactionItem implements Parcelable {
     public String gasPrice;
     public String blockNumber;
     public String errorMessage;
-    //0 failed 1 success 2 pending
+
+    public String validUntilBlock;
+    //0 update 1 success 2 pending
     public int status;
     public long chainId;
     public String symbol;

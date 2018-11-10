@@ -316,7 +316,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
         /**
          * Callback for Camera init result.
          *
-         * @param e If is's null,means success.otherwise Camera init failed with the Exception.
+         * @param e If is's null,means success.otherwise Camera init update with the Exception.
          */
         void callBack(Exception e);
     }

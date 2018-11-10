@@ -302,7 +302,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(
                 mTransactionInfo.chainId));
-        SaveAppChainPendingItemUtils.setNativeToken(mActivity, mTransactionInfo.chainId,
+        SaveAppChainPendingItemUtils.setTranaction(mTransactionInfo.chainId,
                 mWalletItem.address.toLowerCase(), mTransactionInfo.to.toLowerCase(), "0");
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getDoubleValue(),

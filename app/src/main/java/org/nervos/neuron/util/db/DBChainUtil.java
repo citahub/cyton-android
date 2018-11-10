@@ -25,7 +25,6 @@ public class DBChainUtil extends DBUtil {
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
                     ChainItem chainItem = db.getObject(key, ChainItem.class);
-                    LogUtil.d("chainItem: " + new Gson().toJson(chainItem));
                     chainItem.chainId = Integer.parseInt(getDbOrigin(key));
                     chainItemList.add(chainItem);
                 }
