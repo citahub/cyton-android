@@ -4,13 +4,10 @@ package org.nervos.neuron.service.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -31,26 +28,30 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class EthRpcService {
+
+    private static final String TRANSFER_FAIL = "Transfer fail";
+    private static final String SIGN_FAIL = "Sign fail";
 
     private static WalletItem walletItem;
     private static Web3j service;
@@ -73,78 +74,51 @@ public class EthRpcService {
     }
 
     public static Observable<BigInteger> getEthGasPrice() {
-        return Observable.fromCallable(new Callable<BigInteger>() {
-            @Override
-            public BigInteger call() {
-                BigInteger gasPrice = ConstUtil.GAS_PRICE;
-                try {
-                    gasPrice = service.ethGasPrice().send().getGasPrice();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return gasPrice;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        return Observable.fromCallable(() ->
+                service.ethGasPrice().send().getGasPrice())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Observable<BigInteger> getEthGasLimit(TransactionInfo transactionInfo) {
         String data = TextUtils.isEmpty(transactionInfo.data) ? "" : Numeric.prependHexPrefix(transactionInfo.data);
         Transaction transaction = new Transaction(walletItem.address, null, null, null,
                 Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(), data);
-        return Observable.fromCallable(new Callable<BigInteger>() {
-            @Override
-            public BigInteger call() {
-                BigInteger gasLimit = ConstUtil.GAS_ERC20_LIMIT;
-                try {
-                    EthEstimateGas ethEstimateGas = service.ethEstimateGas(transaction).send();
-                    gasLimit = ethEstimateGas.getAmountUsed();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return gasLimit;
+        return Observable.fromCallable(() -> {
+            try {
+                return service.ethEstimateGas(transaction).send().getAmountUsed();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+            return ConstUtil.GAS_ERC20_LIMIT;
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     *
+     * @param address
+     * @param value
+     * @param gasPrice
+     * @param gasLimit
+     * @param data
+     * @param password
+     * @return
+     */
     public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice,
                                                              BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_LIMIT : gasLimit;
-        BigInteger finalGasLimit = gasLimit;
-        String sdata = data == null ? "" : data;
-        return Observable.fromCallable(new Callable<BigInteger>() {
-            @Override
-            public BigInteger call() throws Exception {
-                EthGetTransactionCount ethGetTransactionCount =
-                        service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
-                return ethGetTransactionCount.getTransactionCount();
-            }
-        }).flatMap(new Func1<BigInteger, Observable<String>>() {
-            @Override
-            public Observable<String> call(BigInteger nonce) {
-                try {
-                    WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
-                    Credentials credentials = Credentials.create(walletEntity.getPrivateKey());
-                    RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, address,
-                            NumberUtil.getWeiFromEth(value), sdata);
-                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-                    return Observable.just(Numeric.toHexString(signedMessage));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return Observable.just(null);
-            }
-        }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(String hexValue) {
-                try {
-                    EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).sendAsync().get();
-                    return Observable.just(ethSendTransaction);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return Observable.just(null);
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        return signRawTransaction(address, data == null ? "" : data, NumberUtil.getWeiFromEth(value), gasPrice, gasLimit, password)
+                .flatMap((Func1<String, Observable<EthSendTransaction>>) hexValue -> {
+                    try {
+                        return Observable.just(service.ethSendRawTransaction(hexValue).sendAsync().get());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Observable.error(e);
+                    }
+                    return Observable.error(new Throwable(TRANSFER_FAIL));
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -179,54 +153,51 @@ public class EthRpcService {
 
     public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value,
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
-        BigInteger transferValue = getTransferValue(tokenItem, value);
-        String data = createTokenTransferData(address, transferValue);
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstUtil.GAS_ERC20_LIMIT : gasLimit;
-        BigInteger finalGasLimit = gasLimit;
-        return Observable.fromCallable(new Callable<BigInteger>() {
-            @Override
-            public BigInteger call() throws Exception {
-                EthGetTransactionCount ethGetTransactionCount =
-                        service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send();
-                return ethGetTransactionCount.getTransactionCount();
-            }
-        }).flatMap(new Func1<BigInteger, Observable<String>>() {
-            @Override
-            public Observable<String> call(BigInteger nonce) {
-                try {
-                    WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
-                    Credentials credentials = Credentials.create(walletEntity.getPrivateKey());
-                    RawTransaction rawTransaction =
-                            RawTransaction.createTransaction(nonce, gasPrice, finalGasLimit, tokenItem.contractAddress, data);
-                    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-                    return Observable.just(Numeric.toHexString(signedMessage));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return Observable.just(null);
-            }
-        }).flatMap(new Func1<String, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(String hexValue) {
-                try {
-                    EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).sendAsync().get();
-                    return Observable.just(ethSendTransaction);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return Observable.just(null);
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        String data = createTokenTransferData(address, createTransferValue(tokenItem, value));
+        return signRawTransaction(tokenItem.contractAddress, data, gasPrice, gasLimit, password)
+                .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
+                    try {
+                        return Observable.just(service.ethSendRawTransaction(signData).sendAsync().get());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Observable.error(e);
+                    }
+                    return Observable.error(new Throwable(TRANSFER_FAIL));
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
-    private static BigInteger getTransferValue(TokenItem tokenItem, double value) {
-        StringBuilder sb = new StringBuilder("1");
-        for (int i = 0; i < tokenItem.decimals; i++) {
-            sb.append("0");
-        }
-        BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long) (ConstUtil.LONG_6 * value))).divide(BigInteger.valueOf(ConstUtil.LONG_6));
+
+    private static Observable<String> signRawTransaction(String receiveAddress, String data, BigInteger gasPrice,
+                                                         BigInteger gasLimit, String password) {
+        return signRawTransaction(receiveAddress, data, BigInteger.ZERO, gasPrice, gasLimit, password);
+    }
+
+    private static Observable<String> signRawTransaction(String receiveAddress, String data, BigInteger value, BigInteger gasPrice,
+                                                         BigInteger gasLimit, String password) {
+        return Observable.fromCallable(() ->
+                service.ethGetTransactionCount(walletItem.address, DefaultBlockParameterName.LATEST).send().getTransactionCount())
+                .flatMap((Func1<BigInteger, Observable<String>>) nonce -> {
+                    try {
+                        RawTransaction rawTransaction = RawTransaction.createTransaction(
+                                nonce, gasPrice, gasLimit, receiveAddress, value, data);
+
+                        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction,
+                                Credentials.create(WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey()));
+                        return Observable.just(Numeric.toHexString(signedMessage));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Observable.error(e);
+                    }
+                    return Observable.error(new Throwable(SIGN_FAIL));
+                });
+    }
+
+
+    private static BigInteger createTransferValue(TokenItem tokenItem, double value) {
+        return BigInteger.TEN.pow(tokenItem.decimals).multiply(BigDecimal.valueOf(value).toBigInteger());
     }
 
 

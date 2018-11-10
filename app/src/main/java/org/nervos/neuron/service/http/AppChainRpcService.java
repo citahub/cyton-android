@@ -36,6 +36,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class AppChainRpcService {
+
+    private static final String TRANSFER_FAIL = "Transfer fail";
 
     private static Nervosj service;
 
@@ -107,10 +113,10 @@ public class AppChainRpcService {
     public static AppMetaData getMetaData() {
         try {
             return service.appMetaData(DefaultBlockParameterName.LATEST).send();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
 
@@ -124,88 +130,66 @@ public class AppChainRpcService {
     }
 
     public static Observable<String> getQuotaPrice(String from) {
-        return Observable.fromCallable(new Callable<String>() {
-            @Override
-            public String call() {
-                try {
-                    String price = new NervosjSysContract(service).getQuotaPrice(from).getValue();
-                    return price.equals(ConstUtil.RPC_RESULT_ZERO)? ConstUtil.QUOTA_PRICE_DEFAULT : price;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return "0";
+        return Observable.fromCallable(() -> {
+            try {
+                return Numeric.toBigInt(new NervosjSysContract(service).getQuotaPrice(from).getValue()).toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Observable.error(e);
             }
+            return ConstUtil.QUOTA_PRICE_DEFAULT;
         }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
+                  .observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
-                       String address, double value, long quota, int chainId, String password){
-        BigInteger ercValue = getERC20TransferValue(tokenItem, value);
-        String data = createTokenTransferData(Numeric.cleanHexPrefix(address), ercValue);
-        return getValidUntilBlock().flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
-            @Override
-            public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
-                Transaction transaction = Transaction.createFunctionCallTransaction(
-                        NumberUtil.toLowerCaseWithout0x(tokenItem.contractAddress),
-                        randomNonce(), quota, validUntilBlock.longValue(),
-                        version, chainId, BigInteger.ZERO.toString(), data);
-                try {
-                    String privateKey = NumberUtil.toLowerCaseWithout0x(
-                            WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
-                    String rawTx = transaction.sign(privateKey, false, false);
-                    AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
-                    if (appSendTransaction.getError() != null) {
-                        Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
-                    }
-                    if (appSendTransaction.getSendTransactionResult() != null) {
-                        SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(),
-                                validUntilBlock.toString());
-                    }
-                    return Observable.just(appSendTransaction);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Observable.error(new TransactionErrorException(e.getMessage()));
-                }
-                return Observable.just(null);
-            }
-        }).subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread());
-
+                       String address, double value, long quota, int chainId, String password) {
+        String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(tokenItem, value));
+        return signTransaction(context, tokenItem.contractAddress, 0, data, quota, chainId, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, double value,
                                        String data, long quota, int chainId,  String password) {
-        return getValidUntilBlock().flatMap(new Func1<BigInteger, Observable<AppSendTransaction>>() {
-                @Override
-                public Observable<AppSendTransaction> call(BigInteger validUntilBlock) {
-                    Transaction transaction = Transaction.createFunctionCallTransaction(
-                            NumberUtil.toLowerCaseWithout0x(toAddress),
-                            randomNonce(), quota ,
-                            validUntilBlock.longValue(), version, chainId,
-                            NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
+        return signTransaction(context, toAddress, value, data, quota, chainId, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private static Observable<AppSendTransaction> signTransaction(Context context, String toAddress, double value,
+                                                           String data, long quota, int chainId,  String password) {
+        return getValidUntilBlock()
+                .flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
                     try {
+                        Transaction transaction = Transaction.createFunctionCallTransaction(
+                                NumberUtil.toLowerCaseWithout0x(toAddress),
+                                randomNonce(), quota, validUntilBlock.longValue(), version, chainId,
+                                NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
+
                         String privateKey = NumberUtil.toLowerCaseWithout0x(
                                 WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey());
                         String rawTx = transaction.sign(privateKey, false, false);
                         AppSendTransaction appSendTransaction = service.appSendRawTransaction(rawTx).send();
+
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
                         }
+
                         SaveAppChainPendingItemUtils.saveItem(context, appSendTransaction.getSendTransactionResult().getHash(),
                                 validUntilBlock.longValue() + "");
+
                         return Observable.just(appSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Observable.error(new TransactionErrorException(e.getMessage()));
+                        Observable.error(e);
                     }
-                    return Observable.just(null);
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
+                    return Observable.error(new Throwable(TRANSFER_FAIL));
+                });
     }
+
 
 
     public static TransactionReceipt getTransactionReceipt(String hash) {
@@ -247,13 +231,7 @@ public class AppChainRpcService {
     }
 
     private static BigInteger getERC20TransferValue(TokenItem tokenItem, double value) {
-        StringBuilder sb = new StringBuilder("1");
-        for (int i = 0; i < tokenItem.decimals; i++) {
-            sb.append("0");
-        }
-        BigInteger ERC20Decimal = new BigInteger(sb.toString());
-        return ERC20Decimal.multiply(BigInteger.valueOf((long) (ConstUtil.LONG_6 * value)))
-                .divide(BigInteger.valueOf(ConstUtil.LONG_6));
+        return BigInteger.TEN.pow(tokenItem.decimals).multiply(BigDecimal.valueOf(value).toBigInteger());
     }
 
     private static String getErc20Name(String contractAddress) throws Exception {
