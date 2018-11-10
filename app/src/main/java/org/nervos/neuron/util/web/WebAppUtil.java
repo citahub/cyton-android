@@ -31,8 +31,10 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import okhttp3.Call;
@@ -62,86 +64,91 @@ public class WebAppUtil {
      */
     public static Observable<ChainItem> getHttpManifest(WebView webView, String url) {
         return Observable.fromCallable(new Callable<String>() {
-            @Override
-            public String call() throws IOException {
-                Document doc = Jsoup.connect(url).get();
-                Elements elements = doc.getElementsByTag("link");
-                for (Element element : elements) {
-                    if (MANIFEST.equals(element.attr("rel"))) {
-                        return element.attr("href");
+                    @Override
+                    public String call() throws IOException {
+                        return getManifestPath(url);
                     }
-                }
-                return "";
-            }
-        }).filter(path -> !TextUtils.isEmpty(path))
-          .flatMap((Func1<String, Observable<AppItem>>) path -> {
-            URI uri = URI.create(url);
-            String manifestUrl = path;
-            if (!path.startsWith("http")) {
-                manifestUrl = uri.getAuthority() + "/";
-                manifestUrl += path.startsWith(".")? uri.getPath() + "/" + path.substring(1) : path;
-                manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
-            }
+                }).filter(path -> !TextUtils.isEmpty(path))
+                  .flatMap((Func1<String, Observable<AppItem>>) path -> {
+                      try {
+                          mAppItem = new Gson().fromJson(getManifestResponse(handleManifetPath(url, path)), AppItem.class);
+                      } catch (Throwable throwable) {
+                          throwable.printStackTrace();
+                          Observable.error(throwable);
+                      }
+                      if (mAppItem == null || mAppItem.chainSet == null || mAppItem.chainSet.size() <= 0 || mAppItem.chainSet.size() > 5) {
+                          Observable.error(new Throwable(new Throwable(
+                                  "Manifest chain set is null, please provide chain id and host")));
+                      }
+                      return Observable.just(mAppItem);
+                }).flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
+                      List<ChainItem> chainItemList = new ArrayList<>();
+                      for (Map.Entry<String, String> entry : appItem.chainSet.entrySet()) {
+                          chainItemList.add(new ChainItem(Integer.parseInt(entry.getKey()), mAppItem.name, entry.getValue()));
+                          SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
+                      }
+                      return Observable.from(chainItemList);
+                  }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
+                    @Override
+                    public Observable<ChainItem> call(ChainItem chainItem) {
+                        AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
+                        AppMetaData.AppMetaDataResult ethMetaData =
+                                Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
+                        if (ethMetaData != null) {
+                            chainItem.name = ethMetaData.chainName;
+                            chainItem.tokenAvatar = ethMetaData.tokenAvatar;
+                            chainItem.tokenSymbol = ethMetaData.tokenSymbol;
+                            chainItem.tokenName = ethMetaData.tokenName;
+                        } else {
+                            Observable.error(new Throwable(webView.getContext().getString(R.string.meta_data_error)
+                                    + chainItem.httpProvider));
+                        }
+                        return Observable.just(chainItem);
+                    }
+                }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+    }
 
-            Request request = new Request.Builder().url(manifestUrl).build();
-            Call call = HttpService.getHttpClient().newCall(request);
-            String response = "";
-            ResponseBody body = null;
-            try {
-                final Response resp = call.execute();
-                final int code = resp.code();
-                body = resp.body();
-                if (code == 200) {
-                    response = body.string();
-                }
-                if (body != null) {
-                    body.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return Observable.error(new Throwable(e.getMessage()));
-            } finally {
-                if (body != null) {
-                    body.close();
-                }
+    private static String getManifestResponse(String path) throws Throwable {
+        Request request = new Request.Builder().url(path).build();
+        Call call = HttpService.getHttpClient().newCall(request);
+        Response resp = null;
+        try {
+            resp = call.execute();
+            if (resp.code() == 200 && resp.body() != null) {
+                return resp.body().string();
             }
-            mAppItem = new Gson().fromJson(response, AppItem.class);
-            return Observable.just(mAppItem);
-        }).filter(appItem -> appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5)
-          .flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
-              Map<String, String> chainSet = appItem.chainSet;
-              List<ChainItem> chainItemList = new ArrayList<>();
-              if (chainSet.size() == 0) {
-                  return Observable.error(new Throwable(
-                          "Manifest chain set is null, please provide chain id and host"));
-              }
-              for (Map.Entry<String, String> entry : chainSet.entrySet()) {
-                  ChainItem item = new ChainItem();
-                  item.chainId = Integer.parseInt(entry.getKey());
-                  item.httpProvider = entry.getValue();
-                  chainItemList.add(item);
-                  SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
-              }
-              return Observable.from(chainItemList);
-          }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
-            @Override
-            public Observable<ChainItem> call(ChainItem chainItem) {
-                AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
-                AppMetaData.AppMetaDataResult ethMetaData =
-                        AppChainRpcService.getMetaData().getAppMetaDataResult();
-                if (ethMetaData != null) {
-                    chainItem.name = ethMetaData.chainName;
-                    chainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                    chainItem.tokenSymbol = ethMetaData.tokenSymbol;
-                    chainItem.tokenName = ethMetaData.tokenName;
-                } else {
-                    chainItem.errorMessage = webView.getContext().getString(R.string.meta_data_error)
-                            + chainItem.httpProvider;
-                }
-                return Observable.just(chainItem);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Throwable(e.getMessage());
+        } finally {
+            if (resp != null && resp.body() != null) {
+                resp.body().close();
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }
+        return null;
+    }
+
+    private static String getManifestPath(String url) throws IOException {
+        Document doc = Jsoup.connect(url).get();
+        Elements elements = doc.getElementsByTag("link");
+        for (Element element : elements) {
+            if (MANIFEST.equals(element.attr("rel"))) {
+                return element.attr("href");
+            }
+        }
+        return "";
+    }
+
+    private static String handleManifetPath(String url, String path) {
+        URI uri = URI.create(url);
+        String manifestUrl = path;
+        if (!path.startsWith("http")) {
+            manifestUrl = uri.getAuthority() + "/";
+            manifestUrl += path.startsWith(".") ? uri.getPath() + "/" + path.substring(1) : path;
+            manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
+        }
+        return manifestUrl;
     }
 
     private static String formatUrl(String url) {

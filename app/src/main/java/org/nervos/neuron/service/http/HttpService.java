@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import okhttp3.Call;
@@ -118,7 +119,7 @@ public class HttpService {
             @Override
             public AppMetaData.AppMetaDataResult call() {
                 AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_URL);
-                return AppChainRpcService.getMetaData().getAppMetaDataResult();
+                return Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
             @Override
