@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
-import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
@@ -21,8 +20,6 @@ import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil.TokenType;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
@@ -157,11 +154,7 @@ public class TransactionListPresenter {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    ChainItem chain = DBChainUtil.getChain(activity, tokenItem.chainId);
-                    TokenType tokenType = isNativeToken(tokenItem) ? TokenType.NATIVE : TokenType.TOKEN;
-                    List<TransactionItem> allList = AppChainTransactionService.getTransactionList(activity, tokenType, chain.httpProvider,
-                            tokenItem.contractAddress, list);
-                    listener.refreshList(allList);
+                    listener.refreshList(AppChainTransactionService.getTransactionList(activity, tokenItem.chainId, list));
                 }
             }
         });

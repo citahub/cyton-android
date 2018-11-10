@@ -267,10 +267,8 @@ public class TransferPresenter {
      */
     private void transferAppChainToken(String password, double transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        SaveAppChainPendingItemUtils.setNativeToken(mActivity,
-                mTokenItem.chainId, mWalletItem.address.toLowerCase(),
-                receiveAddress,
-                NumberUtil.getDecimal8ENotation(transferValue));
+        SaveAppChainPendingItemUtils.setTranaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
+                receiveAddress, NumberUtil.getDecimal8ENotation(transferValue));
         AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue,
                 "", ConstUtil.QUOTA_TOKEN.longValue(), mTokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -294,10 +292,8 @@ public class TransferPresenter {
      */
     private void transferAppChainErc20(String password, double transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        SaveAppChainPendingItemUtils.setErc20(mActivity, mTokenItem.contractAddress,
-                mTokenItem.chainId, mWalletItem.address.toLowerCase(),
-                receiveAddress,
-                NumberUtil.getDecimal8ENotation(transferValue));
+        SaveAppChainPendingItemUtils.setTranaction(mTokenItem.chainId, mWalletItem.address.toLowerCase(),
+                receiveAddress, NumberUtil.getDecimal8ENotation(transferValue));
         try {
             AppChainRpcService.transferErc20(mActivity, mTokenItem,
                     receiveAddress, transferValue, mQuotaLimit.longValue(), mTokenItem.chainId, password)

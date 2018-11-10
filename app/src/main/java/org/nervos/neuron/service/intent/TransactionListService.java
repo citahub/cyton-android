@@ -27,7 +27,7 @@ public class TransactionListService extends JobIntentService {
 
     @Override
     protected void onHandleWork(Intent intent) {
-        AppChainTransactionService.checkResult(this, impl);
+        AppChainTransactionService.checkTransactionStatus(this, impl);
     }
 
 }

@@ -2,45 +2,32 @@ package org.nervos.neuron.util;
 
 import android.content.Context;
 
-import org.nervos.neuron.item.AppChainTransactionDBItem;
+import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBChainUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
+
+import java.util.Objects;
 
 /**
  * Created by BaojunCZ on 2018/10/17.
  */
 public class SaveAppChainPendingItemUtils {
 
-    private static AppChainTransactionDBItem appChainTransactionDBItem = new AppChainTransactionDBItem();
+    private static TransactionItem transactionItem = new TransactionItem();
 
-    public static void setNativeToken(Context context, long chainId, String from, String to, String value) {
-        appChainTransactionDBItem.timestamp = System.currentTimeMillis();
-        appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(chainId);
-        appChainTransactionDBItem.from = from;
-        appChainTransactionDBItem.to = to;
-        appChainTransactionDBItem.value = value;
-        appChainTransactionDBItem.chainName = DBChainUtil.getChain(context, chainId).name;
-        appChainTransactionDBItem.status = AppChainTransactionDBItem.PENDING;
-        appChainTransactionDBItem.isNativeToken = true;
-    }
-
-    public static void setErc20(Context context, String contractAddress, long chainId, String from, String to, String value) {
-        appChainTransactionDBItem.timestamp = System.currentTimeMillis();
-        appChainTransactionDBItem.chain = SharePrefUtil.getChainHostFromId(chainId);
-        appChainTransactionDBItem.from = from;
-        appChainTransactionDBItem.to = to;
-        appChainTransactionDBItem.value = value;
-        appChainTransactionDBItem.chainName = DBChainUtil.getChain(context, chainId).name;
-        appChainTransactionDBItem.status = AppChainTransactionDBItem.PENDING;
-        appChainTransactionDBItem.contractAddress = contractAddress;
-        appChainTransactionDBItem.isNativeToken = false;
+    public static void setTranaction(long chainId, String from, String to, String value) {
+        transactionItem.setTimestamp(System.currentTimeMillis());
+        transactionItem.chainId = chainId;
+        transactionItem.from = from;
+        transactionItem.to = to;
+        transactionItem.value = value;
+        transactionItem.status = TransactionItem.PENDING;
     }
 
     public static void saveItem(Context context, String hash, String validUntilBlock) {
-        appChainTransactionDBItem.validUntilBlock = validUntilBlock;
-        appChainTransactionDBItem.hash = hash;
-        DBAppChainTransactionsUtil.save(context, true, appChainTransactionDBItem);
+        transactionItem.validUntilBlock = validUntilBlock;
+        transactionItem.hash = hash;
+        DBAppChainTransactionsUtil.save(context, transactionItem);
     }
 
 }

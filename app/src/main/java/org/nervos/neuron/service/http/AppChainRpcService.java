@@ -8,6 +8,7 @@ import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
+import org.nervos.appchain.protocol.core.methods.response.AppBlock;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
@@ -119,6 +120,15 @@ public class AppChainRpcService {
         }
     }
 
+
+    public static AppBlock getAppBlock(String hash) {
+        try {
+            return  service.appGetBlockByHash(hash, true).send();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static double getBalance(String address) throws Exception {
         AppGetBalance appGetBalance =
