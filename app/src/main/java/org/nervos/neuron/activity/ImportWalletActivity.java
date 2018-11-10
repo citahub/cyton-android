@@ -35,6 +35,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class ImportWalletActivity extends NBaseActivity {
 
     private ViewPager viewPager;

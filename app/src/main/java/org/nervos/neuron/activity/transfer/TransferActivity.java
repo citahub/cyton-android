@@ -47,6 +47,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static org.web3j.utils.Convert.Unit.GWEI;
 
+/**
+ * Created by duanyytop on 2018/11/4
+ */
 public class TransferActivity extends NBaseActivity implements TransferView {
 
     private static final int REQUEST_CODE_SCAN = 0x01;

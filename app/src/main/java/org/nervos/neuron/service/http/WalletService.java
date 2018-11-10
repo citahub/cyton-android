@@ -30,6 +30,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/5/31
+ */
 public class WalletService {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);

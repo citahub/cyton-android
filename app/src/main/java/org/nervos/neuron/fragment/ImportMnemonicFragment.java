@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class ImportMnemonicFragment extends BaseFragment {
 
     List<String> formats;

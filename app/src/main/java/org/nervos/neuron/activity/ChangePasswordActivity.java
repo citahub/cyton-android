@@ -17,6 +17,9 @@ import org.nervos.neuron.view.button.CommonButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by duanyytop on 2018/5/20
+ */
 public class ChangePasswordActivity extends NBaseActivity {
 
     private AppCompatEditText oldPasswordEdit;

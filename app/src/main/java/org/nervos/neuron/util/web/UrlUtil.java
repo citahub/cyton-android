@@ -3,6 +3,9 @@ package org.nervos.neuron.util.web;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Created by duanyytop on 2018/7/13
+ */
 public class UrlUtil {
 
     private final  static String HTTP = "http://";

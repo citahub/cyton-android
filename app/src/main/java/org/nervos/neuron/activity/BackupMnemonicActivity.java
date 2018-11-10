@@ -18,6 +18,9 @@ import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class BackupMnemonicActivity extends NBaseActivity {
 
     private TextView mnemonicText;

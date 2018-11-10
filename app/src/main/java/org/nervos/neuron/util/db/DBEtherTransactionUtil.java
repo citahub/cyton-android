@@ -10,6 +10,9 @@ import org.nervos.neuron.item.TransactionItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/11/18
+ */
 public class DBEtherTransactionUtil extends DBUtil {
 
     private static final String DB_ETH_TRANSACTION = "db_eth_transaction";

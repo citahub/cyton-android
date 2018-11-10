@@ -33,6 +33,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/10/15
+ */
 public class HttpService {
 
     private static final int OFFSET = 20;

@@ -26,7 +26,9 @@ import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.webview.SimpleWebViewClient;
 
-
+/**
+ * Created by duanyytop on 2018/6/6
+ */
 public class SimpleWebActivity extends BaseActivity {
     public static final String EXTRA_URL = "extra_url";
 

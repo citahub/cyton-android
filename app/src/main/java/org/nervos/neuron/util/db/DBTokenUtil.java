@@ -11,6 +11,9 @@ import org.nervos.neuron.item.TokenItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/6/12
+ */
 public class DBTokenUtil extends DBUtil {
 
     private static final String DB_TOKEN = "db_token";

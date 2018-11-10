@@ -47,7 +47,7 @@ public class TransactionListPresenter {
     }
 
     public void setTokenLogo(ImageView tokenLogoImage) {
-        if (isEthereum(tokenItem)) {
+        if (isEther(tokenItem)) {
             if (!isNativeToken(tokenItem)) {
                 if (TextUtils.isEmpty(tokenItem.avatar)) {
                     String address = tokenItem.contractAddress;
@@ -81,7 +81,7 @@ public class TransactionListPresenter {
     }
 
     public void getBalance() {
-        if (tokenItem.balance > 0.0 && isEthereum(tokenItem)) {
+        if (tokenItem.balance > 0.0 && isEther(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
                 @Override
@@ -117,10 +117,11 @@ public class TransactionListPresenter {
                 getUnofficialNoneData();
                 return;
             }
-            observable = isEthereum(tokenItem)
-                    ? HttpService.getEtherTransactionList(activity, 0) : HttpService.getAppChainTransactionList(activity, 0);
+            observable = isEther(tokenItem)
+                    ? HttpService.getEtherTransactionList(activity, 0)
+                    : HttpService.getAppChainTransactionList(activity, 0);
         } else {
-            observable = isEthereum(tokenItem)
+            observable = isEther(tokenItem)
                     ? HttpService.getEtherERC20TransactionList(activity, tokenItem, 0)
                     : HttpService.getAppChainERC20TransactionList(activity, tokenItem, 0);
         }
@@ -145,7 +146,7 @@ public class TransactionListPresenter {
                     return;
                 }
                 Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
-                if (isEthereum(tokenItem)) {
+                if (isEther(tokenItem)) {
                     for (TransactionItem item : list) {
                         item.status = TransactionItem.SUCCESS;
                     }
@@ -169,7 +170,7 @@ public class TransactionListPresenter {
         return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
-    public boolean isEthereum(TokenItem tokenItem) {
+    public boolean isEther(TokenItem tokenItem) {
         return tokenItem.chainId < 0;
     }
 

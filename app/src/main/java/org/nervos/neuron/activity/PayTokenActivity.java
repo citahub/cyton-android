@@ -49,6 +49,9 @@ import rx.schedulers.Schedulers;
 
 import static org.web3j.utils.Convert.Unit.GWEI;
 
+/**
+ * Created by duanyytop on 2018/5/28
+ */
 public class PayTokenActivity extends NBaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_HEX_HASH = "extra_hex_hash";
@@ -302,7 +305,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(
                 mTransactionInfo.chainId));
-        SaveAppChainPendingItemUtils.setTranaction(mTransactionInfo.chainId,
+        SaveAppChainPendingItemUtils.setTransaction(mTransactionInfo.chainId,
                 mWalletItem.address.toLowerCase(), mTransactionInfo.to.toLowerCase(), "0");
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getDoubleValue(),

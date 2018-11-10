@@ -9,6 +9,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.view.dialog.ProgressingDialog;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class BaseFragment extends Fragment {
 
     private ProgressingDialog dialog = null;

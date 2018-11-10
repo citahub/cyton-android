@@ -24,6 +24,9 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProtocolDialog;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class AddWalletActivity extends NBaseActivity {
 
     private ViewPager viewPager;

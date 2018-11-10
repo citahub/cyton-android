@@ -15,6 +15,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/7/17
+ */
 public class SignService {
 
     public static Observable<String> signEthMessage(Context context,

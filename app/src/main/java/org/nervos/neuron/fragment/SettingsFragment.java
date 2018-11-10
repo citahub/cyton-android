@@ -28,6 +28,9 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.SelectorDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class SettingsFragment extends NBaseFragment {
 
     private static final int Currency_Code = 10001;

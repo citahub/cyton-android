@@ -64,12 +64,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.TransactionDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".activity.transfer.TransferActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
