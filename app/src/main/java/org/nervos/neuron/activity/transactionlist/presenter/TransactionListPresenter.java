@@ -54,7 +54,7 @@ public class TransactionListPresenter {
                     if (AddressUtil.isAddressValid(address)) address = Keys.toChecksumAddress(address);
                     RequestOptions options = new RequestOptions().error(R.drawable.ether_big);
                     Glide.with(activity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
+                            .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
                             .apply(options).into(tokenLogoImage);
                 } else {
                     Glide.with(activity)
@@ -110,7 +110,7 @@ public class TransactionListPresenter {
         }
     }
 
-    public void getTransactionList(String from) {
+    public void getTransactionList(int page) {
         Observable<List<TransactionItem>> observable;
         if (isNativeToken(tokenItem)) {
             if (tokenItem.chainId > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
@@ -118,12 +118,12 @@ public class TransactionListPresenter {
                 return;
             }
             observable = isEther(tokenItem)
-                    ? HttpService.getEtherTransactionList(activity, 0)
-                    : HttpService.getAppChainTransactionList(activity, 0);
+                    ? HttpService.getEtherTransactionList(activity, page)
+                    : HttpService.getAppChainTransactionList(activity, page);
         } else {
             observable = isEther(tokenItem)
-                    ? HttpService.getEtherERC20TransactionList(activity, tokenItem, 0)
-                    : HttpService.getAppChainERC20TransactionList(activity, tokenItem, 0);
+                    ? HttpService.getEtherERC20TransactionList(activity, tokenItem, page)
+                    : HttpService.getAppChainERC20TransactionList(activity, tokenItem, page);
         }
         observable.subscribe(new Subscriber<List<TransactionItem>>() {
             @Override
@@ -135,14 +135,15 @@ public class TransactionListPresenter {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
                 listener.hideProgressBar();
                 listener.setRefreshing(false);
             }
 
             @Override
             public void onNext(List<TransactionItem> list) {
-                if (list == null) {
-                    Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+                if (list.size() == 0) {
+                    listener.noMoreLoading();
                     return;
                 }
                 Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
@@ -186,6 +187,9 @@ public class TransactionListPresenter {
         void showTokenDescribe(boolean show);
 
         void getCurrency(String currency);
+
+        void noMoreLoading();
+
     }
 
 }

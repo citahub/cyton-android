@@ -10,6 +10,7 @@ import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
@@ -28,10 +29,10 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.loadmore.OnLoadMoreListener;
+import org.nervos.neuron.view.loadmore.RecyclerViewLoadMoreScroll;
 import org.web3j.crypto.Keys;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +56,10 @@ public class TransactionListActivity extends NBaseActivity {
     private TransactionAdapter transactionAdapter;
 
     private TransactionListPresenter presenter;
+    private RecyclerViewLoadMoreScroll scrollListener;
 
     private String describe;
+    private int mPage = 0;
 
     @Override
     protected int getContentLayout() {
@@ -84,35 +87,48 @@ public class TransactionListActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
         tokenItem = getIntent().getParcelableExtra(TRANSACTION_TOKEN);
         titleBar.setTitle(tokenItem.symbol);
-        showProgressBar();
-        presenter = new TransactionListPresenter(this, tokenItem, listener);
-        initAdapter();
-        presenter.getTransactionList(walletItem.address);
-        initDescribe();
-        DecimalFormat formater = new DecimalFormat("0.####");
-        formater.setRoundingMode(RoundingMode.FLOOR);
+        tvTokenWarning.setVisibility(isTestToken() ? View.VISIBLE : View.GONE);
 
-        tvTokenWarning.setVisibility(isTestToken()? View.VISIBLE : View.GONE);
+        presenter = new TransactionListPresenter(this, tokenItem, listener);
+        initDescribe();
+        initTransactionData();
+
+    }
+
+    private void initTransactionData() {
+        initAdapter();
+        showProgressBar();
+        presenter.getTransactionList(mPage);
     }
 
     @Override
     protected void initAction() {
-        receiveButton.setOnClickListener(v -> startActivity(new Intent(mActivity
-                , ReceiveQrCodeActivity.class)));
+        receiveButton.setOnClickListener(v -> startActivity(new Intent(mActivity, ReceiveQrCodeActivity.class)));
         transferButton.setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, TransferActivity.class);
             intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
-        swipeRefreshLayout.setOnRefreshListener(() ->
-                presenter.getTransactionList(walletItem.address));
+        mPage = 0;
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList(mPage));
     }
 
     private void initAdapter() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        transactionAdapter = new TransactionAdapter(this, transactionItemList
-                , walletItem.address);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address);
         recyclerView.setAdapter(transactionAdapter);
+
+        scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
+        scrollListener.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                LoadMoreData();
+            }
+        });
+
+        recyclerView.addOnScrollListener(scrollListener);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
             TransactionItem item = transactionItemList.get(position);
@@ -123,6 +139,11 @@ public class TransactionListActivity extends NBaseActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void LoadMoreData() {
+        transactionAdapter.addLoadingView();
+        presenter.getTransactionList(mPage);
     }
 
     private void initDescribe() {
@@ -136,8 +157,8 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenSymbol.setText(ConstUtil.ETH);
                 setDesSecondLine();
                 presenter.getBalance();
-                tokenDesRoot.setOnClickListener(view -> SimpleWebActivity.gotoSimpleWeb(mActivity
-                        , HttpUrls.TOKEN_DETAIL.replace("@address", "ethereum")));
+                tokenDesRoot.setOnClickListener(view ->
+                        SimpleWebActivity.gotoSimpleWeb(mActivity, String.format(HttpUrls.TOKEN_DETAIL, ConstUtil.ETHEREUM)));
             }
         }
     }
@@ -162,8 +183,11 @@ public class TransactionListActivity extends NBaseActivity {
 
         @Override
         public void refreshList(List<TransactionItem> list) {
-            transactionItemList = list;
+            mPage++;
+            transactionAdapter.removeLoadingView();
+            transactionItemList.addAll(list);
             transactionAdapter.refresh(transactionItemList);
+            scrollListener.setLoaded();
         }
 
         @Override
@@ -188,17 +212,25 @@ public class TransactionListActivity extends NBaseActivity {
                         address = Keys.toChecksumAddress(address);
                     String finalAddress = address;
                     tokenDesRoot.setOnClickListener(view ->
-                            SimpleWebActivity.gotoSimpleWeb(mActivity
-                                    , HttpUrls.TOKEN_ERC20_DETAIL.replace("@address"
-                                            , finalAddress)));
-                } else
+                            SimpleWebActivity.gotoSimpleWeb(mActivity, String.format(HttpUrls.TOKEN_ERC20_DETAIL, finalAddress)));
+                } else {
                     tokenDesRoot.setVisibility(View.GONE);
+                }
             });
         }
 
         @Override
         public void getCurrency(String currency) {
             tokenBalanceText.post(() -> tokenBalanceText.setText(currency));
+        }
+
+        @Override
+        public void noMoreLoading() {
+            transactionAdapter.removeLoadingView();
+            scrollListener.setLoaded();
+            if (transactionItemList.size() > 0) {
+                Toast.makeText(mActivity, R.string.no_more_transaction_data, Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -207,8 +239,7 @@ public class TransactionListActivity extends NBaseActivity {
             Layout layout = tokenDesTextFirst.getLayout();
             String mDesText = tokenDesTextFirst.getLayout().getText().toString();
             StringBuilder srcStr = new StringBuilder(mDesText);
-            String lineStr = srcStr.subSequence(layout.getLineStart(0)
-                    , layout.getLineEnd(0)).toString();
+            String lineStr = srcStr.subSequence(layout.getLineStart(0), layout.getLineEnd(0)).toString();
             int length = lineStr.length();
             if (length > 0 && describe.length() > length
                     && tokenDesTextSecond.getText().toString().length() == 0) {

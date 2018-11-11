@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity.transactionlist.model;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import java.util.List;
  */
 public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int VIEW_TYPE_ITEM = 1;
-    public static final int VIEW_TYPE_EMPTY = 0;
+    private static final int VIEW_TYPE_EMPTY = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
+    private static final int VIEW_TYPE_LOADING = 2;
+
     private List<TransactionItem> transactionItemList;
     private String address;
     private Context context;
@@ -41,16 +44,34 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    public void addLoadingView() {
+        if (transactionItemList.size() > 0) {
+            transactionItemList.add(null);
+            notifyItemInserted(transactionItemList.size() - 1);
+        }
+    }
+
+    public void removeLoadingView() {
+        if (transactionItemList.size() > 0) {
+            transactionItemList.remove(transactionItemList.size() - 1);
+            notifyItemRemoved(transactionItemList.size());
+        }
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
             ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
             return new RecyclerView.ViewHolder(view) {};
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_loading, parent, false);
+            return new RecyclerView.ViewHolder(view) {};
+        } else {
+            return new TransactionViewHolder(LayoutInflater.from(
+                    parent.getContext()).inflate(R.layout.item_transaction_list, parent,
+                    false));
         }
-        TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_transaction_list, parent, false));
-        return holder;
     }
 
     @Override
@@ -98,6 +119,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         if (transactionItemList.size() == 0) {
             return VIEW_TYPE_EMPTY;
+        } else if (transactionItemList.get(position) == null) {
+            return VIEW_TYPE_LOADING;
         }
         return VIEW_TYPE_ITEM;
     }
