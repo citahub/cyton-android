@@ -10,6 +10,7 @@ public class ConstUtil {
 
     public static final String ETH = "ETH";
     public static final int ETHEREUM_ID = -1;
+    public static final String ETHEREUM = "ethereum";
     public static final String ETH_MAINNET = "Ethereum Mainnet";
     public static final String GWEI = "GWei";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;

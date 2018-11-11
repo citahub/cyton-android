@@ -11,7 +11,7 @@ import org.nervos.neuron.service.http.AppChainTransactionService;
  */
 public class TransactionListService extends JobIntentService {
 
-    public static AppChainTransactionService.OnCheckResultListener impl;
+    public static AppChainTransactionService.OnCheckResultListener listener;
 
     /**
      * Unique job ID for this service.
@@ -27,7 +27,7 @@ public class TransactionListService extends JobIntentService {
 
     @Override
     protected void onHandleWork(Intent intent) {
-        AppChainTransactionService.checkTransactionStatus(this, impl);
+        AppChainTransactionService.checkTransactionStatus(this, listener);
     }
 
 }

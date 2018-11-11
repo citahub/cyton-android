@@ -64,7 +64,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
                     RequestOptions options = new RequestOptions()
                             .error(R.drawable.ether_big);
                     Glide.with(activity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
+                            .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
                             .apply(options)
                             .into(holder.tokenImage);
                 } else {

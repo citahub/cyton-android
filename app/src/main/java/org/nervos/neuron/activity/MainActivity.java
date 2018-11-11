@@ -129,15 +129,15 @@ public class MainActivity extends NBaseActivity {
 
         TransactionListService.enqueueWork(mActivity, new Intent());
 
-        TransactionListService.impl = () -> {
+        TransactionListService.listener = () -> {
             handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
         };
     }
 
     /**
-     * 根据各个Fragment的TAG判断跳转到何处
+     * Go to fragment with flag
      *
-     * @param tag Fragment标签值
+     * @param tag Fragment flag
      */
     public void setNavigationItem(String tag) {
         if (TextUtils.isEmpty(tag)) return;
