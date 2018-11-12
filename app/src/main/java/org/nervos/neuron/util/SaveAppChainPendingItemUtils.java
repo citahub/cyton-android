@@ -4,9 +4,6 @@ import android.content.Context;
 
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import org.nervos.neuron.util.db.DBChainUtil;
-
-import java.util.Objects;
 
 /**
  * Created by BaojunCZ on 2018/10/17.

@@ -12,26 +12,35 @@ public class TransactionItem implements Parcelable {
     public static final int SUCCESS = 1;
     public static final int PENDING = 2;
 
-    public String hash;
+    // base data
     public String from;
     public String to;
     public String value;
-    private long timestamp;
-    private long timeStamp;
+    public String hash;
+
+    public long chainId;
+    public String symbol;
+    public String nativeSymbol;
     public String chainName;
-    public String content;
+
+    //0 update 1 success 2 pending
+    public int status;
+
+
+    // ethereum data
     public String gasUsed;
     public String gas;
     public String gasPrice;
     public String blockNumber;
-    public String errorMessage;
 
+
+    // AppChain
+    private long timestamp;
+    private long timeStamp;
+    public String content;
+    public String errorMessage;
     public String validUntilBlock;
-    //0 update 1 success 2 pending
-    public int status;
-    public long chainId;
-    public String symbol;
-    public String nativeSymbol;
+
 
     public TransactionItem(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
         this.from = from;
@@ -42,7 +51,6 @@ public class TransactionItem implements Parcelable {
         this.setTimestamp(timestamp);
         this.hash = hash;
     }
-
 
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);

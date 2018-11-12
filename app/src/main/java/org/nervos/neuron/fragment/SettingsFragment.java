@@ -18,10 +18,10 @@ import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.service.http.EthRpcService;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -62,13 +62,13 @@ public class SettingsFragment extends NBaseFragment {
     public void initData() {
         initEthNode();
         mFingerPrintController = new FingerPrintController(getActivity());
-        mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.CURRENCY, ConstUtil.DEFAULT_CURRENCY));
+        mSbvCurrency.setRightText(SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY));
         if (mFingerPrintController.isSupportFingerprint()) {
             mSbvFingerPrint.setVisibility(View.VISIBLE);
-            if (SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
+            if (SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false)) {
                 mSbvFingerPrint.setSwitch(true);
             } else {
-                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, false);
+                SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, false);
                 mSbvFingerPrint.setSwitch(false);
             }
         } else {
@@ -104,7 +104,7 @@ public class SettingsFragment extends NBaseFragment {
                 }
             } else {
                 //close fingerprint
-                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, false);
+                SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, false);
                 mSbvFingerPrint.setSwitch(false);
             }
 
@@ -130,13 +130,13 @@ public class SettingsFragment extends NBaseFragment {
             mEthNodeDialog.setRecyclerView(mEthNodeAdapter);
             mEthNodeDialog.setOkListener((view -> {
                 ethNodeIndex = mEthNodeAdapter.mIndex;
-                SharePrefUtil.putString(ConstUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
+                SharePrefUtil.putString(ConstantUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
                 mEthNodeDialog.dismiss();
             }));
             mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
                 EthRpcService.initHttp();
                 initEthNode();
-                String node = SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_MAINNET);
+                String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
                 node = node.replace("_", " ");
                 mSbvSelectEth.setRightText(node);
                 mEthNodeDialog.dismiss();
@@ -145,22 +145,22 @@ public class SettingsFragment extends NBaseFragment {
     }
 
     private void initEthNode() {
-        ethNodeList.put(0, ConstUtil.ETH_MAINNET);
-        ethNodeList.put(1, ConstUtil.ETH_NET_ROPSTEN_TEST);
-        ethNodeList.put(2, ConstUtil.ETH_NET_KOVAN_TEST);
-        ethNodeList.put(3, ConstUtil.ETH_NET_RINKEBY_TEST);
-        switch (SharePrefUtil.getString(ConstUtil.ETH_NET, ConstUtil.ETH_NET_MAIN)) {
-            case ConstUtil.ETH_NET_MAIN:
+        ethNodeList.put(0, ConstantUtil.ETH_MAINNET);
+        ethNodeList.put(1, ConstantUtil.ETH_NET_ROPSTEN_TEST);
+        ethNodeList.put(2, ConstantUtil.ETH_NET_KOVAN_TEST);
+        ethNodeList.put(3, ConstantUtil.ETH_NET_RINKEBY_TEST);
+        switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
+            case ConstantUtil.ETH_NET_MAIN:
             default:
                 ethNodeIndex = 0;
                 break;
-            case ConstUtil.ETH_NET_ROPSTEN_TEST:
+            case ConstantUtil.ETH_NET_ROPSTEN_TEST:
                 ethNodeIndex = 1;
                 break;
-            case ConstUtil.ETH_NET_KOVAN_TEST:
+            case ConstantUtil.ETH_NET_KOVAN_TEST:
                 ethNodeIndex = 2;
                 break;
-            case ConstUtil.ETH_NET_RINKEBY_TEST:
+            case ConstantUtil.ETH_NET_RINKEBY_TEST:
                 ethNodeIndex = 3;
                 break;
         }
@@ -183,7 +183,7 @@ public class SettingsFragment extends NBaseFragment {
         public void onAuthenticationSucceeded() {
             mSbvFingerPrint.setSwitch(true);
             if (mAuthFingerDialog != null && mAuthFingerDialog.isShowing()) mAuthFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, true);
+            SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
 
@@ -199,7 +199,7 @@ public class SettingsFragment extends NBaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Currency_Code:
-                    mSbvCurrency.setRightText(SharePrefUtil.getString(ConstUtil.CURRENCY, "CNY"));
+                    mSbvCurrency.setRightText(SharePrefUtil.getString(ConstantUtil.CURRENCY, "CNY"));
                     break;
             }
         }

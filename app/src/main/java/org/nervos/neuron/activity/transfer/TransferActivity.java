@@ -368,10 +368,9 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     @Override
-    public void transferEtherFail(Throwable e) {
+    public void transferEtherFail(String message) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(TransferActivity.this,
-                e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity,message, Toast.LENGTH_SHORT).show();
         transferDialog.dismiss();
     }
 

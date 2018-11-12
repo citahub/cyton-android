@@ -28,7 +28,7 @@ import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -186,11 +186,11 @@ public class ImportMnemonicFragment extends BaseFragment {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
             if (new FingerPrintController(getActivity()).isSupportFingerprint() &&
-                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false) &&
-                    !SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT_TIP, false)) {
+                    !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false) &&
+                    !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT_TIP, false)) {
                 Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
                 startActivity(intent);
-                SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT_TIP, true);
+                SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
             } else {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);

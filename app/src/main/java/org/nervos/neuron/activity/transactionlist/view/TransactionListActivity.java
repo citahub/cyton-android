@@ -24,9 +24,9 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.loadmore.OnLoadMoreListener;
@@ -154,11 +154,11 @@ public class TransactionListActivity extends NBaseActivity {
                 tokenDesRoot.setVisibility(View.VISIBLE);
                 describe = getResources().getString(R.string.ETH_Describe);
                 tokenDesTextFirst.setText(R.string.ETH_Describe);
-                tokenSymbol.setText(ConstUtil.ETH);
+                tokenSymbol.setText(ConstantUtil.ETH);
                 setDesSecondLine();
                 presenter.getBalance();
                 tokenDesRoot.setOnClickListener(view ->
-                        SimpleWebActivity.gotoSimpleWeb(mActivity, String.format(HttpUrls.TOKEN_DETAIL, ConstUtil.ETHEREUM)));
+                        SimpleWebActivity.gotoSimpleWeb(mActivity, String.format(HttpUrls.TOKEN_DETAIL, ConstantUtil.ETHEREUM)));
             }
         }
     }

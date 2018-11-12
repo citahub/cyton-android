@@ -12,9 +12,13 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.AppChainERC20TransferResponse;
 import org.nervos.neuron.item.response.EthTransactionResponse;
 import org.nervos.neuron.item.response.AppChainTransactionResponse;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.util.url.HttpEtherUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
@@ -61,17 +65,17 @@ public class HttpService {
                     @Override
                     public Observable<List<TransactionItem>> call(WalletItem walletItem) {
                         try {
-                            String ethUrl = String.format(HttpEtherUrls.getEtherTransactionUrl(), walletItem.address, page, OFFSET);
+                            String ethUrl = String.format(EtherUtil.getEtherTransactionUrl(), walletItem.address, page, OFFSET);
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
                             Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
                             EthTransactionResponse response = new Gson().fromJson(ethCall.execute().body().string(),
                                     EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
                             for (TransactionItem item : transactionItemList) {
-                                item.chainName = ConstUtil.ETH_MAINNET;
+                                item.chainName = ConstantUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.getEthFromWeiForStringDecimal8Sub(new BigInteger(item.value)));
-                                item.symbol = ConstUtil.ETH;
-                                item.nativeSymbol = ConstUtil.ETH;
+                                item.symbol = ConstantUtil.ETH;
+                                item.nativeSymbol = ConstantUtil.ETH;
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {
@@ -90,7 +94,7 @@ public class HttpService {
                     @Override
                     public Observable<List<TransactionItem>> call(WalletItem walletItem) {
                         try {
-                            String ethUrl = String.format(HttpEtherUrls.getEtherERC20TransactionUrl(),
+                            String ethUrl = String.format(EtherUtil.getEtherERC20TransactionUrl(),
                                     tokenItem.contractAddress, walletItem.address, page, OFFSET);
 
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
@@ -99,11 +103,11 @@ public class HttpService {
                                     EthTransactionResponse.class);
                             List<TransactionItem> transactionItemList = response.result;
                             for (TransactionItem item : transactionItemList) {
-                                item.chainName = ConstUtil.ETH_MAINNET;
+                                item.chainName = ConstantUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.divideDecimal8Sub(
                                         new BigDecimal(item.value), tokenItem.decimals));
                                 item.symbol = tokenItem.symbol;
-                                item.nativeSymbol = ConstUtil.ETH;
+                                item.nativeSymbol = ConstantUtil.ETH;
                             }
                             return Observable.just(transactionItemList);
                         } catch (IOException e) {
@@ -121,14 +125,14 @@ public class HttpService {
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_URL);
+                AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
                 return Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
             @Override
             public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String appChainUrl = String.format(HttpUrls.APPCHAIN_TRANSACTION_URL,
+                    String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_TRANSACTION_URL,
                             walletItem.address, page, OFFSET);
                     final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
                     Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
@@ -157,14 +161,14 @@ public class HttpService {
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpUrls.APPCHAIN_NODE_URL);
+                AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
                 return AppChainRpcService.getMetaData().getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionItem>>>() {
             @Override
             public Observable<List<TransactionItem>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String appChainUrl = String.format(HttpUrls.APPCHAIN_ERC20_TRANSACTION_URL,
+                    String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_ERC20_TRANSACTION_URL,
                             tokenItem.contractAddress, walletItem.address, page, OFFSET);
                     final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
                     Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);

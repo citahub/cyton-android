@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.AddressUtil;
 import org.web3j.crypto.Keys;

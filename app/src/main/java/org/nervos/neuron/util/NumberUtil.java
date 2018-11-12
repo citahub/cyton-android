@@ -174,6 +174,12 @@ public class NumberUtil {
         return getEthFromWei(Numeric.toBigInt(hex));
     }
 
+    public static String getEthFromWeiForString(String hex) {
+        if (TextUtils.isEmpty(hex)) return "0";
+        hex = Numeric.cleanHexPrefix(hex);
+        return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.ETHER).toString();
+    }
+
     public static double getEthFromWei(BigInteger value) {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }

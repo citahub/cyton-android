@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.SettingButtonView;
@@ -67,14 +67,14 @@ public class CurrencyActivity extends NBaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             CurrencyItem currency = currencyArray.get(position);
-            if (SharePrefUtil.getString(ConstUtil.CURRENCY, ConstUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
+            if (SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
                 holder.currency.setRightImageShow(true);
             } else {
                 holder.currency.setRightImageShow(false);
             }
             holder.currency.setNameText(currency.getName());
             holder.currency.setOpenListener(() -> {
-                SharePrefUtil.putString(ConstUtil.CURRENCY, currency.getName());
+                SharePrefUtil.putString(ConstantUtil.CURRENCY, currency.getName());
                 notifyDataSetChanged();
                 finish();
             });
