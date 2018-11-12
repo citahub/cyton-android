@@ -12,8 +12,8 @@ import com.yanzhenjie.permission.Permission
 
 import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
-import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem
-import org.nervos.neuron.item.NeuronDApp.FileToBase64Item
+import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem
+import org.nervos.neuron.item.dapp.FileToBase64Item
 import org.nervos.neuron.util.FileUtil
 import org.nervos.neuron.util.JSLoadUtils
 import org.nervos.neuron.constant.NeuronDAppCallback
