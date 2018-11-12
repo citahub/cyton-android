@@ -19,15 +19,15 @@
                 android:id="@+id/rl_close"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentLeft="true">
 
                 <ImageView
                     android:id="@+id/close_layout"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
                     android:background="@drawable/delete" />
             </RelativeLayout>
 
