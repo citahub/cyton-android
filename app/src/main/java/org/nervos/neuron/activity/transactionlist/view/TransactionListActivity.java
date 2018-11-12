@@ -118,7 +118,7 @@ public class TransactionListActivity extends NBaseActivity {
             TransactionItem item = transactionItemList.get(position);
             if (item.status != TransactionItem.PENDING) {
                 Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-                intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, item);
+                intent.putExtra(TransactionDetailActivity.Companion.getTRANSACTION_DETAIL(), item);
                 intent.putExtra(TRANSACTION_TOKEN, tokenItem);
                 startActivity(intent);
             }

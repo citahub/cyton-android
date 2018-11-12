@@ -46,12 +46,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (viewType == VIEW_TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
             ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
-            return new RecyclerView.ViewHolder(view) {
-            };
+            return new RecyclerView.ViewHolder(view) {};
         }
-        TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(
-                parent.getContext()).inflate(R.layout.item_transaction_list, parent,
-                false));
+        TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_transaction_list, parent, false));
         return holder;
     }
 
@@ -63,10 +61,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (!transactionItem.from.equalsIgnoreCase(address)) {
                 viewHolder.transactionIdText.setText(transactionItem.from);
             } else {
-                viewHolder.transactionIdText.setText(transactionItem.to);
+                viewHolder.transactionIdText.setText("0x".equals(transactionItem.to) ? context.getResources()
+                        .getString(R.string.contract_create) : transactionItem.to);
             }
-            String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+")
-                    + transactionItem.value;
+            String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+") + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionItem.getDate());
             switch (transactionItem.status) {

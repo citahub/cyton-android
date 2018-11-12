@@ -188,6 +188,7 @@
     <string name="pic_source">图片来源</string>
     <string name="take_photo">拍照</string>
     <string name="photo_album">相册</string>
+    <string name="contract_create">"Contract Created"</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

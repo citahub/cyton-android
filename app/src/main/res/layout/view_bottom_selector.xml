@@ -21,9 +21,8 @@
             android:id="@+id/iv_close"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:src="@drawable/dialog_close" />
 
     </RelativeLayout>
