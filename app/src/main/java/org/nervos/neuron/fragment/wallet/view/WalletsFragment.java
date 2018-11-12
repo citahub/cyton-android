@@ -1,6 +1,7 @@
 package org.nervos.neuron.fragment.wallet.view;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,12 @@ import org.nervos.neuron.fragment.collection.CollectionListFragment;
 import org.nervos.neuron.fragment.token.view.TokenListFragment;
 import org.nervos.neuron.fragment.wallet.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
+import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.nervos.neuron.view.WalletToolbar;
 import org.nervos.neuron.view.WalletTopView;
 
@@ -31,6 +37,8 @@ import org.nervos.neuron.view.WalletTopView;
 public class WalletsFragment extends NBaseFragment {
 
     public static final String TAG = WalletsFragment.class.getName();
+    private static final int APPCAHIN_TRANSACTION_FETCH_PERIOD = 3000;
+    private static final int ETHER_TRANSACTION_FETCH_PERIOD = 15000;
 
     private NestedScrollView mNestedScrollView;
     private TabLayout mTabLayout;
@@ -77,6 +85,9 @@ public class WalletsFragment extends NBaseFragment {
         tokenListFragment = new TokenListFragment();
         presenter = new WalletFragmentPresenter(getActivity());
         initWalletData();
+
+        startCheckAppChainTransaction();
+        startCheckEtherTransaction();
 
     }
 
@@ -129,6 +140,20 @@ public class WalletsFragment extends NBaseFragment {
     public void onResume() {
         super.onResume();
         initWalletData();
+    }
+
+    private void startCheckAppChainTransaction() {
+        AppChainRpcService.init(getContext(), HttpAppChainUrls.APPCHAIN_NODE_URL);
+        AppChainTransactionCheckService.enqueueWork(getContext(), new Intent());
+        AppChainTransactionCheckService.listener = () ->
+                new Handler().postDelayed(this::startCheckAppChainTransaction, APPCAHIN_TRANSACTION_FETCH_PERIOD);
+    }
+
+    private void startCheckEtherTransaction() {
+        EthRpcService.initNodeUrl();
+        EtherTransactionCheckService.enqueueWork(getContext(), new Intent());
+        EtherTransactionCheckService.listener = () ->
+                new Handler().postDelayed(this::startCheckEtherTransaction, ETHER_TRANSACTION_FETCH_PERIOD);
     }
 
     private class MyAdapter extends FragmentPagerAdapter {

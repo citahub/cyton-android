@@ -16,9 +16,10 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
-import org.nervos.neuron.util.url.HttpUrls;
-import org.nervos.neuron.service.intent.TransactionCheckService;
+import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -29,7 +30,6 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
-    private static final int TRANSACTION_FETCH_PERIOD = 3000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
@@ -58,7 +58,6 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void initData() {
         fMgr = getSupportFragmentManager();
-        startCheckTransaction();
     }
 
     @Override
@@ -123,16 +122,6 @@ public class MainActivity extends NBaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setNavigationItem(intent.getStringExtra(EXTRA_TAG));
-    }
-
-    private void startCheckTransaction() {
-        AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL);
-
-        TransactionCheckService.enqueueWork(mActivity, new Intent());
-
-        TransactionCheckService.listener = () -> {
-            handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
-        };
     }
 
     /**

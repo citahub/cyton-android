@@ -134,7 +134,7 @@ public class SettingsFragment extends NBaseFragment {
                 mEthNodeDialog.dismiss();
             }));
             mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
-                EthRpcService.initHttp();
+                EthRpcService.initNodeUrl();
                 initEthNode();
                 String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
                 node = node.replace("_", " ");

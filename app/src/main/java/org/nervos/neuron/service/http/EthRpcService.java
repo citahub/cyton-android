@@ -64,7 +64,7 @@ public class EthRpcService {
         walletItem = DBWalletUtil.getCurrentWallet(context);
     }
 
-    public static void initHttp() {
+    public static void initNodeUrl() {
         service = Web3jFactory.build(new InfuraHttpService(EtherUtil.getEthNodeUrl()));
     }
 

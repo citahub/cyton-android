@@ -17,6 +17,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.service.http.AppChainTransactionService;
 import org.nervos.neuron.service.http.HttpService;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.TokenService;
@@ -152,14 +153,14 @@ public class TransactionListPresenter {
                 Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
                 if (isEther(tokenItem)) {
                     for (TransactionItem item : list) {
-                        item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.FAILED : TransactionItem.SUCCESS;
+                        item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
                     listener.refreshList(getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list));
                 } else {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    listener.refreshList(AppChainTransactionService.getTransactionList(activity, tokenItem.chainId, list));
+                    listener.refreshList(getAppChainTransactionList(activity, tokenItem.chainId, list));
                 }
             }
         });
@@ -170,6 +171,22 @@ public class TransactionListPresenter {
         List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithChain(context, chainId);
         if (itemList.size() > 0) {
             for (TransactionItem dbItem : itemList) {
+                for (TransactionItem transactionItem : list) {
+                    if (!transactionItem.hash.equalsIgnoreCase(dbItem.hash)) {
+                        list.add(dbItem);
+                        break;
+                    }
+                }
+            }
+            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+        }
+        return list;
+    }
+
+    public static List<TransactionItem> getAppChainTransactionList(Context context, long chainId, List<TransactionItem> list) {
+        List<TransactionItem> allList = DBAppChainTransactionsUtil.getAllTransactionsWithChain(context, chainId);
+        if (allList.size() > 0) {
+            for (TransactionItem dbItem : allList) {
                 for (TransactionItem transactionItem : list) {
                     if (!transactionItem.hash.equalsIgnoreCase(dbItem.hash)) {
                         list.add(dbItem);
