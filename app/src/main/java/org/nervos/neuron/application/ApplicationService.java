@@ -8,6 +8,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.sensorsdata.analytics.android.sdk.util.SensorsDataUtils;
 
 import org.json.JSONObject;
+import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.sensor.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class ApplicationService extends IntentService {
 
-    private static final String SENSOR_IP = "$ip";
+    private static final String SENSOR_IP_ID = "ip_id";
     private static final String SENSOR_CHANNEL_KEY = "DownloadChannel";
     private static final String CHANNEL_META = "SD_CHANNEL_ID";
     private static final String EVENT_CHANNEL_META = "AppInstall";
@@ -43,11 +44,16 @@ public class ApplicationService extends IntentService {
         }
         if (!SharePrefUtil.getBoolean(SensorID, false)) {
             SharePrefUtil.putBoolean(SensorID, true);
-            SensorsDataAPI.sharedInstance().identify(SensorIDRandomUtils.getID());
+            SensorsDataAPI.sharedInstance().identify(SensorIDRandomUtils.INSTANCE.getId());
         }
         try {
             JSONObject properties = new JSONObject();
-            properties.put(SENSOR_IP, "");
+            String ipID = SharePrefUtil.getString(ConstUtil.SENSOR_IP_ID, "");
+            if (ipID.isEmpty()) {
+                ipID = SensorIDRandomUtils.INSTANCE.getIpId();
+                SharePrefUtil.putString(ConstUtil.SENSOR_IP_ID, ipID);
+            }
+            properties.put(SENSOR_IP_ID, ipID);
             SensorsDataAPI.sharedInstance().registerSuperProperties(properties);
 
             String downloadChannel = SensorsDataUtils.getApplicationMetaData(this, CHANNEL_META);

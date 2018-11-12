@@ -14,7 +14,7 @@ public class ConstUtil {
     public static final String GWEI = "GWei";
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
     public static final long LONG_6 = 1000000;
-    public static final String DEFAULT_CURRENCY="CNY";
+    public static final String DEFAULT_CURRENCY = "CNY";
 
     public static final String ETH_NET = "ETH_NET";
     public static final String ETH_NET_MAIN = "Main_Ethereum_Network";
@@ -42,8 +42,6 @@ public class ConstUtil {
     public static final BigInteger QUOTA_ERC20 = new BigInteger("100000");
 
 
-
-
     // ERC20 method hashes
     public static final String ZERO_16 = "000000000000000000000000";
     public static final String NAME_HASH = "06fdde03";
@@ -56,6 +54,7 @@ public class ConstUtil {
     public static final String FINGERPRINT = "Fingerprint";
     public static final String CURRENCY = "Currency";
     public static final String PROTOCOL = "Protocol";
+    public static final String SENSOR_IP_ID = "SENSOR_IP_ID";
 
     public static final String IMG_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 }
