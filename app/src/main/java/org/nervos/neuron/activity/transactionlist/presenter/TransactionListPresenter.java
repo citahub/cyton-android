@@ -84,29 +84,29 @@ public class TransactionListPresenter {
         if (tokenItem.balance > 0.0 && isEther(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
-                @Override
-                public void onCompleted() {
-                }
+                        @Override
+                        public void onCompleted() {
+                        }
 
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
 
-                @Override
-                public void onNext(String s) {
-                    if (!TextUtils.isEmpty(s)) {
-                        double price = Double.parseDouble(s.trim());
-                        DecimalFormat df = new DecimalFormat("######0.00");
-                        DecimalFormat format = new DecimalFormat("0.####");
-                        format.setRoundingMode(RoundingMode.FLOOR);
-                        listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
-                                + Double.parseDouble(df.format(price * tokenItem.balance)));
-                    } else {
-                        listener.getCurrency("0");
-                    }
-                }
-            });
+                        @Override
+                        public void onNext(String s) {
+                            if (!TextUtils.isEmpty(s)) {
+                                double price = Double.parseDouble(s.trim());
+                                DecimalFormat df = new DecimalFormat("######0.00");
+                                DecimalFormat format = new DecimalFormat("0.####");
+                                format.setRoundingMode(RoundingMode.FLOOR);
+                                listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
+                                        + Double.parseDouble(df.format(price * tokenItem.balance)));
+                            } else {
+                                listener.getCurrency("0");
+                            }
+                        }
+                    });
         }
     }
 
