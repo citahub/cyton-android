@@ -37,11 +37,12 @@ import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.service.http.HttpEtherUrls;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.url.HttpEtherUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.constant.NeuronDAppCallback;
@@ -297,7 +298,7 @@ public class AppWebActivity extends NBaseActivity {
 
     private void initInjectWebView() {
         webView.setChainId(1);
-        webView.setRpcUrl(HttpEtherUrls.getEthNodeUrl());
+        webView.setRpcUrl(EtherUtil.getEthNodeUrl());
         webView.setWalletAddress(new Address(walletItem.address));
         webView.addJavascriptInterface(mNeuronDAppPlugin, "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
@@ -442,7 +443,7 @@ public class AppWebActivity extends NBaseActivity {
                             .permission(permissionList)
                             .rationale(new RuntimeRationale())
                             .onGranted(permissions -> {
-                                mPhotoPath = ConstUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg";
+                                mPhotoPath = ConstantUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg";
                                 File file = new File(mPhotoPath);
                                 Uri imageUri;
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

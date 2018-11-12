@@ -4,13 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 /**
@@ -46,7 +45,7 @@ public class ProtocolDialog extends Dialog {
         });
         ok.setOnClickListener(view -> {
             if (checked) {
-                SharePrefUtil.putBoolean(ConstUtil.PROTOCOL, true);
+                SharePrefUtil.putBoolean(ConstantUtil.PROTOCOL, true);
                 dismiss();
             } else {
                 Toast.makeText(context, context.getString(R.string.protocol_error_toast), Toast.LENGTH_SHORT).show();

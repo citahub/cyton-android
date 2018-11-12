@@ -9,7 +9,7 @@ import org.nervos.neuron.service.http.AppChainTransactionService;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class TransactionListService extends JobIntentService {
+public class TransactionCheckService extends JobIntentService {
 
     public static AppChainTransactionService.OnCheckResultListener listener;
 
@@ -22,7 +22,7 @@ public class TransactionListService extends JobIntentService {
      * Convenience method for enqueuing work in to this service.
      */
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, TransactionListService.class, JOB_ID, work);
+        enqueueWork(context, TransactionCheckService.class, JOB_ID, work);
     }
 
     @Override

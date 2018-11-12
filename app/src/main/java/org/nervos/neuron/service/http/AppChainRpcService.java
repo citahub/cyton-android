@@ -18,7 +18,7 @@ import org.nervos.appchain.protocol.system.NervosjSysContract;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -97,10 +97,10 @@ public class AppChainRpcService {
 
     public static double getErc20Balance(TokenItem tokenItem, String address) throws Exception {
         Call balanceCall = new Call(address, tokenItem.contractAddress,
-                ConstUtil.BALANCE_OF_HASH + ConstUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
         String balanceOf = service.appCall(balanceCall,
                 DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(balanceOf) && !ConstUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+        if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
             initIntTypes();
             Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
             double balances = balance.getValue().doubleValue();
@@ -147,7 +147,7 @@ public class AppChainRpcService {
                 e.printStackTrace();
                 Observable.error(e);
             }
-            return ConstUtil.QUOTA_PRICE_DEFAULT;
+            return ConstantUtil.QUOTA_PRICE_DEFAULT;
         }).subscribeOn(Schedulers.io())
                   .observeOn(AndroidSchedulers.mainThread());
     }
@@ -216,7 +216,7 @@ public class AppChainRpcService {
             @Override
             public BigInteger call() throws Exception {
                 return BigInteger.valueOf((service.appBlockNumber().send())
-                        .getBlockNumber().longValue() + ConstUtil.VALID_BLOCK_NUMBER_DIFF);
+                        .getBlockNumber().longValue() + ConstantUtil.VALID_BLOCK_NUMBER_DIFF);
             }
         });
     }
@@ -245,29 +245,29 @@ public class AppChainRpcService {
     }
 
     private static String getErc20Name(String contractAddress) throws Exception {
-        Call nameCall = new Call(walletItem.address, contractAddress, ConstUtil.NAME_HASH);
+        Call nameCall = new Call(walletItem.address, contractAddress, ConstantUtil.NAME_HASH);
         String name = service.appCall(nameCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
-        if (TextUtils.isEmpty(name) || ConstUtil.RPC_RESULT_ZERO.equals(name)) return null;
+        if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(name, stringTypes).get(0).toString();
     }
 
 
     private static String getErc20Symbol(String contractAddress) throws Exception {
-        Call symbolCall = new Call(walletItem.address, contractAddress, ConstUtil.SYMBOL_HASH);
+        Call symbolCall = new Call(walletItem.address, contractAddress, ConstantUtil.SYMBOL_HASH);
         String symbol = service.appCall(symbolCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
-        if (TextUtils.isEmpty(symbol) || ConstUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
+        if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
     }
 
     private static int getErc20Decimals(String contractAddress) throws Exception {
-        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstUtil.DECIMALS_HASH);
+        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstantUtil.DECIMALS_HASH);
         String decimals = service.appCall(decimalsCall,
                 DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(decimals) && !ConstUtil.RPC_RESULT_ZERO.equals(decimals)) {
+        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
             Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
             return type.getValue().intValue();

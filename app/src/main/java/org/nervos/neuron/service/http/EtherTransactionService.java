@@ -1,0 +1,51 @@
+package org.nervos.neuron.service.http;
+
+import android.content.Context;
+import android.text.TextUtils;
+
+import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.DBEtherTransactionUtil;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.utils.Numeric;
+
+import java.util.Collections;
+import java.util.List;
+
+import rx.Observable;
+
+/**
+ * Created by duanyytop on 2018/11/12.
+ */
+public class EtherTransactionService implements TransactionService {
+
+    private static final long ETH_BLOCK_DIFF = 200;
+
+    public static void checkTransactionStatus(Context context, OnCheckResultListener listener) {
+        Observable.from(DBEtherTransactionUtil.getAllTransactions(context))
+                .subscribe(new NeuronSubscriber<TransactionItem>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.checkFinish();
+                    }
+                    @Override
+                    public void onNext(TransactionItem item) {
+                        listener.checkFinish();
+                        EthGetTransactionReceipt receipt = EthRpcService.getTransactionReceipt(item.hash);
+                        if (receipt == null && AppChainRpcService.getBlockNumber()
+                                .subtract(Numeric.toBigInt(item.blockNumber)).longValue() > ETH_BLOCK_DIFF) {
+                            item.status = TransactionItem.FAILED;
+                            DBAppChainTransactionsUtil.update(context, item);
+                        }
+                        if (receipt != null && !receipt.hasError()) {
+                            DBAppChainTransactionsUtil.delete(context, item);
+                        }
+                    }
+                });
+    }
+
+
+
+
+}

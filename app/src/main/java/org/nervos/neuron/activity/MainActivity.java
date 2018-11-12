@@ -16,9 +16,10 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
-import org.nervos.neuron.service.http.HttpUrls;
-import org.nervos.neuron.service.intent.TransactionListService;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.service.intent.TransactionCheckService;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
@@ -125,11 +126,11 @@ public class MainActivity extends NBaseActivity {
     }
 
     private void startCheckTransaction() {
-        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
+        AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL);
 
-        TransactionListService.enqueueWork(mActivity, new Intent());
+        TransactionCheckService.enqueueWork(mActivity, new Intent());
 
-        TransactionListService.listener = () -> {
+        TransactionCheckService.listener = () -> {
             handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
         };
     }
@@ -215,7 +216,7 @@ public class MainActivity extends NBaseActivity {
                                     Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
                                     break;
                                 case CodeUtils.STRING_ADDRESS:
-                                    TokenItem tokenItem = new TokenItem(ConstUtil.ETH_MAINNET, ConstUtil.ETH, ConstUtil.ETHEREUM_ID);
+                                    TokenItem tokenItem = new TokenItem(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
                                     intent = new Intent(mActivity, TransferActivity.class);
                                     intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
                                     intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);

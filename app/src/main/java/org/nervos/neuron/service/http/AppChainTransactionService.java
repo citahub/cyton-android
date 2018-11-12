@@ -16,7 +16,7 @@ import rx.Observable;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class AppChainTransactionService {
+public class AppChainTransactionService implements TransactionService {
 
     public static void checkTransactionStatus(Context context, OnCheckResultListener listener) {
         Observable.from(DBAppChainTransactionsUtil.getAllTransactions(context))
@@ -59,10 +59,6 @@ public class AppChainTransactionService {
             Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
-    }
-
-    public interface OnCheckResultListener {
-        void checkFinish();
     }
 
 }

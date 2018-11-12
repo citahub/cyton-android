@@ -2,13 +2,10 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.snappydb.DB;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.util.ConstUtil;
-import org.nervos.neuron.util.LogUtil;
+import org.nervos.neuron.util.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +77,8 @@ public class DBChainUtil extends DBUtil {
     }
 
     public static void initChainData(Context context) {
-        saveChain(context, new ChainItem(ConstUtil.ETHEREUM_ID, ConstUtil.ETH_MAINNET, ConstUtil.ETH, ConstUtil.ETH));
-        saveChain(context, new ChainItem(ConstUtil.CMB_CHAIN_ID, ConstUtil.CMB_CHAIN_NAME, ConstUtil.CMB_HTTP_PROVIDER, ConstUtil.CMB_TOKEN_NAME, ConstUtil.CMB_TOKEN_SYMBOL, ConstUtil.CMB_TOKEN_AVATAR));
+        saveChain(context, new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
+        saveChain(context, new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER, ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
     }
 
 }

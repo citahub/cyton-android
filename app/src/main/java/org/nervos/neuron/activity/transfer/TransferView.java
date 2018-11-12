@@ -39,6 +39,6 @@ public interface TransferView {
 
     void transferEtherSuccess(EthSendTransaction ethSendTransaction);
 
-    void transferEtherFail(Throwable e);
+    void transferEtherFail(String message);
 
 }
