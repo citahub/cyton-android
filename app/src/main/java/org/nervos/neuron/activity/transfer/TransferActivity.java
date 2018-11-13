@@ -21,7 +21,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.item.TransactionInfo;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.WalletService;

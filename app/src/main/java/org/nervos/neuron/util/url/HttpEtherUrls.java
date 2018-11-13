@@ -22,8 +22,8 @@ public class HttpEtherUrls {
     public static final String ETH_ROPSTEN_BASE_URL = "https://api-ropsten.etherscan.io/api";
 
     public static final String END_URL = "?apikey=" + ETHER_SCAN_API_KEY
-            + "&module=account&action=txlist&sort=asc&address=%s&page=%s&offset=%s";
+            + "&module=account&action=txlist&sort=desc&address=%s&page=%s&offset=%s";
     public static final String ERC20_END_URL = "?apikey=" + ETHER_SCAN_API_KEY
-            + "&module=account&action=tokentx&sort=asc&contractaddress=%s&address=%s&page=%s&offset=%s";
+            + "&module=account&action=tokentx&sort=desc&contractaddress=%s&address=%s&page=%s&offset=%s";
 
 }

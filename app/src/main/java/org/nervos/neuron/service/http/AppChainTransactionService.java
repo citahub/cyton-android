@@ -4,9 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
@@ -17,23 +16,22 @@ import rx.Observable;
  */
 public class AppChainTransactionService implements TransactionService {
 
-    public static void checkTransactionStatus(Context context, OnCheckResultListener listener) {
+    public static void checkTransactionStatus(Context context) {
         Observable.from(DBAppChainTransactionsUtil.getAllTransactions(context))
                 .subscribe(new NeuronSubscriber<TransactionItem>() {
                     @Override
                     public void onError(Throwable e) {
-                        listener.checkFinish();
+                        e.printStackTrace();
                     }
                     @Override
                     public void onNext(TransactionItem item) {
-                        listener.checkFinish();
                         TransactionReceipt receipt = AppChainRpcService.getTransactionReceipt(item.hash);
 
                         if (receipt == null && new BigInteger(item.validUntilBlock).compareTo(AppChainRpcService.getBlockNumber()) < 0) {
                             item.status = TransactionItem.FAILED;
                             DBAppChainTransactionsUtil.update(context, item);
                         }
-                        if (receipt != null && !TextUtils.isEmpty(receipt.getErrorMessage())) {
+                        if (receipt != null && TextUtils.isEmpty(receipt.getErrorMessage())) {
                             DBAppChainTransactionsUtil.delete(context, item);
                         }
                     }

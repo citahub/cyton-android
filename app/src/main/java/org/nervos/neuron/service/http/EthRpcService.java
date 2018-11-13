@@ -5,8 +5,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionInfo;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -14,7 +14,6 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpEtherUrls;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
@@ -44,6 +43,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -57,6 +58,8 @@ public class EthRpcService {
 
     private static final String TRANSFER_FAIL = "Transfer fail";
     private static final String SIGN_FAIL = "Sign fail";
+
+    private static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     private static WalletItem walletItem;
     private static Web3j service;
@@ -119,13 +122,15 @@ public class EthRpcService {
      * @param password
      * @return
      */
-    public static Observable<EthSendTransaction> transferEth(String address, double value, BigInteger gasPrice,
+    public static Observable<EthSendTransaction> transferEth(Context context, String address, String value, BigInteger gasPrice,
                                                              BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_LIMIT : gasLimit;
         return signRawTransaction(address, data == null ? "" : data, NumberUtil.getWeiFromEth(value), gasPrice, gasLimit, password)
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) hexValue -> {
                     try {
-                        return Observable.just(service.ethSendRawTransaction(hexValue).sendAsync().get());
+                        EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).sendAsync().get();
+                        saveEtherTransaction(context, walletItem.address, address, value, ethSendTransaction.getTransactionHash());
+                        return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Observable.error(e);
@@ -133,6 +138,18 @@ public class EthRpcService {
                     return Observable.error(new Throwable(TRANSFER_FAIL));
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private static void saveEtherTransaction(Context context, String from, String to, String value, String hash) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
+                        EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
+                item.blockNumber = EthRpcService.getBlockNumber().toString();
+                DBEtherTransactionUtil.save(context, item);
+            }
+        });
     }
 
 
@@ -174,7 +191,7 @@ public class EthRpcService {
     }
 
 
-    public static Observable<EthSendTransaction> transferErc20(TokenItem tokenItem, String address, double value,
+    public static Observable<EthSendTransaction> transferErc20(Context context, TokenItem tokenItem, String address, double value,
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_ERC20_LIMIT : gasLimit;
         String data = createTokenTransferData(address, createTransferValue(tokenItem, value));
@@ -182,6 +199,8 @@ public class EthRpcService {
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
+                        saveEtherERC20Transaction(context, walletItem.address, tokenItem.contractAddress,
+                                String.valueOf(value), ethSendTransaction.getTransactionHash());
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -192,7 +211,18 @@ public class EthRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-
+    private static void saveEtherERC20Transaction(Context context, String from, String to, String value, String hash) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
+                        EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
+                item.blockNumber = EthRpcService.getBlockNumber().toString();
+                item.contractAddress = to;
+                DBEtherTransactionUtil.save(context, item);
+            }
+        });
+    }
 
     private static Observable<String> signRawTransaction(String receiveAddress, String data, BigInteger gasPrice,
                                                          BigInteger gasLimit, String password) {
@@ -217,19 +247,6 @@ public class EthRpcService {
                     }
                     return Observable.error(new Throwable(SIGN_FAIL));
                 });
-    }
-
-    private static void saveEtherTransaction(Context context, String from, String to, String value, String hash) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
-                        EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
-                item.blockNumber = EthRpcService.getBlockNumber().toString();
-                DBEtherTransactionUtil.save(context, item);
-            }
-        }.start();
     }
 
 

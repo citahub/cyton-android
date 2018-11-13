@@ -1,7 +1,9 @@
-package org.nervos.neuron.item;
+package org.nervos.neuron.item.transaction;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import org.nervos.neuron.view.webview.item.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -54,13 +56,15 @@ public class TransactionItem implements Parcelable {
         this.hash = hash;
     }
 
+    public TransactionItem(){}
+
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
-        if (timeStamp > 0) {
-            return ft.format(timeStamp * 1000);
-        } else {
-            return ft.format(timestamp);
-        }
+        return timeStamp > 0 ? ft.format(timeStamp * 1000) : ft.format(timestamp);
+    }
+
+    public long getTimestamp() {
+        return timeStamp > 0 ? timeStamp * 1000 : timestamp;
     }
 
     public void setTimestamp(long timestamp) {

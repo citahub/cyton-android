@@ -1,4 +1,4 @@
-package org.nervos.neuron.item;
+package org.nervos.neuron.item.transaction;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -29,7 +29,7 @@ public class TransactionInfo implements Parcelable {
 
     public TransactionInfo(String to, String value) {
         this.to = to;
-        this.value = NumberUtil.getWeiFromEth(Double.parseDouble(value)).toString();
+        this.value = NumberUtil.getWeiFromEth(value).toString();
     }
 
     public String getStringValue() {

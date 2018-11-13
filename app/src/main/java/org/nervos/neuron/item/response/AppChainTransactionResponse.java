@@ -1,6 +1,6 @@
 package org.nervos.neuron.item.response;
 
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 
 import java.util.List;
 

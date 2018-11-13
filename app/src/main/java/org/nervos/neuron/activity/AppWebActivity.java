@@ -259,7 +259,7 @@ public class AppWebActivity extends NBaseActivity {
                 .subscribe(new NeuronSubscriber<ChainItem>() {
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.e("manifest error: " + e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override

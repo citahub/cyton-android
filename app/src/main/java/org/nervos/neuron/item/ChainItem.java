@@ -3,7 +3,7 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ChainItem implements Parcelable{
+public class ChainItem implements Parcelable {
 
     public int chainId;
     public String httpProvider;

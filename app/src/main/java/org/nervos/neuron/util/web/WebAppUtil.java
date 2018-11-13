@@ -72,7 +72,7 @@ public class WebAppUtil {
                 }).filter(path -> !TextUtils.isEmpty(path))
                   .flatMap((Func1<String, Observable<AppItem>>) path -> {
                       try {
-                          mAppItem = new Gson().fromJson(getManifestResponse(handleManifetPath(url, path)), AppItem.class);
+                          mAppItem = new Gson().fromJson(getManifestResponse(handleManifestPath(url, path)), AppItem.class);
                       } catch (Throwable throwable) {
                           throwable.printStackTrace();
                           Observable.error(throwable);
@@ -130,34 +130,53 @@ public class WebAppUtil {
         return null;
     }
 
+
+    private static final String TAG_LINK = "link";
+    private static final String TAG_REL = "rel";
+    private static final String TAG_HREF = "href";
     private static String getManifestPath(String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
-        Elements elements = doc.getElementsByTag("link");
+        Elements elements = doc.getElementsByTag(TAG_LINK);
         for (Element element : elements) {
-            if (MANIFEST.equals(element.attr("rel"))) {
-                return element.attr("href");
+            if (MANIFEST.equals(element.attr(TAG_REL))) {
+                return element.attr(TAG_HREF);
             }
         }
         return "";
     }
 
-    private static String handleManifetPath(String url, String path) {
+
+    private static final String TAG_HTTP = "http";
+    private static final String TAG_DOT = ".";
+    private static final String TAG_SLASH = "/";
+    private static final String TAG_TWO_SLASH = "//";
+    private static final String TAG_THREE_SLASH = "///";
+    private static String handleManifestPath(String url, String path) {
         URI uri = URI.create(url);
         String manifestUrl = path;
-        if (!path.startsWith("http")) {
-            manifestUrl = uri.getAuthority() + "/";
-            manifestUrl += path.startsWith(".") ? uri.getPath() + "/" + path.substring(1) : path;
+        if (!path.startsWith(TAG_HTTP)) {
+            manifestUrl = uri.getAuthority() + TAG_SLASH;
+            if (path.startsWith(TAG_DOT)) {
+                if (uri.getPath().contains(TAG_SLASH)) {
+                    int index = uri.getPath().lastIndexOf(TAG_SLASH);
+                    manifestUrl += uri.getPath().substring(0, index) + TAG_SLASH + path.substring(1);
+                } else {
+                    manifestUrl += uri.getPath() + TAG_SLASH + path.substring(1);
+                }
+            } else {
+                manifestUrl += path;
+            }
             manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
         }
         return manifestUrl;
     }
 
     private static String formatUrl(String url) {
-        if (url.contains("///")) {
-            url = url.replace("///", "/");
+        if (url.contains(TAG_THREE_SLASH)) {
+            url = url.replace(TAG_THREE_SLASH, TAG_SLASH);
         }
-        if (url.contains("//")) {
-            url = url.replace("//", "/");
+        if (url.contains(TAG_TWO_SLASH)) {
+            url = url.replace(TAG_TWO_SLASH, TAG_SLASH);
         }
         return url;
     }

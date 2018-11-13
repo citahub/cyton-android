@@ -2,6 +2,7 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -24,19 +25,24 @@ import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by duanyytop on 2018/4/17
  */
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
+    public static final int REQUEST_CODE_SCAN = 0x01;
+    private static final int APPCAHIN_TRANSACTION_FETCH_PERIOD = 3000;
+    private static final int ETHER_TRANSACTION_FETCH_PERIOD = 30000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
     private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
     private FragmentManager fMgr;
-    public static final int REQUEST_CODE_SCAN = 0x01;
 
     @Override
     protected int getContentLayout() {
@@ -58,6 +64,33 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void initData() {
         fMgr = getSupportFragmentManager();
+
+        startCheckAppChainTransaction();
+        startCheckEtherTransaction();
+    }
+
+    private void startCheckAppChainTransaction() {
+        AppChainRpcService.init(mActivity, HttpAppChainUrls.APPCHAIN_NODE_URL);
+        Intent intent = new Intent();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                AppChainTransactionCheckService.enqueueWork(mActivity, intent);
+            }
+        }, 0, APPCAHIN_TRANSACTION_FETCH_PERIOD);
+    }
+
+    private void startCheckEtherTransaction() {
+        EthRpcService.initNodeUrl();
+        Intent intent = new Intent();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                EtherTransactionCheckService.enqueueWork(mActivity, intent);
+            }
+        }, 0, ETHER_TRANSACTION_FETCH_PERIOD);
     }
 
     @Override
