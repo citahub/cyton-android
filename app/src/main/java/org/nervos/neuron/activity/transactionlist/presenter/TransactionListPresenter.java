@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
@@ -17,6 +18,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.service.http.AppChainTransactionService;
 import org.nervos.neuron.service.http.HttpService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
@@ -184,9 +186,9 @@ public class TransactionListPresenter {
     }
 
     public static List<TransactionItem> getAppChainTransactionList(Context context, long chainId, List<TransactionItem> list) {
-        List<TransactionItem> allList = DBAppChainTransactionsUtil.getAllTransactionsWithChain(context, chainId);
-        if (allList.size() > 0) {
-            for (TransactionItem dbItem : allList) {
+        List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithChain(context, chainId);
+        if (itemList.size() > 0) {
+            for (TransactionItem dbItem : itemList) {
                 for (TransactionItem transactionItem : list) {
                     if (!transactionItem.hash.equalsIgnoreCase(dbItem.hash)) {
                         list.add(dbItem);

@@ -50,6 +50,7 @@ public class WalletsFragment extends NBaseFragment {
     private TokenListFragment tokenListFragment;
     private CollectionListFragment collectionListFragment = null;
     private WalletFragmentPresenter presenter;
+    private Handler handler = new Handler();
 
     private String[] mTitles = {"代币", "藏品"};
 
@@ -146,14 +147,14 @@ public class WalletsFragment extends NBaseFragment {
         AppChainRpcService.init(getContext(), HttpAppChainUrls.APPCHAIN_NODE_URL);
         AppChainTransactionCheckService.enqueueWork(getContext(), new Intent());
         AppChainTransactionCheckService.listener = () ->
-                new Handler().postDelayed(this::startCheckAppChainTransaction, APPCAHIN_TRANSACTION_FETCH_PERIOD);
+                handler.postDelayed(this::startCheckAppChainTransaction, APPCAHIN_TRANSACTION_FETCH_PERIOD);
     }
 
     private void startCheckEtherTransaction() {
         EthRpcService.initNodeUrl();
         EtherTransactionCheckService.enqueueWork(getContext(), new Intent());
         EtherTransactionCheckService.listener = () ->
-                new Handler().postDelayed(this::startCheckEtherTransaction, ETHER_TRANSACTION_FETCH_PERIOD);
+                handler.postDelayed(this::startCheckEtherTransaction, ETHER_TRANSACTION_FETCH_PERIOD);
     }
 
     private class MyAdapter extends FragmentPagerAdapter {

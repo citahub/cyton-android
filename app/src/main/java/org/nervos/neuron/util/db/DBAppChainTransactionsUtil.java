@@ -24,7 +24,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.put(getDbKey(item.chainId + item.hash), item);
+                db.put(getDbKey(item.chainId + item.contractAddress + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -36,7 +36,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.del(getDbKey(item.chainId + item.hash));
+                db.del(getDbKey(item.chainId + item.contractAddress + item.hash));
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -48,7 +48,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.put(getDbKey(item.chainId + item.hash), item);
+                db.put(getDbKey(item.chainId + item.contractAddress + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -70,8 +70,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
                 db = openDB(context, DB_APPCHAIN);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
-                    TransactionItem transactionItem = db.getObject(key, TransactionItem.class);
-                    list.add(transactionItem);
+                    list.add(db.getObject(key, TransactionItem.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
@@ -93,10 +92,32 @@ public class DBAppChainTransactionsUtil extends DBUtil {
             List<TransactionItem> list = new ArrayList<>();
             try {
                 db = openDB(context, DB_APPCHAIN);
-                String[] keys = db.findKeys(String.valueOf(chainId));
+                String[] keys = db.findKeys(getDbKey(String.valueOf(chainId)));
                 for (String key : keys) {
-                    TransactionItem transactionItem = db.getObject(key, TransactionItem.class);
-                    list.add(transactionItem);
+                    list.add(db.getObject(key, TransactionItem.class));
+                }
+                db.close();
+            } catch (SnappydbException e) {
+                handleException(db, e);
+            }
+            return list;
+        }
+    }
+
+    /**
+     * get all local transactions with chainId
+     *
+     * @param context
+     * @return
+     */
+    public static List<TransactionItem> getAllTransactionsWithToken(Context context, long chainId, String contractAddress) {
+        synchronized (dbObject) {
+            List<TransactionItem> list = new ArrayList<>();
+            try {
+                db = openDB(context, DB_APPCHAIN);
+                String[] keys = db.findKeys(getDbKey(chainId + contractAddress));
+                for (String key : keys) {
+                    list.add(db.getObject(key, TransactionItem.class));
                 }
                 db.close();
             } catch (SnappydbException e) {

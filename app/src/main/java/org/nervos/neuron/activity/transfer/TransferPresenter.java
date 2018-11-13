@@ -241,7 +241,6 @@ public class TransferPresenter {
                         if (ethSendTransaction.hasError()) {
                             mTransferView.transferEtherFail(ethSendTransaction.getError().getMessage());
                         } else {
-                            saveLocalTransaction(receiveAddress, value, ethSendTransaction.getTransactionHash());
                             mTransferView.transferEtherSuccess(ethSendTransaction);
                         }
                     }
@@ -267,19 +266,10 @@ public class TransferPresenter {
                         if (ethSendTransaction.hasError()) {
                             mTransferView.transferEtherFail(ethSendTransaction.getError().getMessage());
                         } else {
-                            saveLocalTransaction(receiveAddress, value, ethSendTransaction.getTransactionHash());
                             mTransferView.transferEtherSuccess(ethSendTransaction);
                         }
                     }
                 });
-    }
-
-
-    private void saveLocalTransaction(String receiveAddress, String value, String hash) {
-        TransactionItem item = new TransactionItem(mWalletItem.address, receiveAddress, value,
-                EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
-        item.blockNumber = EthRpcService.getBlockNumber().toString();
-        DBEtherTransactionUtil.save(mActivity, item);
     }
 
     /**
@@ -335,8 +325,6 @@ public class TransferPresenter {
             e.printStackTrace();
         }
     }
-
-
 
 
     public void updateGasInfo() {

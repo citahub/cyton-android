@@ -6,10 +6,12 @@ import android.text.TextUtils;
 
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.TransactionInfo;
+import org.nervos.neuron.item.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpEtherUrls;
@@ -179,7 +181,8 @@ public class EthRpcService {
         return signRawTransaction(tokenItem.contractAddress, data, gasPrice, gasLimit, password)
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
-                        return Observable.just(service.ethSendRawTransaction(signData).sendAsync().get());
+                        EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
+                        return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Observable.error(e);
@@ -214,6 +217,19 @@ public class EthRpcService {
                     }
                     return Observable.error(new Throwable(SIGN_FAIL));
                 });
+    }
+
+    private static void saveEtherTransaction(Context context, String from, String to, String value, String hash) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
+                        EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
+                item.blockNumber = EthRpcService.getBlockNumber().toString();
+                DBEtherTransactionUtil.save(context, item);
+            }
+        }.start();
     }
 
 

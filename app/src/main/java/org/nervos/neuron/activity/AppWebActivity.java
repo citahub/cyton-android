@@ -280,7 +280,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void signTxAction(Transaction transaction) {
-        handler.post(() -> {
+        webView.post(() -> {
             this.signTransaction = transaction;
             if (walletItem == null) {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)

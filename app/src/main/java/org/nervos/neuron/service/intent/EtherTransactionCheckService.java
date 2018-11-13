@@ -24,7 +24,7 @@ public class EtherTransactionCheckService extends JobIntentService {
      * Convenience method for enqueuing work in to this service.
      */
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, AppChainTransactionCheckService.class, JOB_ID, work);
+        enqueueWork(context, EtherTransactionCheckService.class, JOB_ID, work);
     }
 
     @Override
