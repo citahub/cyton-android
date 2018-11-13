@@ -357,7 +357,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void saveLocalEtherTransaction(String from, String to, String value, String hash) {
         TransactionItem item = new TransactionItem(from, to, value,
-                EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
+                EtherUtil.getEtherId(), EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
         item.blockNumber = EthRpcService.getBlockNumber().toString();
         DBEtherTransactionUtil.save(mActivity, item);
 

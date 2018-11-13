@@ -52,7 +52,7 @@ public class AddWalletActivity extends NBaseActivity {
         initIndicate();
         viewPager.setAdapter(new PagerAadapter());
         if (!SharePrefUtil.getBoolean(ConstantUtil.PROTOCOL, false))
-            handler.postDelayed(() -> {
+            viewPager.postDelayed(() -> {
                 ProtocolDialog dialog = new ProtocolDialog(mActivity);
                 dialog.show();
             }, 500);

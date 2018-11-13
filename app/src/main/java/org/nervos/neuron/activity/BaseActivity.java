@@ -33,7 +33,6 @@ public class BaseActivity extends AppCompatActivity {
     private ProgressCircleDialog circleDialog = null;
     protected boolean mIsSafeLast;
     protected Activity mActivity;
-    Handler handler = new Handler();
     public boolean inLoginPage = false;
     private boolean needLogin = false;
     private TimeCount timeCount = new TimeCount();

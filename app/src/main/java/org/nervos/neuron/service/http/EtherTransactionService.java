@@ -33,7 +33,7 @@ public class EtherTransactionService implements TransactionService {
                             DBEtherTransactionUtil.update(context, item);
                         }
                         if (receipt != null && !receipt.hasError()) {
-                            DBEtherTransactionUtil.delete(context, item.hash);
+                            DBEtherTransactionUtil.delete(context, item);
                         }
                     }
                 });

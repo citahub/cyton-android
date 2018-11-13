@@ -22,6 +22,7 @@ public class TransactionItem implements Parcelable {
     public String symbol;
     public String nativeSymbol;
     public String chainName;
+    public String contractAddress;
 
     //0 update 1 success 2 pending
     public int status;
@@ -42,10 +43,11 @@ public class TransactionItem implements Parcelable {
     public String validUntilBlock;
 
 
-    public TransactionItem(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
+    public TransactionItem(String from, String to, String value, long chainId, String chainName, int status, long timestamp, String hash) {
         this.from = from;
         this.to = to;
         this.value = value;
+        this.chainId = chainId;
         this.chainName = chainName;
         this.status = status;
         this.setTimestamp(timestamp);
@@ -65,64 +67,60 @@ public class TransactionItem implements Parcelable {
         this.timestamp = timestamp;
     }
 
+
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.hash);
         dest.writeString(this.from);
         dest.writeString(this.to);
         dest.writeString(this.value);
-        dest.writeLong(this.timestamp);
-        dest.writeLong(this.timeStamp);
+        dest.writeString(this.hash);
+        dest.writeLong(this.chainId);
+        dest.writeString(this.symbol);
+        dest.writeString(this.nativeSymbol);
         dest.writeString(this.chainName);
-        dest.writeString(this.content);
+        dest.writeString(this.contractAddress);
+        dest.writeInt(this.status);
         dest.writeString(this.gasUsed);
         dest.writeString(this.gas);
         dest.writeString(this.gasPrice);
         dest.writeString(this.blockNumber);
-        dest.writeInt(this.status);
+        dest.writeLong(this.timestamp);
+        dest.writeLong(this.timeStamp);
+        dest.writeString(this.content);
         dest.writeString(this.errorMessage);
-        dest.writeLong(this.chainId);
-        dest.writeString(this.symbol);
-        dest.writeString(this.nativeSymbol);
-    }
-
-    public TransactionItem() {
+        dest.writeString(this.validUntilBlock);
     }
 
     protected TransactionItem(Parcel in) {
-        this.hash = in.readString();
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
-        this.timestamp = in.readLong();
-        this.timeStamp = in.readLong();
+        this.hash = in.readString();
+        this.chainId = in.readLong();
+        this.symbol = in.readString();
+        this.nativeSymbol = in.readString();
         this.chainName = in.readString();
-        this.content = in.readString();
+        this.contractAddress = in.readString();
+        this.status = in.readInt();
         this.gasUsed = in.readString();
         this.gas = in.readString();
         this.gasPrice = in.readString();
         this.blockNumber = in.readString();
-        this.status = in.readInt();
+        this.timestamp = in.readLong();
+        this.timeStamp = in.readLong();
+        this.content = in.readString();
         this.errorMessage = in.readString();
-        this.chainId = in.readLong();
-        this.symbol = in.readString();
-        this.nativeSymbol = in.readString();
+        this.validUntilBlock = in.readString();
     }
 
     public static final Creator<TransactionItem> CREATOR = new Creator<TransactionItem>() {
         @Override
-        public TransactionItem createFromParcel(Parcel source) {
-            return new TransactionItem(source);
-        }
+        public TransactionItem createFromParcel(Parcel source) {return new TransactionItem(source);}
 
         @Override
-        public TransactionItem[] newArray(int size) {
-            return new TransactionItem[size];
-        }
+        public TransactionItem[] newArray(int size) {return new TransactionItem[size];}
     };
 }

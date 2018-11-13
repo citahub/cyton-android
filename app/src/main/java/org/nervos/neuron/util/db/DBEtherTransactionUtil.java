@@ -20,7 +20,7 @@ public class DBEtherTransactionUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_ETH_TRANSACTION);
-                db.put(getDbKey(transactionItem.hash), transactionItem);
+                db.put(getDbKey(transactionItem.chainId + transactionItem.hash), transactionItem);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -32,7 +32,7 @@ public class DBEtherTransactionUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_ETH_TRANSACTION);
-                db.put(getDbKey(transactionItem.hash), transactionItem);
+                db.put(getDbKey(transactionItem.chainId + transactionItem.hash), transactionItem);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -40,11 +40,11 @@ public class DBEtherTransactionUtil extends DBUtil {
         }
     }
 
-    public static void delete(Context context, String hash) {
+    public static void delete(Context context, TransactionItem transactionItem) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_ETH_TRANSACTION);
-                db.del(getDbKey(hash));
+                db.del(getDbKey(transactionItem.chainId + transactionItem.hash));
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -61,7 +61,6 @@ public class DBEtherTransactionUtil extends DBUtil {
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
                     TransactionItem transactionItem = db.getObject(key, TransactionItem.class);
-                    transactionItem.hash = getDbOrigin(key);
                     transactionItemList.add(transactionItem);
                 }
                 db.close();
@@ -81,7 +80,6 @@ public class DBEtherTransactionUtil extends DBUtil {
                 String[] keys = db.findKeys(getDbKey(chainId));
                 for (String key : keys) {
                     TransactionItem transactionItem = db.getObject(key, TransactionItem.class);
-                    transactionItem.hash = getDbOrigin(key);
                     transactionItemList.add(transactionItem);
                 }
                 db.close();

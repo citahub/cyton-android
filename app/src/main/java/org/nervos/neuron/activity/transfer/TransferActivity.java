@@ -354,8 +354,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         progressBar.setVisibility(View.GONE);
         if (ethSendTransaction == null) {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-        } else if (ethSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
+        } else if (ethSendTransaction.getError() != null
+                && !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
         } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
