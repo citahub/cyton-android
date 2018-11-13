@@ -17,8 +17,7 @@ import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionInfo;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
@@ -28,9 +27,6 @@ import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
-import org.nervos.neuron.util.db.DBEtherTransactionUtil;
-import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -279,8 +275,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
                     @Override
                     public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                        return EthRpcService.transferEth(mTransactionInfo.to,
-                                mTransactionInfo.getDoubleValue(), gasPrice,
+                        return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
+                                mTransactionInfo.getStringValue(), gasPrice,
                                 Numeric.toBigInt(mTransactionInfo.gasLimit),
                                 mTransactionInfo.data, password);
                     }
@@ -306,10 +302,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(
                 mTransactionInfo.chainId));
-        SaveAppChainPendingItemUtils.setTransaction(mTransactionInfo.chainId,
-                mWalletItem.address.toLowerCase(), mTransactionInfo.to.toLowerCase(), "0");
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
-                mTransactionInfo.getDoubleValue(),
+                mTransactionInfo.getStringValue(),
                 mTransactionInfo.data, mTransactionInfo.getLongQuota(),
                 (int) mTransactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -346,8 +340,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, R.string.operation_success, Toast.LENGTH_SHORT).show();
-            saveLocalEtherTransaction(mTransactionInfo.from, mTransactionInfo.to,
-                    mTransactionInfo.getStringValue(), ethSendTransaction.getTransactionHash());
             gotoSignSuccess(new Gson().toJson(ethSendTransaction.getTransactionHash()));
         } else {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
@@ -355,13 +347,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         }
     }
 
-    private void saveLocalEtherTransaction(String from, String to, String value, String hash) {
-        TransactionItem item = new TransactionItem(from, to, value,
-                EtherUtil.getEtherId(), EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
-        item.blockNumber = EthRpcService.getBlockNumber().toString();
-        DBEtherTransactionUtil.save(mActivity, item);
-
-    }
 
     /**
      * handle appchain transfer result

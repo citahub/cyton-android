@@ -1,10 +1,11 @@
 package org.nervos.neuron.util.db;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,10 @@ import java.util.List;
  * Created by BaojunCZ on 2018/10/11.
  */
 public class DBAppChainTransactionsUtil extends DBUtil {
+
     private static final String DB_APPCHAIN = "db_appchain_transaction";
+
+    private static final String TOKEN = "token";
 
     /**
      * @param context
@@ -24,7 +28,8 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.put(getDbKey(item.chainId + item.contractAddress + item.hash), item);
+                String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
+                db.put(getDbKey(item.chainId + tokenType + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -36,7 +41,8 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.del(getDbKey(item.chainId + item.contractAddress + item.hash));
+                String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
+                db.del(getDbKey(item.chainId + tokenType + item.hash));
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -48,7 +54,8 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
-                db.put(getDbKey(item.chainId + item.contractAddress + item.hash), item);
+                String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
+                db.put(getDbKey(item.chainId + tokenType + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -82,40 +89,18 @@ public class DBAppChainTransactionsUtil extends DBUtil {
 
 
     /**
-     * get all local transactions with chainId
+     * get all local transactions with chainId and contract address
      *
      * @param context
      * @return
      */
-    public static List<TransactionItem> getAllTransactionsWithChain(Context context, long chainId) {
+    public static List<TransactionItem> getAllTransactionsWithToken(Context context, String chainId, String contractAddress) {
         synchronized (dbObject) {
             List<TransactionItem> list = new ArrayList<>();
             try {
                 db = openDB(context, DB_APPCHAIN);
-                String[] keys = db.findKeys(getDbKey(String.valueOf(chainId)));
-                for (String key : keys) {
-                    list.add(db.getObject(key, TransactionItem.class));
-                }
-                db.close();
-            } catch (SnappydbException e) {
-                handleException(db, e);
-            }
-            return list;
-        }
-    }
-
-    /**
-     * get all local transactions with chainId
-     *
-     * @param context
-     * @return
-     */
-    public static List<TransactionItem> getAllTransactionsWithToken(Context context, long chainId, String contractAddress) {
-        synchronized (dbObject) {
-            List<TransactionItem> list = new ArrayList<>();
-            try {
-                db = openDB(context, DB_APPCHAIN);
-                String[] keys = db.findKeys(getDbKey(chainId + contractAddress));
+                String tokenType = TextUtils.isEmpty(contractAddress) ? TOKEN : contractAddress;
+                String[] keys = db.findKeys(getDbKey(chainId + tokenType));
                 for (String key : keys) {
                     list.add(db.getObject(key, TransactionItem.class));
                 }

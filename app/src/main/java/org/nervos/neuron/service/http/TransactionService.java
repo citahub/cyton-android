@@ -5,7 +5,5 @@ package org.nervos.neuron.service.http;
  */
 public interface TransactionService {
 
-    interface OnCheckResultListener {
-        void checkFinish();
-    }
+
 }

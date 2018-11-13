@@ -11,7 +11,7 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_transaction_detail.*
 import org.nervos.neuron.R
-import org.nervos.neuron.item.TransactionItem
+import org.nervos.neuron.item.transaction.TransactionItem
 import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
@@ -52,7 +52,7 @@ class TransactionDetailActivity : NBaseActivity() {
 
         tv_transaction_number.text = transactionItem!!.hash
         tv_transaction_sender.text = transactionItem!!.from
-        tv_transaction_receiver.text = if ("0x".equals(transactionItem!!.to)) resources.getString(R.string.contract_create) else transactionItem!!.to
+        tv_transaction_receiver.text = if ("0x" == transactionItem!!.to) resources.getString(R.string.contract_create) else transactionItem!!.to
         if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
             tv_chain_name.text = ConstantUtil.ETH_MAINNET
             val gasPriceBig = BigInteger(transactionItem!!.gasPrice)

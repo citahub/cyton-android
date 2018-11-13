@@ -156,8 +156,8 @@ public class NumberUtil {
         return sb.toString();
     }
 
-    public static BigInteger getWeiFromEth(double value) {
-        return Convert.toWei(String.valueOf(value), Convert.Unit.ETHER).toBigInteger();
+    public static BigInteger getWeiFromEth(String value) {
+        return Convert.toWei(value, Convert.Unit.ETHER).toBigInteger();
     }
 
     public static String getEthFromWeiForStringDecimal8Sub(BigInteger value) {

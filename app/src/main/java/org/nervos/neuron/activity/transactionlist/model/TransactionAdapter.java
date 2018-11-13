@@ -3,13 +3,16 @@ package org.nervos.neuron.activity.transactionlist.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
+import org.nervos.neuron.util.ConstantUtil;
 
 import java.util.List;
 
@@ -34,13 +37,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.context = context;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
     public void refresh(List<TransactionItem> transactionItemList) {
         this.transactionItemList = transactionItemList;
         notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public void addLoadingView() {
@@ -81,22 +84,22 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (!transactionItem.from.equalsIgnoreCase(address)) {
                 viewHolder.transactionIdText.setText(transactionItem.from);
             } else {
-                viewHolder.transactionIdText.setText("0x".equals(transactionItem.to) ? context.getResources()
-                        .getString(R.string.contract_create) : transactionItem.to);
+                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to)
+                        ? context.getResources().getString(R.string.contract_create) : transactionItem.to);
             }
             String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+") + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionItem.getDate());
             switch (transactionItem.status) {
-                case 0:
+                case TransactionItem.FAILED:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_failed);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.red));
                     break;
-                case 1:
+                case TransactionItem.SUCCESS:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_success);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.assist_color));
                     break;
-                case 2:
+                case TransactionItem.PENDING:
                 default:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_pending);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.font_title_third));

@@ -15,10 +15,8 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionItem;
-import org.nervos.neuron.service.http.AppChainTransactionService;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.service.http.HttpService;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
@@ -152,9 +150,10 @@ public class TransactionListPresenter {
                     listener.noMoreLoading();
                     return;
                 }
-                Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
                 if (isEther(tokenItem)) {
                     for (TransactionItem item : list) {
+                        item.chainId = EtherUtil.getEtherId();
+                        item.chainName = EtherUtil.getEthNodeName();
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
                     listener.refreshList(getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list));
@@ -162,7 +161,7 @@ public class TransactionListPresenter {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    listener.refreshList(getAppChainTransactionList(activity, tokenItem.chainId, list));
+                    listener.refreshList(getAppChainTransactionList(activity, String.valueOf(tokenItem.chainId), list));
                 }
             }
         });
@@ -170,33 +169,25 @@ public class TransactionListPresenter {
 
 
     private List<TransactionItem> getEtherTransactionList(Context context, String chainId, List<TransactionItem> list) {
-        List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithChain(context, chainId);
+        List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             for (TransactionItem dbItem : itemList) {
-                for (TransactionItem transactionItem : list) {
-                    if (!transactionItem.hash.equalsIgnoreCase(dbItem.hash)) {
-                        list.add(dbItem);
-                        break;
-                    }
+                if (!list.contains(dbItem) && dbItem.getTimestamp() > list.get(list.size() - 1).getTimestamp()) {
+                    list.add(0, dbItem);
                 }
             }
-            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
 
-    public static List<TransactionItem> getAppChainTransactionList(Context context, long chainId, List<TransactionItem> list) {
-        List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithChain(context, chainId);
+    private List<TransactionItem> getAppChainTransactionList(Context context, String chainId, List<TransactionItem> list) {
+        List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             for (TransactionItem dbItem : itemList) {
-                for (TransactionItem transactionItem : list) {
-                    if (!transactionItem.hash.equalsIgnoreCase(dbItem.hash)) {
-                        list.add(dbItem);
-                        break;
-                    }
+                if (!list.contains(dbItem) && dbItem.getTimestamp() > list.get(list.size() - 1).getTimestamp()) {
+                    list.add(0, dbItem);
                 }
             }
-            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }

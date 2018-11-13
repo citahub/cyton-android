@@ -2,7 +2,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.utils.Numeric;
@@ -16,16 +16,15 @@ public class EtherTransactionService implements TransactionService {
 
     private static final long ETH_BLOCK_DIFF = 200;
 
-    public static void checkTransactionStatus(Context context, OnCheckResultListener listener) {
+    public static void checkTransactionStatus(Context context) {
         Observable.from(DBEtherTransactionUtil.getAllTransactions(context))
                 .subscribe(new NeuronSubscriber<TransactionItem>() {
                     @Override
                     public void onError(Throwable e) {
-                        listener.checkFinish();
+                        e.printStackTrace();
                     }
                     @Override
                     public void onNext(TransactionItem item) {
-                        listener.checkFinish();
                         EthGetTransactionReceipt receipt = EthRpcService.getTransactionReceipt(item.hash);
                         if (receipt == null && AppChainRpcService.getBlockNumber()
                                 .subtract(Numeric.toBigInt(item.blockNumber)).longValue() > ETH_BLOCK_DIFF) {

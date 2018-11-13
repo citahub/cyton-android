@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.support.v4.app.JobIntentService;
 
 import org.nervos.neuron.service.http.AppChainTransactionService;
-import org.nervos.neuron.service.http.TransactionService;
 
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
 public class AppChainTransactionCheckService extends JobIntentService {
-
-    public static TransactionService.OnCheckResultListener listener;
 
     /**
      * Unique job ID for this service.
@@ -28,7 +25,7 @@ public class AppChainTransactionCheckService extends JobIntentService {
 
     @Override
     protected void onHandleWork(Intent intent) {
-//        AppChainTransactionService.checkTransactionStatus(this, listener);
+        AppChainTransactionService.checkTransactionStatus(this);
     }
 
 }

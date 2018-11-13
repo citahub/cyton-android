@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
@@ -22,7 +24,7 @@ import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
@@ -109,8 +111,10 @@ public class TransactionListActivity extends NBaseActivity {
             intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
             startActivity(intent);
         });
-        mPage = 0;
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getTransactionList(mPage));
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            mPage = 0;
+            presenter.getTransactionList(mPage);
+        });
     }
 
     private void initAdapter() {
@@ -185,7 +189,7 @@ public class TransactionListActivity extends NBaseActivity {
         public void refreshList(List<TransactionItem> list) {
             mPage++;
             transactionAdapter.removeLoadingView();
-            transactionItemList.addAll(list);
+            transactionItemList.addAll(0, list);
             transactionAdapter.refresh(transactionItemList);
             scrollListener.setLoaded();
         }

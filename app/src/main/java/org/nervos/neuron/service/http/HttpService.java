@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.AppChainERC20TransferResponse;
 import org.nervos.neuron.item.response.EthTransactionResponse;
@@ -17,8 +17,6 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
-import org.nervos.neuron.util.url.HttpEtherUrls;
-import org.nervos.neuron.util.url.HttpUrls;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
