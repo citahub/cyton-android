@@ -14,7 +14,12 @@ public class AppItem implements Parcelable {
     public String name;
     public String provider;
     public String blockViewer;
+    public Long collectTime;
     public Map<String, String> chainSet = new HashMap<>();
+
+    public AppItem() {
+
+    }
 
     public AppItem(String entry, String icon, String name, String provider) {
         this.entry = entry;
@@ -53,6 +58,7 @@ public class AppItem implements Parcelable {
         dest.writeString(this.provider);
         dest.writeString(this.blockViewer);
         dest.writeInt(this.chainSet.size());
+        dest.writeLong(this.collectTime);
         for (Map.Entry<String, String> entry : this.chainSet.entrySet()) {
             dest.writeString(entry.getKey());
             dest.writeString(entry.getValue());
@@ -66,6 +72,7 @@ public class AppItem implements Parcelable {
         this.provider = in.readString();
         this.blockViewer = in.readString();
         int chainsetSize = in.readInt();
+        this.collectTime = in.readLong();
         this.chainSet = new HashMap<String, String>(chainsetSize);
         for (int i = 0; i < chainsetSize; i++) {
             String key = in.readString();

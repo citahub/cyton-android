@@ -41,18 +41,18 @@ public class DBAppUtil extends DBUtil {
 
     public static List<AppItem> getAllApp(Context context) {
         synchronized (dbObject) {
-            List<AppItem> walletList = new ArrayList<>();
+            List<AppItem> appList = new ArrayList<>();
             try {
                 db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(DB_PREFIX);
-                db.close();
                 for(String key: keys) {
-                    walletList.add(db.getObject(key, AppItem.class));
+                    appList.add(db.getObject(key, AppItem.class));
                 }
+                db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
-            return walletList;
+            return appList;
         }
     }
 

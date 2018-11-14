@@ -138,6 +138,7 @@
     <string name="transaction_detail_title">交易详情</string>
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="press_back_finish">再按一次返回键退出</string>
+    <string name="collect_title">我的收藏</string>
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
     <string name="reload">重新加载</string>
@@ -189,6 +190,7 @@
     <string name="take_photo">拍照</string>
     <string name="photo_album">相册</string>
     <string name="contract_create">"Contract Created"</string>
+    <string name="empty_collect">空空如也</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

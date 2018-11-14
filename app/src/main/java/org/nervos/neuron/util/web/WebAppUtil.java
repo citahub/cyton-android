@@ -73,74 +73,75 @@ public class WebAppUtil {
                 }
                 return "";
             }
-        }).filter(path -> !TextUtils.isEmpty(path))
-          .flatMap((Func1<String, Observable<AppItem>>) path -> {
-            URI uri = URI.create(url);
-            String manifestUrl = path;
-            if (!path.startsWith("http")) {
-                manifestUrl = uri.getAuthority() + "/";
-                manifestUrl += path.startsWith(".")? uri.getPath() + "/" + path.substring(1) : path;
-                manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
-            }
+        })
+                .filter(path -> !TextUtils.isEmpty(path))
+                .flatMap((Func1<String, Observable<AppItem>>) path -> {
+                    URI uri = URI.create(url);
+                    String manifestUrl = path;
+                    if (!path.startsWith("http")) {
+                        manifestUrl = uri.getAuthority() + "/";
+                        manifestUrl += path.startsWith(".") ? uri.getPath() + "/" + path.substring(1) : path;
+                        manifestUrl = uri.getScheme() + "://" + formatUrl(manifestUrl);
+                    }
 
-            Request request = new Request.Builder().url(manifestUrl).build();
-            Call call = HttpService.getHttpClient().newCall(request);
-            String response = "";
-            ResponseBody body = null;
-            try {
-                final Response resp = call.execute();
-                final int code = resp.code();
-                body = resp.body();
-                if (code == 200) {
-                    response = body.string();
-                }
-                if (body != null) {
-                    body.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return Observable.error(new Throwable(e.getMessage()));
-            } finally {
-                if (body != null) {
-                    body.close();
-                }
-            }
-            mAppItem = new Gson().fromJson(response, AppItem.class);
-            return Observable.just(mAppItem);
-        }).filter(appItem -> appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5)
-          .flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
-              Map<String, String> chainSet = appItem.chainSet;
-              List<ChainItem> chainItemList = new ArrayList<>();
-              if (chainSet.size() == 0) {
-                  return Observable.error(new Throwable(
-                          "Manifest chain set is null, please provide chain id and host"));
-              }
-              for (Map.Entry<String, String> entry : chainSet.entrySet()) {
-                  ChainItem item = new ChainItem();
-                  item.chainId = Integer.parseInt(entry.getKey());
-                  item.httpProvider = entry.getValue();
-                  chainItemList.add(item);
-                  SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
-              }
-              return Observable.from(chainItemList);
-          }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
-            @Override
-            public Observable<ChainItem> call(ChainItem chainItem) {
-                AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
-                AppMetaData.AppMetaDataResult ethMetaData =
-                        AppChainRpcService.getMetaData().getAppMetaDataResult();
-                if (ethMetaData != null) {
-                    chainItem.name = ethMetaData.chainName;
-                    chainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                    chainItem.tokenSymbol = ethMetaData.tokenSymbol;
-                    chainItem.tokenName = ethMetaData.tokenName;
-                } else {
-                    chainItem.errorMessage = webView.getContext().getString(R.string.meta_data_error)
-                            + chainItem.httpProvider;
-                }
-                return Observable.just(chainItem);
-            }
-        }).subscribeOn(Schedulers.io())
+                    Request request = new Request.Builder().url(manifestUrl).build();
+                    Call call = HttpService.getHttpClient().newCall(request);
+                    String response = "";
+                    ResponseBody body = null;
+                    try {
+                        final Response resp = call.execute();
+                        final int code = resp.code();
+                        body = resp.body();
+                        if (code == 200) {
+                            response = body.string();
+                        }
+                        if (body != null) {
+                            body.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return Observable.error(new Throwable(e.getMessage()));
+                    } finally {
+                        if (body != null) {
+                            body.close();
+                        }
+                    }
+                    mAppItem = new Gson().fromJson(response, AppItem.class);
+                    return Observable.just(mAppItem);
+                })
+                .filter(appItem -> appItem.chainSet.size() > 0 && appItem.chainSet.size() <= 5)
+                .flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
+                    Map<String, String> chainSet = appItem.chainSet;
+                    List<ChainItem> chainItemList = new ArrayList<>();
+                    if (chainSet.size() == 0) {
+                        return Observable.error(new Throwable("Manifest chain set is null, please provide chain id and host"));
+                    }
+                    for (Map.Entry<String, String> entry : chainSet.entrySet()) {
+                        ChainItem item = new ChainItem();
+                        item.chainId = Integer.parseInt(entry.getKey());
+                        item.httpProvider = entry.getValue();
+                        chainItemList.add(item);
+                        SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
+                    }
+                    return Observable.from(chainItemList);
+                })
+                .flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
+                    @Override
+                    public Observable<ChainItem> call(ChainItem chainItem) {
+                        AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
+                        AppMetaData.AppMetaDataResult ethMetaData = AppChainRpcService.getMetaData().getAppMetaDataResult();
+                        if (ethMetaData != null) {
+                            chainItem.name = ethMetaData.chainName;
+                            chainItem.tokenAvatar = ethMetaData.tokenAvatar;
+                            chainItem.tokenSymbol = ethMetaData.tokenSymbol;
+                            chainItem.tokenName = ethMetaData.tokenName;
+                        } else {
+                            chainItem.errorMessage = webView.getContext().getString(R.string.meta_data_error) + chainItem.httpProvider;
+                        }
+                        return Observable.just(chainItem);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -160,14 +161,13 @@ public class WebAppUtil {
     }
 
     public static void collectApp(WebView webView) {
+        mAppItem.collectTime = System.currentTimeMillis();
         DBAppUtil.saveDbApp(webView.getContext(), mAppItem);
-        EventBus.getDefault().post(new AppCollectEvent(true, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
     }
 
     public static void cancelCollectApp(WebView webView) {
         DBAppUtil.deleteApp(webView.getContext(), mAppItem.entry);
-        EventBus.getDefault().post(new AppCollectEvent(false, mAppItem, System.currentTimeMillis()));
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
@@ -208,8 +208,8 @@ public class WebAppUtil {
         webSettings.setDatabaseEnabled(true);
         webSettings.setBuiltInZoomControls(false);
 
-        webSettings.setUserAgentString(webSettings.getUserAgentString()
-                + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+        webSettings.setUserAgentString(
+                webSettings.getUserAgentString() + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
 
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
     }
