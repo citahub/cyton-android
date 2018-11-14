@@ -27,6 +27,7 @@ public class ConstantUtil {
     public static final String FINGERPRINT = "Fingerprint";
     public static final String CURRENCY = "Currency";
     public static final String PROTOCOL = "Protocol";
+    public static final String SENSOR_IP_ID = "SENSOR_IP_ID";
 
     public static final String IMG_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
@@ -45,6 +46,30 @@ public class ConstantUtil {
 
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 
+
+
+    // Ether Constant
+    public static final String ETH = "ETH";
+    public static final String ETHEREUM = "ethereum";
+    public static final String ETH_MAINNET = "Ethereum Mainnet";
+    public static final String GWEI = "GWei";
+
+    public static final String ETH_NET = "ETH_NET";
+    public static final String ETH_NET_MAIN = "Main_Ethereum_Network";
+    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten_Test_Network";
+    public static final String ETH_NET_KOVAN_TEST = "Kovan_Test_Network";
+    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby_Test_Network";
+
+    public static final int ETHEREUM_MAIN_ID = -1;
+    public static final int ETHEREUM_ROPSTEN_ID = -3;
+    public static final int ETHEREUM_KOVAN_ID = -42;
+    public static final int ETHEREUM_RINKEBY_ID = -4;
+
+
+    public static final String ETH_MAIN_NAME = "Ethereum Mainnet";
+    public static final String ETH_RINKEBY_NAME = "Ethereum Rinkeby";
+    public static final String ETH_KOVAN_NAME = "Ethereum Kovan";
+    public static final String ETH_ROPSTEN_NAME = "Ethereum Ropsten";
 
     // gas constant data
     public static final BigInteger GAS_LIMIT = new BigInteger("21000");        // default eth gas limit is 21000
