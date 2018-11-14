@@ -4,21 +4,23 @@ package org.nervos.neuron.constant
  * Created by BaojunCZ on 2018/11/7.
  */
 object NeuronDAppCallback {
-    val SUCCESS_CODE = 1
-    val ERROR_CODE = 0
+    const val SUCCESS_CODE = 1
+    const val ERROR_CODE = 0
 
-    val PERMISSION_DENIED_CODE = 0
-    val PERMISSION_DENIED = "Permission Denied"
+    const val PERMISSION_DENIED_CODE = 0
+    const val PERMISSION_DENIED = "Permission Denied"
 
-    val USER_CANCEL_CODE = 1
-    val USER_CANCEL = "User Cancel"
+    const val USER_CANCEL_CODE = 1
+    const val USER_CANCEL = "User Cancel"
 
-    val UNKNOWN_ERROR_CODE = 3
-    val UNKNOWN_ERROR = "Unknown Error"
+    const val NO_PERMISSION_CODE = 2
+    const val NO_PERMISSION = "Wrong Permission Name"
 
-    val FIND_NO_FILE_CODE = 4
-    val FIND_NO_FILE = "Find No File"
+    const val UNKNOWN_ERROR_CODE = 3
+    const val UNKNOWN_ERROR = "Unknown Error"
 
-    val NO_PERMISSION_CODE = 5
-    val NO_PERMISSION = "NO PERMISSION"
+    const val FIND_NO_FILE_CODE = 4
+    const val FIND_NO_FILE = "Find No File"
+
+
 }

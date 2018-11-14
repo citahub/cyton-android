@@ -542,7 +542,8 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         if (fail) {
                             if (!TextUtils.isEmpty(mCallback)) {
-                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL_CODE(), NeuronDAppCallback.INSTANCE.getUSER_CANCEL());
+                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                                        NeuronDAppCallback.INSTANCE.USER_CANCEL_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL);
                                 JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                             }
                         }
@@ -562,7 +563,8 @@ public class AppWebActivity extends NBaseActivity {
                     break;
                 case RESULT_CODE_SCAN_QRCODE:
                     if (!TextUtils.isEmpty(mCallback)) {
-                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.INSTANCE.getERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR_CODE(), NeuronDAppCallback.INSTANCE.getUNKNOWN_ERROR());
+                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback
+                                .UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
                         JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                     }
                     break;

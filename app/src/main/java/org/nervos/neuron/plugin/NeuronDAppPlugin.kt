@@ -24,6 +24,12 @@ import java.util.*
 
 class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: WebView) {
 
+    companion object {
+        const val PERMISSION_CAMERA = "CAMERA"
+        const val PERMISSION_STORAGE = "STORAGE"
+    }
+
+
     private var mImpl: NeuronDAppPluginImpl? = null
 
     fun setImpl(impl: NeuronDAppPluginImpl) {
@@ -91,8 +97,8 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
 
     private fun switchPermission(info: String): Array<String>? {
         return when (info) {
-            "CAMERA" -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA)
-            "STORAGE" -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
+            PERMISSION_CAMERA -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA)
+            PERMISSION_STORAGE -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
             else -> null
         }
     }
