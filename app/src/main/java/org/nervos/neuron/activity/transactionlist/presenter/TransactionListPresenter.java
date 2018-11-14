@@ -185,9 +185,11 @@ public class TransactionListPresenter {
                 for (TransactionItem item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
                         itemList.remove(dbItem);
+                        break;
                     }
                     if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
                         itemList.remove(dbItem);
+                        break;
                     }
                 }
             }
@@ -204,9 +206,11 @@ public class TransactionListPresenter {
                 for (TransactionItem item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
                         itemList.remove(dbItem);
+                        break;
                     }
                     if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
                         itemList.remove(dbItem);
+                        break;
                     }
                 }
             }
