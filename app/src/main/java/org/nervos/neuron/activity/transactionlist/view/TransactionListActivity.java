@@ -186,10 +186,17 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         @Override
+        public void updateNewList(List<TransactionItem> list) {
+            mPage++;
+            transactionItemList = list;
+            transactionAdapter.refresh(transactionItemList);
+        }
+
+        @Override
         public void refreshList(List<TransactionItem> list) {
             mPage++;
             transactionAdapter.removeLoadingView();
-            transactionItemList.addAll(0, list);
+            transactionItemList.addAll(list);
             transactionAdapter.refresh(transactionItemList);
             scrollListener.setLoaded();
         }
