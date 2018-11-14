@@ -18,4 +18,7 @@ object NeuronDAppCallback {
 
     val FIND_NO_FILE_CODE = 4
     val FIND_NO_FILE = "Find No File"
+
+    val NO_PERMISSION_CODE = 5
+    val NO_PERMISSION = "NO PERMISSION"
 }

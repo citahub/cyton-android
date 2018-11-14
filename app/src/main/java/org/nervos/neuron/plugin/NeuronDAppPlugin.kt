@@ -5,24 +5,22 @@ import android.content.Intent
 import android.text.TextUtils
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-
 import com.google.gson.Gson
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
-
 import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
+import org.nervos.neuron.constant.NeuronDAppCallback
 import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem
 import org.nervos.neuron.item.NeuronDApp.FileToBase64Item
+import org.nervos.neuron.item.NeuronDApp.PermissionItem
 import org.nervos.neuron.util.FileUtil
 import org.nervos.neuron.util.JSLoadUtils
-import org.nervos.neuron.constant.NeuronDAppCallback
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
-
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: WebView) {
 
@@ -89,5 +87,51 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
 
     interface NeuronDAppPluginImpl {
         fun scanCode(callback: String)
+    }
+
+    private fun switchPermission(info: String): Array<String>? {
+        return when (info) {
+            "CAMERA" -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.CAMERA)
+            "STORAGE" -> arrayOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
+            else -> null
+        }
+    }
+
+    @JavascriptInterface
+    fun checkPermissions(info: String, callback: String) {
+        var permissionList = switchPermission(info)
+        var permissionItem: PermissionItem
+        if (permissionList !== null) {
+            permissionItem = PermissionItem(AndPermission.hasPermissions(mContext, permissionList))
+            mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
+        } else {
+            permissionItem = PermissionItem(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
+        }
+    }
+
+    @JavascriptInterface
+    fun requestPermissions(info: String, callback: String) {
+        var permissionList = switchPermission(info)
+        var permissionItem: PermissionItem
+        if (permissionList !== null) {
+            AndPermission.with(mContext)
+                    .runtime()
+                    .permission(*permissionList)
+                    .rationale(RuntimeRationale())
+                    .onGranted {
+                        permissionItem = PermissionItem(true)
+                        mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
+                    }
+                    .onDenied { permissions ->
+                        PermissionUtil.showSettingDialog(mContext, permissions)
+                        permissionItem = PermissionItem(false)
+                        mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
+                    }
+                    .start()
+        } else {
+            permissionItem = PermissionItem(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
+        }
     }
 }
