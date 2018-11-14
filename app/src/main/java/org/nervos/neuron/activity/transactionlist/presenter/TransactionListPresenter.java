@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
@@ -28,7 +27,6 @@ import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -156,12 +154,22 @@ public class TransactionListPresenter {
                         item.chainName = EtherUtil.getEthNodeName();
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    listener.refreshList(getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list));
+                    list = getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list);
+                    if (page == 0) {
+                        listener.updateNewList(list);
+                    } else {
+                        listener.refreshList(list);
+                    }
                 } else {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    listener.refreshList(getAppChainTransactionList(activity, String.valueOf(tokenItem.chainId), list));
+                    list = getAppChainTransactionList(activity, String.valueOf(tokenItem.chainId), list);
+                    if (page == 0) {
+                        listener.updateNewList(list);
+                    } else {
+                        listener.refreshList(list);
+                    }
                 }
             }
         });
@@ -209,6 +217,8 @@ public class TransactionListPresenter {
         void hideProgressBar();
 
         void setRefreshing(boolean refreshing);
+
+        void updateNewList(List<TransactionItem> list);
 
         void refreshList(List<TransactionItem> list);
 
