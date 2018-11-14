@@ -5,6 +5,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.constant.SensorDataCons;
+import org.nervos.neuron.util.NumberUtil;
 
 /**
  * Created by BaojunCZ on 2018/10/10.
@@ -15,7 +16,8 @@ public class SensorDataTrackUtils {
         try {
             JSONObject object = new JSONObject();
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY(), symbol);
-            object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY_NUMBER(), value);
+            object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY_NUMBER(),
+                    NumberUtil.getDecimal8ENotation(Double.parseDouble(value)));
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_RECEIVE_ADDRESS(), receiver);
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_OUTCOME_ADDRESS(), sender);
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TRANSFER_TYPE(), type);
