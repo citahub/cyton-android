@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
@@ -27,6 +28,7 @@ import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -180,10 +182,17 @@ public class TransactionListPresenter {
         List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             for (TransactionItem dbItem : itemList) {
-                if (!list.contains(dbItem) && dbItem.getTimestamp() > list.get(list.size() - 1).getTimestamp()) {
-                    list.add(0, dbItem);
+                for (TransactionItem item : list) {
+                    if (item.hash.equalsIgnoreCase(dbItem.hash)) {
+                        itemList.remove(dbItem);
+                    }
+                    if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
+                        itemList.remove(dbItem);
+                    }
                 }
             }
+            list.addAll(itemList);
+            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
@@ -192,10 +201,17 @@ public class TransactionListPresenter {
         List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             for (TransactionItem dbItem : itemList) {
-                if (!list.contains(dbItem) && dbItem.getTimestamp() > list.get(list.size() - 1).getTimestamp()) {
-                    list.add(0, dbItem);
+                for (TransactionItem item : list) {
+                    if (item.hash.equalsIgnoreCase(dbItem.hash)) {
+                        itemList.remove(dbItem);
+                    }
+                    if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
+                        itemList.remove(dbItem);
+                    }
                 }
             }
+            list.addAll(itemList);
+            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }

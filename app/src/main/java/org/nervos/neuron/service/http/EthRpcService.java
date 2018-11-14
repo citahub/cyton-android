@@ -34,6 +34,7 @@ import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 
@@ -169,6 +170,15 @@ public class EthRpcService {
     public static EthGetTransactionReceipt getTransactionReceipt(String hash) {
         try {
             return service.ethGetTransactionReceipt(hash).send();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static EthTransaction getTransactionByHash(String hash) {
+        try {
+            return service.ethGetTransactionByHash(hash).send();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
