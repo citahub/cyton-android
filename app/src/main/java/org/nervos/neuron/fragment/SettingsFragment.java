@@ -74,6 +74,9 @@ public class SettingsFragment extends NBaseFragment {
         } else {
             mSbvFingerPrint.setVisibility(View.GONE);
         }
+        String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
+        node = node.replace("_", " ");
+        mSbvSelectEth.setRightText(node);
     }
 
     @Override
@@ -95,8 +98,7 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     mAuthFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string
-                            .dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();
