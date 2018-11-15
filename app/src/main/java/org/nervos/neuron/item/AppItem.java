@@ -58,7 +58,7 @@ public class AppItem implements Parcelable {
         dest.writeString(this.provider);
         dest.writeString(this.blockViewer);
         dest.writeInt(this.chainSet.size());
-        dest.writeLong(this.collectTime);
+        if (this.collectTime != null) dest.writeLong(this.collectTime);
         for (Map.Entry<String, String> entry : this.chainSet.entrySet()) {
             dest.writeString(entry.getKey());
             dest.writeString(entry.getValue());
