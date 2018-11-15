@@ -90,7 +90,10 @@ class TransactionDetailActivity : NBaseActivity() {
 
         tv_transaction_blockchain_time.text = transactionItem!!.date
 
-        tv_transaction_receiver!!.setOnClickListener { copyText(transactionItem!!.to) }
+        tv_transaction_receiver!!.setOnClickListener {
+            if (transactionItem!!.to != "0x")
+                copyText(transactionItem!!.to)
+        }
         tv_transaction_sender!!.setOnClickListener { copyText(transactionItem!!.from) }
         tv_transaction_number!!.setOnClickListener { copyText(transactionItem!!.hash) }
     }
