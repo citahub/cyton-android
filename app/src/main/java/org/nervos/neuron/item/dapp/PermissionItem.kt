@@ -1,4 +1,4 @@
-package org.nervos.neuron.item.NeuronDApp
+package org.nervos.neuron.item.dapp
 
 import org.nervos.neuron.constant.NeuronDAppCallback
 
