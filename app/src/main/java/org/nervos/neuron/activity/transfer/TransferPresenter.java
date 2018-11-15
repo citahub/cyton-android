@@ -377,7 +377,7 @@ public class TransferPresenter {
     public String getTransferFee() {
         if (mTokenPrice > 0) {
             return NumberUtil.getDecimal8ENotation(mTransferFee)
-                    + getFeeTokenUnit() + " = " + mCurrencyItem.getSymbol()
+                    + getFeeTokenUnit() + " ≈ " + mCurrencyItem.getSymbol()
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();

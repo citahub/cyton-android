@@ -472,7 +472,7 @@ Nervos基金会\n
     <string name="default_eth_gas_price">以太坊推荐值 %sGWei</string>
     <string name="default_eth_gas_limit">以太坊推荐值 GasLimit</string>
     <string name="gas_fee_token_value">Gas费用：%fETH</string>
-    <string name="gas_fee_sum_value"> = Gas Limit(%1$s)*Gas Price(%2$s)</string>
+    <string name="gas_fee_sum_value"> ≈ Gas Limit(%1$s)*Gas Price(%2$s)</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">请输入正确的GasPrice</string>
     <string name="gas_price_too_low">您的gasPrice设置过低，请确保输入大于等于%sGWei 以快速转账</string>
