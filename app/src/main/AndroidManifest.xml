@@ -25,11 +25,11 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        tools:replace="android:allowBackup"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:allowBackup">
 
         <meta-data
             android:name="SD_CHANNEL_ID"
@@ -179,6 +179,11 @@
             android:name=".activity.ImportFingerTipActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.colleactWebsite.CollectWebsiteActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="org.nervos.neuron.fileprovider"
@@ -190,9 +195,10 @@
         </provider>
 
         <service android:name=".application.ApplicationService" />
-        <service android:name=".service.intent.TransactionListService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+            android:name=".service.intent.TransactionListService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="com.sensorsdata.analytics.android.DisableTrackDeviceId"

@@ -10,16 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import com.google.gson.Gson;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AppWebActivity;
-import org.nervos.neuron.event.AppCollectEvent;
-import org.nervos.neuron.event.AppHistoryEvent;
+import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity;
 import org.nervos.neuron.plugin.AppTabPlugin;
 import org.nervos.neuron.service.http.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
@@ -32,6 +28,8 @@ public class AppFragment extends Fragment {
 
     private WebView webView;
     private WebErrorView webErrorView;
+
+    private static final String COLLECT_WEBSITE = "https://dapp.cryptape.com/mine";
 
     @Nullable
     @Override
@@ -57,8 +55,7 @@ public class AppFragment extends Fragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebSettings() {
-        SensorsDataAPI.sharedInstance()
-                .showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         WebAppUtil.initWebViewCache(getContext(), webView.getSettings());
     }
@@ -68,9 +65,13 @@ public class AppFragment extends Fragment {
         webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent intent = new Intent(getContext(), AppWebActivity.class);
-                intent.putExtra(AppWebActivity.EXTRA_URL, url);
-                startActivity(intent);
+                if (url.contains(COLLECT_WEBSITE)) {
+                    startActivity(new Intent(getContext(), CollectWebsiteActivity.class));
+                } else {
+                    Intent intent = new Intent(getContext(), AppWebActivity.class);
+                    intent.putExtra(AppWebActivity.EXTRA_URL, url);
+                    startActivity(intent);
+                }
                 return true;
             }
         });
@@ -79,34 +80,10 @@ public class AppFragment extends Fragment {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAppCollectEvent(AppCollectEvent event) {
-        if (event.isCollect) {
-            String app = new Gson().toJson(event.appInfo);
-            webView.loadUrl("javascript:__mydapp.add(" + app + ")");
-        } else {
-            webView.loadUrl("javascript:__mydapp.remove('" + event.appInfo.entry + "')");
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAppHistoryEvent(AppHistoryEvent event) {
-        String app = new Gson().toJson(event.appInfo);
-        webView.loadUrl("javascript:window.__myhistory.add(" + app + ")");
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault()
-                .register(this);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault()
-                .unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     public boolean canGoBack() {
