@@ -16,7 +16,9 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.CollectionItem;
 
 import java.util.List;
-
+/**
+ * Created by duanyytop on 2018/8/7
+ */
 public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 1;

@@ -11,11 +11,11 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_transaction_detail.*
 import org.nervos.neuron.R
-import org.nervos.neuron.item.TransactionItem
+import org.nervos.neuron.item.transaction.TransactionItem
 import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
-import org.nervos.neuron.util.ConstUtil
+import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -52,13 +52,13 @@ class TransactionDetailActivity : NBaseActivity() {
 
         tv_transaction_number.text = transactionItem!!.hash
         tv_transaction_sender.text = transactionItem!!.from
-        tv_transaction_receiver.text = if ("0x".equals(transactionItem!!.to)) resources.getString(R.string.contract_create) else transactionItem!!.to
+        tv_transaction_receiver.text = if ("0x" == transactionItem!!.to) resources.getString(R.string.contract_create) else transactionItem!!.to
         if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
-            tv_chain_name.text = ConstUtil.ETH_MAINNET
+            tv_chain_name.text = ConstantUtil.ETH_MAINNET
             val gasPriceBig = BigInteger(transactionItem!!.gasPrice)
             val gasUsedBig = BigInteger(transactionItem!!.gasUsed)
             tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionItem!!.nativeSymbol
-            tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstUtil.GWEI
+            tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
             val value = (if (transactionItem!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionItem!!.value
             transaction_amount.text = value
             tv_token_unit.text = transactionItem!!.symbol
@@ -103,9 +103,9 @@ class TransactionDetailActivity : NBaseActivity() {
                     .rationale(RuntimeRationale())
                     .onGranted {
                         try {
-                            SharePicUtils.savePic(ConstUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber +
+                            SharePicUtils.savePic(ConstantUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber +
                                     ".png", SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_screenshot)))
-                            SharePicUtils.SharePic(this, ConstUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber + ".png")
+                            SharePicUtils.SharePic(this, ConstantUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber + ".png")
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }

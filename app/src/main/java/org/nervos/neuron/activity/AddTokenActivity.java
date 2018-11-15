@@ -17,12 +17,13 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.AddressUtil;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBTokenUtil;
@@ -42,6 +43,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class AddTokenActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
@@ -68,7 +72,7 @@ public class AddTokenActivity extends BaseActivity {
         initView();
         initData();
         initListener();
-        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
+        AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL);
     }
 
     private void initView() {
@@ -159,7 +163,7 @@ public class AddTokenActivity extends BaseActivity {
                 }
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
-                    if (chainItem.chainId == ConstUtil.ETHEREUM_ID) {
+                    if (chainItem.chainId == ConstantUtil.ETHEREUM_MAIN_ID) {
                         tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
                         tokenItem = AppChainRpcService.getErc20TokenInfo(s.toString());

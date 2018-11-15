@@ -31,19 +31,19 @@ import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.NeuronDApp.BaseNeuronDAppCallbackItem;
-import org.nervos.neuron.item.NeuronDApp.QrCodeItem;
+import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem;
+import org.nervos.neuron.item.dapp.QrCodeItem;
 import org.nervos.neuron.item.TitleItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.url.HttpEtherUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.JSLoadUtils;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.constant.NeuronDAppCallback;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.PickPicUtils;
@@ -67,6 +67,9 @@ import java.io.File;
 import rx.Observable;
 import rx.Subscriber;
 
+/**
+ * Created by duanyytop on 2018/5/28
+ */
 public class AppWebActivity extends NBaseActivity {
     public static final String EXTRA_PAYLOAD = "extra_payload";
     public static final String EXTRA_CHAIN = "extra_chain";
@@ -255,7 +258,7 @@ public class AppWebActivity extends NBaseActivity {
                 .subscribe(new NeuronSubscriber<ChainItem>() {
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.e("manifest error: " + e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -276,7 +279,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void signTxAction(Transaction transaction) {
-        handler.post(() -> {
+        webView.post(() -> {
             this.signTransaction = transaction;
             if (walletItem == null) {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
@@ -294,7 +297,7 @@ public class AppWebActivity extends NBaseActivity {
 
     private void initInjectWebView() {
         webView.setChainId(1);
-        webView.setRpcUrl(HttpUrls.getEthNodeUrl());
+        webView.setRpcUrl(EtherUtil.getEthNodeUrl());
         webView.setWalletAddress(new Address(walletItem.address));
         webView.addJavascriptInterface(mNeuronDAppPlugin, "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
@@ -439,7 +442,7 @@ public class AppWebActivity extends NBaseActivity {
                             .permission(permissionList)
                             .rationale(new RuntimeRationale())
                             .onGranted(permissions -> {
-                                mPhotoPath = ConstUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg";
+                                mPhotoPath = ConstantUtil.IMG_SAVE_PATH + System.currentTimeMillis() + ".jpg";
                                 File file = new File(mPhotoPath);
                                 Uri imageUri;
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

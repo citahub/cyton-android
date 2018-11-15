@@ -1,10 +1,9 @@
-package org.nervos.neuron.item;
+package org.nervos.neuron.item.transaction;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import org.nervos.neuron.util.ConstUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
@@ -30,11 +29,16 @@ public class TransactionInfo implements Parcelable {
 
     public TransactionInfo(String to, String value) {
         this.to = to;
-        this.value = NumberUtil.getWeiFromEth(Double.parseDouble(value)).toString();
+        this.value = NumberUtil.getWeiFromEth(value).toString();
+    }
+
+    public String getStringValue() {
+        value = TextUtils.isEmpty(value) ? "0" : value;
+        return NumberUtil.getEthFromWeiForString(value);
     }
 
     public double getDoubleValue() {
-        value = TextUtils.isEmpty(value)? "0":value;
+        value = TextUtils.isEmpty(value) ? "0" : value;
         return NumberUtil.getEthFromWeiForDouble(value);
     }
 

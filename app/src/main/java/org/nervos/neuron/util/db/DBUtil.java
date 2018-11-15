@@ -8,6 +8,9 @@ import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
+/**
+ * Created by duanyytop on 2018/5/25
+ */
 public class DBUtil {
 
     static final String DB_PREFIX = "neuron-";
@@ -16,7 +19,7 @@ public class DBUtil {
 
     static final Object dbObject = new Object();
 
-    static final Kryo kryo = new Kryo();
+    private static final Kryo kryo = new Kryo();
 
     static {
         kryo.setDefaultSerializer(CompatibleFieldSerializer.class);

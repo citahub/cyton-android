@@ -11,11 +11,14 @@ import org.nervos.neuron.item.TokenItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/6/12
+ */
 public class DBTokenUtil extends DBUtil {
 
     private static final String DB_TOKEN = "db_token";
 
-    public static void saveToken(Context context, TokenItem tokenItem){
+    public static void saveToken(Context context, TokenItem tokenItem) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_TOKEN);
@@ -47,7 +50,7 @@ public class DBTokenUtil extends DBUtil {
             try {
                 db = openDB(context, DB_TOKEN);
                 String[] keys = db.findKeys(DB_PREFIX);
-                for (String key: keys) {
+                for (String key : keys) {
                     tokenList.add(db.getObject(key, TokenItem.class));
                 }
                 db.close();

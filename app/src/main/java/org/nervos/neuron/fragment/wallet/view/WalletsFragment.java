@@ -1,6 +1,7 @@
 package org.nervos.neuron.fragment.wallet.view;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ public class WalletsFragment extends NBaseFragment {
     private TokenListFragment tokenListFragment;
     private CollectionListFragment collectionListFragment = null;
     private WalletFragmentPresenter presenter;
+    private Handler handler = new Handler();
 
     private String[] mTitles = {"代币", "藏品"};
 

@@ -3,6 +3,9 @@ package org.nervos.neuron.util.db;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * Created by duanyytop on 2018/5/20
+ */
 public class SharePrefUtil {
 
     private static final String FILE_NAME = "shared_name";
@@ -22,7 +25,7 @@ public class SharePrefUtil {
         return sharedPreferences.getBoolean(key, true);
     }
 
-    public static boolean getBoolean(String key,boolean def) {
+    public static boolean getBoolean(String key, boolean def) {
         return sharedPreferences.getBoolean(key, def);
     }
 

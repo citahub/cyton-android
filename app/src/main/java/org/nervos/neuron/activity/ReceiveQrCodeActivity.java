@@ -28,6 +28,9 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class ReceiveQrCodeActivity extends NBaseActivity {
 
     private ImageView qrCodeImage;

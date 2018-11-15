@@ -3,13 +3,16 @@ package org.nervos.neuron.activity.transactionlist.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
+import org.nervos.neuron.util.ConstantUtil;
 
 import java.util.List;
 
@@ -18,8 +21,10 @@ import java.util.List;
  */
 public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int VIEW_TYPE_ITEM = 1;
-    public static final int VIEW_TYPE_EMPTY = 0;
+    private static final int VIEW_TYPE_EMPTY = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
+    private static final int VIEW_TYPE_LOADING = 2;
+
     private List<TransactionItem> transactionItemList;
     private String address;
     private Context context;
@@ -32,13 +37,27 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.context = context;
     }
 
+    public void refresh(List<TransactionItem> transactionItemList) {
+        this.transactionItemList = transactionItemList;
+        notifyDataSetChanged();
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void refresh(List<TransactionItem> transactionItemList) {
-        this.transactionItemList = transactionItemList;
-        notifyDataSetChanged();
+    public void addLoadingView() {
+        if (transactionItemList.size() > 0) {
+            transactionItemList.add(null);
+            notifyItemInserted(transactionItemList.size() - 1);
+        }
+    }
+
+    public void removeLoadingView() {
+        if (transactionItemList.size() > 0) {
+            transactionItemList.remove(transactionItemList.size() - 1);
+            notifyItemRemoved(transactionItemList.size());
+        }
     }
 
     @Override
@@ -47,10 +66,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_view, parent, false);
             ((TextView) view.findViewById(R.id.empty_text)).setText(R.string.empty_no_transaction_data);
             return new RecyclerView.ViewHolder(view) {};
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_loading, parent, false);
+            return new RecyclerView.ViewHolder(view) {};
+        } else {
+            return new TransactionViewHolder(LayoutInflater.from(
+                    parent.getContext()).inflate(R.layout.item_transaction_list, parent,
+                    false));
         }
-        TransactionViewHolder holder = new TransactionViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_transaction_list, parent, false));
-        return holder;
     }
 
     @Override
@@ -61,22 +84,22 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (!transactionItem.from.equalsIgnoreCase(address)) {
                 viewHolder.transactionIdText.setText(transactionItem.from);
             } else {
-                viewHolder.transactionIdText.setText("0x".equals(transactionItem.to) ? context.getResources()
-                        .getString(R.string.contract_create) : transactionItem.to);
+                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to)
+                        ? context.getResources().getString(R.string.contract_create) : transactionItem.to);
             }
             String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+") + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionItem.getDate());
             switch (transactionItem.status) {
-                case 0:
+                case TransactionItem.FAILED:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_failed);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.red));
                     break;
-                case 1:
+                case TransactionItem.SUCCESS:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_success);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.assist_color));
                     break;
-                case 2:
+                case TransactionItem.PENDING:
                 default:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_pending);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.font_title_third));
@@ -98,6 +121,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         if (transactionItemList.size() == 0) {
             return VIEW_TYPE_EMPTY;
+        } else if (transactionItemList.get(position) == null) {
+            return VIEW_TYPE_LOADING;
         }
         return VIEW_TYPE_ITEM;
     }

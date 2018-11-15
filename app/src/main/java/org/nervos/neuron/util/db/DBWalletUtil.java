@@ -19,6 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class DBWalletUtil extends DBUtil {
 
     private static final String DB_WALLET = "db_wallet";
@@ -167,8 +170,7 @@ public class DBWalletUtil extends DBUtil {
                 for (String name : names) {
                     WalletItem walletItem = getWallet(context, name);
                     isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
-                    if (isKeyExist)
-                        return true;
+                    if (isKeyExist) return true;
                 }
                 db.close();
                 return false;

@@ -12,6 +12,7 @@ import org.nervos.neuron.item.CurrencyIDList;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.CollectionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.url.HttpUrls;
 
 import java.io.IOException;
 import java.util.ArrayList;

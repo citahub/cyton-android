@@ -2,6 +2,7 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -16,23 +17,32 @@ import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
-import org.nervos.neuron.service.http.HttpUrls;
-import org.nervos.neuron.service.intent.TransactionListService;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.intent.EtherTransactionCheckService;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+/**
+ * Created by duanyytop on 2018/4/17
+ */
 public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
-    private static final int TRANSACTION_FETCH_PERIOD = 3000;
+    public static final int REQUEST_CODE_SCAN = 0x01;
+    private static final int APPCAHIN_TRANSACTION_FETCH_PERIOD = 3000;
+    private static final int ETHER_TRANSACTION_FETCH_PERIOD = 10000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
     private WalletsFragment walletsFragment;
     private SettingsFragment settingsFragment;
     private FragmentManager fMgr;
-    public static final int REQUEST_CODE_SCAN = 0x01;
 
     @Override
     protected int getContentLayout() {
@@ -54,7 +64,33 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void initData() {
         fMgr = getSupportFragmentManager();
-        startCheckTransaction();
+
+        startCheckAppChainTransaction();
+        startCheckEtherTransaction();
+    }
+
+    private void startCheckAppChainTransaction() {
+        AppChainRpcService.init(mActivity, HttpAppChainUrls.APPCHAIN_NODE_URL);
+        Intent intent = new Intent();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                AppChainTransactionCheckService.enqueueWork(mActivity, intent);
+            }
+        }, 0, APPCAHIN_TRANSACTION_FETCH_PERIOD);
+    }
+
+    private void startCheckEtherTransaction() {
+        EthRpcService.initNodeUrl();
+        Intent intent = new Intent();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                EtherTransactionCheckService.enqueueWork(mActivity, intent);
+            }
+        }, 0, ETHER_TRANSACTION_FETCH_PERIOD);
     }
 
     @Override
@@ -121,20 +157,10 @@ public class MainActivity extends NBaseActivity {
         setNavigationItem(intent.getStringExtra(EXTRA_TAG));
     }
 
-    private void startCheckTransaction() {
-        AppChainRpcService.init(this, HttpUrls.APPCHAIN_NODE_URL);
-
-        TransactionListService.enqueueWork(mActivity, new Intent());
-
-        TransactionListService.impl = () -> {
-            handler.postDelayed(() -> startCheckTransaction(), TRANSACTION_FETCH_PERIOD);
-        };
-    }
-
     /**
-     * 根据各个Fragment的TAG判断跳转到何处
+     * Go to fragment with flag
      *
-     * @param tag Fragment标签值
+     * @param tag Fragment flag
      */
     public void setNavigationItem(String tag) {
         if (TextUtils.isEmpty(tag)) return;
@@ -212,7 +238,7 @@ public class MainActivity extends NBaseActivity {
                                     Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
                                     break;
                                 case CodeUtils.STRING_ADDRESS:
-                                    TokenItem tokenItem = new TokenItem(ConstUtil.ETH_MAINNET, ConstUtil.ETH, ConstUtil.ETHEREUM_ID);
+                                    TokenItem tokenItem = new TokenItem(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
                                     intent = new Intent(mActivity, TransferActivity.class);
                                     intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
                                     intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);

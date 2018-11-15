@@ -1,4 +1,4 @@
-package org.nervos.neuron.item.NeuronDApp
+package org.nervos.neuron.item.dapp
 
 /**
  * Created by BaojunCZ on 2018/11/5.

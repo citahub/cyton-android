@@ -21,7 +21,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.item.TransactionInfo;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.WalletService;
@@ -47,6 +47,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static org.web3j.utils.Convert.Unit.GWEI;
 
+/**
+ * Created by duanyytop on 2018/11/4
+ */
 public class TransferActivity extends NBaseActivity implements TransferView {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
@@ -221,7 +224,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     /**
      * Estimate Gas limit when address edit text and value edit text were not null
      */
-    private boolean isAddressOK = false, isValueOk = false;
+    private boolean isAddressOk = false, isValueOk = false;
 
     @Override
     public void initTransferEditValue() {
@@ -229,11 +232,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                isAddressOK = !TextUtils.isEmpty(s);
-                if (isAddressOK && isValueOk && mPresenter.isEthERC20()) {
-                    initAdvancedSetup();
-                    mPresenter.initGasLimit(getTransactionInfo());
-                }
+                isAddressOk = !TextUtils.isEmpty(s);
+                updateTransferEditValue();
             }
         });
         transferValueEdit.addTextChangedListener(new NeuronTextWatcher() {
@@ -241,19 +241,22 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
                 isValueOk = !TextUtils.isEmpty(s);
-                if (isAddressOK && isValueOk && mPresenter.isEthERC20()) {
-                    initAdvancedSetup();
-                    mPresenter.initGasLimit(getTransactionInfo());
-                }
+                updateTransferEditValue();
             }
         });
+    }
+
+    private void updateTransferEditValue() {
+        if (isAddressOk && isValueOk && mPresenter.isEthERC20()) {
+            initAdvancedSetup();
+            mPresenter.initGasLimit(getTransactionInfo());
+        }
     }
 
 
     private TransactionInfo getTransactionInfo() {
         TransactionInfo transactionInfo = new TransactionInfo(mPresenter.getTokenItem().contractAddress, "0");
-        transactionInfo.data = EthRpcService.createTokenTransferData(
-                receiveAddressEdit.getText().toString(),
+        transactionInfo.data = EthRpcService.createTokenTransferData(receiveAddressEdit.getText().toString(),
                 Convert.toWei(transferValueEdit.getText().toString(), Convert.Unit.ETHER).toBigInteger());
         return transactionInfo;
     }
@@ -351,8 +354,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         progressBar.setVisibility(View.GONE);
         if (ethSendTransaction == null) {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
-        } else if (ethSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
+        } else if (ethSendTransaction.getError() != null
+                && !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
         } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
@@ -365,10 +368,9 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     @Override
-    public void transferEtherFail(Throwable e) {
+    public void transferEtherFail(String message) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(TransferActivity.this,
-                e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity,message, Toast.LENGTH_SHORT).show();
         transferDialog.dismiss();
     }
 

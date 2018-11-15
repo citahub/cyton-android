@@ -1,7 +1,5 @@
 package org.nervos.neuron.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -30,7 +28,9 @@ import org.nervos.neuron.view.button.CommonButton;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+/**
+ * Created by duanyytop on 2018/5/8
+ */
 public class CreateWalletActivity extends NBaseActivity {
 
     ExecutorService cachedThreadPool = Executors.newCachedThreadPool();

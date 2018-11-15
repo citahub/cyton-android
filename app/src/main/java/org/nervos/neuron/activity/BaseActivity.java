@@ -17,11 +17,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.AntiHijackingUtil;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProgressCircleDialog;
 import org.nervos.neuron.view.dialog.ProgressingDialog;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class BaseActivity extends AppCompatActivity {
 
     private static final int INTERVAL_TIME = 20000;
@@ -30,7 +33,6 @@ public class BaseActivity extends AppCompatActivity {
     private ProgressCircleDialog circleDialog = null;
     protected boolean mIsSafeLast;
     protected Activity mActivity;
-    Handler handler = new Handler();
     public boolean inLoginPage = false;
     private boolean needLogin = false;
     private TimeCount timeCount = new TimeCount();
@@ -58,7 +60,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private boolean shouldTimeOut() {
-        return !inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false);
+        return !inLoginPage && SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gotoLogin() {
-        if (!inLoginPage && SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
+        if (!inLoginPage && SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false)) {
             Intent intent = new Intent(mActivity, FingerPrintActivity.class);
             startActivity(intent);
         }

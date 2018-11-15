@@ -11,7 +11,7 @@ import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
@@ -30,6 +30,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Created by duanyytop on 2018/5/31
+ */
 public class WalletService {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);
@@ -45,14 +48,14 @@ public class WalletService {
                 iterator.remove();
                 try {
                     if (tokenItem.chainId < 0) {
-                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                        if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                             tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
-                            track(ConstUtil.ETH, ConstUtil.ETH, tokenItem.balance);
+                            track(ConstantUtil.ETH, ConstantUtil.ETH, tokenItem.balance);
                         } else {
                             tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                             tokenItemList.add(tokenItem);
-                            track(ConstUtil.ETH, tokenItem.symbol, tokenItem.balance);
+                            track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
                         }
                     } else {
                         ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
@@ -111,7 +114,7 @@ public class WalletService {
             public Double call() {
                 try {
                     if (tokenItem.chainId < 0) {                // ethereum
-                        if (ConstUtil.ETH.equals(tokenItem.symbol)) {
+                        if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                             return EthRpcService.getEthBalance(walletItem.address);
                         } else {
                             return EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);

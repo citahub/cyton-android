@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -79,7 +79,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
         @Override
         public void onAuthenticationSucceeded() {
             if (authFingerDialog != null && authFingerDialog.isShowing()) authFingerDialog.dismiss();
-            SharePrefUtil.putBoolean(ConstUtil.FINGERPRINT, true);
+            SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, true);
             Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mActivity, MainActivity.class);
             intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);

@@ -8,7 +8,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.sensorsdata.analytics.android.sdk.util.SensorsDataUtils;
 
 import org.json.JSONObject;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.sensor.SensorIDRandomUtils;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
@@ -48,10 +48,10 @@ public class ApplicationService extends IntentService {
         }
         try {
             JSONObject properties = new JSONObject();
-            String ipID = SharePrefUtil.getString(ConstUtil.SENSOR_IP_ID, "");
+            String ipID = SharePrefUtil.getString(ConstantUtil.SENSOR_IP_ID, "");
             if (ipID.isEmpty()) {
                 ipID = SensorIDRandomUtils.INSTANCE.getIpId();
-                SharePrefUtil.putString(ConstUtil.SENSOR_IP_ID, ipID);
+                SharePrefUtil.putString(ConstantUtil.SENSOR_IP_ID, ipID);
             }
             properties.put(SENSOR_IP_ID, ipID);
             SensorsDataAPI.sharedInstance().registerSuperProperties(properties);

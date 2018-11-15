@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.RootUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
+/**
+ * Created by duanyytop on 2018/6/12
+ */
 public class SplashActivity extends BaseActivity {
 
     public static final String EXTRA_FIRST = "extra_first";
@@ -39,7 +40,7 @@ public class SplashActivity extends BaseActivity {
                     try {
                         sleep(1000);
                         if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                            if (SharePrefUtil.getBoolean(ConstUtil.FINGERPRINT, false)) {
+                            if (SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false)) {
                                 Intent intent = new Intent(mActivity, FingerPrintActivity.class);
                                 intent.putExtra(LOCK_TO_MAIN, true);
                                 startActivity(intent);

@@ -17,11 +17,14 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AppWebActivity;
 import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity;
 import org.nervos.neuron.plugin.AppTabPlugin;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.web.WebAppUtil;
 import org.nervos.neuron.view.WebErrorView;
 import org.nervos.neuron.view.webview.SimpleWebViewClient;
 
+/**
+ * Created by duanyytop on 2018/5/18
+ */
 public class AppFragment extends Fragment {
 
     public static final String TAG = AppFragment.class.getName();

@@ -17,17 +17,16 @@ import org.nervos.neuron.item.AppItem;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.TransactionInfo;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.SaveAppChainPendingItemUtils;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -49,6 +48,9 @@ import rx.schedulers.Schedulers;
 
 import static org.web3j.utils.Convert.Unit.GWEI;
 
+/**
+ * Created by duanyytop on 2018/5/28
+ */
 public class PayTokenActivity extends NBaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_HEX_HASH = "extra_hex_hash";
@@ -184,14 +186,14 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
-                        mTransactionInfo.gasLimit = ConstUtil.GAS_ERC20_LIMIT.toString(16);
+                        mTransactionInfo.gasLimit = ConstantUtil.GAS_ERC20_LIMIT.toString(16);
                         setEthGasPrice();
                     }
 
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.gasLimit = gasLimit.multiply(ConstUtil.GAS_LIMIT_PARAMETER).toString(16);
+                        mTransactionInfo.gasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER).toString(16);
                         setEthGasPrice();
                     }
                 });
@@ -206,7 +208,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
                 mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas()) + getNativeToken());
         CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(ConstUtil.ETH, currencyItem.getName())
+        TokenService.getCurrency(ConstantUtil.ETH, currencyItem.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
@@ -242,7 +244,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 progressBar.setVisibility(View.VISIBLE);
                 if (mTransactionInfo.isEthereum()) {
                     SensorDataTrackUtils.transferAccount(mTokenItem.symbol, "",
-                            "", mWalletItem.address, ConstUtil.ETH, "1");
+                            "", mWalletItem.address, ConstantUtil.ETH, "1");
                     transferEth(password, progressBar);
                 } else {
                     SensorDataTrackUtils.transferAccount(mTokenItem.symbol, "",
@@ -252,12 +254,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             }
         });
 
-        String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()?
-                mTransactionInfo.getGas() : mTransactionInfo.getDoubleQuota()) + getNativeToken();
+        String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()
+                ? mTransactionInfo.getGas() : mTransactionInfo.getDoubleQuota()) + getNativeToken();
 
         mTransferDialog.setConfirmData(mWalletItem.address, mTransactionInfo.to,
-                NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue())
-                        + getNativeToken(), fee);
+                NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()) + getNativeToken(), fee);
     }
 
     private void transferEth(String password, ProgressBar progressBar) {
@@ -265,22 +266,21 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 .flatMap(new Func1<String, Observable<BigInteger>>() {
                     @Override
                     public Observable<BigInteger> call(String gasPrice) {
-                        if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
-                                || "0".equals(mTransactionInfo.gasPrice)) {
+                        if (TextUtils.isEmpty(gasPrice) || "0".equals(gasPrice)) {
                             return EthRpcService.getEthGasPrice();
                         } else {
                             return Observable.just(Numeric.toBigInt(gasPrice));
                         }
                     }
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                return EthRpcService.transferEth(mTransactionInfo.to,
-                        mTransactionInfo.getDoubleValue(), gasPrice,
-                        Numeric.toBigInt(mTransactionInfo.gasLimit),
-                        mTransactionInfo.data, password);
-            }
-        }).subscribeOn(Schedulers.io())
+                    @Override
+                    public Observable<EthSendTransaction> call(BigInteger gasPrice) {
+                        return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
+                                mTransactionInfo.getStringValue(), gasPrice,
+                                Numeric.toBigInt(mTransactionInfo.gasLimit),
+                                mTransactionInfo.data, password);
+                    }
+                }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
@@ -302,10 +302,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private void transferAppChain(String password, ProgressBar progressBar) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(
                 mTransactionInfo.chainId));
-        SaveAppChainPendingItemUtils.setNativeToken(mActivity, mTransactionInfo.chainId,
-                mWalletItem.address.toLowerCase(), mTransactionInfo.to.toLowerCase(), "0");
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
-                mTransactionInfo.getDoubleValue(),
+                mTransactionInfo.getStringValue(),
                 mTransactionInfo.data, mTransactionInfo.getLongQuota(),
                 (int) mTransactionInfo.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -333,8 +331,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         if (ethSendTransaction == null) {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
-        } else if (ethSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
+        } else if (ethSendTransaction.getError() != null
+                && !TextUtils.isEmpty(ethSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, ethSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
@@ -348,6 +346,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             gotoSignFail(getCommonError());
         }
     }
+
 
     /**
      * handle appchain transfer result
@@ -375,9 +374,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         }
     }
 
+
     private String getNativeToken() {
         if (mTransactionInfo.isEthereum()) {
-            return ConstUtil.ETH;
+            return ConstantUtil.ETH;
         } else {
             ChainItem chainItem = DBChainUtil.getChain(mActivity, mTransactionInfo.chainId);
             return chainItem == null ? "" : " " + chainItem.tokenSymbol;

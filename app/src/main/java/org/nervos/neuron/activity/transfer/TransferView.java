@@ -6,6 +6,9 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.math.BigInteger;
 
+/**
+ * Created by duanyytop on 2018/11/4
+ */
 public interface TransferView {
 
     void updateAnyTokenBalance(Double balance);
@@ -36,6 +39,6 @@ public interface TransferView {
 
     void transferEtherSuccess(EthSendTransaction ethSendTransaction);
 
-    void transferEtherFail(Throwable e);
+    void transferEtherFail(String message);
 
 }

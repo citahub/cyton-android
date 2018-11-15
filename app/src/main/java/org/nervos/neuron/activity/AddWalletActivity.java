@@ -18,12 +18,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstUtil;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.ProtocolDialog;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class AddWalletActivity extends NBaseActivity {
 
     private ViewPager viewPager;
@@ -48,8 +51,8 @@ public class AddWalletActivity extends NBaseActivity {
         initGuideList();
         initIndicate();
         viewPager.setAdapter(new PagerAadapter());
-        if (!SharePrefUtil.getBoolean(ConstUtil.PROTOCOL, false))
-            handler.postDelayed(() -> {
+        if (!SharePrefUtil.getBoolean(ConstantUtil.PROTOCOL, false))
+            viewPager.postDelayed(() -> {
                 ProtocolDialog dialog = new ProtocolDialog(mActivity);
                 dialog.show();
             }, 500);

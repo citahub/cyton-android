@@ -22,7 +22,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.http.HttpUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.TokenRefreshEvent;
@@ -37,6 +37,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by duanyytop on 2018/5/17
+ */
 public class TokenManageActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 0x01;
@@ -123,7 +126,7 @@ public class TokenManageActivity extends BaseActivity {
                     RequestOptions options = new RequestOptions()
                             .error(R.drawable.ether_big);
                     Glide.with(mActivity)
-                            .load(Uri.parse(HttpUrls.TOKEN_LOGO.replace("@address", address)))
+                            .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
                             .apply(options)
                             .into(viewHolder.tokenImage);
                 } else {
@@ -136,15 +139,15 @@ public class TokenManageActivity extends BaseActivity {
                 viewHolder.tokenContractAddress.setText(tokenList.get(position).address);
                 tokenList.get(position).isSelected =
                         DBWalletUtil.checkTokenInCurrentWallet(mActivity, tokenList.get(position).symbol);
-                viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected ?
-                        R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
+                viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected
+                        ? R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
                 viewHolder.tokenSelectImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int mPosition = holder.getAdapterPosition();
                         tokenList.get(mPosition).isSelected = !tokenList.get(mPosition).isSelected;
-                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(mPosition).isSelected ?
-                                R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
+                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(mPosition).isSelected
+                                ? R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
                         if (tokenList.get(mPosition).isSelected) {
                             DBWalletUtil.addTokenToCurrentWallet(mActivity,
                                     new TokenItem(tokenList.get(mPosition)));

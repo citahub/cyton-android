@@ -14,6 +14,9 @@ import org.nervos.neuron.fragment.CaptureFragment;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.qrcode.QRResultCheck;
 
+/**
+ * Created by duanyytop on 2018/5/28
+ */
 public class QrCodeActivity extends NBaseActivity {
 
     private CaptureFragment captureFragment;
