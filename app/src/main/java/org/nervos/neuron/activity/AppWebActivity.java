@@ -121,8 +121,7 @@ public class AppWebActivity extends NBaseActivity {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity);
 
         if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
         mNeuronDAppPlugin = new NeuronDAppPlugin(this, webView);
@@ -155,8 +154,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance()
-                .showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -185,7 +183,7 @@ public class AppWebActivity extends NBaseActivity {
                 return true;
             }
         });
-        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
+        webView.setWebViewClient(new SimpleWebViewClient(this, webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 titleItem = null;
@@ -254,36 +252,33 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initManifest(String url) {
-        WebAppUtil.getHttpManifest(webView, url)
-                .subscribe(new NeuronSubscriber<ChainItem>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
+        WebAppUtil.getHttpManifest(webView, url).subscribe(new NeuronSubscriber<ChainItem>() {
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
 
-                    @Override
-                    public void onNext(ChainItem chainItem) {
-                        if (TextUtils.isEmpty(chainItem.errorMessage)) {
-                            WebAppUtil.addHistory();
-                            DBChainUtil.saveChain(webView.getContext(), chainItem);
-                            if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                                TokenItem tokenItem = new TokenItem(chainItem);
-                                DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                            }
-                        } else {
-                            Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT)
-                                    .show();
-                        }
+            @Override
+            public void onNext(ChainItem chainItem) {
+                if (TextUtils.isEmpty(chainItem.errorMessage)) {
+                    WebAppUtil.addHistory();
+                    DBChainUtil.saveChain(webView.getContext(), chainItem);
+                    if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                        TokenItem tokenItem = new TokenItem(chainItem);
+                        DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
                     }
-                });
+                } else {
+                    Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void signTxAction(Transaction transaction) {
         webView.post(() -> {
             this.signTransaction = transaction;
             if (walletItem == null) {
-                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Intent intent = new Intent(mActivity, PayTokenActivity.class);
@@ -358,8 +353,7 @@ public class AppWebActivity extends NBaseActivity {
 
     private void showSignMessageDialog(Message<Transaction> message) {
         if (walletItem == null) {
-            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         } else {
             mSignDialog = new SignDialog(mActivity, message, mSignListener);
@@ -380,12 +374,10 @@ public class AppWebActivity extends NBaseActivity {
 
     private void showPasswordConfirmView(String password, ProgressBar progressBar, Message<Transaction> message) {
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
             return;
         } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
-            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
@@ -477,25 +469,23 @@ public class AppWebActivity extends NBaseActivity {
                     break;
             }
         });
-        builder.create()
-                .show();
+        builder.create().show();
     }
 
     private void actionSignAppChain(String password, Message<Transaction> message) {
-        SignService.signAppChainMessage(mActivity, message.value.data, password)
-                .subscribe(new NeuronSubscriber<String>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        mSignDialog.dismiss();
-                        webView.onSignError(message, e.getMessage());
-                    }
+        SignService.signAppChainMessage(mActivity, message.value.data, password).subscribe(new NeuronSubscriber<String>() {
+            @Override
+            public void onError(Throwable e) {
+                mSignDialog.dismiss();
+                webView.onSignError(message, e.getMessage());
+            }
 
-                    @Override
-                    public void onNext(String hexSign) {
-                        mSignDialog.dismiss();
-                        webView.onSignMessageSuccessful(message, hexSign);
-                    }
-                });
+            @Override
+            public void onNext(String hexSign) {
+                mSignDialog.dismiss();
+                webView.onSignMessageSuccessful(message, hexSign);
+            }
+        });
     }
 
     @Override
@@ -545,8 +535,7 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         if (fail) {
                             if (!TextUtils.isEmpty(mCallback)) {
-                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
-                                        NeuronDAppCallback.INSTANCE.USER_CANCEL_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL);
+                                BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL);
                                 JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                             }
                         }
@@ -566,8 +555,7 @@ public class AppWebActivity extends NBaseActivity {
                     break;
                 case RESULT_CODE_SCAN_QRCODE:
                     if (!TextUtils.isEmpty(mCallback)) {
-                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback
-                                .UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
+                        BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
                         JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                     }
                     break;

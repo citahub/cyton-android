@@ -192,6 +192,7 @@
     <string name="contract_create">"Contract Created"</string>
     <string name="empty_collect">空空如也</string>
     <string name="gas_too_low">您的GasPrice设置过低，建议输入推荐值以快速转账</string>
+    <string name="about_blank">about:blank</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

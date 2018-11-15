@@ -57,8 +57,7 @@ public class SimpleWebActivity extends BaseActivity {
         titleBar = findViewById(R.id.title);
         progressBar = findViewById(R.id.progressBar);
         webErrorView = findViewById(R.id.view_web_error);
-        SensorsDataAPI.sharedInstance()
-                .showUpWebView(webView, false, true);
+        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new TokenPricePlugin(webView), "tokenPricePlugin");
         webErrorView.setImpl((reloadUrl) -> {
@@ -83,7 +82,7 @@ public class SimpleWebActivity extends BaseActivity {
                 titleBar.setTitle(title);
             }
         });
-        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
+        webView.setWebViewClient(new SimpleWebViewClient(this, webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("weixin://") || url.startsWith("alipay")) {
