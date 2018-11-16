@@ -162,7 +162,7 @@ public class AppChainRpcService {
     public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
                        String address, String value, long quota, int chainId, String password) {
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(tokenItem, value));
-        return signTransaction(context, tokenItem.contractAddress, value, data, quota, chainId, password, tokenItem.contractAddress)
+        return signTransaction(context, tokenItem.contractAddress, "0", data, quota, chainId, password, tokenItem.contractAddress)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
