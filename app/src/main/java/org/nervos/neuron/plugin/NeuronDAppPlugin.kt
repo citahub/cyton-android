@@ -2,6 +2,7 @@ package org.nervos.neuron.plugin
 
 import android.app.Activity
 import android.content.Intent
+import android.hardware.SensorManager
 import android.text.TextUtils
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -11,15 +12,15 @@ import com.yanzhenjie.permission.Permission
 import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.constant.NeuronDAppCallback
+import org.nervos.neuron.item.NeuronDApp.DeviceMotionItem
+import org.nervos.neuron.item.NeuronDApp.GyroscopeItem
 import org.nervos.neuron.item.dapp.PermissionItem
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem
-import org.nervos.neuron.item.dapp.FileToBase64Item
-import org.nervos.neuron.util.FileUtil
 import org.nervos.neuron.util.JSLoadUtils
+import org.nervos.neuron.util.SensorUtils
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
-import java.io.File
 import java.util.*
 
 class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: WebView) {
@@ -29,8 +30,8 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
         const val PERMISSION_STORAGE = "STORAGE"
     }
 
-
     private var mImpl: NeuronDAppPluginImpl? = null
+    private var mSensorUtils = SensorUtils(mContext)
 
     fun setImpl(impl: NeuronDAppPluginImpl) {
         mImpl = impl
@@ -73,22 +74,6 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
                     JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(qrCodeItem))
                 }
                 .start()
-    }
-
-    @JavascriptInterface
-    fun fileToBase64(info: String, callback: String) {
-        var base64: String? = ""
-        if (!TextUtils.isEmpty(info) || info == "undefined") {
-            base64 = FileUtil.fileToBase64(File(info))
-        }
-        val item: FileToBase64Item
-        if (!TextUtils.isEmpty(base64)) {
-            item = FileToBase64Item(base64!!)
-        } else {
-            item = FileToBase64Item(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.FIND_NO_FILE_CODE,
-                    NeuronDAppCallback.FIND_NO_FILE, "")
-        }
-        mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(item)) }
     }
 
     interface NeuronDAppPluginImpl {
@@ -139,5 +124,44 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
             permissionItem = PermissionItem(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         }
+    }
+
+    @JavascriptInterface
+    fun startDeviceMotionListening(info: String, callback: String) {
+        if (TextUtils.isEmpty(callback)) return
+        var interval = when (info) {
+            SensorUtils.INTERVAL_GAME -> SensorManager.SENSOR_DELAY_GAME
+            SensorUtils.INTERVAL_UI -> SensorManager.SENSOR_DELAY_UI
+            else -> SensorManager.SENSOR_DELAY_NORMAL
+        }
+        mSensorUtils.startDeviceMotionListening(interval, object : SensorUtils.OnMotionListener {
+            override fun motionListener(values: FloatArray) {
+                var motion = DeviceMotionItem.Motion(values[2].toString(), values[0].toString(), values[1].toString())
+                var motionItem = DeviceMotionItem(motion)
+                JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(motionItem))
+            }
+        })
+    }
+
+    @JavascriptInterface
+    fun startGyroscopeListening(info: String, callback: String) {
+        if (TextUtils.isEmpty(callback)) return
+        var interval = when (info) {
+            SensorUtils.INTERVAL_GAME -> SensorManager.SENSOR_DELAY_GAME
+            SensorUtils.INTERVAL_UI -> SensorManager.SENSOR_DELAY_UI
+            else -> SensorManager.SENSOR_DELAY_NORMAL
+        }
+        mSensorUtils.startGyroscopeListening(interval, object : SensorUtils.OnGyroscopeListener {
+            override fun gyroscopeListener(values: FloatArray) {
+                var gyroscope = GyroscopeItem.Gyroscope(values[0].toString(), values[1].toString(), values[2].toString())
+                var gyroscopeItem = GyroscopeItem(gyroscope)
+                JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(gyroscopeItem))
+            }
+        })
+    }
+
+    @JavascriptInterface
+    fun stopSensorListner() {
+        mSensorUtils.stopListening()
     }
 }
