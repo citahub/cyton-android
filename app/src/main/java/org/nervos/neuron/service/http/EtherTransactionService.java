@@ -32,7 +32,7 @@ public class EtherTransactionService implements TransactionService {
                             item.status = TransactionItem.FAILED;
                             DBEtherTransactionUtil.update(context, item);
                         }
-                        if (ethTransaction != null && !ethTransaction.hasError()) {
+                        if (ethTransaction != null && !ethTransaction.hasError() && exceedTwelveBlock(item)) {
                             DBEtherTransactionUtil.delete(context, item);
                         }
                     }
@@ -40,6 +40,11 @@ public class EtherTransactionService implements TransactionService {
     }
 
 
+    private static final int TwelveBlockNumber = 12;
+    private static boolean exceedTwelveBlock(TransactionItem item) {
+        return AppChainRpcService.getBlockNumber()
+                .subtract(Numeric.toBigInt(item.blockNumber)).longValue() > TwelveBlockNumber;
+    }
 
 
 }
