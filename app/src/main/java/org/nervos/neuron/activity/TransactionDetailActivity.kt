@@ -19,6 +19,7 @@ import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.util.db.SharePrefUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.view.TitleBar
@@ -57,7 +58,7 @@ class TransactionDetailActivity : NBaseActivity() {
                     resources.getString(R.string.contract_create)
                 else transactionItem!!.to
         if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
-            tv_chain_name.text = ConstantUtil.ETH_MAINNET
+            tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             val gasPriceBig = BigInteger(transactionItem!!.gasPrice)
             val gasUsedBig = BigInteger(transactionItem!!.gasUsed)
             tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionItem!!.nativeSymbol
