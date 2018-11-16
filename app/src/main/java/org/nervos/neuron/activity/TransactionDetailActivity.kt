@@ -16,6 +16,7 @@ import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.util.HexUtils
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -86,9 +87,11 @@ class TransactionDetailActivity : NBaseActivity() {
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(price: String) {
                             super.onNext(price)
+                            var gasUsed = Numeric.toBigInt(transactionItem!!.gasUsed)
+                            var gasPrice = Numeric.toBigInt(HexUtils.IntToHex(price.toInt()))
+                            var gas = gasUsed.multiply(gasPrice)
                             tv_transaction_gas.text =
-                                    NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem!!.gasUsed)
-                                            .multiply(Numeric.toBigInt(price))) + transactionItem!!.nativeSymbol
+                                    NumberUtil.getEthFromWeiForStringDecimal8(gas) + transactionItem!!.nativeSymbol
                         }
                     })
         }
