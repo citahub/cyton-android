@@ -250,7 +250,7 @@ public class TransferPresenter {
      */
     private void transferEthErc20(String password, String value, String receiveAddress) {
         EthRpcService.transferErc20(mActivity, mTokenItem, receiveAddress,
-                Double.valueOf(value), mGasPrice, mGasLimit, password)
+                value, mGasPrice, mGasLimit, password)
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {

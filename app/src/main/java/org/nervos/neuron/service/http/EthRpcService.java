@@ -201,7 +201,7 @@ public class EthRpcService {
     }
 
 
-    public static Observable<EthSendTransaction> transferErc20(Context context, TokenItem tokenItem, String address, double value,
+    public static Observable<EthSendTransaction> transferErc20(Context context, TokenItem tokenItem, String address, String value,
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_ERC20_LIMIT : gasLimit;
         String data = createTokenTransferData(address, createTransferValue(tokenItem, value));
@@ -260,8 +260,8 @@ public class EthRpcService {
     }
 
 
-    private static BigInteger createTransferValue(TokenItem tokenItem, double value) {
-        return BigInteger.TEN.pow(tokenItem.decimals).multiply(BigDecimal.valueOf(value).toBigInteger());
+    private static BigInteger createTransferValue(TokenItem tokenItem, String value) {
+        return BigInteger.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value).toBigInteger());
     }
 
 
