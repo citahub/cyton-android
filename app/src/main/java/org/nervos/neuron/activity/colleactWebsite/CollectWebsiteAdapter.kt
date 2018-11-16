@@ -10,14 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import org.nervos.neuron.R
-import org.nervos.neuron.item.AppItem
+import org.nervos.neuron.item.CollectDAppItem
 import org.nervos.neuron.util.db.DBAppUtil
 import java.text.SimpleDateFormat
 
 /**
  * Created by BaojunCZ on 2018/11/14.
  */
-class CollectWebsiteAdapter(var collectWebsites: List<AppItem>,
+class CollectWebsiteAdapter(var collectWebsites: List<CollectDAppItem>,
                             var listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 1
