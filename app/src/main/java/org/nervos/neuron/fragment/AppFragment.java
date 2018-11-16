@@ -65,7 +65,7 @@ public class AppFragment extends Fragment {
 
     private void initWebView() {
 
-        webView.setWebViewClient(new SimpleWebViewClient(webErrorView) {
+        webView.setWebViewClient(new SimpleWebViewClient(getContext(), webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(COLLECT_WEBSITE)) {

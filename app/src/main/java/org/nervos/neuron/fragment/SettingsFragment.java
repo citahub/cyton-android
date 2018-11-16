@@ -74,11 +74,14 @@ public class SettingsFragment extends NBaseFragment {
         } else {
             mSbvFingerPrint.setVisibility(View.GONE);
         }
+        String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
+        node = node.replace("_", " ");
+        mSbvSelectEth.setRightText(node);
     }
 
     @Override
     public void initAction() {
-        mSbvAboutUs.setOpenListener(() -> {
+        mSbvCurrency.setOpenListener(() -> {
             Intent intent = new Intent(getActivity(), CurrencyActivity.class);
             startActivityForResult(intent, Currency_Code);
         });
@@ -95,8 +98,7 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     mAuthFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string
-                            .dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();

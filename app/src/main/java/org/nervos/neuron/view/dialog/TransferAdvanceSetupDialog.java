@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.button.CommonButton;
@@ -40,9 +41,11 @@ public class TransferAdvanceSetupDialog {
             }
         });
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        confirmButton.setOnClickListener(v -> {
+            String gas = mGasPriceEdit.getText().toString().trim();
+            if (Double.parseDouble(gas) < 1) {
+                Toast.makeText(mContext, R.string.gas_too_low, Toast.LENGTH_LONG).show();
+            } else {
                 mListener.onOkClick(v, mGasPriceEdit.getText().toString().trim());
                 mDialog.dismiss();
             }
