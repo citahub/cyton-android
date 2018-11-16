@@ -32,7 +32,6 @@ public class SimpleWebViewClient extends WebViewClient {
                 case ERROR_FAILED_SSL_HANDSHAKE:
                 case ERROR_HOST_LOOKUP:
                 case ERROR_PROXY_AUTHENTICATION:
-                case ERROR_TIMEOUT:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
@@ -58,7 +57,6 @@ public class SimpleWebViewClient extends WebViewClient {
                 case ERROR_FAILED_SSL_HANDSHAKE:
                 case ERROR_HOST_LOOKUP:
                 case ERROR_PROXY_AUTHENTICATION:
-                case ERROR_TIMEOUT:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);

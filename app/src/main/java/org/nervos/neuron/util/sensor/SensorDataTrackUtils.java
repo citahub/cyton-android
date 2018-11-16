@@ -16,8 +16,11 @@ public class SensorDataTrackUtils {
         try {
             JSONObject object = new JSONObject();
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY(), symbol);
-            object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY_NUMBER(),
-                    NumberUtil.getDecimal8ENotation(Double.parseDouble(value)));
+            try {
+                object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY_NUMBER(), NumberUtil.getDecimal8ENotation(Double.parseDouble(value)));
+            } catch (Exception e) {
+                object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TARGET_CURRENCY_NUMBER(), "0");
+            }
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_RECEIVE_ADDRESS(), receiver);
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_OUTCOME_ADDRESS(), sender);
             object.put(SensorDataCons.INSTANCE.getTAG_TRANSFER_TRANSFER_TYPE(), type);
