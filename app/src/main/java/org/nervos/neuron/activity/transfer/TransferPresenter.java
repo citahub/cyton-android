@@ -151,52 +151,55 @@ public class TransferPresenter {
      */
     private void initTokenPrice() {
         mCurrencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(ConstantUtil.ETH, mCurrencyItem.getName()).subscribe(new NeuronSubscriber<String>() {
-            @Override
-            public void onNext(String price) {
-                if (TextUtils.isEmpty(price)) return;
-                try {
-                    mTokenPrice = Double.parseDouble(price);
-                    mTransferView.initTransferFeeView();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        TokenService.getCurrency(ConstantUtil.ETH, mCurrencyItem.getName())
+                .subscribe(new NeuronSubscriber<String>() {
+                    @Override
+                    public void onNext(String price) {
+                        if (TextUtils.isEmpty(price)) return;
+                        try {
+                            mTokenPrice = Double.parseDouble(price);
+                            mTransferView.initTransferFeeView();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
 
     private void initAppChainQuota() {
-        AppChainRpcService.getQuotaPrice(mWalletItem.address).subscribe(new NeuronSubscriber<String>() {
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
+        AppChainRpcService.getQuotaPrice(mWalletItem.address)
+                .subscribe(new NeuronSubscriber<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onNext(String quotaPrice) {
-                mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-                mQuota = mQuotaLimit.multiply(Numeric.toBigInt(HexUtils.IntToHex(Integer.valueOf(quotaPrice))));
-                mTransferFee = NumberUtil.getEthFromWei(mQuota);
-                mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
-            }
-        });
+                    @Override
+                    public void onNext(String quotaPrice) {
+                        mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
+                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(HexUtils.IntToHex(Integer.valueOf(quotaPrice))));
+                        mTransferFee = NumberUtil.getEthFromWei(mQuota);
+                        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+                    }
+                });
 
     }
 
     public void initGasLimit(TransactionInfo transactionInfo) {
-        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new NeuronSubscriber<BigInteger>() {
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
+        EthRpcService.getEthGasLimit(transactionInfo)
+                .subscribe(new NeuronSubscriber<BigInteger>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onNext(BigInteger gasLimit) {
-                mGasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER);
-                updateGasInfo();
-            }
-        });
+                    @Override
+                    public void onNext(BigInteger gasLimit) {
+                        mGasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER);
+                        updateGasInfo();
+                    }
+                });
     }
 
 
@@ -369,8 +372,9 @@ public class TransferPresenter {
 
     public String getTransferFee() {
         if (mTokenPrice > 0) {
-            return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit() + " ≈ " + mCurrencyItem.getSymbol() +
-                    NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
+            return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
+                    + " ≈ " + mCurrencyItem.getSymbol()
+                    + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();
         }
