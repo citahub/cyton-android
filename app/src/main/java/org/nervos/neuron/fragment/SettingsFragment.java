@@ -81,7 +81,7 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initAction() {
-        mSbvAboutUs.setOpenListener(() -> {
+        mSbvCurrency.setOpenListener(() -> {
             Intent intent = new Intent(getActivity(), CurrencyActivity.class);
             startActivityForResult(intent, Currency_Code);
         });

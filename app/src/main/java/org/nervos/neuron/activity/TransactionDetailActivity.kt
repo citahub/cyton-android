@@ -52,7 +52,7 @@ class TransactionDetailActivity : NBaseActivity() {
 
         tv_transaction_number.text = transactionItem!!.hash
         tv_transaction_sender.text = transactionItem!!.from
-        tv_transaction_receiver.text = if ("0x" == transactionItem!!.to) resources.getString(R.string.contract_create) else transactionItem!!.to
+        tv_transaction_receiver.text = if (ConstantUtil.RPC_RESULT_ZERO == transactionItem!!.to) resources.getString(R.string.contract_create) else transactionItem!!.to
         if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
             tv_chain_name.text = ConstantUtil.ETH_MAINNET
             val gasPriceBig = BigInteger(transactionItem!!.gasPrice)
@@ -91,7 +91,7 @@ class TransactionDetailActivity : NBaseActivity() {
         tv_transaction_blockchain_time.text = transactionItem!!.date
 
         tv_transaction_receiver!!.setOnClickListener {
-            if (transactionItem!!.to != "0x")
+            if (transactionItem!!.to != ConstantUtil.RPC_RESULT_ZERO)
                 copyText(transactionItem!!.to)
         }
         tv_transaction_sender!!.setOnClickListener { copyText(transactionItem!!.from) }
