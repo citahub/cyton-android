@@ -180,8 +180,6 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             String transferValue = transferValueEdit.getText().toString().trim();
             if (TextUtils.isEmpty(receiveAddressValue)) {
                 Toast.makeText(mActivity, R.string.transfer_address_not_null, Toast.LENGTH_SHORT).show();
-            } else if (receiveAddressValue.equalsIgnoreCase(mPresenter.getWalletItem().address)) {
-                Toast.makeText(mActivity, R.string.address_from_equal_to, Toast.LENGTH_LONG).show();
             } else if (!AddressUtil.isAddressValid(receiveAddressValue)) {
                 Toast.makeText(mActivity, R.string.address_error, Toast.LENGTH_LONG).show();
             } else if (TextUtils.isEmpty(transferValue)) {

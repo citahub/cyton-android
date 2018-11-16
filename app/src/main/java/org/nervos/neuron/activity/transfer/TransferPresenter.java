@@ -12,6 +12,7 @@ import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.util.HexUtils;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
@@ -82,21 +83,22 @@ public class TransferPresenter {
             }
         });
 
-        WalletService.getBalanceWithNativeToken(mActivity, mTokenItem)
-                .subscribe(new Subscriber<Double>() {
-                    @Override
-                    public void onNext(Double balance) {
-                        mNativeTokenBalance = balance;
-                        mTransferView.updateNativeTokenBalance(balance);
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                    @Override
-                    public void onCompleted() {
+        WalletService.getBalanceWithNativeToken(mActivity, mTokenItem).subscribe(new Subscriber<Double>() {
+            @Override
+            public void onNext(Double balance) {
+                mNativeTokenBalance = balance;
+                mTransferView.updateNativeTokenBalance(balance);
+            }
 
-                    }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
         });
 
     }
@@ -134,6 +136,7 @@ public class TransferPresenter {
                 e.printStackTrace();
                 mTransferView.updateEthGasPriceFail(e);
             }
+
             @Override
             public void onNext(BigInteger gasPrice) {
                 mEthGasDefaultPrice = mGasPrice = gasPrice;
@@ -171,10 +174,11 @@ public class TransferPresenter {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                     }
+
                     @Override
                     public void onNext(String quotaPrice) {
                         mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
+                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(HexUtils.IntToHex(Integer.valueOf(quotaPrice))));
                         mTransferFee = NumberUtil.getEthFromWei(mQuota);
                         mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
                     }
@@ -183,33 +187,32 @@ public class TransferPresenter {
     }
 
     public void initGasLimit(TransactionInfo transactionInfo) {
-        EthRpcService.getEthGasLimit(transactionInfo).subscribe(new NeuronSubscriber<BigInteger>() {
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
+        EthRpcService.getEthGasLimit(transactionInfo)
+                .subscribe(new NeuronSubscriber<BigInteger>() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onNext(BigInteger gasLimit) {
-                mGasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER);
-                updateGasInfo();
-            }
-        });
+                    @Override
+                    public void onNext(BigInteger gasLimit) {
+                        mGasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER);
+                        updateGasInfo();
+                    }
+                });
     }
 
 
     public void handleTransferAction(String password, String transferValue, String receiveAddress) {
         if (isEther()) {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue,
-                    receiveAddress, mWalletItem.address, ConstantUtil.ETH, "2");
+            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, ConstantUtil.ETH, "2");
             if (ConstantUtil.ETH.equals(mTokenItem.symbol)) {
                 transferEth(password, transferValue, receiveAddress);
             } else {
                 transferEthErc20(password, transferValue, receiveAddress);
             }
         } else {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue,
-                    receiveAddress, mWalletItem.address, mTokenItem.chainName, "2");
+            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, mTokenItem.chainName, "2");
             if (isNativeToken()) {
                 transferAppChainToken(password, transferValue, receiveAddress.toLowerCase());
             } else {
@@ -249,13 +252,13 @@ public class TransferPresenter {
      * @param value
      */
     private void transferEthErc20(String password, String value, String receiveAddress) {
-        EthRpcService.transferErc20(mActivity, mTokenItem, receiveAddress,
-                value, mGasPrice, mGasLimit, password)
+        EthRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, value, mGasPrice, mGasLimit, password)
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         mTransferView.transferEtherFail(e.getMessage());
                     }
+
                     @Override
                     public void onNext(EthSendTransaction ethSendTransaction) {
                         if (ethSendTransaction.hasError()) {
@@ -274,8 +277,7 @@ public class TransferPresenter {
      */
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue,
-                "", ConstantUtil.QUOTA_TOKEN.longValue(), mTokenItem.chainId, password)
+        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, "", ConstantUtil.QUOTA_TOKEN.longValue(), mTokenItem.chainId, password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -298,8 +300,7 @@ public class TransferPresenter {
     private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
         AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
         try {
-            AppChainRpcService.transferErc20(mActivity, mTokenItem,
-                    receiveAddress, transferValue, mQuotaLimit.longValue(), mTokenItem.chainId, password)
+            AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(), mTokenItem.chainId, password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
@@ -323,9 +324,9 @@ public class TransferPresenter {
         mTransferFee = NumberUtil.getEthFromWei(mGas);
         mTransferView.initTransferFeeView();
     }
+
     /**
-     *
-     * @param gasPrice  wei
+     * @param gasPrice wei
      */
     public void updateGasInfo(BigInteger gasPrice) {
         mGasPrice = gasPrice;
@@ -350,6 +351,7 @@ public class TransferPresenter {
 
     /**
      * Check whether transfer value is bigger than balance of wallet
+     *
      * @return
      */
     public boolean checkTransferValueMoreBalance(String transferValue) {
@@ -362,8 +364,7 @@ public class TransferPresenter {
 
     public String balanceSubFee() {
         if (isNativeToken()) {
-            return NumberUtil.getDecimal8ENotation(new BigDecimal(mNativeTokenBalance)
-                    .subtract(new BigDecimal(mTransferFee)).toString());
+            return NumberUtil.getDecimal8ENotation(new BigDecimal(mNativeTokenBalance).subtract(new BigDecimal(mTransferFee)).toString());
         } else {
             return NumberUtil.getDecimal8ENotation(mTokenBalance);
         }
@@ -371,8 +372,8 @@ public class TransferPresenter {
 
     public String getTransferFee() {
         if (mTokenPrice > 0) {
-            return NumberUtil.getDecimal8ENotation(mTransferFee)
-                    + getFeeTokenUnit() + " ≈ " + mCurrencyItem.getSymbol()
+            return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
+                    + " ≈ " + mCurrencyItem.getSymbol()
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();
@@ -380,8 +381,7 @@ public class TransferPresenter {
     }
 
     public String getEthGasDefaultPrice() {
-        return NumberUtil.getDecimalValid_2(
-                Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
+        return NumberUtil.getDecimalValid_2(Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
     }
 
     public boolean isEther() {

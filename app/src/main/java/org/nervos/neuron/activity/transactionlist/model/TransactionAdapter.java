@@ -3,12 +3,11 @@ package org.nervos.neuron.activity.transactionlist.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.TransactionItem;
@@ -70,9 +69,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_loading, parent, false);
             return new RecyclerView.ViewHolder(view) {};
         } else {
-            return new TransactionViewHolder(LayoutInflater.from(
-                    parent.getContext()).inflate(R.layout.item_transaction_list, parent,
-                    false));
+            return new TransactionViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_transaction_list, parent, false));
         }
     }
 
@@ -84,8 +82,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (!transactionItem.from.equalsIgnoreCase(address)) {
                 viewHolder.transactionIdText.setText(transactionItem.from);
             } else {
-                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to)
-                        ? context.getResources().getString(R.string.contract_create) : transactionItem.to);
+                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to) ||
+                        TextUtils.isEmpty(transactionItem.to) ?
+                        context.getResources().getString(R.string.contract_create) : transactionItem.to);
             }
             String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+") + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);

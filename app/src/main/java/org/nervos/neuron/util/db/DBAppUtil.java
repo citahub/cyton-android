@@ -2,11 +2,9 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 
-import com.snappydb.DB;
-import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.AppItem;
+import org.nervos.neuron.item.CollectDAppItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ public class DBAppUtil extends DBUtil {
 
     private static final String DB_APP = "db_app";
 
-    public static void saveDbApp(Context context, AppItem appItem) {
+    public static void saveDbApp(Context context, CollectDAppItem appItem) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APP);
@@ -42,14 +40,14 @@ public class DBAppUtil extends DBUtil {
         }
     }
 
-    public static List<AppItem> getAllApp(Context context) {
+    public static List<CollectDAppItem> getAllApp(Context context) {
         synchronized (dbObject) {
-            List<AppItem> appList = new ArrayList<>();
+            List<CollectDAppItem> appList = new ArrayList<>();
             try {
                 db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for(String key: keys) {
-                    appList.add(db.getObject(key, AppItem.class));
+                    appList.add(db.getObject(key, CollectDAppItem.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
@@ -74,11 +72,11 @@ public class DBAppUtil extends DBUtil {
     }
 
 
-    public static AppItem getApp(Context context, String entry) {
+    public static CollectDAppItem getApp(Context context, String entry) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APP);
-                AppItem appItem = db.getObject(getDbKey(entry), AppItem.class);
+                CollectDAppItem appItem = db.getObject(getDbKey(entry), CollectDAppItem.class);
                 db.close();
                 return appItem;
             } catch (SnappydbException e) {

@@ -16,9 +16,11 @@ import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.util.HexUtils
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.util.db.SharePrefUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.view.TitleBar
@@ -52,9 +54,12 @@ class TransactionDetailActivity : NBaseActivity() {
 
         tv_transaction_number.text = transactionItem!!.hash
         tv_transaction_sender.text = transactionItem!!.from
-        tv_transaction_receiver.text = if (ConstantUtil.RPC_RESULT_ZERO == transactionItem!!.to) resources.getString(R.string.contract_create) else transactionItem!!.to
+        tv_transaction_receiver.text =
+                if (ConstantUtil.RPC_RESULT_ZERO == transactionItem!!.to || transactionItem!!.to.isEmpty())
+                    resources.getString(R.string.contract_create)
+                else transactionItem!!.to
         if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
-            tv_chain_name.text = ConstantUtil.ETH_MAINNET
+            tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             val gasPriceBig = BigInteger(transactionItem!!.gasPrice)
             val gasUsedBig = BigInteger(transactionItem!!.gasUsed)
             tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionItem!!.nativeSymbol
@@ -82,8 +87,11 @@ class TransactionDetailActivity : NBaseActivity() {
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(price: String) {
                             super.onNext(price)
-                            tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(transactionItem!!.gasUsed)
-                                    .multiply(Numeric.toBigInt(price))) + transactionItem!!.nativeSymbol
+                            var gasUsed = Numeric.toBigInt(transactionItem!!.gasUsed)
+                            var gasPrice = Numeric.toBigInt(HexUtils.IntToHex(price.toInt()))
+                            var gas = gasUsed.multiply(gasPrice)
+                            tv_transaction_gas.text =
+                                    NumberUtil.getEthFromWeiForStringDecimal8(gas) + transactionItem!!.nativeSymbol
                         }
                     })
         }
@@ -91,7 +99,7 @@ class TransactionDetailActivity : NBaseActivity() {
         tv_transaction_blockchain_time.text = transactionItem!!.date
 
         tv_transaction_receiver!!.setOnClickListener {
-            if (transactionItem!!.to != ConstantUtil.RPC_RESULT_ZERO)
+            if (transactionItem!!.to != ConstantUtil.RPC_RESULT_ZERO && !transactionItem!!.to.isEmpty())
                 copyText(transactionItem!!.to)
         }
         tv_transaction_sender!!.setOnClickListener { copyText(transactionItem!!.from) }

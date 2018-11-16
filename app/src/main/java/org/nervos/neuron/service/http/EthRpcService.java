@@ -261,7 +261,7 @@ public class EthRpcService {
 
 
     private static BigInteger createTransferValue(TokenItem tokenItem, String value) {
-        return BigInteger.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value).toBigInteger());
+        return (BigDecimal.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value))).toBigInteger();
     }
 
 
