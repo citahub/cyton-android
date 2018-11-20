@@ -162,7 +162,7 @@ public class AppChainRpcService {
     public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
                        String address, String value, long quota, int chainId, String password) {
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(tokenItem, value));
-        return signTransaction(context, tokenItem.contractAddress, "0", data, quota, chainId, password, tokenItem.contractAddress)
+        return signTransaction(context, tokenItem.contractAddress, value, data, quota, chainId, password, tokenItem.contractAddress)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -183,7 +183,8 @@ public class AppChainRpcService {
                         Transaction transaction = Transaction.createFunctionCallTransaction(
                                 NumberUtil.toLowerCaseWithout0x(toAddress),
                                 randomNonce(), quota, validUntilBlock.longValue(), version, chainId,
-                                NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
+                                TextUtils.isEmpty(contractAddress) ? NumberUtil.getWeiFromEth(value).toString() : "0",
+                                TextUtils.isEmpty(data) ? "" : data);
 
                         WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
                         String privateKey = NumberUtil.toLowerCaseWithout0x(walletEntity.getPrivateKey());
@@ -264,7 +265,7 @@ public class AppChainRpcService {
     }
 
     private static BigInteger getERC20TransferValue(TokenItem tokenItem, String value) {
-        return BigInteger.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value).toBigInteger());
+        return BigDecimal.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value)).toBigInteger();
     }
 
     private static String getErc20Name(String contractAddress) throws Exception {
