@@ -15,6 +15,8 @@ import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil
 
 import kotlinx.android.synthetic.main.activity_wallet_manage.*
+import org.nervos.neuron.view.SettingButtonView
+
 /**
  * Created by duanyytop on 2018/11/7
  */
@@ -46,9 +48,10 @@ class WalletManageActivity : NBaseActivity() {
             simpleDialog.show()
         }
 
-        change_password.setOpenListener { startActivity(Intent(mActivity, ChangePasswordActivity::class.java)) }
+        change_password.setOnClickListener(SettingButtonView.OnClickListener {
+            startActivity(Intent(mActivity, ChangePasswordActivity::class.java)) })
 
-        export_keystore.setOpenListener {
+        export_keystore.setOnClickListener(SettingButtonView.OnClickListener {
             val simpleDialog = SimpleDialog(mActivity)
             simpleDialog.setTitle(R.string.input_password_hint)
             simpleDialog.setMessageHint(R.string.input_password_hint)
@@ -58,9 +61,9 @@ class WalletManageActivity : NBaseActivity() {
             }
             simpleDialog.setOnCancelClickListener { simpleDialog.dismiss() }
             simpleDialog.show()
-        }
+        })
 
-        delete_wallet_button.setOnClickListener{
+        delete_wallet_button.setOnClickListener {
             val deleteDialog = SimpleDialog(mActivity)
             deleteDialog.setTitle(getString(R.string.ask_confirm_delete_wallet))
             deleteDialog.setMessageHint(getString(R.string.password))

@@ -32,7 +32,7 @@
     <string name="export_keystore_warning">Keystore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 Keystore 格式与以太坊官方 Keystore 格式相同。</string>
     <string name="tab_application">应用</string>
     <string name="tab_wallet">钱包</string>
-    <string name="tab_settings">设置</string>
+    <string name="tab_me">我</string>
     <string name="wallet_token_total_money">总资产</string>
     <string name="copy_address">复制地址</string>
     <string name="token_warning_message">该token无任何价值，仅做开发者测试使用</string>

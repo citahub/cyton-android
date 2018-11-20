@@ -33,7 +33,7 @@
                 android:id="@+id/navigation_settings"
                 style="@style/tab_bottom_radio_button_style"
                 android:drawableTop="@drawable/tab_settings"
-                android:text="@string/tab_settings" />
+                android:text="@string/tab_me" />
 
         </RadioGroup>
 
