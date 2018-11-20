@@ -5,6 +5,7 @@ import android.content.Context;
 
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.utils.Numeric;
 
@@ -26,13 +27,13 @@ public class EtherTransactionService implements TransactionService {
                     }
                     @Override
                     public void onNext(TransactionItem item) {
-                        EthTransaction ethTransaction = EthRpcService.getTransactionByHash(item.hash);
-                        if (ethTransaction == null && AppChainRpcService.getBlockNumber()
+                        EthGetTransactionReceipt receipt = EthRpcService.getTransactionReceipt(item.hash);
+                        if (receipt == null && AppChainRpcService.getBlockNumber()
                                 .subtract(Numeric.toBigInt(item.blockNumber)).longValue() > ETH_BLOCK_DIFF) {
                             item.status = TransactionItem.FAILED;
                             DBEtherTransactionUtil.update(context, item);
                         }
-                        if (ethTransaction != null && !ethTransaction.hasError() && exceedTwelveBlock(item)) {
+                        if (receipt != null && !receipt.hasError() && exceedTwelveBlock(item)) {
                             DBEtherTransactionUtil.delete(context, item);
                         }
                     }
