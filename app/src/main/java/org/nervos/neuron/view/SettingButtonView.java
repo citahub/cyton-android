@@ -22,8 +22,8 @@ public class SettingButtonView extends ConstraintLayout {
     private TextView nameText, rightText;
     private View line;
     private TypedArray ta;
-    private openListener openListener = null;
-    private switchListener switchListener = null;
+    private OpenListener openListener = null;
+    private SwitchListener SwitchListener = null;
     private ConstraintLayout root;
     private boolean switchStatus = false;
     private Context context;
@@ -116,12 +116,12 @@ public class SettingButtonView extends ConstraintLayout {
         nameText.setText(text);
     }
 
-    public void setOpenListener(openListener openListener) {
+    public void setOpenListener(OpenListener openListener) {
         this.openListener = openListener;
     }
 
-    public void setSwitchListener(switchListener switchListener) {
-        this.switchListener = switchListener;
+    public void setSwitchListener(SwitchListener SwitchListener) {
+        this.SwitchListener = SwitchListener;
     }
 
     public void setSwitch(boolean is) {
@@ -140,17 +140,17 @@ public class SettingButtonView extends ConstraintLayout {
                 openListener.open();
         });
         switchImage.setOnClickListener((view) -> {
-            if (switchListener != null) {
-                switchListener.click(!switchStatus);
+            if (SwitchListener != null) {
+                SwitchListener.click(!switchStatus);
             }
         });
     }
 
-    public interface openListener {
+    public interface OpenListener {
         void open();
     }
 
-    public interface switchListener {
+    public interface SwitchListener {
         void click(boolean chosen);
     }
 }

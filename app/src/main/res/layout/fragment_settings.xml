@@ -12,59 +12,105 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:isShowLeft="false"
-        app:title="@string/settings_title"
+        app:title="@string/me_title"
         app:title_bg="@color/colorPrimary"
         app:title_color="@color/white" />
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/wallet_information_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="85dp"
+        android:paddingStart="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_margin"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/default_margin">
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_local_coin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_localcoin"
-            app:name="@string/setting_currency" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/wallet_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/wallet_photo"
+            app:civ_border_color="@color/line_input"
+            app:civ_border_width="1dp" />
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_eth_select"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_select_eth"
-            app:name="@string/setting_select_eth_net" />
+            android:layout_toEndOf="@id/wallet_photo"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/wallet_name"
+                android:textColor="@color/font_title"
+                android:textSize="15sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:text="@string/wallet_address"
+                android:textColor="@color/font_title_third"
+                android:textSize="15sp" />
+        </LinearLayout>
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_arrow"
+            android:scaleType="centerInside"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_fingerprint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_fingerprint"
-            app:name="@string/setting_fingerprint"
-            app:right_arrow="false"
-            app:right_text="CNY"
-            app:switch_button="true" />
+    </RelativeLayout>
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_about_us"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_about_us"
-            app:name="@string/setting_about_us" />
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_local_coin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:icon="@drawable/ic_setting_localcoin"
+        app:name="@string/setting_currency" />
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_contact_us"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_contact_us"
-            app:name="@string/setting_weixin" />
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_eth_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_setting_select_eth"
+        app:name="@string/setting_select_eth_net" />
 
-        <org.nervos.neuron.view.SettingButtonView
-            android:id="@+id/sbv_forums"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_setting_nervos_forums"
-            app:name="@string/setting_nervos_forum" />
-    </LinearLayout>
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_fingerprint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_setting_fingerprint"
+        app:name="@string/setting_fingerprint"
+        app:right_arrow="false"
+        app:right_text="CNY"
+        app:switch_button="true" />
+    
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_about_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:icon="@drawable/ic_setting_about_us"
+        app:name="@string/setting_about_us" />
+
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_contact_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_setting_contact_us"
+        app:name="@string/setting_connect_us" />
+
+    <org.nervos.neuron.view.SettingButtonView
+        android:id="@+id/sbv_forums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_setting_nervos_forums"
+        app:name="@string/setting_nervos_forum" />
 </LinearLayout>
