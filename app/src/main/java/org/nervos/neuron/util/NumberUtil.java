@@ -38,6 +38,9 @@ public class NumberUtil {
                 return String.valueOf(value);
             }
         }
+        if ((value + "").length() - (value + "").indexOf(".") - 1 <= 8) {
+            return String.valueOf(value);
+        }
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
         return fmt.format(value);
@@ -54,15 +57,15 @@ public class NumberUtil {
 
     /**
      * WARNING: not very sure
+     *
      * @param value
      * @return
      */
     public static boolean isHex(String value) {
         value = Numeric.cleanHexPrefix(value);
-        for (int i = 0; i < value.length(); i ++) {
-            if (('0' > value.charAt(i) || '9' < value.charAt(i))
-                    && ('A' > value.charAt(i) || 'F' < value.charAt(i))
-                    && ('a' > value.charAt(i) || 'f' < value.charAt(i))) {
+        for (int i = 0; i < value.length(); i++) {
+            if (('0' > value.charAt(i) || '9' < value.charAt(i)) && ('A' > value.charAt(i) || 'F' < value.charAt(i)) &&
+                    ('a' > value.charAt(i) || 'f' < value.charAt(i))) {
                 return false;
             }
         }
@@ -205,8 +208,7 @@ public class NumberUtil {
                 flag |= 0b0010;
             } else if (c >= '0' & c <= '9') {
                 flag |= 0b0100;
-            } else if ((c >= '!' & c <= '/') || (c >= ':' & c <= '@')
-                    || (c >= '[' & c <= '`') || (c >= '{' & c <= '~')) {
+            } else if ((c >= '!' & c <= '/') || (c >= ':' & c <= '@') || (c >= '[' & c <= '`') || (c >= '{' & c <= '~')) {
                 flag |= 0b1000;
             } else {
                 return false;
