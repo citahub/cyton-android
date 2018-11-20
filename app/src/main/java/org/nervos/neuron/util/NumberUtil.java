@@ -38,6 +38,9 @@ public class NumberUtil {
                 return String.valueOf(value);
             }
         }
+        if (String.valueOf(value).length() -String.valueOf(value).indexOf(".") - 1 <= 8) {
+            return String.valueOf(value);
+        }
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
         return fmt.format(value);
