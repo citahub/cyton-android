@@ -17,6 +17,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.service.http.HttpService;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
@@ -29,6 +30,7 @@ import org.web3j.crypto.Keys;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.Observable;
@@ -181,14 +183,16 @@ public class TransactionListPresenter {
     private List<TransactionItem> getEtherTransactionList(Context context, String chainId, List<TransactionItem> list) {
         List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
-            for (TransactionItem dbItem : itemList) {
+            Iterator<TransactionItem> iterator = itemList.iterator();
+            while (iterator.hasNext()) {
+                TransactionItem dbItem = iterator.next();
                 for (TransactionItem item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
-                        itemList.remove(dbItem);
+                        iterator.remove();
                         break;
                     }
                     if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
-                        itemList.remove(dbItem);
+                        iterator.remove();
                         break;
                     }
                 }
@@ -202,14 +206,16 @@ public class TransactionListPresenter {
     private List<TransactionItem> getAppChainTransactionList(Context context, String chainId, List<TransactionItem> list) {
         List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
-            for (TransactionItem dbItem : itemList) {
+            Iterator<TransactionItem> iterator = itemList.iterator();
+            while (iterator.hasNext()) {
+                TransactionItem dbItem = iterator.next();
                 for (TransactionItem item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
-                        itemList.remove(dbItem);
+                        iterator.remove();
                         break;
                     }
                     if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
-                        itemList.remove(dbItem);
+                        iterator.remove();
                         break;
                     }
                 }
