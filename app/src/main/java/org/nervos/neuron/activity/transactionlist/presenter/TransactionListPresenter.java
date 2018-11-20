@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
@@ -17,7 +16,6 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.service.http.HttpService;
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;

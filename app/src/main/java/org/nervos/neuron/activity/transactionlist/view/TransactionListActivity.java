@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
