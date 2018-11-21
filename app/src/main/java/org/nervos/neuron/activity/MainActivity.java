@@ -49,7 +49,7 @@ public class MainActivity extends NBaseActivity {
 
     @Override
     protected int getStatusBarColor() {
-        return getResources().getColor(R.color.colorPrimary);
+        return getResources().getColor(R.color.white);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class MainActivity extends NBaseActivity {
             transaction.commitAllowingStateLoss();
         });
 
-        setNavigationItem(AppFragment.TAG);
+        setNavigationItem(AppFragment.Companion.getTAG());
 
     }
 
@@ -162,7 +162,7 @@ public class MainActivity extends NBaseActivity {
      */
     public void setNavigationItem(String tag) {
         if (TextUtils.isEmpty(tag)) return;
-        if (TextUtils.equals(tag, AppFragment.TAG)) {
+        if (TextUtils.equals(tag, AppFragment.Companion.getTAG())) {
             navigation.check(R.id.navigation_application);
         } else if (TextUtils.equals(tag, WalletFragment.Companion.getTAG())) {
             navigation.check(R.id.navigation_wallet);
@@ -211,7 +211,7 @@ public class MainActivity extends NBaseActivity {
             } else {
                 FragmentTransaction fragmentTransaction = fMgr.beginTransaction();
                 hideFragments(fragmentTransaction);
-                setNavigationItem(AppFragment.TAG);
+                setNavigationItem(AppFragment.Companion.getTAG());
                 return true;
             }
 

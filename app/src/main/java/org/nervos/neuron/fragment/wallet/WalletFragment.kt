@@ -42,9 +42,8 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     private lateinit var mAdapter: WalletTokenAdapter
     private lateinit var mCircleAnim: Animation
 
-    override fun getContentLayout(): Int {
-        return R.layout.fragment_wallet
-    }
+    override val contentLayout: Int
+        get() =  R.layout.fragment_wallet
 
     override fun initView() {
         mWalletAssetsView = findViewById(R.id.view_wallet_assets) as WalletAssetsView
