@@ -2,9 +2,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.constant.SensorDataCons;
@@ -18,6 +16,9 @@ import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.Credentials;
 import org.web3j.utils.Numeric;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,10 +26,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/5/31
@@ -88,6 +85,45 @@ public class WalletService {
         });
     }
 
+    public static void getTokenBalance(Context context, TokenItem tokenItem, OnGetWalletTokenListener listener) {
+        executorService.execute(() -> {
+            try {
+                String address = DBWalletUtil.getCurrentWallet(context).address;
+                if (tokenItem.chainId < 0) {
+                    if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
+                        tokenItem.balance = EthRpcService.getEthBalance(address);
+                        track(ConstantUtil.ETH, ConstantUtil.ETH, tokenItem.balance);
+                    } else {
+                        tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
+                        track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
+                    }
+                } else {
+                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                    if (chainItem != null) {
+                        String httpProvider = chainItem.httpProvider;
+                        AppChainRpcService.init(context, httpProvider);
+                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
+                            tokenItem.balance = AppChainRpcService.getErc20Balance(tokenItem, address);
+                            tokenItem.chainName = chainItem.name;
+                        } else {
+                            tokenItem.balance = AppChainRpcService.getBalance(address);
+                            tokenItem.chainName = chainItem.name;
+                        }
+                        track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
+                    }
+                }
+                if (listener != null) {
+                    listener.onGetTokenBalance(tokenItem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (listener != null) {
+                    listener.onGetWalletError(e.getMessage());
+                }
+            }
+        });
+    }
+
     private static void track(String chain, String type, double number) {
         try {
             JSONObject object = new JSONObject();
@@ -101,6 +137,8 @@ public class WalletService {
     }
 
     public interface OnGetWalletTokenListener {
+        void onGetTokenBalance(TokenItem balance);
+
         void onGetWalletToken(WalletItem walletItem);
 
         void onGetWalletError(String message);

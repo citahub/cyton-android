@@ -2,28 +2,26 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
-import org.nervos.neuron.service.intent.EtherTransactionCheckService;
-import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
+import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.url.HttpAppChainUrls;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,7 +38,7 @@ public class MainActivity extends NBaseActivity {
 
     private RadioGroup navigation;
     private AppFragment appFragment;
-    private WalletsFragment walletsFragment;
+    private WalletFragment walletFragment;
     private SettingsFragment settingsFragment;
     private FragmentManager fMgr;
 
@@ -111,11 +109,11 @@ public class MainActivity extends NBaseActivity {
                     if (DBWalletUtil.getCurrentWallet(mActivity) == null) {
                         startActivity(new Intent(mActivity, AddWalletActivity.class));
                     } else {
-                        if (walletsFragment == null) {
-                            walletsFragment = new WalletsFragment();
-                            transaction.add(R.id.fragment, walletsFragment);
+                        if (walletFragment == null) {
+                            walletFragment = new WalletFragment();
+                            transaction.add(R.id.fragment, walletFragment);
                         } else {
-                            transaction.show(walletsFragment);
+                            transaction.show(walletFragment);
                         }
                     }
                     break;
@@ -166,7 +164,7 @@ public class MainActivity extends NBaseActivity {
         if (TextUtils.isEmpty(tag)) return;
         if (TextUtils.equals(tag, AppFragment.TAG)) {
             navigation.check(R.id.navigation_application);
-        } else if (TextUtils.equals(tag, WalletsFragment.TAG)) {
+        } else if (TextUtils.equals(tag, WalletFragment.Companion.getTAG())) {
             navigation.check(R.id.navigation_wallet);
         } else if (TextUtils.equals(tag, SettingsFragment.TAG)) {
             navigation.check(R.id.navigation_settings);
@@ -181,8 +179,8 @@ public class MainActivity extends NBaseActivity {
         if (appFragment != null) {
             transaction.hide(appFragment);
         }
-        if (walletsFragment != null) {
-            transaction.hide(walletsFragment);
+        if (walletFragment != null) {
+            transaction.hide(walletFragment);
         }
         if (settingsFragment != null) {
             transaction.hide(settingsFragment);
