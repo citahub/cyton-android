@@ -11,6 +11,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +19,10 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
+import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
@@ -31,6 +34,8 @@ import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.dialog.SelectorDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by duanyytop on 2018/4/17
  */
@@ -40,6 +45,8 @@ public class SettingsFragment extends NBaseFragment {
     public static final String TAG = SettingsFragment.class.getName();
     private SettingButtonView mSbvCurrency, mSbvAboutUs, mSbvContactUs, mSbvFingerPrint, mSbvForums, mSbvSelectEth;
     private TextView walletNameText, walletAddressText;
+    private CircleImageView photoImage;
+    private RelativeLayout walletLayout;
     private AuthFingerDialog mAuthFingerDialog = null;
     private SelectorDialog mEthNodeDialog = null;
     private SparseArray<String> ethNodeList = new SparseArray<>();
@@ -62,6 +69,8 @@ public class SettingsFragment extends NBaseFragment {
         mSbvSelectEth = (SettingButtonView) findViewById(R.id.sbv_eth_select);
         walletNameText = (TextView) findViewById(R.id.text_wallet_name);
         walletAddressText = (TextView) findViewById(R.id.text_wallet_address);
+        walletLayout = (RelativeLayout) findViewById(R.id.wallet_information_layout);
+        photoImage = (CircleImageView) findViewById(R.id.wallet_photo);
     }
 
     @Override
@@ -69,8 +78,10 @@ public class SettingsFragment extends NBaseFragment {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(getContext());
         walletNameText.setText(walletItem.name);
         walletAddressText.setText(walletItem.address);
+        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
 
         initEthNode();
+
         mFingerPrintController = new FingerPrintController(getActivity());
         mSbvCurrency.setRightText(SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY));
         if (mFingerPrintController.isSupportFingerprint()) {
@@ -85,7 +96,7 @@ public class SettingsFragment extends NBaseFragment {
             mSbvFingerPrint.setVisibility(View.GONE);
         }
         String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
-        node = node.replace("_", " ");
+        if (node.contains("_")) node = node.replace("_", " ");
         mSbvSelectEth.setRightText(node);
     }
 
@@ -150,12 +161,17 @@ public class SettingsFragment extends NBaseFragment {
             }));
             mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
                 EthRpcService.initNodeUrl();
-                initEthNode();
                 String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
-                node = node.replace("_", " ");
+                if (node.contains("_")) node = node.replace("_", " ");
                 mSbvSelectEth.setRightText(node);
                 mEthNodeDialog.dismiss();
             });
+        });
+        walletLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), WalletManageActivity.class));
+            }
         });
     }
 

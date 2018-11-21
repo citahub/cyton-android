@@ -55,7 +55,7 @@
                 android:layout_marginTop="3dp"
                 android:ellipsize="middle"
                 android:maxEms="15"
-                android:lines="1"
+                android:singleLine="true"
                 android:textColor="@color/font_title_third"
                 android:textSize="15sp" />
         </LinearLayout>

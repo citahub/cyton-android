@@ -84,7 +84,7 @@
                 android:id="@+id/sbv_infura"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_about_us_infua"
+                app:icon="@drawable/ic_about_us_infura"
                 app:name="Infura"
                 app:right_txt="@string/infua_describe" />
 

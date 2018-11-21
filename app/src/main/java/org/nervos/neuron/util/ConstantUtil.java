@@ -55,10 +55,10 @@ public class ConstantUtil {
     public static final String GWEI = "GWei";
 
     public static final String ETH_NET = "ETH_NET";
-    public static final String ETH_NET_MAIN = "Main_Ethereum_Network";
-    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten_Test_Network";
-    public static final String ETH_NET_KOVAN_TEST = "Kovan_Test_Network";
-    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby_Test_Network";
+    public static final String ETH_NET_MAIN = "Main Ethereum Network";
+    public static final String ETH_NET_ROPSTEN_TEST = "Ropsten Test Network";
+    public static final String ETH_NET_KOVAN_TEST = "Kovan Test Network";
+    public static final String ETH_NET_RINKEBY_TEST = "Rinkeby Test Network";
 
     public static final int ETHEREUM_MAIN_ID = -1;
     public static final int ETHEREUM_ROPSTEN_ID = -3;
