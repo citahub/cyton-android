@@ -3,13 +3,12 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.button.CommonButton;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
@@ -44,7 +43,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
     protected void initAction() {
         cancelBtn.setOnClickListener((v) -> {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
             startActivity(intent);
             finish();
         });
@@ -82,7 +81,7 @@ public class ImportFingerTipActivity extends NBaseActivity {
             SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, true);
             Toast.makeText(mActivity, getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mActivity, MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
             startActivity(intent);
             finish();
         }

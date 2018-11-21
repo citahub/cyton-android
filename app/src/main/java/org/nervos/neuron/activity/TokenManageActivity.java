@@ -16,23 +16,21 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.url.HttpUrls;
-import org.nervos.neuron.util.AddressUtil;
-import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.event.AddTokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.view.TitleBar;
 import org.web3j.crypto.Keys;
 
 import java.lang.reflect.Type;
@@ -104,7 +102,7 @@ public class TokenManageActivity extends BaseActivity {
     }
 
     private void postTokenRefreshEvent() {
-        EventBus.getDefault().post(new TokenRefreshEvent());
+        EventBus.getDefault().post(new AddTokenRefreshEvent());
     }
 
     class TokenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

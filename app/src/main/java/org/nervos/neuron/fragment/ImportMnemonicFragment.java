@@ -14,26 +14,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportFingerTipActivity;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.view.button.CommonButton;
 import org.nervos.neuron.view.dialog.SelectorDialog;
 
@@ -193,7 +188,7 @@ public class ImportMnemonicFragment extends BaseFragment {
                 SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
             } else {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                 getActivity().startActivity(intent);
             }
             EventBus.getDefault().post(new TokenRefreshEvent());

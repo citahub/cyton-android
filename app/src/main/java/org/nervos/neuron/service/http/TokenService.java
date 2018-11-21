@@ -2,9 +2,9 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
-
+import okhttp3.Call;
+import okhttp3.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.item.CurrencyIDItem;
@@ -13,17 +13,14 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.CollectionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.url.HttpUrls;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import okhttp3.Call;
-import okhttp3.Request;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 /**
  * Created by BaojunCZ on 2018/8/3.
@@ -65,7 +62,7 @@ public class TokenService {
             Call call = HttpService.getHttpClient().newCall(request);
             return fetchPriceFromResponse(call.execute().body().string(), currency);
         }).subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static String fetchPriceFromResponse(String response, String currency) throws JSONException {
@@ -95,22 +92,20 @@ public class TokenService {
             }
             return list;
         }).subscribeOn(Schedulers.newThread())
-        .flatMap(new Func1<ArrayList<CurrencyIDItem>, Observable<String>>() {
-            @Override
-            public Observable<String> call(ArrayList<CurrencyIDItem> currencyIDItems) {
-                for (CurrencyIDItem item : list) {
-                    if (item.getSymbol().equals(symbol)) {
-                        return Observable.just(item.getId());
+                .flatMap((Func1<ArrayList<CurrencyIDItem>, Observable<String>>) currencyIDItems -> {
+                    for (CurrencyIDItem item : list) {
+                        if (item.getSymbol().equals(symbol)) {
+                            return Observable.just(item.getId());
+                        }
                     }
-                }
-                return Observable.just(null);
-            }
-        });
+                    return Observable.just(null);
+                });
     }
 
 
     /**
      * get ERC721 token transaction list
+     *
      * @param context
      * @return
      */
@@ -131,7 +126,7 @@ public class TokenService {
                 return new Gson().fromJson(response, CollectionResponse.class);
             }
         }).subscribeOn(Schedulers.io())
-         .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

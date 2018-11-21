@@ -9,10 +9,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportFingerTipActivity;
@@ -20,17 +18,17 @@ import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
-import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.view.button.CommonButton;
 import org.web3j.utils.Numeric;
 
@@ -98,9 +96,9 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             public void onClick(View v) {
                 AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
                         .onGranted(permissions -> {
-                    Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start();
+                            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE);
+                        }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start();
             }
         });
     }
@@ -146,7 +144,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                 SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
             } else {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                 getActivity().startActivity(intent);
             }
             EventBus.getDefault().post(new TokenRefreshEvent());

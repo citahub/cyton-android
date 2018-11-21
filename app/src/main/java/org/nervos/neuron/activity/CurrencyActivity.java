@@ -7,14 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.event.CurrencyRefreshEvent;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.SettingButtonView;
+import org.nervos.neuron.view.TitleBar;
 
 import java.util.List;
 
@@ -101,6 +102,7 @@ public class CurrencyActivity extends NBaseActivity {
     @Override
     public void finish() {
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new CurrencyRefreshEvent());
         super.finish();
     }
 

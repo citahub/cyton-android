@@ -7,21 +7,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 import com.zhy.view.flowlayout.TagView;
-
-
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,7 +126,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                     SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
                 } else {
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                    intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                     startActivity(intent);
                 }
                 EventBus.getDefault().post(new CloseWalletInfoEvent());

@@ -1,21 +1,16 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
@@ -23,13 +18,8 @@ import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
-import org.nervos.neuron.fragment.wallet.presenter.WalletFragmentPresenter;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
-import org.objectweb.asm.Handle;
-
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

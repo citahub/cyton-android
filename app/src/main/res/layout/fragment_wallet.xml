@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_background"
+    android:orientation="vertical">
+
+    <org.nervos.neuron.view.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        app:isShowBottomLine="true"
+        app:isShowLeft="false"
+        app:isShowRight="true"
+        app:right_img="@drawable/ic_wallet_exchange"
+        app:title="@string/tab_wallet"
+        app:title_color="@color/font_title" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:focusableInTouchMode="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="vertical">
+
+                <org.nervos.neuron.view.WalletAssetsView
+                    android:id="@+id/view_wallet_assets"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/token"
+                        android:textColor="@color/font_title"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_refresh"
+                        android:layout_width="18dp"
+                        android:layout_height="16dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/tv_token"
+                        android:background="@drawable/ic_token_refresh" />
+
+                    <ImageView
+                        android:id="@+id/iv_right_arrow"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/right_arrow" />
+
+                    <TextView
+                        android:id="@+id/tv_add_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_right_arrow"
+                        android:text="@string/add_assets"
+                        android:textColor="@color/font_title_second" />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

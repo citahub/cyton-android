@@ -8,11 +8,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.runtime.PermissionRequest;
-
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportFingerTipActivity;
@@ -20,16 +18,16 @@ import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
-import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.fragment.wallet.view.WalletsFragment;
+import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.view.button.CommonButton;
 
 import java.util.concurrent.ExecutorService;
@@ -136,7 +134,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
                 SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
             } else {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletsFragment.TAG);
+                intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                 getActivity().startActivity(intent);
             }
             EventBus.getDefault().post(new TokenRefreshEvent());
