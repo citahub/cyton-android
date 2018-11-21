@@ -142,14 +142,11 @@ public class EthRpcService {
     }
 
     private static void saveEtherTransaction(Context context, String from, String to, String value, String hash) {
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
-                        EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
-                item.blockNumber = EthRpcService.getBlockNumber().toString();
-                DBEtherTransactionUtil.save(context, item);
-            }
+        executorService.execute(() -> {
+            TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
+                    EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
+            item.blockNumber = EthRpcService.getBlockNumber().toString();
+            DBEtherTransactionUtil.save(context, item);
         });
     }
 
@@ -209,7 +206,7 @@ public class EthRpcService {
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
-                        saveEtherERC20Transaction(context, walletItem.address, tokenItem.contractAddress,
+                        saveEtherERC20Transaction(context, tokenItem, walletItem.address, address,
                                 String.valueOf(value), ethSendTransaction.getTransactionHash());
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
@@ -221,14 +218,14 @@ public class EthRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static void saveEtherERC20Transaction(Context context, String from, String to, String value, String hash) {
+    private static void saveEtherERC20Transaction(Context context, TokenItem tokenItem, String from, String to, String value, String hash) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
                         EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
                 item.blockNumber = EthRpcService.getBlockNumber().toString();
-                item.contractAddress = to;
+                item.contractAddress = tokenItem.contractAddress;
                 DBEtherTransactionUtil.save(context, item);
             }
         });
