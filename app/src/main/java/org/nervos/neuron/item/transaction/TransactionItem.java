@@ -127,4 +127,17 @@ public class TransactionItem implements Parcelable {
         @Override
         public TransactionItem[] newArray(int size) {return new TransactionItem[size];}
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        TransactionItem other = (TransactionItem)obj;
+
+        if (hash == null) {
+            return other.hash == null;
+        } else return hash.equalsIgnoreCase(other.hash);
+    }
 }

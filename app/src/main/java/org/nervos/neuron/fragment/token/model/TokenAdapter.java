@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -85,15 +86,15 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
                     .apply(options)
                     .into(holder.tokenImage);
         }
-        if (tokenItem != null) {
-            holder.tokenName.setText(tokenItem.symbol);
-            holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
-        }
+
+        holder.tokenName.setText(tokenItem.symbol);
+        holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
+
         if (!TextUtils.isEmpty(tokenItem.chainName)) {
             holder.tokenNetworkText.setText(tokenItem.chainName);
         } else {
             if (tokenItem.chainId < 0) {
-                holder.tokenNetworkText.setText(activity.getString(R.string.ethereum_mainnet));
+                holder.tokenNetworkText.setText(EtherUtil.getEthNodeName());
             }
         }
         if (tokenItem.currencyPrice == 0.00) {

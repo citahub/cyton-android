@@ -82,9 +82,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (!transactionItem.from.equalsIgnoreCase(address)) {
                 viewHolder.transactionIdText.setText(transactionItem.from);
             } else {
-                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to) ||
-                        TextUtils.isEmpty(transactionItem.to) ?
-                        context.getResources().getString(R.string.contract_create) : transactionItem.to);
+                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionItem.to)
+                        || TextUtils.isEmpty(transactionItem.to)
+                        ? context.getResources().getString(R.string.contract_create) : transactionItem.to);
             }
             String value = (transactionItem.from.equalsIgnoreCase(address) ? "-" : "+") + transactionItem.value;
             viewHolder.transactionAmountText.setText(value);

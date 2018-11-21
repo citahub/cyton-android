@@ -27,6 +27,7 @@ import org.web3j.crypto.Keys;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -151,6 +152,7 @@ public class TransactionListPresenter {
                     return;
                 }
                 if (isEther(tokenItem)) {
+                    list = removeRepetition(list);
                     for (TransactionItem item : list) {
                         item.chainId = EtherUtil.getEtherId();
                         item.chainName = EtherUtil.getEthNodeName();
@@ -223,6 +225,18 @@ public class TransactionListPresenter {
         }
         return list;
     }
+
+
+    public static List<TransactionItem> removeRepetition(List<TransactionItem> list) {
+        List<TransactionItem> tempList = new ArrayList<>();
+        for (TransactionItem item : list) {
+            if (!tempList.contains(item)) {
+                tempList.add(item);
+            }
+        }
+        return tempList;
+    }
+
 
     private void getUnofficialNoneData() {
         listener.hideProgressBar();
