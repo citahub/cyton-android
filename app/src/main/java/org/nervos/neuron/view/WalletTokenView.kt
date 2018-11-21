@@ -22,7 +22,6 @@ import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.service.http.WalletService
 import org.nervos.neuron.util.AddressUtil
 import org.nervos.neuron.util.CurrencyUtil
-import org.nervos.neuron.util.LogUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.url.HttpUrls
@@ -118,9 +117,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         TokenService.getCurrency(tokenItem.symbol, currencyItem.name).subscribe(object : Subscriber<String>() {
             override fun onCompleted() {
                 if (DBWalletUtil.getCurrentWallet(context).address == address) {
-                    LogUtil.e(tokenItem.symbol + "----" + tokenItem.currencyPrice)
-                    val df = DecimalFormat("######0.00")
-                    tv_token_currency.text = currencyItem.symbol + df.format(tokenItem.currencyPrice)
+                    tv_token_currency.text = currencyItem.symbol + DecimalFormat("######0.00").format(tokenItem.currencyPrice)
                     tv_token_currency.visibility = View.VISIBLE
                     EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                 }
@@ -135,7 +132,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                 if (!TextUtils.isEmpty(s)) {
                     val price = java.lang.Double.parseDouble(s.trim { it <= ' ' })
                     val df = DecimalFormat("######0.0000")
-                    tokenItem.currencyPrice = java.lang.Double.parseDouble(df.format(price * tokenItem.balance))
+                    tokenItem.currencyPrice = java.lang.Double.parseDouble(DecimalFormat("######0.0000").format(price * tokenItem.balance))
                 } else
                     tokenItem.currencyPrice = 0.00
             }

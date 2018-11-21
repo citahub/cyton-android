@@ -26,12 +26,8 @@ class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout
     }
 
     private fun initAction() {
-        rl_transfer.setOnClickListener {
-
-        }
         rl_receive.setOnClickListener {
-            val intent = Intent(context, ReceiveQrCodeActivity::class.java)
-            context.startActivity(intent)
+            context.startActivity(Intent(context, ReceiveQrCodeActivity::class.java))
         }
     }
 
