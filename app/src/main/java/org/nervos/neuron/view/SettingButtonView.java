@@ -7,7 +7,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
@@ -18,14 +20,14 @@ import org.nervos.neuron.util.DipUtils;
  */
 public class SettingButtonView extends ConstraintLayout {
 
-    private ImageView iconImage, openImage, switchImage, rightImage;
+    private ImageView iconImage, openImage, rightImage;
+    private Switch endSwitch;
     private TextView nameText, rightText;
     private View line;
     private TypedArray ta;
-    private openListener openListener = null;
-    private switchListener switchListener = null;
+    private OnClickListener onClickListener = null;
+    private OnCheckedChangeListener onCheckedChangeListener = null;
     private ConstraintLayout root;
-    private boolean switchStatus = false;
     private Context context;
 
     public SettingButtonView(Context context, AttributeSet attrs) {
@@ -45,7 +47,7 @@ public class SettingButtonView extends ConstraintLayout {
         rightText = findViewById(R.id.tv_right);
         openImage = findViewById(R.id.iv_setting_open);
         root = findViewById(R.id.root);
-        switchImage = findViewById(R.id.iv_setting_switch);
+        endSwitch = findViewById(R.id.iv_setting_switch);
         rightImage = findViewById(R.id.iv_setting_right);
         line = findViewById(R.id.line);
     }
@@ -70,10 +72,8 @@ public class SettingButtonView extends ConstraintLayout {
         } else
             rightText.setVisibility(GONE);
         boolean switchButton = ta.getBoolean(R.styleable.SettingButtonView_switch_button, false);
-        if (switchButton)
-            switchImage.setVisibility(VISIBLE);
-        else
-            switchImage.setVisibility(GONE);
+        endSwitch.setVisibility(switchButton ? VISIBLE : GONE);
+
         boolean rightArrow = ta.getBoolean(R.styleable.SettingButtonView_right_arrow, true);
         if (rightArrow) {
             openImage.setVisibility(VISIBLE);
@@ -116,41 +116,39 @@ public class SettingButtonView extends ConstraintLayout {
         nameText.setText(text);
     }
 
-    public void setOpenListener(openListener openListener) {
-        this.openListener = openListener;
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
-    public void setSwitchListener(switchListener switchListener) {
-        this.switchListener = switchListener;
+    public void setSwitchCheckedListener(OnCheckedChangeListener onCheckedChangeListener) {
+        this.onCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void setSwitch(boolean is) {
-        if (is) {
-            switchStatus = true;
-            switchImage.setImageResource(R.drawable.ic_setting_onoff_on);
-        } else {
-            switchStatus = false;
-            switchImage.setImageResource(R.drawable.ic_setting_onoff_off);
-        }
+    public void setSwitchCheck(boolean isChecked) {
+        endSwitch.setChecked(isChecked);
     }
 
     private void initAction() {
         root.setOnClickListener((view) -> {
-            if (openListener != null)
-                openListener.open();
+            if (onClickListener != null)
+                onClickListener.open();
         });
-        switchImage.setOnClickListener((view) -> {
-            if (switchListener != null) {
-                switchListener.click(!switchStatus);
+
+        endSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (onCheckedChangeListener != null) {
+                    onCheckedChangeListener.onCheckedChanged(isChecked);
+                }
             }
         });
     }
 
-    public interface openListener {
+    public interface OnClickListener {
         void open();
     }
 
-    public interface switchListener {
-        void click(boolean chosen);
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(boolean isChecked);
     }
 }

@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
@@ -25,6 +26,7 @@ import org.nervos.neuron.util.NumberUtil;
 import org.web3j.crypto.Keys;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> {
 
@@ -57,7 +59,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     public void onBindViewHolder(@NonNull TokenViewHolder holder, int position) {
         TokenItem tokenItem = tokenItemList.get(position);
         if (TextUtils.isEmpty(tokenItem.avatar)) {
-            if (tokenItem.chainId < 0) {
+            if (isEther(tokenItem)) {
                 if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
                     String address = tokenItem.contractAddress;
                     if (AddressUtil.isAddressValid(address))
@@ -90,19 +92,12 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         holder.tokenName.setText(tokenItem.symbol);
         holder.tokenBalance.setText(NumberUtil.getDecimal8ENotation(tokenItem.balance));
 
-        if (!TextUtils.isEmpty(tokenItem.chainName)) {
-            holder.tokenNetworkText.setText(tokenItem.chainName);
-        } else {
-            if (tokenItem.chainId < 0) {
-                holder.tokenNetworkText.setText(EtherUtil.getEthNodeName());
-            }
-        }
-        if (tokenItem.currencyPrice == 0.00) {
-            holder.tokenCurrencyText.setText("");
-        } else {
-            holder.tokenCurrencyText.setText(listener.getCurrency().getSymbol() +
-                    NumberUtil.getDecimalValid_2(tokenItem.currencyPrice));
-        }
+        holder.tokenNetworkText.setText(isEther(tokenItem)
+                ? EtherUtil.getEthNodeName() : Objects.requireNonNull(DBChainUtil.getChain(activity, tokenItem.chainId)).name);
+
+        holder.tokenCurrencyText.setText(tokenItem.currencyPrice == 0.0 ? "" : listener.getCurrency().getSymbol()
+                + NumberUtil.getDecimalValid_2(tokenItem.currencyPrice));
+
         holder.root.setOnClickListener((view) -> {
             listener.onItemClick(view, position);
         });
@@ -136,6 +131,10 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
         void onItemClick(View view, int position);
 
         CurrencyItem getCurrency();
+    }
+
+    private boolean isEther(TokenItem tokenItem) {
+        return tokenItem.chainId < 0;
     }
 
 }

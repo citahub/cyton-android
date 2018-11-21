@@ -43,7 +43,6 @@ public class WalletsFragment extends NBaseFragment {
     private TokenListFragment tokenListFragment;
     private CollectionListFragment collectionListFragment = null;
     private WalletFragmentPresenter presenter;
-    private Handler handler = new Handler();
 
     private String[] mTitles = {"代币", "藏品"};
 

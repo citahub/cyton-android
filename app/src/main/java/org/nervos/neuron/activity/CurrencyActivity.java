@@ -73,7 +73,7 @@ public class CurrencyActivity extends NBaseActivity {
                 holder.currency.setRightImageShow(false);
             }
             holder.currency.setNameText(currency.getName());
-            holder.currency.setOpenListener(() -> {
+            holder.currency.setOnClickListener(() -> {
                 SharePrefUtil.putString(ConstantUtil.CURRENCY, currency.getName());
                 notifyDataSetChanged();
                 finish();

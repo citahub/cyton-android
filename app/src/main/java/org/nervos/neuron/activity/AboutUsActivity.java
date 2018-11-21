@@ -53,22 +53,22 @@ public class AboutUsActivity extends NBaseActivity {
     }
 
     private void initListener() {
-        sourceCodeSBV.setOpenListener(() -> {
+        sourceCodeSBV.setOnClickListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.SOURCE_CODE_GITHUB_URL);
         });
-        serverPrivateSBV.setOpenListener(() -> {
+        serverPrivateSBV.setOnClickListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PRODUCT_AGREEMENT_URL);
         });
-        NervosSBV.setOpenListener(() -> {
+        NervosSBV.setOnClickListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.NERVOS_WEB_URL);
         });
-        InfuraSBV.setOpenListener(() -> {
+        InfuraSBV.setOnClickListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.INFURA_URL);
         });
-        openSeaSBV.setOpenListener(() -> {
+        openSeaSBV.setOnClickListener(() -> {
             SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.OPEN_SEA_URL);
         });
-        peckShieldSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PECKSHEILD_URL));
-        citaSBV.setOpenListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.CITA_GITHUB_URL));
+        peckShieldSBV.setOnClickListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.PECKSHEILD_URL));
+        citaSBV.setOnClickListener(() -> SimpleWebActivity.gotoSimpleWeb(AboutUsActivity.this, HttpUrls.CITA_GITHUB_URL));
     }
 }
