@@ -220,7 +220,9 @@ public class AppChainRpcService {
                         Observable.error(e);
                     }
                     return Observable.error(new Throwable(TRANSFER_FAIL));
-                });
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static AppSendTransaction signTransaction(Transaction transaction, String password) throws Exception {
