@@ -12,11 +12,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.view_token_item.view.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity
-import org.nervos.neuron.event.CurrencyRefreshEvent
 import org.nervos.neuron.event.TokenBalanceEvent
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.item.WalletItem
