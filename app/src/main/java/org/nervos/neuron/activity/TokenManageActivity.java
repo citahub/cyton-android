@@ -12,7 +12,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -118,13 +120,10 @@ public class TokenManageActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder) holder;
-                if (tokenList.get(position).logo == null ||
-                        TextUtils.isEmpty(tokenList.get(position).logo.src)) {
+                if (tokenList.get(position).logo == null || TextUtils.isEmpty(tokenList.get(position).logo.src)) {
                     String address = tokenList.get(position).address;
-                    if (AddressUtil.isAddressValid(address))
-                        address = Keys.toChecksumAddress(address);
-                    RequestOptions options = new RequestOptions()
-                            .error(R.drawable.ether_big);
+                    if (AddressUtil.isAddressValid(address)) address = Keys.toChecksumAddress(address);
+                    RequestOptions options = new RequestOptions().error(R.drawable.ether_big);
                     Glide.with(mActivity)
                             .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
                             .apply(options)
@@ -139,21 +138,18 @@ public class TokenManageActivity extends BaseActivity {
                 viewHolder.tokenContractAddress.setText(tokenList.get(position).address);
                 tokenList.get(position).isSelected =
                         DBWalletUtil.checkTokenInCurrentWallet(mActivity, tokenList.get(position).symbol);
-                viewHolder.tokenSelectImage.setImageResource(tokenList.get(position).isSelected
-                        ? R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
-                viewHolder.tokenSelectImage.setOnClickListener(new View.OnClickListener() {
+
+                viewHolder.tokenSelectSwitch.setChecked(tokenList.get(position).isSelected);
+                viewHolder.tokenSelectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        int mPosition = holder.getAdapterPosition();
-                        tokenList.get(mPosition).isSelected = !tokenList.get(mPosition).isSelected;
-                        viewHolder.tokenSelectImage.setImageResource(tokenList.get(mPosition).isSelected
-                                ? R.drawable.ic_setting_onoff_on : R.drawable.ic_setting_onoff_off);
-                        if (tokenList.get(mPosition).isSelected) {
-                            DBWalletUtil.addTokenToCurrentWallet(mActivity,
-                                    new TokenItem(tokenList.get(mPosition)));
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        tokenList.get(position).isSelected = !tokenList.get(position).isSelected;
+                        viewHolder.tokenSelectSwitch.setChecked(tokenList.get(position).isSelected);
+
+                        if (tokenList.get(position).isSelected) {
+                            DBWalletUtil.addTokenToCurrentWallet(mActivity, new TokenItem(tokenList.get(position)));
                         } else {
-                            DBWalletUtil.deleteTokenFromCurrentWallet(mActivity,
-                                    new TokenItem(tokenList.get(mPosition)));
+                            DBWalletUtil.deleteTokenFromCurrentWallet(mActivity, new TokenItem(tokenList.get(position)));
                         }
                     }
                 });
@@ -172,7 +168,7 @@ public class TokenManageActivity extends BaseActivity {
             TextView tokenName;
             TextView tokenSymbol;
             TextView tokenContractAddress;
-            ImageView tokenSelectImage;
+            Switch tokenSelectSwitch;
 
             public TokenViewHolder(View view) {
                 super(view);
@@ -180,7 +176,7 @@ public class TokenManageActivity extends BaseActivity {
                 tokenName = view.findViewById(R.id.token_name_text);
                 tokenSymbol = view.findViewById(R.id.token_symbol_text);
                 tokenContractAddress = view.findViewById(R.id.token_contract_address);
-                tokenSelectImage = view.findViewById(R.id.image_token_select);
+                tokenSelectSwitch = view.findViewById(R.id.switch_token_select);
             }
         }
     }
