@@ -17,8 +17,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 
 import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
@@ -184,11 +186,12 @@ public class NeuronWebView extends WebView {
 
     private void callbackToJS(long callbackId, String function, String param) {
         String callback = String.format(function, callbackId, param);
+        LogUtil.d("callback: " + callback);
         post(() -> evaluateJavascript(callback, value -> Log.d("WEB_VIEW", value)));
     }
 
     private String getSuccessFunction(String param) {
-        return isJson(param)? JS_PROTOCOL_JSON_ON_SUCCESSFUL : JS_PROTOCOL_ON_SUCCESSFUL;
+        return isJson(param) ? JS_PROTOCOL_JSON_ON_SUCCESSFUL : JS_PROTOCOL_ON_SUCCESSFUL;
     }
 
     private String getFailFunction(String param) {

@@ -13,6 +13,7 @@ import org.nervos.neuron.item.response.AppChainERC20TransferResponse;
 import org.nervos.neuron.item.response.EthTransactionResponse;
 import org.nervos.neuron.item.response.AppChainTransactionResponse;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
@@ -135,13 +136,15 @@ public class HttpService {
                     final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
                     Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
 
-                    AppChainTransactionResponse response = new Gson().fromJson(appChainCall.execute().body().string(),
-                            AppChainTransactionResponse.class);
+                    String res = appChainCall.execute().body().string();
+                    LogUtil.d("response: " + res);
+
+                    AppChainTransactionResponse response = new Gson().fromJson(res, AppChainTransactionResponse.class);
                     for (TransactionItem item : response.result.transactions) {
-                        item.chainName = result.chainName;
+                        item.chainName = result.getChainName();
                         item.value = NumberUtil.getEthFromWeiForStringDecimal8Sub(Numeric.toBigInt(item.value));
-                        item.symbol = result.tokenSymbol;
-                        item.nativeSymbol = result.tokenSymbol;
+                        item.symbol = result.getTokenSymbol();
+                        item.nativeSymbol = result.getTokenSymbol();
                     }
                     return Observable.just(response.result.transactions);
                 } catch (Exception e) {
@@ -177,7 +180,7 @@ public class HttpService {
                         item.value = (NumberUtil.divideDecimal8Sub(
                                 new BigDecimal(item.value), tokenItem.decimals));
                         item.symbol = tokenItem.symbol;
-                        item.nativeSymbol = result.tokenSymbol;
+                        item.nativeSymbol = result.getTokenSymbol();
                     }
                     return Observable.just(response.result.transfers);
                 } catch (Exception e) {

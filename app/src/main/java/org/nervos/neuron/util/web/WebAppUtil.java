@@ -93,10 +93,10 @@ public class WebAppUtil {
                 AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
                 AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
                 if (ethMetaData != null) {
-                    chainItem.name = ethMetaData.chainName;
-                    chainItem.tokenAvatar = ethMetaData.tokenAvatar;
-                    chainItem.tokenSymbol = ethMetaData.tokenSymbol;
-                    chainItem.tokenName = ethMetaData.tokenName;
+                    chainItem.name = ethMetaData.getChainName();
+                    chainItem.tokenAvatar = ethMetaData.getTokenAvatar();
+                    chainItem.tokenSymbol = ethMetaData.getTokenSymbol();
+                    chainItem.tokenName = ethMetaData.getTokenName();
                 } else {
                     Observable.error(new Throwable(webView.getContext().getString(R.string.meta_data_error) + chainItem.httpProvider));
                 }
