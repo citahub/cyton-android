@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment.collection;
+package org.nervos.neuron.activity.collection;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CollectionItem;
 
 import java.util.List;
+
 /**
  * Created by duanyytop on 2018/8/7
  */

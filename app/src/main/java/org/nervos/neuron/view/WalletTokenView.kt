@@ -2,14 +2,11 @@ package org.nervos.neuron.view
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.view_token_item.view.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
@@ -20,12 +17,10 @@ import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.item.WalletTokenLoadItem
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.service.http.WalletService
-import org.nervos.neuron.util.AddressUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
+import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
-import org.nervos.neuron.util.url.HttpUrls
-import org.web3j.crypto.Keys
 import rx.Subscriber
 import java.text.DecimalFormat
 
@@ -45,7 +40,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
     fun setData(address: String, item: WalletTokenLoadItem) {
         tokenItem = item
         this.address = address
-        setLogo()
+        TokenLogoUtil.setLogo(tokenItem, context, iv_token_logo)
         tv_token_name.text = tokenItem.symbol
         tv_loading.text = resources.getString(R.string.wallet_token_loading)
         tv_token_currency.visibility = View.GONE
@@ -87,31 +82,6 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         }
     }
 
-    private fun setLogo() {
-        if (tokenItem.chainId < 0 && !TextUtils.isEmpty(tokenItem.contractAddress)) {
-            var address = tokenItem.contractAddress
-            if (AddressUtil.isAddressValid(address))
-                address = Keys.toChecksumAddress(address)
-            val options = RequestOptions()
-                    .error(R.drawable.ether_big)
-                    .placeholder(R.drawable.ether_big)
-            Glide.with(context)
-                    .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
-                    .apply(options)
-                    .into(iv_token_logo)
-
-        } else {
-            var icon = if (tokenItem.chainId < 0) R.drawable.ether_big else R.mipmap.ic_launcher
-            val options = RequestOptions()
-                    .error(icon)
-                    .placeholder(icon)
-            Glide.with(context)
-                    .load(if (TextUtils.isEmpty(tokenItem.avatar)) "" else Uri.parse(tokenItem.avatar))
-                    .apply(options)
-                    .into(iv_token_logo)
-        }
-    }
-
     private fun getPrice() {
         var currencyItem = CurrencyUtil.getCurrencyItem(context)
         TokenService.getCurrency(tokenItem.symbol, currencyItem.name).subscribe(object : Subscriber<String>() {
@@ -131,7 +101,6 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             override fun onNext(s: String) {
                 if (!TextUtils.isEmpty(s)) {
                     val price = java.lang.Double.parseDouble(s.trim { it <= ' ' })
-                    val df = DecimalFormat("######0.0000")
                     tokenItem.currencyPrice = java.lang.Double.parseDouble(DecimalFormat("######0.0000").format(price * tokenItem.balance))
                 } else
                     tokenItem.currencyPrice = 0.00

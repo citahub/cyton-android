@@ -199,6 +199,7 @@
     <string name="wallet_token_loading">加载中...</string>
     <string name="wallet_token_loading_failed">加载失败</string>
     <string name="wallet_token_no_assets">暂无资产</string>
+    <string name="dapp_title">DApp</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>

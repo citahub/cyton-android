@@ -1,13 +1,11 @@
 package org.nervos.neuron.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.greenrobot.eventbus.EventBus;
@@ -25,13 +21,11 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.AddTokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.FileUtil;
+import org.nervos.neuron.util.TokenLogoUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.TitleBar;
-import org.web3j.crypto.Keys;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -118,19 +112,7 @@ public class TokenManageActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TokenViewHolder) {
                 TokenViewHolder viewHolder = (TokenViewHolder) holder;
-                if (tokenList.get(position).logo == null || TextUtils.isEmpty(tokenList.get(position).logo.src)) {
-                    String address = tokenList.get(position).address;
-                    if (AddressUtil.isAddressValid(address)) address = Keys.toChecksumAddress(address);
-                    RequestOptions options = new RequestOptions().error(R.drawable.ether_big);
-                    Glide.with(mActivity)
-                            .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
-                            .apply(options)
-                            .into(viewHolder.tokenImage);
-                } else {
-                    Glide.with(mActivity)
-                            .load(Uri.parse(tokenList.get(position).logo.src))
-                            .into(viewHolder.tokenImage);
-                }
+                TokenLogoUtil.Companion.setLogo(new TokenItem(tokenList.get(position)), mActivity, viewHolder.tokenImage);
                 viewHolder.tokenName.setText(tokenList.get(position).name);
                 viewHolder.tokenSymbol.setText(tokenList.get(position).symbol);
                 viewHolder.tokenContractAddress.setText(tokenList.get(position).address);
