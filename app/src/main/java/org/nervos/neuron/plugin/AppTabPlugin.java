@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
 import org.nervos.neuron.activity.AddWebsiteActivity;
+import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity;
 
 public class AppTabPlugin {
 
@@ -14,9 +15,8 @@ public class AppTabPlugin {
         mContext = context;
     }
 
-    @JavascriptInterface
-    public void startAddWebsitePage() {
-        mContext.startActivity(new Intent(mContext, AddWebsiteActivity.class));
+    public void toWebCollection() {
+        mContext.startActivity(new Intent(mContext, CollectWebsiteActivity.class));
     }
 
 }

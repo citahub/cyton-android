@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <WebView
-        android:id="@+id/webview"
+    <org.nervos.neuron.view.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="48dp"
+        app:isShowBottomLine="false"
+        app:isShowLeft="false"
+        app:isShowRight="true"
+        app:right_img="@drawable/icon_dapp_search"
+        app:title="@string/dapp_title"
+        app:title_color="@color/font_title" />
 
-    <org.nervos.neuron.view.WebErrorView
-        android:id="@+id/view_web_error"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <org.nervos.neuron.view.WebErrorView
+            android:id="@+id/view_web_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
+</LinearLayout>

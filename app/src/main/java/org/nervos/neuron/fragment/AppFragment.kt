@@ -2,22 +2,17 @@ package org.nervos.neuron.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
-
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI
-
-import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
+import org.nervos.neuron.activity.AddWebsiteActivity
 import org.nervos.neuron.activity.AppWebActivity
 import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity
 import org.nervos.neuron.plugin.AppTabPlugin
 import org.nervos.neuron.util.url.HttpUrls
 import org.nervos.neuron.util.web.WebAppUtil
+import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.WebErrorView
 import org.nervos.neuron.view.webview.SimpleWebViewClient
 
@@ -54,6 +49,10 @@ class AppFragment : NBaseFragment() {
             webView!!.visibility = View.VISIBLE
             webErrorView!!.visibility = View.GONE
         }
+        var title = findViewById(R.id.title) as TitleBar
+        title.setOnRightClickListener {
+            activity!!.startActivity(Intent(activity, AddWebsiteActivity::class.java))
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -63,8 +62,8 @@ class AppFragment : NBaseFragment() {
         WebAppUtil.initWebViewCache(context, webView!!.settings)
     }
 
+    @SuppressLint("JavascriptInterface")
     private fun initWebView() {
-
         webView!!.webViewClient = object : SimpleWebViewClient(context, webErrorView) {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 if (url.contains(COLLECT_WEBSITE)) {
