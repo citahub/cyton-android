@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.erc721.Erc721Activity;
+import org.nervos.neuron.activity.collection.CollectActivity;
 import org.nervos.neuron.item.CollectionItem;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
@@ -59,7 +59,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        collectionItem = getIntent().getParcelableExtra(Erc721Activity.EXTRA_COLLECTION);
+        collectionItem = getIntent().getParcelableExtra(CollectActivity.EXTRA_COLLECTION);
         nameText.setText(collectionItem.name);
         tokenIdText.setText("ID:" + collectionItem.tokenId);
         contractNameText.setText(collectionItem.assetContract.name);

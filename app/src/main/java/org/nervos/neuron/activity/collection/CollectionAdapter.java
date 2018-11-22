@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.erc721;
+package org.nervos.neuron.activity.collection;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by duanyytop on 2018/8/7
  */
-public class Erc721Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 1;
     public static final int VIEW_TYPE_EMPTY = 0;
@@ -27,7 +27,7 @@ public class Erc721Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private Context context;
     private List<CollectionItem> collectionItemList;
 
-    public Erc721Adapter(Context context, List<CollectionItem> collectionItemList) {
+    public CollectionAdapter(Context context, List<CollectionItem> collectionItemList) {
         this.context = context;
         this.collectionItemList = collectionItemList;
         notifyDataSetChanged();

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity
-import org.nervos.neuron.activity.erc721.Erc721Activity
+import org.nervos.neuron.activity.collection.CollectActivity
 
 class AppTabPlugin(private val mContext: Context) {
 
@@ -15,7 +15,7 @@ class AppTabPlugin(private val mContext: Context) {
 
     @JavascriptInterface
     fun toErc721() {
-        mContext.startActivity(Intent(mContext, Erc721Activity::class.java))
+        mContext.startActivity(Intent(mContext, CollectActivity::class.java))
     }
 
 }

@@ -1,8 +1,8 @@
-package org.nervos.neuron.activity.erc721
+package org.nervos.neuron.activity.collection
 
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_collection.*
+import kotlinx.android.synthetic.main.activity_collection.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.CollectionDetailActivity
 import org.nervos.neuron.activity.NBaseActivity
@@ -15,24 +15,24 @@ import java.util.*
 /**
  * Created by BaojunCZ on 2018/11/22.
  */
-class Erc721Activity : NBaseActivity() {
+class CollectActivity : NBaseActivity() {
 
     companion object {
         const val EXTRA_COLLECTION = "collection"
     }
 
-    private lateinit var mAdapter: Erc721Adapter
+    private lateinit var mAdapter: CollectionAdapter
     private var mCollectionItemList: MutableList<CollectionItem> = ArrayList()
 
     override fun getContentLayout(): Int {
-        return R.layout.fragment_collection
+        return R.layout.activity_collection
     }
 
     override fun initView() {
     }
 
     override fun initData() {
-        mAdapter = Erc721Adapter(mActivity, mCollectionItemList)
+        mAdapter = CollectionAdapter(mActivity, mCollectionItemList)
         recycler.layoutManager = LinearLayoutManager(mActivity)
         recycler.adapter = mAdapter
 
