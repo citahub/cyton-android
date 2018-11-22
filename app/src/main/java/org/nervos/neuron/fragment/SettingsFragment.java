@@ -161,6 +161,7 @@ public class SettingsFragment extends NBaseFragment {
             }));
             mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
                 EthRpcService.initNodeUrl();
+                updateEthNode();
                 String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
                 if (node.contains("_")) node = node.replace("_", " ");
                 mSbvSelectEth.setRightText(node);
@@ -180,6 +181,11 @@ public class SettingsFragment extends NBaseFragment {
         ethNodeList.put(1, ConstantUtil.ETH_NET_ROPSTEN_TEST);
         ethNodeList.put(2, ConstantUtil.ETH_NET_KOVAN_TEST);
         ethNodeList.put(3, ConstantUtil.ETH_NET_RINKEBY_TEST);
+
+        updateEthNode();
+    }
+
+    private void updateEthNode() {
         switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
             case ConstantUtil.ETH_NET_MAIN:
             default:
