@@ -109,9 +109,8 @@ public class ImportMnemonicFragment extends BaseFragment {
 
     private void showSelectDialog() {
         selectorDialog = new SelectorDialog(getActivity());
-        selectorDialog.setTitleText(getString(R.string.path));
         selectorDialog.setRecyclerView(new RecyclerAdapter());
-        selectorDialog.setOkListener(view1 -> {
+        selectorDialog.setOnOkListener(view1 -> {
             if (currentIndex != paths.size() - 1) {
                 pathText.setText(paths.get(currentIndex));
                 formatText.setText(formats.get(currentIndex));

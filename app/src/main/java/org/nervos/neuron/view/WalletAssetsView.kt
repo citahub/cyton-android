@@ -5,15 +5,22 @@ import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import kotlinx.android.synthetic.main.view_wallet_assets.view.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.ReceiveQrCodeActivity
+import org.nervos.neuron.activity.transfer.TransferActivity
+import org.nervos.neuron.fragment.SimpleSelectDialog
+import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.util.CurrencyUtil
+import org.nervos.neuron.util.db.DBWalletUtil
 
 /**
  * Created by BaojunCZ on 2018/11/19.
  */
 class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+
+    private lateinit var mList: List<TokenItem>
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_wallet_assets, this)
@@ -28,6 +35,18 @@ class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout
     private fun initAction() {
         rl_receive.setOnClickListener {
             context.startActivity(Intent(context, ReceiveQrCodeActivity::class.java))
+        }
+        rl_transfer.setOnClickListener {
+            mList = DBWalletUtil.getCurrentWallet(context).tokenItems
+            var list = mutableListOf<String>()
+            mList.forEach { item -> list.add(item.symbol) }
+            var dialog = SimpleSelectDialog(context, list)
+            dialog.setOnOkListener(View.OnClickListener {
+                val intent = Intent(context, TransferActivity::class.java)
+                intent.putExtra(TransferActivity.EXTRA_TOKEN, mList[dialog.mSelected])
+                context.startActivity(intent)
+                dialog.dismiss()
+            })
         }
     }
 

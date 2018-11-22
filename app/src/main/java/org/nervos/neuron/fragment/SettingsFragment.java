@@ -5,16 +5,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
@@ -23,18 +18,18 @@ import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
+import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
-import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.view.dialog.SelectorDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by duanyytop on 2018/4/17
@@ -48,10 +43,9 @@ public class SettingsFragment extends NBaseFragment {
     private CircleImageView photoImage;
     private RelativeLayout walletLayout;
     private AuthFingerDialog mAuthFingerDialog = null;
-    private SelectorDialog mEthNodeDialog = null;
-    private SparseArray<String> ethNodeList = new SparseArray<>();
+    private List<String> ethNodeList = Arrays.asList(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH_NET_ROPSTEN_TEST
+            , ConstantUtil.ETH_NET_KOVAN_TEST, ConstantUtil.ETH_NET_RINKEBY_TEST);
     private int ethNodeIndex;
-    private EthNodeAdapter mEthNodeAdapter;
     private FingerPrintController mFingerPrintController;
 
     @Override
@@ -80,7 +74,7 @@ public class SettingsFragment extends NBaseFragment {
         walletAddressText.setText(walletItem.address);
         photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
 
-        initEthNode();
+        updateEthNode();
 
         mFingerPrintController = new FingerPrintController(getActivity());
         mSbvCurrency.setRightText(SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY));
@@ -106,33 +100,30 @@ public class SettingsFragment extends NBaseFragment {
             Intent intent = new Intent(getActivity(), CurrencyActivity.class);
             startActivityForResult(intent, Currency_Code);
         });
-        mSbvFingerPrint.setSwitchCheckedListener(new SettingButtonView.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(boolean isChecked) {
-                if (isChecked) {
-                    //setting fingerprint
-                    if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
-                        if (mAuthFingerDialog == null) mAuthFingerDialog = new AuthFingerDialog(getActivity());
-                        mAuthFingerDialog.setOnShowListener((dialogInterface) -> {
-                            mFingerPrintController.authenticate(authenticateResultCallback);
-                        });
-                        mAuthFingerDialog.setOnDismissListener((dialog) -> {
-                            mFingerPrintController.cancelAuth();
-                            mSbvFingerPrint.setSwitchCheck(false);
-                        });
-                        mAuthFingerDialog.show();
-                    } else {
-                        ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
-                        dialog.setOnCancelClickListener(view -> {
-                            FingerPrintController.openFingerPrintSettingPage(getActivity());
-                            view.dismiss();
-                        });
-                    }
+        mSbvFingerPrint.setSwitchCheckedListener(isChecked -> {
+            if (isChecked) {
+                //setting fingerprint
+                if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
+                    if (mAuthFingerDialog == null) mAuthFingerDialog = new AuthFingerDialog(getActivity());
+                    mAuthFingerDialog.setOnShowListener((dialogInterface) -> {
+                        mFingerPrintController.authenticate(authenticateResultCallback);
+                    });
+                    mAuthFingerDialog.setOnDismissListener((dialog) -> {
+                        mFingerPrintController.cancelAuth();
+                        mSbvFingerPrint.setSwitchCheck(false);
+                    });
+                    mAuthFingerDialog.show();
                 } else {
-                    //close fingerprint
-                    SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, false);
-                    mSbvFingerPrint.setSwitchCheck(false);
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
+                    dialog.setOnCancelClickListener(view -> {
+                        FingerPrintController.openFingerPrintSettingPage(getActivity());
+                        view.dismiss();
+                    });
                 }
+            } else {
+                //close fingerprint
+                SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, false);
+                mSbvFingerPrint.setSwitchCheck(false);
             }
         });
         mSbvAboutUs.setOnClickListener(() -> {
@@ -151,38 +142,23 @@ public class SettingsFragment extends NBaseFragment {
             SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_TALK_URL);
         });
         mSbvSelectEth.setOnClickListener(() -> {
-            mEthNodeDialog = new SelectorDialog(getActivity());
-            mEthNodeDialog.setTitleText(getString(R.string.setting_select_eth_net));
-            mEthNodeDialog.setRecyclerView(mEthNodeAdapter);
-            mEthNodeDialog.setOkListener((view -> {
-                ethNodeIndex = mEthNodeAdapter.mIndex;
+            SimpleSelectDialog dialog = new SimpleSelectDialog(getActivity(), ethNodeList);
+            dialog.setMSelected(ethNodeIndex);
+            dialog.setOnOkListener((view -> {
+                ethNodeIndex = dialog.getMSelected();
                 SharePrefUtil.putString(ConstantUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
-                mEthNodeDialog.dismiss();
+                dialog.dismiss();
             }));
-            mEthNodeDialog.setOnDissmissListener(dialogInterface -> {
+            dialog.setOnDissmissListener(dialogInterface -> {
                 EthRpcService.initNodeUrl();
                 updateEthNode();
                 String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
                 if (node.contains("_")) node = node.replace("_", " ");
                 mSbvSelectEth.setRightText(node);
-                mEthNodeDialog.dismiss();
+                dialog.dismiss();
             });
         });
-        walletLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), WalletManageActivity.class));
-            }
-        });
-    }
-
-    private void initEthNode() {
-        ethNodeList.put(0, ConstantUtil.ETH_MAINNET);
-        ethNodeList.put(1, ConstantUtil.ETH_NET_ROPSTEN_TEST);
-        ethNodeList.put(2, ConstantUtil.ETH_NET_KOVAN_TEST);
-        ethNodeList.put(3, ConstantUtil.ETH_NET_RINKEBY_TEST);
-
-        updateEthNode();
+        walletLayout.setOnClickListener(v -> startActivity(new Intent(getContext(), WalletManageActivity.class)));
     }
 
     private void updateEthNode() {
@@ -201,7 +177,6 @@ public class SettingsFragment extends NBaseFragment {
                 ethNodeIndex = 3;
                 break;
         }
-        mEthNodeAdapter = new EthNodeAdapter(ethNodeIndex);
     }
 
     @Override
@@ -239,49 +214,6 @@ public class SettingsFragment extends NBaseFragment {
                     mSbvCurrency.setRightText(SharePrefUtil.getString(ConstantUtil.CURRENCY, "CNY"));
                     break;
             }
-        }
-    }
-
-    class EthNodeAdapter extends RecyclerView.Adapter<ViewHolder> {
-
-        public int mIndex;
-
-        public EthNodeAdapter(int index) {
-            mIndex = index;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_currency, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (mIndex == position) holder.mSbvEthNode.setRightImageShow(true);
-            else holder.mSbvEthNode.setRightImageShow(false);
-
-            holder.mSbvEthNode.setNameText(ethNodeList.get(position).replace("_", " "));
-            holder.mSbvEthNode.setOnClickListener(() -> {
-                mIndex = holder.getAdapterPosition();
-                notifyDataSetChanged();
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return ethNodeList.size();
-        }
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        SettingButtonView mSbvEthNode;
-
-        public ViewHolder(View view) {
-            super(view);
-            mSbvEthNode = view.findViewById(R.id.currency);
         }
     }
 }
