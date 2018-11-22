@@ -21,7 +21,6 @@ import org.nervos.neuron.fragment.NBaseFragment
 import org.nervos.neuron.fragment.token.model.WalletTokenAdapter
 import org.nervos.neuron.item.WalletTokenLoadItem
 import org.nervos.neuron.util.CurrencyUtil
-import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.WalletAssetsView
