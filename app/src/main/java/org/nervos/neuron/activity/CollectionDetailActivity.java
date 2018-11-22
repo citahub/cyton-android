@@ -9,17 +9,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import org.nervos.neuron.R;
-import org.nervos.neuron.fragment.collection.CollectionListFragment;
-import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.activity.erc721.Erc721Activity;
 import org.nervos.neuron.item.CollectionItem;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
 
 /**
@@ -62,7 +59,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        collectionItem = getIntent().getParcelableExtra(CollectionListFragment.EXTRA_COLLECTION);
+        collectionItem = getIntent().getParcelableExtra(Erc721Activity.EXTRA_COLLECTION);
         nameText.setText(collectionItem.name);
         tokenIdText.setText("ID:" + collectionItem.tokenId);
         contractNameText.setText(collectionItem.assetContract.name);

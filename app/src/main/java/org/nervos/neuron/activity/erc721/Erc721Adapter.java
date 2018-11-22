@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment.collection;
+package org.nervos.neuron.activity.erc721;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,17 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.CollectionItem;
 
 import java.util.List;
+
 /**
  * Created by duanyytop on 2018/8/7
  */
-public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Erc721Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 1;
     public static final int VIEW_TYPE_EMPTY = 0;
@@ -28,7 +27,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context context;
     private List<CollectionItem> collectionItemList;
 
-    public CollectionAdapter(Context context, List<CollectionItem> collectionItemList) {
+    public Erc721Adapter(Context context, List<CollectionItem> collectionItemList) {
         this.context = context;
         this.collectionItemList = collectionItemList;
         notifyDataSetChanged();

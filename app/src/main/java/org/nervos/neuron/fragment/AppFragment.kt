@@ -62,7 +62,6 @@ class AppFragment : NBaseFragment() {
         WebAppUtil.initWebViewCache(context, webView!!.settings)
     }
 
-    @SuppressLint("JavascriptInterface")
     private fun initWebView() {
         webView!!.webViewClient = object : SimpleWebViewClient(context, webErrorView) {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
@@ -76,7 +75,7 @@ class AppFragment : NBaseFragment() {
                 return true
             }
         }
-        webView!!.addJavascriptInterface(AppTabPlugin(context), "appHybrid")
+        webView!!.addJavascriptInterface(AppTabPlugin(activity!!), "appHybrid")
     }
 
     fun canGoBack(): Boolean {
