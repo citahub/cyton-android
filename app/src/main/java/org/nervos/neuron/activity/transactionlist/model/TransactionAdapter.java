@@ -13,6 +13,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.BaseResponse;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     || TextUtils.isEmpty(transactionResponse.to)
                     ? context.getResources().getString(R.string.contract_create) : transactionResponse.to);
             String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") + transactionResponse.value;
-            viewHolder.transactionAmountText.setText(value);
+            viewHolder.transactionAmountText.setText(NumberUtil.getDecimal8ENotation(value));
             viewHolder.transactionTimeText.setText(transactionResponse.getDate());
             switch (transactionResponse.status) {
                 case BaseResponse.FAILED:

@@ -65,13 +65,13 @@ class TransactionDetailActivity : NBaseActivity() {
             tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionResponse!!.nativeSymbol
             tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
             val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
-            transaction_amount.text = value
+            transaction_amount.text = NumberUtil.getDecimal8ENotation(value)
             tv_token_unit.text = transactionResponse!!.symbol
             tv_transaction_blockchain_no!!.text = transactionResponse!!.blockNumber
         } else {
             tv_chain_name.text = transactionResponse!!.chainName
             val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
-            transaction_amount.text = value
+            transaction_amount.text = NumberUtil.getDecimal8ENotation(value)
             tv_transaction_gas.text = transactionResponse!!.symbol
             tv_transaction_gas_price.visibility = View.GONE
             tv_transaction_gas_price_title.visibility = View.GONE

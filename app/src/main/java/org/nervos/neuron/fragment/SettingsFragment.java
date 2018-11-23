@@ -107,6 +107,7 @@ public class SettingsFragment extends NBaseFragment {
                     if (mAuthFingerDialog == null) mAuthFingerDialog = new AuthFingerDialog(getActivity());
                     mAuthFingerDialog.setOnShowListener((dialogInterface) -> {
                         mFingerPrintController.authenticate(authenticateResultCallback);
+                        mSbvFingerPrint.setSwitchCheck(true);
                     });
                     mAuthFingerDialog.setOnDismissListener((dialog) -> {
                         mFingerPrintController.cancelAuth();
