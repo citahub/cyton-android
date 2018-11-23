@@ -1,4 +1,4 @@
-package org.nervos.neuron.activity.colleactWebsite
+package org.nervos.neuron.activity.collectwebsite
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout

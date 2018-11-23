@@ -26,6 +26,7 @@ import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
+import org.nervos.neuron.view.dialog.SimpleSelectDialog;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 import java.util.Arrays;
