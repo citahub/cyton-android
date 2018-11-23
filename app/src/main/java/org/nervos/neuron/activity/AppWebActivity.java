@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -79,8 +80,8 @@ public class AppWebActivity extends NBaseActivity {
     public static final int RESULT_CODE_SUCCESS = 0x02;
     public static final int RESULT_CODE_FAIL = 0x01;
     public static final int RESULT_CODE_CANCEL = 0x00;
-    public static final int RESULT_CODE_TAKE_PHOTO = 0x03;
-    public static final int RESULT_CODE_INPUT_FILE_CHOOSE = 0x04;
+    public static final int REQUEST_CODE_TAKE_PHOTO = 0x03;
+    public static final int REQUEST_CODE_INPUT_FILE_CHOOSE = 0x04;
     public static final int RESULT_CODE_SCAN_QRCODE = 0x05;
     public static ValueCallback<Uri[]> mFilePathCallbacks;
 
@@ -448,7 +449,7 @@ public class AppWebActivity extends NBaseActivity {
                                 }
                                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                startActivityForResult(intent, AppWebActivity.RESULT_CODE_TAKE_PHOTO);
+                                startActivityForResult(intent, AppWebActivity.REQUEST_CODE_TAKE_PHOTO);
                             })
                             .onDenied(permissions -> {
                                 PermissionUtil.showSettingDialog(this, permissions);
@@ -463,7 +464,7 @@ public class AppWebActivity extends NBaseActivity {
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "File Chooser"), RESULT_CODE_INPUT_FILE_CHOOSE);
+                    startActivityForResult(Intent.createChooser(intent, "File Chooser"), REQUEST_CODE_INPUT_FILE_CHOOSE);
                     break;
                 default:
                     break;
@@ -507,9 +508,9 @@ public class AppWebActivity extends NBaseActivity {
                         break;
                 }
                 break;
-            case RESULT_OK:
-                switch (requestCode) {
-                    case RESULT_CODE_TAKE_PHOTO:
+            case REQUEST_CODE_TAKE_PHOTO:
+                switch (resultCode) {
+                    case RESULT_OK:
                         if (mFilePathCallbacks != null) {
                             if (mPhotoPath != null) {
                                 Uri picUri = Uri.fromFile(new File(mPhotoPath));
@@ -518,7 +519,17 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         mFilePathCallbacks = null;
                         break;
-                    case RESULT_CODE_INPUT_FILE_CHOOSE:
+                    default:
+                        if (mFilePathCallbacks != null) {
+                            mFilePathCallbacks.onReceiveValue(null);
+                        }
+                        mFilePathCallbacks = null;
+                        break;
+                }
+                break;
+            case REQUEST_CODE_INPUT_FILE_CHOOSE:
+                switch (resultCode) {
+                    case RESULT_OK:
                         if (mFilePathCallbacks != null) {
                             Uri result = data == null ? null : data.getData();
                             if (result != null) {
@@ -529,7 +540,17 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         mFilePathCallbacks = null;
                         break;
-                    case RESULT_CODE_SCAN_QRCODE:
+                    default:
+                        if (mFilePathCallbacks != null) {
+                            mFilePathCallbacks.onReceiveValue(null);
+                        }
+                        mFilePathCallbacks = null;
+                        break;
+                }
+                break;
+            case RESULT_CODE_SCAN_QRCODE:
+                switch (resultCode) {
+                    case RESULT_OK:
                         if (null != data) {
                             boolean fail = true;
                             Bundle bundle = data.getExtras();
@@ -549,24 +570,10 @@ public class AppWebActivity extends NBaseActivity {
                         }
                         break;
                     default:
-                        break;
-                }
-            default:
-                switch (resultCode) {
-                    case RESULT_CODE_TAKE_PHOTO:
-                    case RESULT_CODE_INPUT_FILE_CHOOSE:
-                        if (mFilePathCallbacks != null) {
-                            mFilePathCallbacks.onReceiveValue(null);
-                        }
-                        mFilePathCallbacks = null;
-                        break;
-                    case RESULT_CODE_SCAN_QRCODE:
                         if (!TextUtils.isEmpty(mCallback)) {
                             BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
                             JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                         }
-                        break;
-                    default:
                         break;
                 }
                 break;
