@@ -83,7 +83,7 @@ public class WebAppUtil {
         }).flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
             List<ChainItem> chainItemList = new ArrayList<>();
             for (Map.Entry<String, String> entry : appItem.chainSet.entrySet()) {
-                chainItemList.add(new ChainItem(Integer.parseInt(entry.getKey()), mAppItem.name, entry.getValue()));
+                chainItemList.add(new ChainItem(entry.getKey(), mAppItem.name, entry.getValue()));
                 SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
             }
             return Observable.from(chainItemList);

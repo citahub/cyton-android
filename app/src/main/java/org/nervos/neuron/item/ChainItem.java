@@ -2,10 +2,12 @@ package org.nervos.neuron.item;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 public class ChainItem implements Parcelable {
 
-    public int chainId;
+    private int chainId;
+    private String chainIdV1;        // hex string
     public String httpProvider;
     public String blockViewer;
     public String name;
@@ -19,22 +21,22 @@ public class ChainItem implements Parcelable {
 
     public ChainItem(){}
 
-    public ChainItem(int chainId, String name, String httpProvider) {
-        this.chainId = chainId;
+    public ChainItem(String chainId, String name, String httpProvider) {
+        this.chainIdV1 = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
     }
 
-    public ChainItem(int chainId, String name, String tokenName, String tokenSymbol) {
-        this.chainId = chainId;
+    public ChainItem(String chainId, String name, String tokenName, String tokenSymbol) {
+        this.chainIdV1 = chainId;
         this.name = name;
         this.tokenName = tokenName;
         this.tokenSymbol = tokenSymbol;
     }
 
-    public ChainItem(int chainId, String name, String httpProvider, String tokenName,
+    public ChainItem(String chainId, String name, String httpProvider, String tokenName,
                      String tokenSymbol, String tokenAvatar) {
-        this.chainId = chainId;
+        this.chainIdV1 = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
         this.tokenName = tokenName;
@@ -42,15 +44,22 @@ public class ChainItem implements Parcelable {
         this.tokenAvatar = tokenAvatar;
     }
 
+    public void setChainId(String chainId) {
+        this.chainIdV1 = chainId;
+    }
+
+    public String getChainId() {
+        if (TextUtils.isEmpty(chainIdV1)) return String.valueOf(chainId);
+        else return chainIdV1;
+    }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.chainId);
+        dest.writeString(this.chainIdV1);
         dest.writeString(this.httpProvider);
         dest.writeString(this.blockViewer);
         dest.writeString(this.name);
@@ -65,6 +74,7 @@ public class ChainItem implements Parcelable {
 
     protected ChainItem(Parcel in) {
         this.chainId = in.readInt();
+        this.chainIdV1 = in.readString();
         this.httpProvider = in.readString();
         this.blockViewer = in.readString();
         this.name = in.readString();
@@ -79,13 +89,9 @@ public class ChainItem implements Parcelable {
 
     public static final Creator<ChainItem> CREATOR = new Creator<ChainItem>() {
         @Override
-        public ChainItem createFromParcel(Parcel source) {
-            return new ChainItem(source);
-        }
+        public ChainItem createFromParcel(Parcel source) {return new ChainItem(source);}
 
         @Override
-        public ChainItem[] newArray(int size) {
-            return new ChainItem[size];
-        }
+        public ChainItem[] newArray(int size) {return new ChainItem[size];}
     };
 }

@@ -208,7 +208,7 @@ public class DBWalletUtil extends DBUtil {
 
     private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(tokenItem.symbol) && token.chainId == tokenItem.chainId) {
+            if (token.symbol.equals(tokenItem.symbol) && token.getChainId().equals(tokenItem.getChainId())) {
                 return true;
             }
         }

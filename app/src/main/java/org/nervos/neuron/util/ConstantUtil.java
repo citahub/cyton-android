@@ -37,7 +37,7 @@ public class ConstantUtil {
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
     public static final BigInteger QUOTA_ERC20 = new BigInteger("100000");
 
-    public static final int CMB_CHAIN_ID = 2;
+    public static final String CMB_CHAIN_ID = "2";
     public static final String CMB_CHAIN_NAME = "mba-testnet";
     public static final String CMB_TOKEN_NAME = "Merchant Base Assert";
     public static final String CMB_TOKEN_SYMBOL = "MBA";
@@ -60,10 +60,10 @@ public class ConstantUtil {
     public static final String ETH_NET_KOVAN_TEST = "Kovan Test Network";
     public static final String ETH_NET_RINKEBY_TEST = "Rinkeby Test Network";
 
-    public static final int ETHEREUM_MAIN_ID = -1;
-    public static final int ETHEREUM_ROPSTEN_ID = -3;
-    public static final int ETHEREUM_KOVAN_ID = -42;
-    public static final int ETHEREUM_RINKEBY_ID = -4;
+    public static final String ETHEREUM_MAIN_ID = "-1";
+    public static final String ETHEREUM_ROPSTEN_ID = "-3";
+    public static final String ETHEREUM_KOVAN_ID = "-42";
+    public static final String ETHEREUM_RINKEBY_ID = "-4";
 
 
     public static final String ETH_MAIN_NAME = "Ethereum Mainnet";

@@ -162,7 +162,7 @@ public class AppChainRpcService {
 
 
     public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
-                       String address, String value, long quota, int chainId, String password) {
+                       String address, String value, long quota, BigInteger chainId, String password) {
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(tokenItem, value));
 
         return getValidUntilBlock()
@@ -183,7 +183,7 @@ public class AppChainRpcService {
                         }
 
                         saveLocalTransaction(context, walletItem.address, address, String.valueOf(value),
-                                validUntilBlock.longValue(), chainId, tokenItem.contractAddress,
+                                validUntilBlock.longValue(), chainId.toString(), tokenItem.contractAddress,
                                 appSendTransaction.getSendTransactionResult().getHash());
 
                         return Observable.just(appSendTransaction);
@@ -199,7 +199,7 @@ public class AppChainRpcService {
 
 
     public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, String value,
-                                       String data, long quota, int chainId,  String password) {
+                                       String data, long quota, BigInteger chainId,  String password) {
 
         return getValidUntilBlock()
                 .flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
@@ -221,7 +221,7 @@ public class AppChainRpcService {
                         }
 
                         saveLocalTransaction(context, walletItem.address, toAddress, String.valueOf(value),
-                                validUntilBlock.longValue(), chainId, "",
+                                validUntilBlock.longValue(), chainId.toString(), "",
                                 appSendTransaction.getSendTransactionResult().getHash());
 
                         return Observable.just(appSendTransaction);
@@ -244,7 +244,7 @@ public class AppChainRpcService {
 
 
     private static void saveLocalTransaction(Context context, String from, String to, String value,
-                                             long validUntilBlock, long chainId, String contractAddress, String hash) {
+                                             long validUntilBlock, String chainId, String contractAddress, String hash) {
         executorService.execute(() -> {
             String chainName = Objects.requireNonNull(DBChainUtil.getChain(context, chainId)).name;
             TransactionItem item = new TransactionItem(from, to, value, chainId, chainName,

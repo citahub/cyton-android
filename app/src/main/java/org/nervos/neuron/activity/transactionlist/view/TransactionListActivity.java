@@ -24,6 +24,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstantUtil;
@@ -149,7 +150,7 @@ public class TransactionListActivity extends NBaseActivity {
     }
 
     private void initDescribe() {
-        if (presenter.isEther(tokenItem)) {
+        if (EtherUtil.isEther(tokenItem)) {
             if (!presenter.isNativeToken(tokenItem)) {
                 presenter.getTokenDescribe();
             } else {
@@ -166,7 +167,7 @@ public class TransactionListActivity extends NBaseActivity {
     }
 
     private void initBalance() {
-        if (tokenItem.balance != 0.0 && presenter.isEther(tokenItem)) {
+        if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
             presenter.getBalance();
         }
     }

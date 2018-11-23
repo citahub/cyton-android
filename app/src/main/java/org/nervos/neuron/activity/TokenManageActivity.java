@@ -21,6 +21,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.AddTokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.FileUtil;
 import org.nervos.neuron.util.TokenLogoUtil;
 import org.nervos.neuron.util.db.DBTokenUtil;
@@ -59,7 +60,7 @@ public class TokenManageActivity extends BaseActivity {
         }.getType();
         tokenList = new Gson().fromJson(tokens, type);
         for (TokenEntity entity : tokenList) {
-            entity.chainId = -1;
+            entity.chainId = ConstantUtil.ETHEREUM_MAIN_ID;
         }
         addCustomToken();
         adapter.notifyDataSetChanged();

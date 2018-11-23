@@ -25,7 +25,7 @@ public class DBChainUtil extends DBUtil {
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
                     ChainItem chainItem = db.getObject(key, ChainItem.class);
-                    chainItem.chainId = Integer.parseInt(getDbOrigin(key));
+                    chainItem.setChainId(getDbOrigin(key));
                     chainItemList.add(chainItem);
                 }
                 db.close();
@@ -36,11 +36,11 @@ public class DBChainUtil extends DBUtil {
         }
     }
 
-    public static ChainItem getChain(Context context, long chainId) {
+    public static ChainItem getChain(Context context, String chainId) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_CHAIN);
-                ChainItem chainItem = db.getObject(getDbKey(String.valueOf(chainId)), ChainItem.class);
+                ChainItem chainItem = db.getObject(getDbKey(chainId), ChainItem.class);
                 db.close();
                 return chainItem;
             } catch (SnappydbException e) {
@@ -68,7 +68,7 @@ public class DBChainUtil extends DBUtil {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_CHAIN);
-                db.put(getDbKey(String.valueOf(chainItem.chainId)), chainItem);
+                db.put(getDbKey(chainItem.getChainId()), chainItem);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -78,7 +78,8 @@ public class DBChainUtil extends DBUtil {
 
     public static void initChainData(Context context) {
         saveChain(context, new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
-        saveChain(context, new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER, ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        saveChain(context, new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
+                ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
     }
 
 }

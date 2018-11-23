@@ -21,6 +21,7 @@ import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.util.ether.EtherUtil
 import rx.Subscriber
 import java.text.DecimalFormat
 
@@ -62,7 +63,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                         tv_loading.visibility = View.GONE
                         tv_token_balance.text = NumberUtil.getDecimal8ENotation(tokenItem.balance)
                         tv_token_balance.visibility = View.VISIBLE
-                        if (tokenItem.balance != 0.0 && tokenItem.chainId < 0) {
+                        if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
                             getPrice()
                         } else {
                             EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))

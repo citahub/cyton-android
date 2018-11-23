@@ -2,14 +2,14 @@ package org.nervos.neuron.item.transaction;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
-
-import org.nervos.neuron.view.webview.item.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class TransactionItem implements Parcelable {
+/**
+ * Created by duanyytop on 2018/11/23.
+ */
+public class TransactionReponse implements Parcelable {
 
     public static final int FAILED = 0;
     public static final int SUCCESS = 1;
@@ -21,8 +21,7 @@ public class TransactionItem implements Parcelable {
     public String value;
     public String hash;
 
-    private int chainId;
-    private String chainIdV1;
+    private String chainId;
     public String symbol;
     public String nativeSymbol;
     public String chainName;
@@ -46,30 +45,30 @@ public class TransactionItem implements Parcelable {
     public String errorMessage;
     public String validUntilBlock;
 
-    public TransactionItem(){}
-
-    public void setChainId(String chainId) {
-        this.chainIdV1 = chainId;
+    public TransactionReponse(String from, String to, String value, String chainId, String chainName, int status, long timestamp, String hash) {
+        this.from = from;
+        this.to = to;
+        this.value = value;
+        this.chainId = chainId;
+        this.chainName = chainName;
+        this.status = status;
+        this.setTimestamp(timestamp);
+        this.hash = hash;
     }
 
-    public String getChainId() {
-        if (TextUtils.isEmpty(chainIdV1)) return String.valueOf(chainId);
-        else return chainIdV1;
+    public String getDate() {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
+        return timeStamp > 0 ? ft.format(timeStamp * 1000) : ft.format(timestamp);
     }
 
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-
-        TransactionItem other = (TransactionItem)obj;
-
-        if (hash == null) {
-            return other.hash == null;
-        } else return hash.equalsIgnoreCase(other.hash);
+    public long getTimestamp() {
+        return timeStamp > 0 ? timeStamp * 1000 : timestamp;
     }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
 
 
     @Override
@@ -81,8 +80,7 @@ public class TransactionItem implements Parcelable {
         dest.writeString(this.to);
         dest.writeString(this.value);
         dest.writeString(this.hash);
-        dest.writeInt(this.chainId);
-        dest.writeString(this.chainIdV1);
+        dest.writeString(this.chainId);
         dest.writeString(this.symbol);
         dest.writeString(this.nativeSymbol);
         dest.writeString(this.chainName);
@@ -99,13 +97,14 @@ public class TransactionItem implements Parcelable {
         dest.writeString(this.validUntilBlock);
     }
 
-    protected TransactionItem(Parcel in) {
+    public TransactionReponse() {}
+
+    protected TransactionReponse(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
         this.hash = in.readString();
-        this.chainId = in.readInt();
-        this.chainIdV1 = in.readString();
+        this.chainId = in.readString();
         this.symbol = in.readString();
         this.nativeSymbol = in.readString();
         this.chainName = in.readString();
@@ -122,11 +121,11 @@ public class TransactionItem implements Parcelable {
         this.validUntilBlock = in.readString();
     }
 
-    public static final Creator<TransactionItem> CREATOR = new Creator<TransactionItem>() {
+    public static final Creator<TransactionReponse> CREATOR = new Creator<TransactionReponse>() {
         @Override
-        public TransactionItem createFromParcel(Parcel source) {return new TransactionItem(source);}
+        public TransactionReponse createFromParcel(Parcel source) {return new TransactionReponse(source);}
 
         @Override
-        public TransactionItem[] newArray(int size) {return new TransactionItem[size];}
+        public TransactionReponse[] newArray(int size) {return new TransactionReponse[size];}
     };
 }

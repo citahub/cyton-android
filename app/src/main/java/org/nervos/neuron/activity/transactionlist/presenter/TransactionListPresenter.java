@@ -24,7 +24,9 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.web3j.crypto.Keys;
+import org.web3j.utils.Numeric;
 
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class TransactionListPresenter {
     }
 
     public void setTokenLogo(ImageView tokenLogoImage) {
-        if (isEther(tokenItem)) {
+        if (EtherUtil.isEther(tokenItem)) {
             if (!isNativeToken(tokenItem)) {
                 if (TextUtils.isEmpty(tokenItem.avatar)) {
                     String address = tokenItem.contractAddress;
@@ -86,7 +88,7 @@ public class TransactionListPresenter {
     }
 
     public void getBalance() {
-        if (tokenItem.balance > 0.0 && isEther(tokenItem)) {
+        if (tokenItem.balance > 0.0 && EtherUtil.isEther(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
                         @Override
@@ -118,15 +120,15 @@ public class TransactionListPresenter {
     public void getTransactionList(int page) {
         Observable<List<TransactionItem>> observable;
         if (isNativeToken(tokenItem)) {
-            if (tokenItem.chainId > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
+            if (Numeric.toBigInt(tokenItem.getChainId()).longValue() > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
                 getUnofficialNoneData();
                 return;
             }
-            observable = isEther(tokenItem)
+            observable = EtherUtil.isEther(tokenItem)
                     ? HttpService.getEtherTransactionList(activity, page)
                     : HttpService.getAppChainTransactionList(activity, page);
         } else {
-            observable = isEther(tokenItem)
+            observable = EtherUtil.isEther(tokenItem)
                     ? HttpService.getEtherERC20TransactionList(activity, tokenItem, page)
                     : HttpService.getAppChainERC20TransactionList(activity, tokenItem, page);
         }
@@ -151,14 +153,14 @@ public class TransactionListPresenter {
                     listener.noMoreLoading();
                     return;
                 }
-                if (isEther(tokenItem)) {
+                if (EtherUtil.isEther(tokenItem)) {
                     list = removeRepetition(list);
                     for (TransactionItem item : list) {
-                        item.chainId = EtherUtil.getEtherId();
+                        item.setChainId(String.valueOf(EtherUtil.getEtherId()));
                         item.chainName = EtherUtil.getEthNodeName();
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    list = getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list);
+                    list = getEtherTransactionList(activity, EtherUtil.getEtherId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
@@ -168,7 +170,7 @@ public class TransactionListPresenter {
                     for (TransactionItem item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    list = getAppChainTransactionList(activity, String.valueOf(tokenItem.chainId), list);
+                    list = getAppChainTransactionList(activity, tokenItem.getChainId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
@@ -245,10 +247,6 @@ public class TransactionListPresenter {
 
     public boolean isNativeToken(TokenItem tokenItem) {
         return TextUtils.isEmpty(tokenItem.contractAddress);
-    }
-
-    public boolean isEther(TokenItem tokenItem) {
-        return tokenItem.chainId < 0;
     }
 
     public interface TransactionListPresenterImpl {

@@ -14,12 +14,14 @@ import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.crypto.Credentials;
 import org.web3j.utils.Numeric;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +46,7 @@ public class WalletService {
                 TokenItem tokenItem = iterator.next();
                 iterator.remove();
                 try {
-                    if (tokenItem.chainId < 0) {
+                    if (EtherUtil.isEther(tokenItem)) {
                         if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                             tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
                             tokenItemList.add(tokenItem);
@@ -55,7 +57,7 @@ public class WalletService {
                             track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
                         }
                     } else {
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
                         if (chainItem != null) {
                             String httpProvider = chainItem.httpProvider;
                             AppChainRpcService.init(context, httpProvider);
@@ -89,7 +91,7 @@ public class WalletService {
         executorService.execute(() -> {
             try {
                 String address = DBWalletUtil.getCurrentWallet(context).address;
-                if (tokenItem.chainId < 0) {
+                if (EtherUtil.isEther(tokenItem)) {
                     if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                         tokenItem.balance = EthRpcService.getEthBalance(address);
                         track(ConstantUtil.ETH, ConstantUtil.ETH, tokenItem.balance);
@@ -98,7 +100,7 @@ public class WalletService {
                         track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
                     }
                 } else {
-                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
                     if (chainItem != null) {
                         String httpProvider = chainItem.httpProvider;
                         AppChainRpcService.init(context, httpProvider);
@@ -151,14 +153,14 @@ public class WalletService {
             @Override
             public Double call() {
                 try {
-                    if (tokenItem.chainId < 0) {                // ethereum
+                    if (EtherUtil.isEther(tokenItem)) {
                         if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
                             return EthRpcService.getEthBalance(walletItem.address);
                         } else {
                             return EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
                         }
                     } else {                                    // nervos
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
                         if (chainItem == null) return 0.0;
                         String httpProvider = chainItem.httpProvider;
                         AppChainRpcService.init(context, httpProvider);
@@ -183,10 +185,10 @@ public class WalletService {
             @Override
             public Double call() {
                 try {
-                    if (tokenItem.chainId < 0) {                // ethereum
+                    if (EtherUtil.isEther(tokenItem)) {                // ethereum
                         return EthRpcService.getEthBalance(walletItem.address);
                     } else {                                    // appChain
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.chainId);
+                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
                         if (chainItem == null) return 0.0;
                         String httpProvider = chainItem.httpProvider;
                         AppChainRpcService.init(context, httpProvider);
