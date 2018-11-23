@@ -105,7 +105,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
             passwordEdit.post(() -> {
                 ImportWalletActivity.track("1", false, "");
                 dismissProgressBar();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.import_keystore_error), Toast.LENGTH_SHORT).show();
             });
             return;
         }
