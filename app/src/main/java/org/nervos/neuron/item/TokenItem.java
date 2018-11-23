@@ -3,6 +3,7 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
 
 public class TokenItem implements Parcelable {
 
@@ -16,7 +17,8 @@ public class TokenItem implements Parcelable {
     public String symbol;
     public int decimals;
     public String amount;
-    public int chainId;
+    private int chainId;
+    private String chainIdV1;        // hex string
     public String chainName;
     public double balance;
     public double currencyPrice;
@@ -31,25 +33,25 @@ public class TokenItem implements Parcelable {
         this.contractAddress = contractAddress;
     }
 
-    public TokenItem(String symbol, int image, double balance, int chainId) {
+    public TokenItem(String symbol, int image, double balance, String chainId) {
         this.symbol = symbol;
         this.image = image;
         this.balance = balance;
-        this.chainId = chainId;
+        this.chainIdV1 = chainId;
     }
 
-    public TokenItem(String name, String symbol, int decimals, String avatar, int chainId) {
+    public TokenItem(String name, String symbol, int decimals, String avatar, String chainId) {
         this.name = name;
         this.symbol = symbol;
         this.decimals = decimals;
         this.avatar = avatar;
-        this.chainId = chainId;
+        this.chainIdV1 = chainId;
     }
 
-    public TokenItem(String name, String symbol, int chainId) {
+    public TokenItem(String name, String symbol, String chainId) {
         this.name = name;
         this.symbol = symbol;
-        this.chainId = chainId;
+        this.chainIdV1 = chainId;
     }
 
 
@@ -58,7 +60,7 @@ public class TokenItem implements Parcelable {
         this.symbol = chainItem.tokenSymbol;
         this.decimals = APPCHAIN_DECIMAL;
         this.avatar = chainItem.tokenAvatar;
-        this.chainId = chainItem.chainId;
+        this.chainIdV1 = chainItem.getChainId();
         this.chainName = chainItem.name;
     }
 
@@ -70,13 +72,20 @@ public class TokenItem implements Parcelable {
             this.avatar = tokenEntity.logo.src;
         }
         this.decimals = tokenEntity.decimals;
-        this.chainId = tokenEntity.chainId;
+        this.chainIdV1 = tokenEntity.chainId;
+    }
+
+    public String getChainId() {
+        if (TextUtils.isEmpty(chainIdV1)) return String.valueOf(chainId);
+        else return chainIdV1;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainIdV1 = chainId;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -88,6 +97,7 @@ public class TokenItem implements Parcelable {
         dest.writeInt(this.decimals);
         dest.writeString(this.amount);
         dest.writeInt(this.chainId);
+        dest.writeString(this.chainIdV1);
         dest.writeString(this.chainName);
         dest.writeDouble(this.balance);
         dest.writeDouble(this.currencyPrice);
@@ -102,6 +112,7 @@ public class TokenItem implements Parcelable {
         this.decimals = in.readInt();
         this.amount = in.readString();
         this.chainId = in.readInt();
+        this.chainIdV1 = in.readString();
         this.chainName = in.readString();
         this.balance = in.readDouble();
         this.currencyPrice = in.readDouble();
@@ -109,13 +120,9 @@ public class TokenItem implements Parcelable {
 
     public static final Creator<TokenItem> CREATOR = new Creator<TokenItem>() {
         @Override
-        public TokenItem createFromParcel(Parcel source) {
-            return new TokenItem(source);
-        }
+        public TokenItem createFromParcel(Parcel source) {return new TokenItem(source);}
 
         @Override
-        public TokenItem[] newArray(int size) {
-            return new TokenItem[size];
-        }
+        public TokenItem[] newArray(int size) {return new TokenItem[size];}
     };
 }

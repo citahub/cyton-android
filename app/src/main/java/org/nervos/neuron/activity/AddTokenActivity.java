@@ -17,6 +17,7 @@ import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.AppChainRpcService;
@@ -163,13 +164,13 @@ public class AddTokenActivity extends BaseActivity {
                 }
                 showProgressBar();
                 cachedThreadPool.execute(() -> {
-                    if (chainItem.chainId == ConstantUtil.ETHEREUM_MAIN_ID) {
+                    if (chainItem.getChainId().equals(ConstantUtil.ETHEREUM_MAIN_ID)) {
                         tokenItem = EthRpcService.getTokenInfo(s.toString(), walletItem.address);
                     } else {
                         tokenItem = AppChainRpcService.getErc20TokenInfo(s.toString());
                     }
                     if (chainItem != null && tokenItem != null) {
-                        tokenItem.chainId = chainItem.chainId;
+                        tokenItem.setChainId(chainItem.getChainId());
                     }
                     tokenNameEdit.post(() -> {
                         if (tokenItem != null) {
@@ -210,7 +211,7 @@ public class AddTokenActivity extends BaseActivity {
     }
 
     private boolean checkRepetitionContract(TokenItem tokenItem) {
-        if (tokenItem.chainId < 0) {
+        if (EtherUtil.isEther(tokenItem)) {
             String tokens = FileUtil.loadRawFile(mActivity, R.raw.tokens_eth);
             Type type = new TypeToken<List<TokenEntity>>() {}.getType();
             ArrayList<TokenEntity> tokenList = new Gson().fromJson(tokens, type);

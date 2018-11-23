@@ -21,7 +21,7 @@ public class TransactionInfo implements Parcelable {
     public long validUntilBlock;
     public String data;
     private String value;
-    public long chainId;
+    public String chainId;
     public int version;
     public String gasLimit;
     public String gasPrice;
@@ -79,7 +79,7 @@ public class TransactionInfo implements Parcelable {
         dest.writeLong(this.quota);
         dest.writeString(this.data);
         dest.writeString(this.value);
-        dest.writeLong(this.chainId);
+        dest.writeString(this.chainId);
         dest.writeInt(this.version);
         dest.writeString(this.gasLimit);
         dest.writeString(this.gasPrice);
@@ -92,7 +92,7 @@ public class TransactionInfo implements Parcelable {
         this.quota = in.readLong();
         this.data = in.readString();
         this.value = in.readString();
-        this.chainId = in.readLong();
+        this.chainId = in.readString();
         this.version = in.readInt();
         this.gasLimit = in.readString();
         this.gasPrice = in.readString();

@@ -1,7 +1,5 @@
 package org.nervos.neuron.item;
 
-import android.os.Parcelable;
-
 /**
  * Created by BaojunCZ on 2018/11/19.
  */
@@ -13,7 +11,7 @@ public class WalletTokenLoadItem extends TokenItem {
         this.amount = tokenItem.amount;
         this.avatar = tokenItem.avatar;
         this.balance = tokenItem.balance;
-        this.chainId = tokenItem.chainId;
+        this.setChainId(tokenItem.getChainId());
         this.chainName = tokenItem.chainName;
         this.contractAddress = tokenItem.contractAddress;
         this.currencyPrice = tokenItem.currencyPrice;

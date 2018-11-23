@@ -27,11 +27,8 @@ public class SimpleWebViewClient extends WebViewClient {
         try {
             if (!mContext.getString(R.string.about_blank).equals(view.getUrl())) mWebErrorView.setReloadUrl(view.getUrl());
             switch (error.getErrorCode()) {
-                case ERROR_AUTHENTICATION:
                 case ERROR_BAD_URL:
                 case ERROR_FAILED_SSL_HANDSHAKE:
-                case ERROR_HOST_LOOKUP:
-                case ERROR_PROXY_AUTHENTICATION:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
@@ -50,13 +47,11 @@ public class SimpleWebViewClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         try {
-            if (view.getUrl() != mContext.getString(R.string.about_blank)) mWebErrorView.setReloadUrl(view.getUrl());
+            if (!view.getUrl().equals(mContext.getString(R.string.about_blank))) mWebErrorView.setReloadUrl(view.getUrl());
             switch (errorCode) {
-                case ERROR_AUTHENTICATION:
                 case ERROR_BAD_URL:
                 case ERROR_FAILED_SSL_HANDSHAKE:
                 case ERROR_HOST_LOOKUP:
-                case ERROR_PROXY_AUTHENTICATION:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);

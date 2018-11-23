@@ -12,7 +12,9 @@ import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.util.HexUtils;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
@@ -119,7 +121,7 @@ public class TransferPresenter {
     }
 
     private void initTransferFee() {
-        if (isEther()) {
+        if (EtherUtil.isEther(mTokenItem)) {
             initEthGasPrice();
             mTransferView.initTransferEditValue();
             initTokenPrice();
@@ -204,7 +206,7 @@ public class TransferPresenter {
 
 
     public void handleTransferAction(String password, String transferValue, String receiveAddress) {
-        if (isEther()) {
+        if (EtherUtil.isEther(mTokenItem)) {
             SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, ConstantUtil.ETH, "2");
             if (ConstantUtil.ETH.equals(mTokenItem.symbol)) {
                 transferEth(password, transferValue, receiveAddress);
@@ -276,8 +278,9 @@ public class TransferPresenter {
      * @param transferValue transfer value
      */
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
-        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
-        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, "", ConstantUtil.QUOTA_TOKEN.longValue(), mTokenItem.chainId, password)
+        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.getChainId()));
+        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, "", ConstantUtil.QUOTA_TOKEN.longValue(),
+                new BigInteger(mTokenItem.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -298,9 +301,10 @@ public class TransferPresenter {
      * @param transferValue
      */
     private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
-        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.chainId));
+        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.getChainId()));
         try {
-            AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(), mTokenItem.chainId, password)
+            AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(),
+                    Numeric.toBigInt(mTokenItem.getChainId()), password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
@@ -384,12 +388,9 @@ public class TransferPresenter {
         return NumberUtil.getDecimalValid_2(Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
     }
 
-    public boolean isEther() {
-        return mTokenItem.chainId < 0;
-    }
-
     public boolean isEthERC20() {
-        return mTokenItem.chainId < 0 && !TextUtils.isEmpty(mTokenItem.contractAddress);
+        return Numeric.toBigInt(mTokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0
+                && !TextUtils.isEmpty(mTokenItem.contractAddress);
     }
 
     public boolean isNativeToken() {
@@ -397,10 +398,10 @@ public class TransferPresenter {
     }
 
     public String getFeeTokenUnit() {
-        if (isEther()) {
+        if (EtherUtil.isEther(mTokenItem)) {
             return " " + ConstantUtil.ETH;
         } else {
-            ChainItem chainItem = DBChainUtil.getChain(mActivity, mTokenItem.chainId);
+            ChainItem chainItem = DBChainUtil.getChain(mActivity, mTokenItem.getChainId());
             return chainItem == null ? "" : " " + chainItem.tokenSymbol;
         }
     }

@@ -305,7 +305,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getStringValue(),
                 mTransactionInfo.data, mTransactionInfo.getLongQuota(),
-                (int) mTransactionInfo.chainId, password)
+                Numeric.toBigInt(mTransactionInfo.chainId), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {

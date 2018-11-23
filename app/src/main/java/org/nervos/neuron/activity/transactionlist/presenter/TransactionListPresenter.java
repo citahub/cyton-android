@@ -15,6 +15,7 @@ import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
+import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
@@ -24,6 +25,7 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.web3j.crypto.Keys;
+import org.web3j.utils.Numeric;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -52,7 +54,7 @@ public class TransactionListPresenter {
     }
 
     public void setTokenLogo(ImageView tokenLogoImage) {
-        if (isEther(tokenItem)) {
+        if (EtherUtil.isEther(tokenItem)) {
             if (!isNativeToken(tokenItem)) {
                 if (TextUtils.isEmpty(tokenItem.avatar)) {
                     String address = tokenItem.contractAddress;
@@ -86,7 +88,7 @@ public class TransactionListPresenter {
     }
 
     public void getBalance() {
-        if (tokenItem.balance > 0.0 && isEther(tokenItem)) {
+        if (tokenItem.balance > 0.0 && EtherUtil.isEther(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
                         @Override
@@ -116,21 +118,21 @@ public class TransactionListPresenter {
     }
 
     public void getTransactionList(int page) {
-        Observable<List<TransactionItem>> observable;
+        Observable<List<TransactionResponse>> observable;
         if (isNativeToken(tokenItem)) {
-            if (tokenItem.chainId > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
+            if (Numeric.toBigInt(tokenItem.getChainId()).longValue() > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
                 getUnofficialNoneData();
                 return;
             }
-            observable = isEther(tokenItem)
+            observable = EtherUtil.isEther(tokenItem)
                     ? HttpService.getEtherTransactionList(activity, page)
                     : HttpService.getAppChainTransactionList(activity, page);
         } else {
-            observable = isEther(tokenItem)
+            observable = EtherUtil.isEther(tokenItem)
                     ? HttpService.getEtherERC20TransactionList(activity, tokenItem, page)
                     : HttpService.getAppChainERC20TransactionList(activity, tokenItem, page);
         }
-        observable.subscribe(new Subscriber<List<TransactionItem>>() {
+        observable.subscribe(new Subscriber<List<TransactionResponse>>() {
             @Override
             public void onCompleted() {
                 listener.hideProgressBar();
@@ -146,29 +148,29 @@ public class TransactionListPresenter {
             }
 
             @Override
-            public void onNext(List<TransactionItem> list) {
+            public void onNext(List<TransactionResponse> list) {
                 if (list.size() == 0) {
                     listener.noMoreLoading();
                     return;
                 }
-                if (isEther(tokenItem)) {
+                if (EtherUtil.isEther(tokenItem)) {
                     list = removeRepetition(list);
-                    for (TransactionItem item : list) {
+                    for (TransactionResponse item : list) {
                         item.chainId = EtherUtil.getEtherId();
                         item.chainName = EtherUtil.getEthNodeName();
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    list = getEtherTransactionList(activity, String.valueOf(EtherUtil.getEtherId()), list);
+                    list = getEtherTransactionList(activity, EtherUtil.getEtherId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
                         listener.refreshList(list);
                     }
                 } else {
-                    for (TransactionItem item : list) {
+                    for (TransactionResponse item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
                     }
-                    list = getAppChainTransactionList(activity, String.valueOf(tokenItem.chainId), list);
+                    list = getAppChainTransactionList(activity, tokenItem.getChainId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
@@ -180,13 +182,13 @@ public class TransactionListPresenter {
     }
 
 
-    private List<TransactionItem> getEtherTransactionList(Context context, String chainId, List<TransactionItem> list) {
+    private List<TransactionResponse> getEtherTransactionList(Context context, String chainId, List<TransactionResponse> list) {
         List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             Iterator<TransactionItem> iterator = itemList.iterator();
             while (iterator.hasNext()) {
                 TransactionItem dbItem = iterator.next();
-                for (TransactionItem item : list) {
+                for (TransactionResponse item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
                         iterator.remove();
                         break;
@@ -197,19 +199,21 @@ public class TransactionListPresenter {
                     }
                 }
             }
-            list.addAll(itemList);
+            for (TransactionItem item : itemList) {
+                list.add(new TransactionResponse(item));
+            }
             Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
 
-    private List<TransactionItem> getAppChainTransactionList(Context context, String chainId, List<TransactionItem> list) {
+    private List<TransactionResponse> getAppChainTransactionList(Context context, String chainId, List<TransactionResponse> list) {
         List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             Iterator<TransactionItem> iterator = itemList.iterator();
             while (iterator.hasNext()) {
                 TransactionItem dbItem = iterator.next();
-                for (TransactionItem item : list) {
+                for (TransactionResponse item : list) {
                     if (item.hash.equalsIgnoreCase(dbItem.hash)) {
                         iterator.remove();
                         break;
@@ -220,16 +224,18 @@ public class TransactionListPresenter {
                     }
                 }
             }
-            list.addAll(itemList);
+            for (TransactionItem item : itemList) {
+                list.add(new TransactionResponse(item));
+            }
             Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
 
 
-    public static List<TransactionItem> removeRepetition(List<TransactionItem> list) {
-        List<TransactionItem> tempList = new ArrayList<>();
-        for (TransactionItem item : list) {
+    public static List<TransactionResponse> removeRepetition(List<TransactionResponse> list) {
+        List<TransactionResponse> tempList = new ArrayList<>();
+        for (TransactionResponse item : list) {
             if (!tempList.contains(item)) {
                 tempList.add(item);
             }
@@ -247,18 +253,14 @@ public class TransactionListPresenter {
         return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
-    public boolean isEther(TokenItem tokenItem) {
-        return tokenItem.chainId < 0;
-    }
-
     public interface TransactionListPresenterImpl {
         void hideProgressBar();
 
         void setRefreshing(boolean refreshing);
 
-        void updateNewList(List<TransactionItem> list);
+        void updateNewList(List<TransactionResponse> list);
 
-        void refreshList(List<TransactionItem> list);
+        void refreshList(List<TransactionResponse> list);
 
         void getTokenDescribe(EthErc20TokenInfoItem item);
 

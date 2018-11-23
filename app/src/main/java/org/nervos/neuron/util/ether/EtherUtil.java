@@ -1,15 +1,23 @@
 package org.nervos.neuron.util.ether;
 
+import org.nervos.appchain.utils.Numeric;
+import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.url.HttpEtherUrls;
+
+import java.math.BigInteger;
 
 /**
  * Created by duanyytop on 2018/11/12.
  */
 public class EtherUtil {
 
-    public static int getEtherId() {
+    public static boolean isEther(TokenItem tokenItem) {
+        return Numeric.toBigInt(tokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0;
+    }
+
+    public static String getEtherId() {
         switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
             case ConstantUtil.ETH_NET_RINKEBY_TEST:
                 return ConstantUtil.ETHEREUM_RINKEBY_ID;

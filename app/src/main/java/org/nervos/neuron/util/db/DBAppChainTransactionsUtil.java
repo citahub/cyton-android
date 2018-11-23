@@ -29,7 +29,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
             try {
                 db = openDB(context, DB_APPCHAIN);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
-                db.put(getDbKey(item.chainId + tokenType + item.hash), item);
+                db.put(getDbKey(item.getChainId() + tokenType + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -42,7 +42,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
             try {
                 db = openDB(context, DB_APPCHAIN);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
-                db.del(getDbKey(item.chainId + tokenType + item.hash));
+                db.del(getDbKey(item.getChainId() + tokenType + item.hash));
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -55,7 +55,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
             try {
                 db = openDB(context, DB_APPCHAIN);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
-                db.put(getDbKey(item.chainId + tokenType + item.hash), item);
+                db.put(getDbKey(item.getChainId() + tokenType + item.hash), item);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
