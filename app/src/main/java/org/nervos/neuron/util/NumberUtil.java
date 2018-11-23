@@ -34,7 +34,8 @@ public class NumberUtil {
     public static String getDecimal8ENotation(double value) {
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
-        return fmt.format(value);
+        BigDecimal big = BigDecimal.valueOf(value);
+        return fmt.format(big);
     }
 
     public static String getDecimal8ENotation(String value) {
