@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.BaseResponse;
-import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.ConstantUtil;
 
@@ -81,13 +80,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof TransactionViewHolder) {
             TransactionResponse transactionResponse = transactionResponseList.get(position);
             TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-            if (!transactionResponse.from.equalsIgnoreCase(address)) {
-                viewHolder.transactionIdText.setText(transactionResponse.from);
-            } else {
-                viewHolder.transactionIdText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to)
-                        || TextUtils.isEmpty(transactionResponse.to)
-                        ? context.getResources().getString(R.string.contract_create) : transactionResponse.to);
-            }
+            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to)
+                    || TextUtils.isEmpty(transactionResponse.to)
+                    ? context.getResources().getString(R.string.contract_create) : transactionResponse.to);
             String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") + transactionResponse.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionResponse.getDate());
@@ -129,7 +124,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
-        TextView transactionIdText;
+        TextView transactionToAddressText;
         TextView transactionAmountText;
         TextView transactionTimeText;
         TextView transactionStatus;
@@ -141,7 +136,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     onItemClickListener.onItemClick(v, (int) v.getTag());
                 }
             });
-            transactionIdText = view.findViewById(R.id.transaction_id_text);
+            transactionToAddressText = view.findViewById(R.id.transaction_to_address_text);
             transactionTimeText = view.findViewById(R.id.transaction_time_text);
             transactionAmountText = view.findViewById(R.id.transaction_amount);
             transactionStatus = view.findViewById(R.id.transaction_status);
