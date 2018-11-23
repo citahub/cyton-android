@@ -214,8 +214,6 @@ public class AppChainRpcService {
 
                         AppSendTransaction appSendTransaction = signTransaction(transaction, password);
 
-                        LogUtil.d("appSendTransaction: " + new Gson().toJson(appSendTransaction));
-
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
                         }
