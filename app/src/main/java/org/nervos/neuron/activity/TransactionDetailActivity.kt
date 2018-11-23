@@ -11,8 +11,8 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_transaction_detail.*
 import org.nervos.neuron.R
-import org.nervos.neuron.item.transaction.TransactionItem
 import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.transaction.TransactionResponse
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.ConstantUtil
@@ -32,11 +32,11 @@ import java.math.BigInteger
 class TransactionDetailActivity : NBaseActivity() {
 
     companion object {
-        val TRANSACTION_DETAIL = "TRANSACTION_DETAIL"
+        const val TRANSACTION_DETAIL = "TRANSACTION_DETAIL"
     }
 
     private var walletItem: WalletItem? = null
-    private var transactionItem: TransactionItem? = null
+    private var transactionResponse: TransactionResponse? = null
     private var title: TitleBar? = null
 
     override fun getContentLayout(): Int {
@@ -50,60 +50,60 @@ class TransactionDetailActivity : NBaseActivity() {
     @SuppressLint("SetTextI18n")
     override fun initData() {
         walletItem = DBWalletUtil.getCurrentWallet(mActivity)
-        transactionItem = intent.getParcelableExtra(TRANSACTION_DETAIL)
+        transactionResponse = intent.getParcelableExtra(TRANSACTION_DETAIL)
 
-        tv_transaction_number.text = transactionItem!!.hash
-        tv_transaction_sender.text = transactionItem!!.from
+        tv_transaction_number.text = transactionResponse!!.hash
+        tv_transaction_sender.text = transactionResponse!!.from
         tv_transaction_receiver.text =
-                if (ConstantUtil.RPC_RESULT_ZERO == transactionItem!!.to || transactionItem!!.to.isEmpty())
+                if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty())
                     resources.getString(R.string.contract_create)
-                else transactionItem!!.to
-        if (!TextUtils.isEmpty(transactionItem!!.gasPrice)) {
+                else transactionResponse!!.to
+        if (!TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
             tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
-            val gasPriceBig = BigInteger(transactionItem!!.gasPrice)
-            val gasUsedBig = BigInteger(transactionItem!!.gasUsed)
-            tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionItem!!.nativeSymbol
+            val gasPriceBig = BigInteger(transactionResponse!!.gasPrice)
+            val gasUsedBig = BigInteger(transactionResponse!!.gasUsed)
+            tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionResponse!!.nativeSymbol
             tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
-            val value = (if (transactionItem!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionItem!!.value
+            val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
             transaction_amount.text = value
-            tv_token_unit.text = transactionItem!!.symbol
-            tv_transaction_blockchain_no!!.text = transactionItem!!.blockNumber
+            tv_token_unit.text = transactionResponse!!.symbol
+            tv_transaction_blockchain_no!!.text = transactionResponse!!.blockNumber
         } else {
-            tv_chain_name.text = transactionItem!!.chainName
-            val value = (if (transactionItem!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionItem!!.value
+            tv_chain_name.text = transactionResponse!!.chainName
+            val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
             transaction_amount.text = value
-            tv_transaction_gas.text = transactionItem!!.symbol
+            tv_transaction_gas.text = transactionResponse!!.symbol
             tv_transaction_gas_price.visibility = View.GONE
             tv_transaction_gas_price_title.visibility = View.GONE
 
             try {
-                val blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionItem!!.blockNumber), 16)
+                val blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionResponse!!.blockNumber), 16)
                 tv_transaction_blockchain_no!!.text = blockNumber.toString()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            AppChainRpcService.getQuotaPrice(transactionItem!!.from)
+            AppChainRpcService.getQuotaPrice(transactionResponse!!.from)
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(price: String) {
                             super.onNext(price)
-                            var gasUsed = Numeric.toBigInt(transactionItem!!.gasUsed)
+                            var gasUsed = Numeric.toBigInt(transactionResponse!!.gasUsed)
                             var gasPrice = Numeric.toBigInt(HexUtils.IntToHex(price.toInt()))
                             var gas = gasUsed.multiply(gasPrice)
                             tv_transaction_gas.text =
-                                    NumberUtil.getEthFromWeiForStringDecimal8(gas) + transactionItem!!.nativeSymbol
+                                    NumberUtil.getEthFromWeiForStringDecimal8(gas) + transactionResponse!!.nativeSymbol
                         }
                     })
         }
 
-        tv_transaction_blockchain_time.text = transactionItem!!.date
+        tv_transaction_blockchain_time.text = transactionResponse!!.date
 
         tv_transaction_receiver!!.setOnClickListener {
-            if (transactionItem!!.to != ConstantUtil.RPC_RESULT_ZERO && !transactionItem!!.to.isEmpty())
-                copyText(transactionItem!!.to)
+            if (transactionResponse!!.to != ConstantUtil.RPC_RESULT_ZERO && !transactionResponse!!.to.isEmpty())
+                copyText(transactionResponse!!.to)
         }
-        tv_transaction_sender!!.setOnClickListener { copyText(transactionItem!!.from) }
-        tv_transaction_number!!.setOnClickListener { copyText(transactionItem!!.hash) }
+        tv_transaction_sender!!.setOnClickListener { copyText(transactionResponse!!.from) }
+        tv_transaction_number!!.setOnClickListener { copyText(transactionResponse!!.hash) }
     }
 
     override fun initAction() {
@@ -114,9 +114,9 @@ class TransactionDetailActivity : NBaseActivity() {
                     .rationale(RuntimeRationale())
                     .onGranted {
                         try {
-                            SharePicUtils.savePic(ConstantUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber +
+                            SharePicUtils.savePic(ConstantUtil.IMG_SAVE_PATH + transactionResponse!!.blockNumber +
                                     ".png", SharePicUtils.getCacheBitmapFromView(findViewById(R.id.ll_screenshot)))
-                            SharePicUtils.SharePic(this, ConstantUtil.IMG_SAVE_PATH + transactionItem!!.blockNumber + ".png")
+                            SharePicUtils.SharePic(this, ConstantUtil.IMG_SAVE_PATH + transactionResponse!!.blockNumber + ".png")
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
