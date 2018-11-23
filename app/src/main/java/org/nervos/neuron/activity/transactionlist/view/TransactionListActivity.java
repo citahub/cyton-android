@@ -138,7 +138,7 @@ public class TransactionListActivity extends NBaseActivity {
             TransactionResponse response = transactionResponseList.get(position);
             if (response.status != TransactionItem.PENDING) {
                 Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-                intent.putExtra(TransactionDetailActivity.Companion.getTRANSACTION_DETAIL(), response);
+                intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, response);
                 intent.putExtra(TRANSACTION_TOKEN, tokenItem);
                 startActivity(intent);
             }
