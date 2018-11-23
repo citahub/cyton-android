@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * Created by duanyytop on 2018/11/23.
  */
-public class TransactionReponse implements Parcelable {
+public class BaseResponse implements Parcelable {
 
     public static final int FAILED = 0;
     public static final int SUCCESS = 1;
@@ -21,7 +21,6 @@ public class TransactionReponse implements Parcelable {
     public String value;
     public String hash;
 
-    private String chainId;
     public String symbol;
     public String nativeSymbol;
     public String chainName;
@@ -45,17 +44,6 @@ public class TransactionReponse implements Parcelable {
     public String errorMessage;
     public String validUntilBlock;
 
-    public TransactionReponse(String from, String to, String value, String chainId, String chainName, int status, long timestamp, String hash) {
-        this.from = from;
-        this.to = to;
-        this.value = value;
-        this.chainId = chainId;
-        this.chainName = chainName;
-        this.status = status;
-        this.setTimestamp(timestamp);
-        this.hash = hash;
-    }
-
     public String getDate() {
         SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINA);
         return timeStamp > 0 ? ft.format(timeStamp * 1000) : ft.format(timestamp);
@@ -69,6 +57,30 @@ public class TransactionReponse implements Parcelable {
         this.timestamp = timestamp;
     }
 
+    public BaseResponse(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
+        this.from = from;
+        this.to = to;
+        this.value = value;
+        this.chainName = chainName;
+        this.status = status;
+        this.setTimestamp(timestamp);
+        this.hash = hash;
+    }
+
+    public BaseResponse(){}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        BaseResponse other = (BaseResponse)obj;
+
+        if (hash == null) {
+            return other.hash == null;
+        } else return hash.equalsIgnoreCase(other.hash);
+    }
 
 
     @Override
@@ -80,7 +92,6 @@ public class TransactionReponse implements Parcelable {
         dest.writeString(this.to);
         dest.writeString(this.value);
         dest.writeString(this.hash);
-        dest.writeString(this.chainId);
         dest.writeString(this.symbol);
         dest.writeString(this.nativeSymbol);
         dest.writeString(this.chainName);
@@ -97,14 +108,11 @@ public class TransactionReponse implements Parcelable {
         dest.writeString(this.validUntilBlock);
     }
 
-    public TransactionReponse() {}
-
-    protected TransactionReponse(Parcel in) {
+    protected BaseResponse(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
         this.hash = in.readString();
-        this.chainId = in.readString();
         this.symbol = in.readString();
         this.nativeSymbol = in.readString();
         this.chainName = in.readString();
@@ -121,11 +129,11 @@ public class TransactionReponse implements Parcelable {
         this.validUntilBlock = in.readString();
     }
 
-    public static final Creator<TransactionReponse> CREATOR = new Creator<TransactionReponse>() {
+    public static final Creator<BaseResponse> CREATOR = new Creator<BaseResponse>() {
         @Override
-        public TransactionReponse createFromParcel(Parcel source) {return new TransactionReponse(source);}
+        public BaseResponse createFromParcel(Parcel source) {return new BaseResponse(source);}
 
         @Override
-        public TransactionReponse[] newArray(int size) {return new TransactionReponse[size];}
+        public BaseResponse[] newArray(int size) {return new BaseResponse[size];}
     };
 }

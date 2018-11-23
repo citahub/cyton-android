@@ -24,6 +24,7 @@ import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
@@ -41,7 +42,7 @@ public class TransactionListActivity extends NBaseActivity {
 
     public static final String TRANSACTION_TOKEN = "TRANSACTION_TOKEN";
 
-    private List<TransactionItem> transactionItemList = new ArrayList<>();
+    private List<TransactionResponse> transactionResponseList = new ArrayList<>();
     private WalletItem walletItem;
 
     private RecyclerView recyclerView;
@@ -120,7 +121,7 @@ public class TransactionListActivity extends NBaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        transactionAdapter = new TransactionAdapter(this, transactionItemList, walletItem.address);
+        transactionAdapter = new TransactionAdapter(this, transactionResponseList, walletItem.address);
         recyclerView.setAdapter(transactionAdapter);
 
         scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
@@ -134,10 +135,10 @@ public class TransactionListActivity extends NBaseActivity {
         recyclerView.addOnScrollListener(scrollListener);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
-            TransactionItem item = transactionItemList.get(position);
-            if (item.status != TransactionItem.PENDING) {
+            TransactionResponse response = transactionResponseList.get(position);
+            if (response.status != TransactionItem.PENDING) {
                 Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-                intent.putExtra(TransactionDetailActivity.Companion.getTRANSACTION_DETAIL(), item);
+                intent.putExtra(TransactionDetailActivity.Companion.getTRANSACTION_DETAIL(), response);
                 intent.putExtra(TRANSACTION_TOKEN, tokenItem);
                 startActivity(intent);
             }
@@ -185,18 +186,18 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         @Override
-        public void updateNewList(List<TransactionItem> list) {
+        public void updateNewList(List<TransactionResponse> list) {
             mPage++;
-            transactionItemList = list;
-            transactionAdapter.refresh(transactionItemList);
+            transactionResponseList = list;
+            transactionAdapter.refresh(transactionResponseList);
         }
 
         @Override
-        public void refreshList(List<TransactionItem> list) {
+        public void refreshList(List<TransactionResponse> list) {
             mPage++;
             transactionAdapter.removeLoadingView();
-            transactionItemList.addAll(list);
-            transactionAdapter.refresh(transactionItemList);
+            transactionResponseList.addAll(list);
+            transactionAdapter.refresh(transactionResponseList);
             scrollListener.setLoaded();
         }
 
@@ -238,7 +239,7 @@ public class TransactionListActivity extends NBaseActivity {
         public void noMoreLoading() {
             transactionAdapter.removeLoadingView();
             scrollListener.setLoaded();
-            if (transactionItemList.size() > 0) {
+            if (transactionResponseList.size() > 0) {
                 Toast.makeText(mActivity, R.string.no_more_transaction_data, Toast.LENGTH_SHORT).show();
             }
         }
