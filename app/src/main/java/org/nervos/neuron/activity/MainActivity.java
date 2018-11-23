@@ -63,8 +63,8 @@ public class MainActivity extends NBaseActivity {
     protected void initData() {
         fMgr = getSupportFragmentManager();
 
-//        startCheckAppChainTransaction();
-//        startCheckEtherTransaction();
+        startCheckAppChainTransaction();
+        startCheckEtherTransaction();
     }
 
     private void startCheckAppChainTransaction() {
