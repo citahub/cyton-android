@@ -6,6 +6,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.*;
 
+import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.crypto.bip44.HdKeyNode;
 import org.nervos.neuron.util.crypto.bip44.hdpath.HdKeyPath;
 import com.fasterxml.jackson.core.JsonParser;
@@ -106,7 +107,7 @@ public class WalletEntity {
      */
     public static WalletEntity fromMnemonic(String mnemonic, String path, String password) throws Exception {
         WalletEntity wa = new WalletEntity();
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
         wa.keystore = new Gson().toJson(wa.walletFile);
