@@ -1,5 +1,7 @@
 package org.nervos.neuron.util.ether;
 
+import android.text.TextUtils;
+
 import org.nervos.appchain.utils.Numeric;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.ConstantUtil;
@@ -15,6 +17,10 @@ public class EtherUtil {
 
     public static boolean isEther(TokenItem tokenItem) {
         return Numeric.toBigInt(tokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0;
+    }
+
+    public static boolean isNative(TokenItem tokenItem) {
+        return TextUtils.isEmpty(tokenItem.contractAddress);
     }
 
     public static String getEtherId() {

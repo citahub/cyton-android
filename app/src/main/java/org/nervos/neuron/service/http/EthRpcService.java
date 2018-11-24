@@ -44,6 +44,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -74,12 +75,11 @@ public class EthRpcService {
         service = Web3jFactory.build(new InfuraHttpService(EtherUtil.getEthNodeUrl()));
     }
 
-    public static double getEthBalance(String address) throws Exception {
-        EthGetBalance ethGetBalance = service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
-        if (ethGetBalance != null) {
-            return NumberUtil.getEthFromWei(ethGetBalance.getBalance());
-        }
-        return 0.0;
+    public static Observable<Double> getEthBalance(String address) {
+        return Observable.fromCallable(() ->
+                service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send())
+                .map(ethGetBalance -> NumberUtil.getEthFromWei(ethGetBalance.getBalance()))
+                .subscribeOn(Schedulers.io());
     }
 
     public static Observable<BigInteger> getEthGasPrice() {
@@ -182,19 +182,24 @@ public class EthRpcService {
         }
     }
 
-    public static double getERC20Balance(String contractAddress, String address) throws Exception {
-        long decimal = getErc20Decimal(address, contractAddress);
-        Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
-                ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
-        String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
-            initIntTypes();
-            Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
-            double balances = balance.getValue().doubleValue();
-            if (decimal == 0) return balance.getValue().doubleValue();
-            else return balances / (Math.pow(10, decimal));
-        }
-        return 0.0;
+    public static Observable<Double> getERC20Balance(String contractAddress, String address) {
+        return Observable.fromCallable(new Callable<Double>() {
+            @Override
+            public Double call() throws Exception {
+                long decimal = getErc20Decimal(address, contractAddress);
+                Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
+                        ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
+                if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+                    initIntTypes();
+                    Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+                    double balances = balance.getValue().doubleValue();
+                    if (decimal == 0) return balance.getValue().doubleValue();
+                    else return balances / (Math.pow(10, decimal));
+                }
+                return 0.0;
+            }
+        }).subscribeOn(Schedulers.io());
     }
 
 
