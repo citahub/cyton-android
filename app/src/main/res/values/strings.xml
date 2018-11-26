@@ -147,7 +147,7 @@
     <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
-    <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="address_error">您的地址错误，请重新输入</string>
     <string name="web_url_error">请扫描正确的网址二维码</string>
     <string name="keystore_error">请扫描正确的Keystore二维码</string>
     <string name="private_key_error">请扫描正确的私钥二维码</string>
