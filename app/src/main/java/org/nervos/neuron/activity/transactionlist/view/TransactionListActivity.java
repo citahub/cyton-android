@@ -11,25 +11,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.TransactionDetailActivity;
-import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
+import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
-import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.loadmore.OnLoadMoreListener;
 import org.nervos.neuron.view.loadmore.RecyclerViewLoadMoreScroll;
@@ -168,9 +167,7 @@ public class TransactionListActivity extends NBaseActivity {
     }
 
     private void initBalance() {
-        if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
-            presenter.getBalance();
-        }
+        presenter.getBalance();
     }
 
     private TransactionListPresenter.TransactionListPresenterImpl listener
