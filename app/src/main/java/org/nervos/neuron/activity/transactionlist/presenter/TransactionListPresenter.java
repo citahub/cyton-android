@@ -14,10 +14,12 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.TokenService;
@@ -183,17 +185,18 @@ public class TransactionListPresenter {
 
 
     private List<TransactionResponse> getEtherTransactionList(Context context, String chainId, List<TransactionResponse> list) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             Iterator<TransactionItem> iterator = itemList.iterator();
             while (iterator.hasNext()) {
                 TransactionItem dbItem = iterator.next();
                 for (TransactionResponse item : list) {
-                    if (item.hash.equalsIgnoreCase(dbItem.hash)) {
+                    if (!walletItem.address.equals(dbItem.from) && !walletItem.address.equals(dbItem.to)) {
                         iterator.remove();
                         break;
                     }
-                    if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
+                    if (item.hash.equalsIgnoreCase(dbItem.hash) || dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
                         iterator.remove();
                         break;
                     }
@@ -208,17 +211,18 @@ public class TransactionListPresenter {
     }
 
     private List<TransactionResponse> getAppChainTransactionList(Context context, String chainId, List<TransactionResponse> list) {
+        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
         List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
         if (itemList.size() > 0) {
             Iterator<TransactionItem> iterator = itemList.iterator();
             while (iterator.hasNext()) {
                 TransactionItem dbItem = iterator.next();
                 for (TransactionResponse item : list) {
-                    if (item.hash.equalsIgnoreCase(dbItem.hash)) {
+                    if (!walletItem.address.equals(dbItem.from) && !walletItem.address.equals(dbItem.to)) {
                         iterator.remove();
                         break;
                     }
-                    if (dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
+                    if (item.hash.equalsIgnoreCase(dbItem.hash) || dbItem.getTimestamp() < list.get(list.size() - 1).getTimestamp()) {
                         iterator.remove();
                         break;
                     }
