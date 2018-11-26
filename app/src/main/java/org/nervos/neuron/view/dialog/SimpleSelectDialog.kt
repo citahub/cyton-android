@@ -1,6 +1,7 @@
-package org.nervos.neuron.fragment
+package org.nervos.neuron.view.dialog
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import org.nervos.neuron.R
-import org.nervos.neuron.view.dialog.SelectorDialog
 
 /**
  * Created by BaojunCZ on 2018/11/22.
@@ -39,9 +39,9 @@ class SimpleSelectDialog(val context: Context, val list: List<String>) : Selecto
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.name.text = list[position]
             if (position == mSelected)
-                holder.name.setTextColor(context.resources.getColor(R.color.font_link))
+                holder.name.setTextColor(ContextCompat.getColor(context, R.color.font_link))
             else
-                holder.name.setTextColor(context.resources.getColor(R.color.font_title))
+                holder.name.setTextColor(ContextCompat.getColor(context, R.color.font_title))
             holder.root.setOnClickListener {
                 mSelected = position
                 notifyDataSetChanged()

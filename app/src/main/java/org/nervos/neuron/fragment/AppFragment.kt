@@ -8,7 +8,7 @@ import com.sensorsdata.analytics.android.sdk.SensorsDataAPI
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWebsiteActivity
 import org.nervos.neuron.activity.AppWebActivity
-import org.nervos.neuron.activity.colleactWebsite.CollectWebsiteActivity
+import org.nervos.neuron.activity.collectwebsite.CollectWebsiteActivity
 import org.nervos.neuron.plugin.AppTabPlugin
 import org.nervos.neuron.util.url.HttpUrls
 import org.nervos.neuron.util.web.WebAppUtil

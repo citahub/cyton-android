@@ -157,7 +157,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ChangeWalletActivity"
+            android:name=".activity.changewallet.ChangeWalletActivity"
             android:theme="@style/transparent_activity" />
         <activity
             android:name=".activity.PwdUnlockActivity"
@@ -178,7 +178,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.colleactWebsite.CollectWebsiteActivity"
+            android:name=".activity.collectwebsite.CollectWebsiteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

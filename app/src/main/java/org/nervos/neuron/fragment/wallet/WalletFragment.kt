@@ -11,8 +11,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWalletActivity
-import org.nervos.neuron.activity.ChangeWalletActivity
 import org.nervos.neuron.activity.TokenManageActivity
+import org.nervos.neuron.activity.changewallet.ChangeWalletActivity
 import org.nervos.neuron.event.AddTokenRefreshEvent
 import org.nervos.neuron.event.CurrencyRefreshEvent
 import org.nervos.neuron.event.TokenBalanceEvent

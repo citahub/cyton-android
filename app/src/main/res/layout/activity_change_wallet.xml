@@ -3,26 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="@color/default_background"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_pull"
-        android:layout_width="70dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="11dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_wallet_change_pull" />
+    <org.nervos.neuron.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:isShowBottomLine="true"
+        app:isShowLeft="true"
+        app:title="@string/wallet_exchange" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/wallet_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="15dip"
-        android:layout_marginEnd="15dip"
-        android:layout_marginTop="15dp"
-        android:background="@color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/iv_pull" />
+        android:background="@color/transparent" />
 
 </LinearLayout>

@@ -3,28 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/wallet_item_corner">
+    android:layout_height="46dp"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="@dimen/default_margin"
+    android:background="@drawable/ic_bg_wallet_add">
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginBottom="39dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/ic_wallet_add"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/icon_wallet_change_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:text="@string/add_wallet"
         android:textColor="@color/font_title"
-        android:textSize="15sp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv" />
+        app:layout_constraintStart_toEndOf="@id/iv"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

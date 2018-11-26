@@ -10,10 +10,10 @@ import kotlinx.android.synthetic.main.view_wallet_assets.view.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.ReceiveQrCodeActivity
 import org.nervos.neuron.activity.transfer.TransferActivity
-import org.nervos.neuron.fragment.SimpleSelectDialog
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.view.dialog.SimpleSelectDialog
 
 /**
  * Created by BaojunCZ on 2018/11/19.

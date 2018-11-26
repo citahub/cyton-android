@@ -224,6 +224,7 @@
     <string name="web_error_hint">网络错误，请稍候重试</string>
     <string name="refresh">刷新</string>
     <string name="token_detail_btn">详情>></string>
+    <string name="wallet_exchange">切换钱包</string>
 
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
