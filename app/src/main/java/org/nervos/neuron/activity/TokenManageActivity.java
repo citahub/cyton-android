@@ -117,17 +117,16 @@ public class TokenManageActivity extends BaseActivity {
                 viewHolder.tokenName.setText(tokenList.get(position).name);
                 viewHolder.tokenSymbol.setText(tokenList.get(position).symbol);
                 viewHolder.tokenContractAddress.setText(tokenList.get(position).address);
+                viewHolder.tokenSelectSwitch.setOnCheckedChangeListener(null);
                 tokenList.get(position).isSelected =
                         DBWalletUtil.checkTokenInCurrentWallet(mActivity, tokenList.get(position).symbol);
-
                 viewHolder.tokenSelectSwitch.setChecked(tokenList.get(position).isSelected);
+
                 viewHolder.tokenSelectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        tokenList.get(position).isSelected = !tokenList.get(position).isSelected;
-                        viewHolder.tokenSelectSwitch.setChecked(tokenList.get(position).isSelected);
-
-                        if (tokenList.get(position).isSelected) {
+                        tokenList.get(position).isSelected = isChecked;
+                        if (isChecked) {
                             DBWalletUtil.addTokenToCurrentWallet(mActivity, new TokenItem(tokenList.get(position)));
                         } else {
                             DBWalletUtil.deleteTokenFromCurrentWallet(mActivity, new TokenItem(tokenList.get(position)));
