@@ -77,7 +77,7 @@ class TransactionDetailActivity : NBaseActivity() {
             tv_transaction_gas_price_title.visibility = View.GONE
 
             try {
-                val blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionResponse!!.blockNumber), 16)
+                val blockNumber = Numeric.toBigInt(transactionResponse!!.blockNumber).toString(10)
                 tv_transaction_blockchain_no!!.text = blockNumber.toString()
             } catch (e: Exception) {
                 e.printStackTrace()
