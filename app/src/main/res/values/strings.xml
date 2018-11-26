@@ -513,5 +513,4 @@
     <string name="blockchain">区块链</string>
     <string name="contract_address">合约地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
-    <string name="todo">TODO</string>
 </resources>
