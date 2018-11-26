@@ -186,12 +186,11 @@ public class AppChainRpcService {
 
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                        } else {
+                            saveLocalTransaction(context, walletItem.address, address, String.valueOf(value),
+                                    validUntilBlock.longValue(), chainId.toString(), tokenItem.contractAddress,
+                                    appSendTransaction.getSendTransactionResult().getHash());
                         }
-
-                        saveLocalTransaction(context, walletItem.address, address, String.valueOf(value),
-                                validUntilBlock.longValue(), chainId.toString(), tokenItem.contractAddress,
-                                appSendTransaction.getSendTransactionResult().getHash());
-
                         return Observable.just(appSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -222,12 +221,11 @@ public class AppChainRpcService {
 
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                        } else {
+                            saveLocalTransaction(context, walletItem.address, toAddress, String.valueOf(value),
+                                    validUntilBlock.longValue(), chainId.toString(), "",
+                                    appSendTransaction.getSendTransactionResult().getHash());
                         }
-
-                        saveLocalTransaction(context, walletItem.address, toAddress, String.valueOf(value),
-                                validUntilBlock.longValue(), chainId.toString(), "",
-                                appSendTransaction.getSendTransactionResult().getHash());
-
                         return Observable.just(appSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
