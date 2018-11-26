@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transactionlist.model.TokenDescribeModel;
 import org.nervos.neuron.item.EthErc20TokenInfoItem;
@@ -17,15 +15,17 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.service.http.HttpService;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.web3j.crypto.Keys;
 import org.web3j.utils.Numeric;
+import rx.Observable;
+import rx.Subscriber;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -33,9 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by BaojunCZ on 2018/10/9.
@@ -88,7 +85,7 @@ public class TransactionListPresenter {
     }
 
     public void getBalance() {
-        if (tokenItem.balance > 0.0 && EtherUtil.isEther(tokenItem)) {
+        if (EtherUtil.isEther(tokenItem)) {
             TokenService.getCurrency(tokenItem.symbol, CurrencyUtil.getCurrencyItem(activity).getName())
                     .subscribe(new Subscriber<String>() {
                         @Override
@@ -108,9 +105,9 @@ public class TransactionListPresenter {
                                 DecimalFormat format = new DecimalFormat("0.####");
                                 format.setRoundingMode(RoundingMode.FLOOR);
                                 listener.getCurrency(CurrencyUtil.getCurrencyItem(activity).getSymbol()
-                                        + Double.parseDouble(df.format(price * tokenItem.balance)));
+                                        + Double.parseDouble(df.format(price)));
                             } else {
-                                listener.getCurrency("0");
+                                listener.getCurrency("");
                             }
                         }
                     });
