@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.RootUtil;
@@ -22,6 +21,10 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_splash);
         inLoginPage = true;
         if (RootUtil.isDeviceRooted()) {
