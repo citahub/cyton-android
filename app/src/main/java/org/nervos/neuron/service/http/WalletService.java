@@ -19,12 +19,14 @@ import org.web3j.crypto.Credentials;
 import org.web3j.utils.Numeric;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,96 +36,31 @@ import java.util.concurrent.Executors;
  */
 public class WalletService {
 
-    private static ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-    public static void getWalletTokenBalance(Context context, OnGetWalletTokenListener listener) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        if (walletItem == null || walletItem.tokenItems.size() == 0) return;
-        List<TokenItem> tokenItemList = new ArrayList<>();
-        executorService.execute(() -> {
-            Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
-            while (iterator.hasNext()) {
-                TokenItem tokenItem = iterator.next();
-                iterator.remove();
-                try {
-                    if (EtherUtil.isEther(tokenItem)) {
-                        if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
-                            tokenItem.balance = EthRpcService.getEthBalance(walletItem.address);
-                            tokenItemList.add(tokenItem);
-                            track(ConstantUtil.ETH, ConstantUtil.ETH, tokenItem.balance);
-                        } else {
-                            tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
-                            tokenItemList.add(tokenItem);
-                            track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
-                        }
-                    } else {
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                        if (chainItem != null) {
-                            String httpProvider = chainItem.httpProvider;
-                            AppChainRpcService.init(context, httpProvider);
-                            if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                                tokenItem.balance = AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
-                                tokenItem.chainName = chainItem.name;
-                                tokenItemList.add(tokenItem);
+    public static Observable<TokenItem> getTokenBalance(Context context, TokenItem tokenItem) {
+        return Observable.just(DBWalletUtil.getCurrentWallet(context).address)
+                .flatMap(new Func1<String, Observable<Double>>() {
+                    @Override
+                    public Observable<Double> call(String address) {
+                            if (EtherUtil.isEther(tokenItem)) {
+                                tokenItem.chainName = ConstantUtil.ETH;
+                                return EtherUtil.isNative(tokenItem)
+                                        ? EthRpcService.getEthBalance(address)
+                                        : EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
                             } else {
-                                tokenItem.balance = AppChainRpcService.getBalance(walletItem.address);
-                                tokenItem.chainName = chainItem.name;
-                                tokenItemList.add(tokenItem);
+                                ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+                                tokenItem.chainName = Objects.requireNonNull(chainItem).name;
+                                AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
+                                return EtherUtil.isNative(tokenItem)
+                                        ? AppChainRpcService.getBalance(address)
+                                        : AppChainRpcService.getErc20Balance(tokenItem, address);
                             }
-                            track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
-                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (listener != null) {
-                        listener.onGetWalletError(e.getMessage());
-                    }
-                }
-            }
-            walletItem.tokenItems = tokenItemList;
-            if (listener != null) {
-                listener.onGetWalletToken(walletItem);
-            }
-        });
-    }
-
-    public static void getTokenBalance(Context context, TokenItem tokenItem, OnGetWalletTokenListener listener) {
-        executorService.execute(() -> {
-            try {
-                String address = DBWalletUtil.getCurrentWallet(context).address;
-                if (EtherUtil.isEther(tokenItem)) {
-                    if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
-                        tokenItem.balance = EthRpcService.getEthBalance(address);
-                        track(ConstantUtil.ETH, ConstantUtil.ETH, tokenItem.balance);
-                    } else {
-                        tokenItem.balance = EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
-                        track(ConstantUtil.ETH, tokenItem.symbol, tokenItem.balance);
-                    }
-                } else {
-                    ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                    if (chainItem != null) {
-                        String httpProvider = chainItem.httpProvider;
-                        AppChainRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            tokenItem.balance = AppChainRpcService.getErc20Balance(tokenItem, address);
-                            tokenItem.chainName = chainItem.name;
-                        } else {
-                            tokenItem.balance = AppChainRpcService.getBalance(address);
-                            tokenItem.chainName = chainItem.name;
-                        }
-                        track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
-                    }
-                }
-                if (listener != null) {
-                    listener.onGetTokenBalance(tokenItem);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (listener != null) {
-                    listener.onGetWalletError(e.getMessage());
-                }
-            }
-        });
+                }).map(balance -> {
+                    tokenItem.balance = balance;
+                    track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
+                    return tokenItem;
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static void track(String chain, String type, double number) {
@@ -138,68 +75,40 @@ public class WalletService {
         }
     }
 
-    public interface OnGetWalletTokenListener {
-        void onGetTokenBalance(TokenItem balance);
-
-        void onGetWalletToken(WalletItem walletItem);
-
-        void onGetWalletError(String message);
-    }
-
-
     public static Observable<Double> getBalanceWithToken(Context context, TokenItem tokenItem) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return Observable.fromCallable(new Callable<Double>() {
-            @Override
-            public Double call() {
-                try {
-                    if (EtherUtil.isEther(tokenItem)) {
-                        if (ConstantUtil.ETH.equals(tokenItem.symbol)) {
-                            return EthRpcService.getEthBalance(walletItem.address);
-                        } else {
-                            return EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
-                        }
-                    } else {                                    // nervos
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                        if (chainItem == null) return 0.0;
-                        String httpProvider = chainItem.httpProvider;
-                        AppChainRpcService.init(context, httpProvider);
-                        if (!TextUtils.isEmpty(tokenItem.contractAddress)) {
-                            return AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
-                        } else {
-                            return AppChainRpcService.getBalance(walletItem.address);
-                        }
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0.0;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        Observable<Double> balanceObservable;
+        if (EtherUtil.isEther(tokenItem)) {
+            tokenItem.chainName = ConstantUtil.ETH;
+            balanceObservable =  EtherUtil.isNative(tokenItem)
+                    ? EthRpcService.getEthBalance(walletItem.address)
+                    : EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
+        } else {
+            ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
+            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
+            balanceObservable = EtherUtil.isNative(tokenItem)
+                    ? AppChainRpcService.getBalance(walletItem.address)
+                    : AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
+        }
+        return balanceObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Observable<Double> getBalanceWithNativeToken(Context context, TokenItem tokenItem) {
         WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        return Observable.fromCallable(new Callable<Double>() {
-            @Override
-            public Double call() {
-                try {
-                    if (EtherUtil.isEther(tokenItem)) {                // ethereum
-                        return EthRpcService.getEthBalance(walletItem.address);
-                    } else {                                    // appChain
-                        ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                        if (chainItem == null) return 0.0;
-                        String httpProvider = chainItem.httpProvider;
-                        AppChainRpcService.init(context, httpProvider);
-                        return AppChainRpcService.getBalance(walletItem.address);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0.0;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        Observable<Double> balanceObservable;
+        if (EtherUtil.isEther(tokenItem)) {
+            tokenItem.chainName = ConstantUtil.ETH;
+            balanceObservable = EthRpcService.getEthBalance(walletItem.address);
+        } else {
+            ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
+            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
+            balanceObservable = AppChainRpcService.getBalance(walletItem.address);
+        }
+        return balanceObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static boolean checkPassword(Context context, String password, WalletItem walletItem) {

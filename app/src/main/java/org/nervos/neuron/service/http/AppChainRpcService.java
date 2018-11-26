@@ -103,19 +103,25 @@ public class AppChainRpcService {
     }
 
 
-    public static double getErc20Balance(TokenItem tokenItem, String address) throws Exception {
-        Call balanceCall = new Call(address, tokenItem.contractAddress,
-                ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
-        String balanceOf = service.appCall(balanceCall,
-                DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
-            initIntTypes();
-            Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
-            double balances = balance.getValue().doubleValue();
-            if (tokenItem.decimals == 0) return balances;
-            else return balances / (Math.pow(10, tokenItem.decimals));
-        }
-        return 0.0;
+    public static Observable<Double> getErc20Balance(TokenItem tokenItem, String address) {
+        return Observable.fromCallable(new Callable<Double>() {
+            @Override
+            public Double call() throws IOException {
+                Call balanceCall = new Call(address, tokenItem.contractAddress,
+                        ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                String balanceOf = service.appCall(balanceCall,
+                        DefaultBlockParameterName.LATEST).send().getValue();
+                if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+                    initIntTypes();
+                    Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+                    double balances = balance.getValue().doubleValue();
+                    if (tokenItem.decimals == 0) return balances;
+                    else return balances / (Math.pow(10, tokenItem.decimals));
+                }
+                return 0.0;
+            }
+        }).subscribeOn(Schedulers.io());
+
     }
 
 
@@ -138,13 +144,13 @@ public class AppChainRpcService {
         }
     }
 
-    public static double getBalance(String address) throws Exception {
-        AppGetBalance appGetBalance =
-                service.appGetBalance(address, DefaultBlockParameterName.LATEST).send();
-        if (appGetBalance != null) {
-            return NumberUtil.getEthFromWei(appGetBalance.getBalance());
-        }
-        return 0.0;
+    public static Observable<Double> getBalance(String address) {
+        return Observable.fromCallable(() ->
+                    service.appGetBalance(address, DefaultBlockParameterName.LATEST).send())
+                .filter(appGetBalance -> appGetBalance != null)
+                .map(appGetBalance ->
+                    NumberUtil.getEthFromWei(appGetBalance.getBalance()))
+                .subscribeOn(Schedulers.io());
     }
 
     public static Observable<String> getQuotaPrice(String from) {

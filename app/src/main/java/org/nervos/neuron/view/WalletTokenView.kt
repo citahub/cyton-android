@@ -45,34 +45,29 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         tv_token_name.text = tokenItem.symbol
         tv_loading.text = resources.getString(R.string.wallet_token_loading)
         tv_token_currency.visibility = View.GONE
-        WalletService.getTokenBalance(context, tokenItem, object : WalletService.OnGetWalletTokenListener {
-            override fun onGetWalletToken(walletItem: WalletItem?) {
-            }
+        WalletService.getTokenBalance(context, tokenItem)
+                .subscribe(object : Subscriber<TokenItem>() {
+                    override fun onCompleted() {
 
-            override fun onGetWalletError(message: String?) {
-                tv_loading.post {
-                    tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)
-                    EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
-                }
-            }
-
-            override fun onGetTokenBalance(_tokenItem: TokenItem?) {
-                tv_loading.post {
-                    if (DBWalletUtil.getCurrentWallet(context).address == address && _tokenItem!!.name == tokenItem.name) {
-                        tokenItem = WalletTokenLoadItem(_tokenItem)
-                        tv_loading.visibility = View.GONE
-                        tv_token_balance.text = NumberUtil.getDecimal8ENotation(tokenItem.balance)
-                        tv_token_balance.visibility = View.VISIBLE
-                        if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
-                            getPrice()
-                        } else {
-                            EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
+                    }
+                    override fun onError(e: Throwable) {
+                        tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)
+                        EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
+                    }
+                    override fun onNext(item: TokenItem) {
+                        if (DBWalletUtil.getCurrentWallet(context).address == address && item.name == tokenItem.name) {
+                            tokenItem = WalletTokenLoadItem(item)
+                            tv_loading.visibility = View.GONE
+                            tv_token_balance.text = NumberUtil.getDecimal8ENotation(tokenItem.balance)
+                            tv_token_balance.visibility = View.VISIBLE
+                            if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
+                                getPrice()
+                            } else {
+                                EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
+                            }
                         }
                     }
-                }
-            }
-
-        })
+                })
     }
 
     private fun initAction() {
