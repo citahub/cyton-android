@@ -130,7 +130,9 @@ public class EthRpcService {
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) hexValue -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).sendAsync().get();
-                        saveEtherTransaction(context, walletItem.address, address, value, ethSendTransaction.getTransactionHash());
+                        if (!ethSendTransaction.hasError()) {
+                            saveEtherTransaction(context, walletItem.address, address, value, ethSendTransaction.getTransactionHash());
+                        }
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -211,8 +213,10 @@ public class EthRpcService {
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
-                        saveEtherERC20Transaction(context, tokenItem, walletItem.address, address,
-                                String.valueOf(value), ethSendTransaction.getTransactionHash());
+                        if (!ethSendTransaction.hasError()) {
+                            saveEtherERC20Transaction(context, tokenItem, walletItem.address, address,
+                                    value, ethSendTransaction.getTransactionHash());
+                        }
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
                         e.printStackTrace();

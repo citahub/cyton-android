@@ -54,6 +54,9 @@ public class NumberUtil {
      * @return
      */
     public static boolean isHex(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return false;
+        }
         value = Numeric.cleanHexPrefix(value);
         for (int i = 0; i < value.length(); i ++) {
             if (('0' > value.charAt(i) || '9' < value.charAt(i))

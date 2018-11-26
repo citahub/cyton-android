@@ -84,8 +84,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to)
                     || TextUtils.isEmpty(transactionResponse.to)
                     ? context.getResources().getString(R.string.contract_create) : transactionResponse.to);
-            String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") + transactionResponse.value;
-            viewHolder.transactionAmountText.setText(NumberUtil.getDecimal8ENotation(value));
+            String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+")
+                    + NumberUtil.getDecimal8ENotation(transactionResponse.value);
+            viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionResponse.getDate());
             switch (transactionResponse.status) {
                 case BaseResponse.FAILED:

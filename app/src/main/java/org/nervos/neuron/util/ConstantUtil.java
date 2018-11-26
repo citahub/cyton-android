@@ -53,6 +53,7 @@ public class ConstantUtil {
     public static final String ETHEREUM = "ethereum";
     public static final String ETH_MAINNET = "Ethereum Mainnet";
     public static final String GWEI = "GWei";
+    public static final double MIN_GWEI = 1;
 
     public static final String ETH_NET = "ETH_NET";
     public static final String ETH_NET_MAIN = "Main Ethereum Network";

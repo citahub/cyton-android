@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 
 import java.math.BigInteger;
 
@@ -31,8 +32,13 @@ public class AppChainTransactionService implements TransactionService {
                             item.status = TransactionItem.FAILED;
                             DBAppChainTransactionsUtil.update(context, item);
                         }
-                        if (receipt != null && TextUtils.isEmpty(receipt.getErrorMessage())) {
-                            DBAppChainTransactionsUtil.delete(context, item);
+                        if (receipt != null) {
+                            if (!TextUtils.isEmpty(receipt.getErrorMessage())) {
+                                item.status = TransactionItem.FAILED;
+                                DBAppChainTransactionsUtil.update(context, item);
+                            } else {
+                                DBAppChainTransactionsUtil.delete(context, item);
+                            }
                         }
                     }
                 });

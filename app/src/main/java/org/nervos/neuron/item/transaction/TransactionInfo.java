@@ -17,8 +17,8 @@ public class TransactionInfo implements Parcelable {
     public String from;
     public String to;
     public String nonce;
-    private long quota = -1;
-    public long validUntilBlock;
+    private String quota;
+    public String validUntilBlock;
     public String data;
     private String value;
     public String chainId;
@@ -33,36 +33,44 @@ public class TransactionInfo implements Parcelable {
     }
 
     public String getStringValue() {
-        value = TextUtils.isEmpty(value) ? "0" : value;
+        value = isValid(value) ? value : "0";
         return NumberUtil.getEthFromWeiForString(value);
     }
 
     public double getDoubleValue() {
-        value = TextUtils.isEmpty(value) ? "0" : value;
+        value = isValid(value) ? value : "0";
         return NumberUtil.getEthFromWeiForDouble(value);
     }
 
     public BigInteger getBigIntegerValue() {
-        if (TextUtils.isEmpty(value)) return BigInteger.ZERO;
+        if (isValid(value)) {
+            return BigInteger.ZERO;
+        }
         return Numeric.toBigInt(value);
     }
 
     public double getDoubleQuota() {
+        quota = isValid(quota) ? quota : "0";
         return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
     }
 
     public long getLongQuota() {
-        return quota;
+        quota = isValid(quota) ? quota : "0";
+        return Numeric.toBigInt(value).longValue();
     }
 
     public double getGas() {
-        BigInteger limitBig = TextUtils.isEmpty(gasLimit)? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
-        BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
+        BigInteger limitBig = isValid(gasLimit) ? Numeric.toBigInt(gasLimit) : BigInteger.ZERO;
+        BigInteger priceBig = isValid(gasPrice) ? Numeric.toBigInt(gasPrice) : BigInteger.ZERO;
         return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
     public boolean isEthereum() {
         return !TextUtils.isEmpty(chainType) && TYPE_ETH.equals(chainType);
+    }
+
+    private boolean isValid(String value) {
+        return !TextUtils.isEmpty(value) && NumberUtil.isHex(value);
     }
 
 
@@ -76,7 +84,7 @@ public class TransactionInfo implements Parcelable {
         dest.writeString(this.from);
         dest.writeString(this.to);
         dest.writeString(this.nonce);
-        dest.writeLong(this.quota);
+        dest.writeString(this.quota);
         dest.writeString(this.data);
         dest.writeString(this.value);
         dest.writeString(this.chainId);
@@ -89,7 +97,7 @@ public class TransactionInfo implements Parcelable {
         this.from = in.readString();
         this.to = in.readString();
         this.nonce = in.readString();
-        this.quota = in.readLong();
+        this.quota = in.readString();
         this.data = in.readString();
         this.value = in.readString();
         this.chainId = in.readString();
