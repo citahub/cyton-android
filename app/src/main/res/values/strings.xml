@@ -33,7 +33,7 @@
     <string name="export_keystore_warning">Keystore 是使用钱包密码加密后的文本信息，请您妥善保管。导出的 Keystore 格式与以太坊官方 Keystore 格式相同。</string>
     <string name="tab_application">应用</string>
     <string name="tab_wallet">钱包</string>
-    <string name="tab_me">我</string>
+    <string name="tab_me">我的</string>
     <string name="wallet_token_total_money">总资产</string>
     <string name="copy_address">复制地址</string>
     <string name="token_warning_message">该token无任何价值，仅做开发者测试使用</string>
@@ -87,7 +87,7 @@
     <string name="share">分享</string>
     <string name="wallet_title">钱包</string>
     <string name="receive_token">收款</string>
-    <string name="me_title">我的</string>
+    <string name="me_title">我</string>
     <string name="setting_currency">本地货币</string>
     <string name="setting_fingerprint">指纹设置</string>
     <string name="setting_select_eth_net">切换以太坊网络</string>
@@ -139,7 +139,8 @@
     <string name="transaction_detail_title">交易详情</string>
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="press_back_finish">再按一次返回键退出</string>
-    <string name="collect_title">我的收藏</string>
+    <string name="collect_title">我的藏品</string>
+    <string name="my_dapp">我的dapp</string>
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
     <string name="reload">重新加载</string>
@@ -199,7 +200,7 @@
     <string name="wallet_token_loading">加载中...</string>
     <string name="wallet_token_loading_failed">加载失败</string>
     <string name="wallet_token_no_assets">暂无资产</string>
-    <string name="dapp_title">DApp</string>
+    <string name="dapp_title">ÐApp</string>
     <string name="import_keystore_error">您导入的Keystore失败，请重新输入</string>
     <string name="qrcode_receive_tips">此地址只接收AppChain、以太坊Token，发送其他币种到此地址将不可找回</string>
 
