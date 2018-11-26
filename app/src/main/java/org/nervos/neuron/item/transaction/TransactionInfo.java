@@ -33,37 +33,44 @@ public class TransactionInfo implements Parcelable {
     }
 
     public String getStringValue() {
-        value = TextUtils.isEmpty(value) || !NumberUtil.isHex(value) ? "0" : value;
+        value = isValid(value) ? "0" : value;
         return NumberUtil.getEthFromWeiForString(value);
     }
 
     public double getDoubleValue() {
-        value = TextUtils.isEmpty(value) || !NumberUtil.isHex(value) ? "0" : value;
+        value = isValid(value) ? "0" : value;
         return NumberUtil.getEthFromWeiForDouble(value);
     }
 
     public BigInteger getBigIntegerValue() {
-        if (TextUtils.isEmpty(value) || !NumberUtil.isHex(value)) return BigInteger.ZERO;
+        if (isValid(value)) {
+            return BigInteger.ZERO;
+        }
         return Numeric.toBigInt(value);
     }
 
     public double getDoubleQuota() {
+        quota = isValid(quota) ? "0" : quota;
         return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
     }
 
     public long getLongQuota() {
-        quota = TextUtils.isEmpty(quota) || !NumberUtil.isHex(quota) ? "0" : quota;
+        quota = isValid(quota) ? "0" : quota;
         return Numeric.toBigInt(value).longValue();
     }
 
     public double getGas() {
-        BigInteger limitBig = TextUtils.isEmpty(gasLimit)? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
-        BigInteger priceBig = TextUtils.isEmpty(gasPrice)? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
+        BigInteger limitBig = isValid(gasLimit) ? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
+        BigInteger priceBig = isValid(gasPrice) ? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
         return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
     public boolean isEthereum() {
         return !TextUtils.isEmpty(chainType) && TYPE_ETH.equals(chainType);
+    }
+
+    private boolean isValid(String value) {
+        return !TextUtils.isEmpty(value) && NumberUtil.isHex(value);
     }
 
 
