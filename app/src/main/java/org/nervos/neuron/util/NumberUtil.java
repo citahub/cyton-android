@@ -32,6 +32,12 @@ public class NumberUtil {
     }
 
     public static String getDecimal8ENotation(double value) {
+        if (value < 1) {
+            double decimal = value - (long) value;
+            if (decimal < 0.00000001) {
+                return String.valueOf(value);
+            }
+        }
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
         BigDecimal big = BigDecimal.valueOf(value);
