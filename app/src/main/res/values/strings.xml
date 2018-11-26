@@ -144,7 +144,7 @@
     <string name="cancel_collect">取消收藏</string>
     <string name="reload">重新加载</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
-    <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
+    <string name="balance_not_enough_fee">请确保账户剩余 %s 高于矿工费用，以便顺利完成转账～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">您的地址错误，请重新输入</string>
