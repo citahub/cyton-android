@@ -42,7 +42,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     private lateinit var mCircleAnim: Animation
 
     override val contentLayout: Int
-        get() =  R.layout.fragment_wallet
+        get() = R.layout.fragment_wallet
 
     override fun initView() {
         mWalletAssetsView = findViewById(R.id.view_wallet_assets) as WalletAssetsView
@@ -50,6 +50,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     }
 
     override fun initData() {
+        loadExchangeBtn()
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.isNestedScrollingEnabled = false
         startIvRefresh()
@@ -77,6 +78,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     //reload list after exchanging wallet
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWalletSaveEvent(event: TokenRefreshEvent) {
+        loadExchangeBtn()
         startIvRefresh()
         reloadTokens()
     }
@@ -164,4 +166,11 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
         iv_refresh.startAnimation(mCircleAnim)
     }
 
+    private fun loadExchangeBtn() {
+        if (DBWalletUtil.getAllWalletName(activity!!).size > 1) {
+            mTitleBar!!.setRightImage(R.drawable.ic_wallet_exchange)
+        } else {
+            mTitleBar!!.setRightImage(R.drawable.ic_wallet_rec_add)
+        }
+    }
 }
