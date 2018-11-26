@@ -9,7 +9,7 @@
     <string name="add_wallet">添加钱包</string>
     <string name="add">添加</string>
     <string name="title_token_management">ERC20列表</string>
-    <string name="title_receive_qrcode">收款码</string>
+    <string name="title_receive_qrcode">收款</string>
     <string name="backup_mnemonic">备份助记词</string>
     <string name="confirm_mnemonic">确认助记词</string>
     <string name="title_transfer">转账</string>
@@ -201,6 +201,7 @@
     <string name="wallet_token_no_assets">暂无资产</string>
     <string name="dapp_title">DApp</string>
     <string name="import_keystore_error">您导入的Keystore失败，请重新输入</string>
+    <string name="qrcode_receive_tips">此地址只接收AppChain、以太坊Token，发送其他币种到此地址将不可找回</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
@@ -512,4 +513,5 @@
     <string name="blockchain">区块链</string>
     <string name="contract_address">合约地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
+    <string name="todo">TODO</string>
 </resources>
