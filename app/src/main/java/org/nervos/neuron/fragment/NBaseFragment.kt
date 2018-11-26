@@ -11,30 +11,20 @@ import android.view.ViewGroup
 abstract class NBaseFragment : BaseFragment() {
 
     var contentView: View? = null
-    var isFirstLoad = true
 
     protected abstract val contentLayout: Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        if (contentView == null) {
-            contentView = inflater.inflate(contentLayout, container, false)
-            isFirstLoad = true
-        } else {
-            isFirstLoad = false
-            val vp = contentView!!.parent as ViewGroup
-            vp.removeView(contentView)
-        }
+        contentView = inflater.inflate(contentLayout, container, false)
         return contentView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (isFirstLoad) {
-            initView()
-            initData()
-            initAction()
-        }
+        initView()
+        initData()
+        initAction()
     }
 
     protected open fun initView() {}

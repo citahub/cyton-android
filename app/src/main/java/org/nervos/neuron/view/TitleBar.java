@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 import org.nervos.neuron.R;
-
-import java.io.IOException;
 
 /**
  * Created by duanyangyang on 18/1/5.
@@ -195,9 +190,9 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setRightImage(int res) {
         showRight();
-        mTitleBarLeftDefaultView.setText("");
+        mTitleBarRightDefaultView.setText("");
         Drawable drawable = mContext.getResources().getDrawable(res);
-        mTitleBarLeftDefaultView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+        mTitleBarRightDefaultView.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
     }
 
     /**
