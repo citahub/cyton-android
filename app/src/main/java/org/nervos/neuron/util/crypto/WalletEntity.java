@@ -30,6 +30,8 @@ public class WalletEntity {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static final String PASSPHRASE = "";
+
     static {
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -81,7 +83,7 @@ public class WalletEntity {
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
         String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSPHRASE);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         try {
             wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
@@ -91,7 +93,7 @@ public class WalletEntity {
         wa.keystore = new Gson().toJson(wa.walletFile);
         wa.credentials = Credentials.create(ecKeyPair);
         wa.mnemonic = mnemonic;
-        wa.passphrase = password;
+        wa.passphrase = PASSPHRASE;
         wa.path = path;
         return wa;
     }
@@ -107,13 +109,13 @@ public class WalletEntity {
      */
     public static WalletEntity fromMnemonic(String mnemonic, String path, String password) throws Exception {
         WalletEntity wa = new WalletEntity();
-        byte[] seed = MnemonicUtils.generateSeed(mnemonic, "");
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, PASSPHRASE);
         ECKeyPair ecKeyPair = createBip44NodeFromSeed(seed, path);
         wa.walletFile = Wallet.create(password, ecKeyPair, 1024, 1);
         wa.keystore = new Gson().toJson(wa.walletFile);
         wa.credentials = Credentials.create(ecKeyPair);
         wa.mnemonic = mnemonic;
-        wa.passphrase = password;
+        wa.passphrase = PASSPHRASE;
         wa.path = path;
         return wa;
     }

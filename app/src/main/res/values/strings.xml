@@ -144,10 +144,10 @@
     <string name="cancel_collect">取消收藏</string>
     <string name="reload">重新加载</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
-    <string name="balance_not_enough_fee">您的%s余额不足支付此次交易的手续费，请获取后再试～</string>
+    <string name="balance_not_enough_fee">请确保账户剩余 %s 高于矿工费用，以便顺利完成转账～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
-    <string name="address_error">地址有误：地址一般为0x开头的42位字符</string>
+    <string name="address_error">您的地址错误，请重新输入</string>
     <string name="web_url_error">请扫描正确的网址二维码</string>
     <string name="keystore_error">请扫描正确的Keystore二维码</string>
     <string name="private_key_error">请扫描正确的私钥二维码</string>
@@ -505,7 +505,7 @@
     <string name="gas_fee_sum_value">≈ Gas Limit(%1$s)*Gas Price(%2$s)</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">请输入正确的GasPrice</string>
-    <string name="gas_price_too_low">您的gasPrice设置过低，请确保输入大于等于%sGWei 以快速转账</string>
+    <string name="gas_price_too_low">您的GasPrice设置过低，建议输入推荐值以快速转账</string>
     <string name="balance_more_gas">请确保账户剩余%s高于矿工费用，以便顺利完成转账～</string>
     <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
     <string name="transaction_data">包含数据</string>

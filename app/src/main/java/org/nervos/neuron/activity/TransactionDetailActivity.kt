@@ -58,26 +58,24 @@ class TransactionDetailActivity : NBaseActivity() {
                 if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty())
                     resources.getString(R.string.contract_create)
                 else transactionResponse!!.to
+        val symbol = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+")
+        transaction_amount.text = symbol + NumberUtil.getDecimal8ENotation(transactionResponse!!.value)
         if (!TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
             tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             val gasPriceBig = BigInteger(transactionResponse!!.gasPrice)
             val gasUsedBig = BigInteger(transactionResponse!!.gasUsed)
             tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + transactionResponse!!.nativeSymbol
             tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
-            val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
-            transaction_amount.text = NumberUtil.getDecimal8ENotation(value)
             tv_token_unit.text = transactionResponse!!.symbol
             tv_transaction_blockchain_no!!.text = transactionResponse!!.blockNumber
         } else {
             tv_chain_name.text = transactionResponse!!.chainName
-            val value = (if (transactionResponse!!.from.equals(walletItem!!.address, ignoreCase = true)) "-" else "+") + transactionResponse!!.value
-            transaction_amount.text = NumberUtil.getDecimal8ENotation(value)
             tv_transaction_gas.text = transactionResponse!!.symbol
             tv_transaction_gas_price.visibility = View.GONE
             tv_transaction_gas_price_title.visibility = View.GONE
 
             try {
-                val blockNumber = Integer.parseInt(Numeric.cleanHexPrefix(transactionResponse!!.blockNumber), 16)
+                val blockNumber = Numeric.toBigInt(transactionResponse!!.blockNumber).toString(10)
                 tv_transaction_blockchain_no!!.text = blockNumber.toString()
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -419,10 +419,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     public void onOkClick(View v, String gasPrice) {
                         if (TextUtils.isEmpty(gasPrice)) {
                             Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if(Double.parseDouble(gasPrice) < Double.parseDouble(ethGasPriceDefaultValue)) {
-                            Toast.makeText(mActivity,
-                                    String.format(getString(R.string.gas_price_too_low), ethGasPriceDefaultValue),
-                                    Toast.LENGTH_SHORT).show();
+                        } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
+                            Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
                         } else {
                             mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
                             setEthGasPrice();
