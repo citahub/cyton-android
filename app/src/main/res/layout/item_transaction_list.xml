@@ -7,7 +7,7 @@
     android:gravity="center_vertical">
 
     <TextView
-        android:id="@+id/transaction_id_text"
+        android:id="@+id/transaction_to_address_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -27,7 +27,7 @@
         android:textColor="@color/font_title_third"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/transaction_id_text" />
+        app:layout_constraintTop_toBottomOf="@id/transaction_to_address_text" />
 
 
     <TextView
@@ -38,7 +38,7 @@
         android:textColor="@color/font_title"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/transaction_id_text" />
+        app:layout_constraintTop_toTopOf="@id/transaction_to_address_text" />
 
     <TextView
         android:id="@+id/transaction_status"

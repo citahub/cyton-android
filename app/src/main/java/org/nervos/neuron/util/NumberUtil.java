@@ -32,27 +32,14 @@ public class NumberUtil {
     }
 
     public static String getDecimal8ENotation(double value) {
-        if (value < 1) {
-            double decimal = value - (long) value;
-            if (decimal < 0.00000001) {
-                return String.valueOf(value);
-            }
-        }
-        if (String.valueOf(value).length() - String.valueOf(value).indexOf(".") - 1 <= 8) {
-            return String.valueOf(value);
-        }
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
-        return fmt.format(value);
+        BigDecimal big = BigDecimal.valueOf(value);
+        return fmt.format(big);
     }
 
     public static String getDecimal8ENotation(String value) {
-        if (!value.contains(".")) return value;
-        int index = value.indexOf(".");
-        String integer = value.substring(0, index);
-        String decimal = value.substring(index + 1);
-        decimal = decimal.substring(0, 8);
-        return integer + "." + decimal;
+        return getDecimal8ENotation(Double.parseDouble(value));
     }
 
     /**

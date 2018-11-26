@@ -110,7 +110,6 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     mAuthFingerDialog.setOnDismissListener((dialog) -> {
                         mFingerPrintController.cancelAuth();
-                        mSbvFingerPrint.setSwitchCheck(false);
                     });
                     mAuthFingerDialog.show();
                 } else {
@@ -188,6 +187,7 @@ public class SettingsFragment extends NBaseFragment {
     AuthenticateResultCallback authenticateResultCallback = new AuthenticateResultCallback() {
         @Override
         public void onAuthenticationError(String errorMsg) {
+            mSbvFingerPrint.setSwitchCheck(false);
             Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
         }
 
@@ -201,6 +201,7 @@ public class SettingsFragment extends NBaseFragment {
 
         @Override
         public void onAuthenticationFailed() {
+            mSbvFingerPrint.setSwitchCheck(false);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_failed), Toast.LENGTH_SHORT).show();
         }
     };
