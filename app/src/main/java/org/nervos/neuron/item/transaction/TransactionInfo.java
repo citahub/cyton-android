@@ -33,12 +33,12 @@ public class TransactionInfo implements Parcelable {
     }
 
     public String getStringValue() {
-        value = isValid(value) ? "0" : value;
+        value = isValid(value) ? value : "0";
         return NumberUtil.getEthFromWeiForString(value);
     }
 
     public double getDoubleValue() {
-        value = isValid(value) ? "0" : value;
+        value = isValid(value) ? value : "0";
         return NumberUtil.getEthFromWeiForDouble(value);
     }
 
@@ -50,18 +50,18 @@ public class TransactionInfo implements Parcelable {
     }
 
     public double getDoubleQuota() {
-        quota = isValid(quota) ? "0" : quota;
+        quota = isValid(quota) ? quota : "0";
         return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
     }
 
     public long getLongQuota() {
-        quota = isValid(quota) ? "0" : quota;
+        quota = isValid(quota) ? quota : "0";
         return Numeric.toBigInt(value).longValue();
     }
 
     public double getGas() {
-        BigInteger limitBig = isValid(gasLimit) ? BigInteger.ZERO : Numeric.toBigInt(gasLimit);
-        BigInteger priceBig = isValid(gasPrice) ? BigInteger.ZERO : Numeric.toBigInt(gasPrice);
+        BigInteger limitBig = isValid(gasLimit) ? Numeric.toBigInt(gasLimit) : BigInteger.ZERO;
+        BigInteger priceBig = isValid(gasPrice) ? Numeric.toBigInt(gasPrice) : BigInteger.ZERO;
         return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
