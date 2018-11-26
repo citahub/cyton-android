@@ -14,6 +14,7 @@ import com.zhy.view.flowlayout.TagView;
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
+import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.util.ConstantUtil;
@@ -125,6 +126,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                     startActivity(intent);
                     SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
                 } else {
+                    EventBus.getDefault().post(new TokenRefreshEvent());
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
                     intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                     startActivity(intent);
