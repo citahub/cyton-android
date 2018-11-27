@@ -125,21 +125,7 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         leftView.setOnClickListener(v -> {
-            if (titleItem != null) {
-                if (!TextUtils.isEmpty(titleItem.left.action)) {
-                    JSLoadUtils.INSTANCE.loadFunc(webView, titleItem.left.action);
-                } else if (TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
-                    if (webView.canGoBack()) {
-                        webView.goBack();
-                    } else {
-                        finish();
-                    }
-                } else if (TextUtils.equals(TitleItem.ACTION_CLOSE, titleItem.left.type)) {
-                    finish();
-                }
-            } else {
-                finish();
-            }
+            backAction();
         });
         rightMenuView.setOnClickListener(v -> initMenuView());
         webErrorView.setImpl((reloadUrl) -> {
@@ -147,6 +133,11 @@ public class AppWebActivity extends NBaseActivity {
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        backAction();
     }
 
     private void initWebView() {
@@ -303,6 +294,24 @@ public class AppWebActivity extends NBaseActivity {
             isPersonalSign = true;
             showSignMessageDialog(message);
         });
+    }
+
+    private void backAction() {
+        if (titleItem != null) {
+            if (!TextUtils.isEmpty(titleItem.left.action)) {
+                JSLoadUtils.INSTANCE.loadFunc(webView, titleItem.left.action);
+            } else if (TextUtils.equals(TitleItem.ACTION_CLOSE, titleItem.left.type)) {
+                finish();
+            } else {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    finish();
+                }
+            }
+        } else {
+            finish();
+        }
     }
 
     public class WebTitleBar {
