@@ -3,7 +3,6 @@ package org.nervos.neuron.item.transaction;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
@@ -56,7 +55,7 @@ public class TransactionInfo implements Parcelable {
 
     public long getLongQuota() {
         quota = isValid(quota) ? quota : "0";
-        return Numeric.toBigInt(value).longValue();
+        return Numeric.toBigInt(quota).longValue();
     }
 
     public double getGas() {
