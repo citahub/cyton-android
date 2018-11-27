@@ -54056,7 +54056,7 @@ var Neuron = {
     var engine = new ProviderEngine();
     var web3 = new Web3(engine);
     context.web3 = web3;
-    context.nervos = web3;
+    context.appchain = web3;
 
     globalSyncOptions = syncOptions;
 
