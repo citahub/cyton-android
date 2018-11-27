@@ -34,7 +34,7 @@ public class NumberUtil {
     public static String getDecimal8ENotation(double value) {
         if (value < 1) {
             double decimal = value - (long) value;
-            if (decimal < 0.00000001) {
+            if (decimal < 0.00000001 && decimal > 0) {
                 return String.valueOf(value);
             }
         }
