@@ -1,5 +1,7 @@
 package org.nervos.neuron.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,13 +30,22 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         inLoginPage = true;
         if (RootUtil.isDeviceRooted()) {
-            ToastSingleButtonDialog toastSingleButtonDialog
-                    = ToastSingleButtonDialog.getInstance(this, getString(R.string.safe_hint)
-                    , getString(R.string.root_hint));
-            toastSingleButtonDialog.setOnCancelClickListener((dialog ->
-                    finish()));
-            toastSingleButtonDialog.setCanceledOnTouchOutside(false);
-            toastSingleButtonDialog.setCancelable(false);
+            new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.safe_hint)
+                    .setMessage(R.string.root_hint)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }).setNegativeButton(R.string.go_on, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            gotoMainPage();
+                        }
+                    }).setCancelable(false)
+                    .create().show();
         } else {
             new Thread() {
                 @Override
@@ -42,24 +53,28 @@ public class SplashActivity extends BaseActivity {
                     super.run();
                     try {
                         sleep(1000);
-                        if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
-                            if (SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false)) {
-                                Intent intent = new Intent(mActivity, FingerPrintActivity.class);
-                                intent.putExtra(LOCK_TO_MAIN, true);
-                                startActivity(intent);
-                            } else {
-                                startActivity(new Intent(mActivity, MainActivity.class));
-                            }
-                        } else {
-                            Intent intent = new Intent(mActivity, AddWalletActivity.class);
-                            startActivity(intent);
-                        }
-                        finish();
+                        gotoMainPage();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }.start();
         }
+    }
+
+    private void gotoMainPage() {
+        if (!TextUtils.isEmpty(SharePrefUtil.getCurrentWalletName())) {
+            if (SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false)) {
+                Intent intent = new Intent(mActivity, FingerPrintActivity.class);
+                intent.putExtra(LOCK_TO_MAIN, true);
+                startActivity(intent);
+            } else {
+                startActivity(new Intent(mActivity, MainActivity.class));
+            }
+        } else {
+            Intent intent = new Intent(mActivity, AddWalletActivity.class);
+            startActivity(intent);
+        }
+        finish();
     }
 }

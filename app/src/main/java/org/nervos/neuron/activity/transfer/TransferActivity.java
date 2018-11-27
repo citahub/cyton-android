@@ -231,7 +231,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                isAddressOk = !TextUtils.isEmpty(s);
+                isAddressOk = !TextUtils.isEmpty(s) && NumberUtil.isHex(s.toString());
                 updateTransferEditValue();
             }
         });
@@ -281,7 +281,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             public void onOkClick(View v, String gasPrice) {
                 if (TextUtils.isEmpty(gasPrice)) {
                     Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if(Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
+                } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
                     Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
                 } else {
                     mPresenter.updateGasInfo(Convert.toWei(gasPrice, GWEI).toBigInteger());
