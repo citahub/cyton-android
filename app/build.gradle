@@ -98,7 +98,7 @@ android {
 //        xiaomi { dimension "default" }
 //        vivo { dimension "default" }
 //        wandoujia { dimension "default" }
-//        others { dimension "default" }
+        others { dimension "default" }
         dev {
             versionName = appConfig.devVersionName
             resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
