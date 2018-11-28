@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment.importwallet;
+package org.nervos.neuron.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import com.yanzhenjie.permission.runtime.PermissionRequest;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;

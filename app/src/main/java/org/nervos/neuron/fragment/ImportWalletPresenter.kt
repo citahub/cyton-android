@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment.importwallet
+package org.nervos.neuron.fragment
 
 import android.app.Activity
 import android.content.Intent

@@ -1,10 +1,9 @@
-package org.nervos.neuron.fragment.importwallet
+package org.nervos.neuron.fragment
 
 import android.text.TextUtils
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_import_mnemonic.*
 import org.nervos.neuron.R
-import org.nervos.neuron.fragment.NBaseFragment
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.WalletTextWatcher
 import org.nervos.neuron.util.db.DBWalletUtil
