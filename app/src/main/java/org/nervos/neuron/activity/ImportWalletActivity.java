@@ -30,6 +30,13 @@ import java.util.List;
  */
 public class ImportWalletActivity extends NBaseActivity {
 
+    public static final String QR_FROM = "QR_FROM";
+    public static final String QR_FROM_VALUE = "QR";
+    public static final String QR_TYPE = "TYPE";
+    public static final String QR_TYPE_KEYSTORE = "KEYSTORE";
+    public static final String QR_TYPE_PRIVATEKEY = "PRIVATEKEY";
+    public static final String QR_VALUE = "VALUE";
+
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ImportMnemonicFragment importMnemonicFragment;
@@ -39,7 +46,6 @@ public class ImportWalletActivity extends NBaseActivity {
     private List<String> tabTitles = new ArrayList<>();
     public static String KeyStore = "";
     public static String PrivateKey = "";
-
 
     @Override
     protected int getContentLayout() {
@@ -93,13 +99,13 @@ public class ImportWalletActivity extends NBaseActivity {
 
         viewPager.setAdapter(adapter);
 
-        if (("QR").equals(getIntent().getStringExtra("from"))) {
-            switch (getIntent().getIntExtra("type", 1)) {
-                case 1:
-                    KeyStore = getIntent().getStringExtra("value");
+        if ((QR_FROM_VALUE).equals(getIntent().getStringExtra(QR_FROM))) {
+            switch (getIntent().getStringExtra(QR_TYPE)) {
+                case QR_TYPE_KEYSTORE:
+                    KeyStore = getIntent().getStringExtra(QR_VALUE);
                     break;
-                case 2:
-                    PrivateKey = getIntent().getStringExtra("value");
+                case QR_TYPE_PRIVATEKEY:
+                    PrivateKey = getIntent().getStringExtra(QR_VALUE);
                     viewPager.setCurrentItem(2);
                     break;
             }
