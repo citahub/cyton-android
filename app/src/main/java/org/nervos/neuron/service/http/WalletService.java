@@ -22,14 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by duanyytop on 2018/5/31
@@ -66,10 +59,10 @@ public class WalletService {
     private static void track(String chain, String type, double number) {
         try {
             JSONObject object = new JSONObject();
-            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_CHAIN(), chain);
-            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_TYPE(), type);
-            object.put(SensorDataCons.INSTANCE.getTAG_POSSESS_MONEY_NUMBER(), number);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_POSSESS_MONEY(), object);
+            object.put(SensorDataCons.TAG_POSSESS_MONEY_CHAIN, chain);
+            object.put(SensorDataCons.TAG_POSSESS_MONEY_TYPE, type);
+            object.put(SensorDataCons.TAG_POSSESS_MONEY_NUMBER, number);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_POSSESS_MONEY, object);
         } catch (JSONException e) {
             e.printStackTrace();
         }

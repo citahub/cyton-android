@@ -30,6 +30,13 @@ import java.util.List;
  */
 public class ImportWalletActivity extends NBaseActivity {
 
+    public static final String INTENT_FROM = "FROM";
+    public static final String INTENT_FROM_VALUE = "QR";
+    public static final String QR_CODE_TYPE = "TYPE";
+    public static final String QR_CODE_TYPE_KEYSTORE = "KEYSTORE";
+    public static final String QR_CODE_TYPE_PRIVATEKEY = "PRIVATEKEY";
+    public static final String QR_CODE_VALUE = "VALUE";
+
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ImportMnemonicFragment importMnemonicFragment;
@@ -39,7 +46,6 @@ public class ImportWalletActivity extends NBaseActivity {
     private List<String> tabTitles = new ArrayList<>();
     public static String KeyStore = "";
     public static String PrivateKey = "";
-
 
     @Override
     protected int getContentLayout() {
@@ -93,13 +99,13 @@ public class ImportWalletActivity extends NBaseActivity {
 
         viewPager.setAdapter(adapter);
 
-        if (("QR").equals(getIntent().getStringExtra("from"))) {
-            switch (getIntent().getIntExtra("type", 1)) {
-                case 1:
-                    KeyStore = getIntent().getStringExtra("value");
+        if ((INTENT_FROM_VALUE).equals(getIntent().getStringExtra(INTENT_FROM))) {
+            switch (getIntent().getStringExtra(QR_CODE_TYPE)) {
+                case QR_CODE_TYPE_KEYSTORE:
+                    KeyStore = getIntent().getStringExtra(QR_CODE_VALUE);
                     break;
-                case 2:
-                    PrivateKey = getIntent().getStringExtra("value");
+                case QR_CODE_TYPE_PRIVATEKEY:
+                    PrivateKey = getIntent().getStringExtra(QR_CODE_VALUE);
                     viewPager.setCurrentItem(2);
                     break;
             }
@@ -174,10 +180,10 @@ public class ImportWalletActivity extends NBaseActivity {
     public static void track(String id, boolean suc, String address) {
         try {
             JSONObject object = new JSONObject();
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_TYPE(), id);
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_RESULT(), suc);
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_ADDRESS(), address);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_INPUT_WALLET(), object);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_TYPE, id);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_RESULT, suc);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_ADDRESS, address);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_INPUT_WALLET, object);
         } catch (JSONException e) {
             e.printStackTrace();
         }

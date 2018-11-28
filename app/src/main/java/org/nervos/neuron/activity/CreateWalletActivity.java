@@ -2,13 +2,9 @@ package org.nervos.neuron.activity;
 
 import android.content.Intent;
 import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.widget.Toast;
-
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -16,14 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.SensorDataCons;
-import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
 
 import java.util.concurrent.ExecutorService;
@@ -95,8 +92,8 @@ public class CreateWalletActivity extends NBaseActivity {
                     rePasswordEdit.post(() -> {
                         try {
                             JSONObject object = new JSONObject();
-                            object.put(SensorDataCons.INSTANCE.getTAG_CREATE_WALLET_ADDRESS(), walletEntity.getAddress());
-                            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_CREATE_WALLET(), object);
+                            object.put(SensorDataCons.TAG_CREATE_WALLET_ADDRESS, walletEntity.getAddress());
+                            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_CREATE_WALLET, object);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -173,24 +170,6 @@ public class CreateWalletActivity extends NBaseActivity {
                 createWalletCbt.setClickAble(isWalletValid());
             }
         });
-    }
-
-
-    private static class WalletTextWatcher implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
     }
 
 }

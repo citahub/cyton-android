@@ -36,7 +36,7 @@
             android:paddingBottom="6dp">
 
             <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/edit_wallet_mnemonic"
+                android:id="@+id/et_mnemonic"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@drawable/edit_input_shape"
@@ -47,53 +47,6 @@
                 android:textSize="15sp" />
 
         </FrameLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@android:color/white"
-            android:paddingStart="@dimen/default_margin"
-            android:paddingEnd="@dimen/default_margin"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="@string/path"
-                android:textColor="@color/font_title"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/ll_path"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/tv_path"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:textColor="@color/font_title"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_format"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:textColor="@color/font_title" />
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,7 +60,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_name"
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
@@ -132,7 +85,7 @@
 
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_password"
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -156,7 +109,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_wallet_repassword"
+            android:id="@+id/et_repassword"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
@@ -180,7 +133,7 @@
             android:textSize="12sp" />
 
         <org.nervos.neuron.view.button.CommonButton
-            android:id="@+id/import_mnemonic_button"
+            android:id="@+id/cb_import"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
