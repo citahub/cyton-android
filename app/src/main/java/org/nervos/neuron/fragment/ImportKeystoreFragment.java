@@ -11,6 +11,7 @@ import com.yanzhenjie.permission.runtime.PermissionRequest;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -133,7 +134,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    QrCodeActivity.track("3", false);
+                    QrCodeActivity.track(SensorDataCons.INSTANCE.getTAG_SCAN_TYPE_KEYSTORE(), false);
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }

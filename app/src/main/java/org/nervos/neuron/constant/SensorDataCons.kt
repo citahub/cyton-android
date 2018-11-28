@@ -6,6 +6,8 @@ package org.nervos.neuron.constant
 object SensorDataCons {
     val TRACK_SCAN_QR = "scanQRcode"
     val TAG_SCAN_TYPE = "scan_type"
+    val TAG_SCAN_TYPE_KEYSTORE="3"
+    val TAG_SCAN_TYPE_PRIVATEKEY="2"
     val TAG_SCAN_RESULT = "scan_result"
 
     val TRACK_CREATE_WALLET = "createWallet"
