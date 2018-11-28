@@ -68,7 +68,8 @@ public class ImportKeystoreFragment extends NBaseFragment {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
                 return;
             }
-            generateAndSaveWallet();
+            presenter.importKeystore(mEtKeystore.getText().toString().trim(), mEtPassword.getText().toString().trim()
+                    , mEtWalletName.getText().toString().trim());
         });
         findViewById(R.id.wallet_scan).setOnClickListener(v -> {
             PermissionRequest request = AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA);
@@ -80,12 +81,6 @@ public class ImportKeystoreFragment extends NBaseFragment {
             request.onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions));
             request.start();
         });
-    }
-
-
-    private void generateAndSaveWallet() {
-        presenter.importKeystore(mEtKeystore.getText().toString().trim(), mEtPassword.getText().toString().trim()
-                , mEtWalletName.getText().toString().trim());
     }
 
     private boolean isWalletValid() {

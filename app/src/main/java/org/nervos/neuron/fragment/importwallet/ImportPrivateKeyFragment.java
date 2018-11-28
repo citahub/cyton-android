@@ -3,38 +3,24 @@ package org.nervos.neuron.fragment.importwallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
-import org.nervos.neuron.activity.ImportFingerTipActivity;
 import org.nervos.neuron.activity.ImportWalletActivity;
-import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.fragment.NBaseFragment;
-import org.nervos.neuron.fragment.wallet.WalletFragment;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.crypto.WalletEntity;
+import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.util.fingerprint.FingerPrintController;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.view.button.CommonButton;
 import org.web3j.utils.Numeric;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Objects;
 
 /**
  * Created by duanyytop on 2018/5/8
@@ -42,14 +28,12 @@ import java.util.concurrent.Executors;
 public class ImportPrivateKeyFragment extends NBaseFragment {
 
     private static final int REQUEST_CODE = 0x01;
-    private AppCompatEditText privateKeyEdit;
-    private AppCompatEditText walletNameEdit;
-    private AppCompatEditText passwordEdit;
-    private AppCompatEditText rePasswordEdit;
-    private CommonButton importButton;
-    private ImageView scanImage;
-
-    ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private AppCompatEditText mEtPrivateKey;
+    private AppCompatEditText mEtWalletName;
+    private AppCompatEditText mEtPassword;
+    private AppCompatEditText mEtRePassword;
+    private CommonButton mCbImport;
+    private ImportWalletPresenter presenter;
 
     @Override
     protected int getContentLayout() {
@@ -58,99 +42,47 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
 
     @Override
     protected void initView() {
-        super.initView();
-        privateKeyEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_private_key);
-        walletNameEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_name);
-        passwordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_password);
-        rePasswordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_repassword);
-        importButton = (CommonButton) findViewById(R.id.import_private_key_button);
-        scanImage = (ImageView) findViewById(R.id.wallet_scan);
+        mEtPrivateKey = (AppCompatEditText) findViewById(R.id.edit_wallet_private_key);
+        mEtWalletName = (AppCompatEditText) findViewById(R.id.edit_wallet_name);
+        mEtPassword = (AppCompatEditText) findViewById(R.id.edit_wallet_password);
+        mEtRePassword = (AppCompatEditText) findViewById(R.id.edit_wallet_repassword);
+        mCbImport = (CommonButton) findViewById(R.id.import_private_key_button);
     }
 
     @Override
     protected void initData() {
-        super.initData();
+        presenter = new ImportWalletPresenter(Objects.requireNonNull(getActivity()), show -> {
+            if (show) showProgressBar();
+            else dismissProgressBar();
+            return null;
+        });
         checkWalletStatus();
         if (!TextUtils.isEmpty(ImportWalletActivity.PrivateKey)) {
-            privateKeyEdit.setText(ImportWalletActivity.PrivateKey);
-            privateKeyEdit.setSelection(ImportWalletActivity.PrivateKey.length());
+            mEtPrivateKey.setText(ImportWalletActivity.PrivateKey);
+            mEtPrivateKey.setSelection(ImportWalletActivity.PrivateKey.length());
             ImportWalletActivity.PrivateKey = "";
         }
-
     }
 
     @Override
     protected void initAction() {
-        importButton.setOnClickListener(view -> {
-            if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
+        mCbImport.setOnClickListener(view -> {
+            if (!NumberUtil.isPasswordOk(mEtPassword.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(), rePasswordEdit.getText().toString().trim())) {
+            } else if (!TextUtils.equals(mEtPassword.getText().toString().trim(), mEtRePassword.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
+            } else if (DBWalletUtil.checkWalletName(getContext(), mEtWalletName.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
             } else {
-                cachedThreadPool.execute(() -> generateAndSaveWallet());
+                presenter.importPrivateKey(Numeric.toBigInt(mEtPrivateKey.getText().toString().trim())
+                        , mEtPassword.getText().toString().trim(), mEtWalletName.getText().toString().trim());
             }
         });
-        scanImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
-                        .onGranted(permissions -> {
-                            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start();
-            }
-        });
-    }
-
-    private void generateAndSaveWallet() {
-        passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
-        WalletEntity walletEntity;
-        String password = passwordEdit.getText().toString().trim();
-        String privateKey = privateKeyEdit.getText().toString().trim();
-        try {
-            walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privateKey), password);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ImportWalletActivity.track("3", false, "");
-            passwordEdit.post(() -> {
-                dismissProgressBar();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-            return;
-        }
-        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
-            ImportWalletActivity.track("3", false, "");
-            passwordEdit.post(() -> {
-                dismissProgressBar();
-                Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
-            });
-            return;
-        }
-        WalletItem walletItem = WalletItem.fromWalletEntity(walletEntity);
-        walletItem.name = walletNameEdit.getText().toString().trim();
-        walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
-        DBWalletUtil.saveWallet(getContext(), walletItem);
-        SharePrefUtil.putCurrentWalletName(walletItem.name);
-        ImportWalletActivity.track("3", true, walletEntity.getAddress());
-        passwordEdit.post(() -> {
-            Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
-            dismissProgressBar();
-            if (new FingerPrintController(getActivity()).isSupportFingerprint() &&
-                    !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false) &&
-                    !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT_TIP, false)) {
-                Intent intent = new Intent(getActivity(), ImportFingerTipActivity.class);
-                startActivity(intent);
-                SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true);
-            } else {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
-                getActivity().startActivity(intent);
-            }
-            EventBus.getDefault().post(new TokenRefreshEvent());
-            getActivity().finish();
-        });
+        findViewById(R.id.wallet_scan).setOnClickListener(v -> AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
+                .onGranted(permissions -> {
+                    Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start());
     }
 
     private boolean isWalletValid() {
@@ -160,60 +92,42 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     private boolean check1 = false, check2 = false, check3 = false, check4 = false;
 
     private void checkWalletStatus() {
-        walletNameEdit.addTextChangedListener(new WalletTextWatcher() {
+        mEtWalletName.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check1 = !TextUtils.isEmpty(walletNameEdit.getText().toString().trim());
-                importButton.setClickAble(isWalletValid());
+                check1 = !TextUtils.isEmpty(mEtWalletName.getText().toString().trim());
+                mCbImport.setClickAble(isWalletValid());
             }
         });
-        passwordEdit.addTextChangedListener(new WalletTextWatcher() {
+        mEtPassword.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) &&
-                        passwordEdit.getText().toString().trim().length() >= 8;
-                importButton.setClickAble(isWalletValid());
+                check2 = !TextUtils.isEmpty(mEtPassword.getText().toString().trim()) &&
+                        mEtPassword.getText().toString().trim().length() >= 8;
+                mCbImport.setClickAble(isWalletValid());
             }
         });
 
-        rePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
+        mEtRePassword.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) &&
-                        rePasswordEdit.getText().toString().trim().length() >= 8;
-                importButton.setClickAble(isWalletValid());
+                check3 = !TextUtils.isEmpty(mEtRePassword.getText().toString().trim()) &&
+                        mEtRePassword.getText().toString().trim().length() >= 8;
+                mCbImport.setClickAble(isWalletValid());
             }
         });
-        privateKeyEdit.addTextChangedListener(new WalletTextWatcher() {
+        mEtPrivateKey.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check4 = !TextUtils.isEmpty(privateKeyEdit.getText().toString().trim());
-                importButton.setClickAble(isWalletValid());
+                check4 = !TextUtils.isEmpty(mEtPrivateKey.getText().toString().trim());
+                mCbImport.setClickAble(isWalletValid());
             }
         });
 
-    }
-
-
-    private static class WalletTextWatcher implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
     }
 
     @Override
@@ -229,7 +143,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                     switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
                         case CodeUtils.STRING_PRIVATE_KEY:
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
-                            privateKeyEdit.setText(result);
+                            mEtPrivateKey.setText(result);
                             break;
                         default:
                             Toast.makeText(getActivity(), R.string.private_key_error, Toast.LENGTH_LONG).show();
