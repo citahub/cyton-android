@@ -92,8 +92,8 @@ public class CreateWalletActivity extends NBaseActivity {
                     rePasswordEdit.post(() -> {
                         try {
                             JSONObject object = new JSONObject();
-                            object.put(SensorDataCons.INSTANCE.getTAG_CREATE_WALLET_ADDRESS(), walletEntity.getAddress());
-                            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_CREATE_WALLET(), object);
+                            object.put(SensorDataCons.TAG_CREATE_WALLET_ADDRESS, walletEntity.getAddress());
+                            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_CREATE_WALLET, object);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

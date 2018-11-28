@@ -180,10 +180,10 @@ public class ImportWalletActivity extends NBaseActivity {
     public static void track(String id, boolean suc, String address) {
         try {
             JSONObject object = new JSONObject();
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_TYPE(), id);
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_RESULT(), suc);
-            object.put(SensorDataCons.INSTANCE.getTAG_INPUT_WALLET_ADDRESS(), address);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_INPUT_WALLET(), object);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_TYPE, id);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_RESULT, suc);
+            object.put(SensorDataCons.TAG_INPUT_WALLET_ADDRESS, address);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_INPUT_WALLET, object);
         } catch (JSONException e) {
             e.printStackTrace();
         }

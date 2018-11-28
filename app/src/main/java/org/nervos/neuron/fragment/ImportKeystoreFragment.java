@@ -137,7 +137,7 @@ public class ImportKeystoreFragment extends NBaseFragment {
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    QrCodeActivity.track(SensorDataCons.INSTANCE.getTAG_SCAN_TYPE_KEYSTORE(), false);
+                    QrCodeActivity.track(SensorDataCons.TAG_SCAN_TYPE_KEYSTORE, false);
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }

@@ -3,9 +3,7 @@ package org.nervos.neuron.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
@@ -76,9 +74,9 @@ public class QrCodeActivity extends NBaseActivity {
     public static void track(String type, boolean suc) {
         try {
             JSONObject object = new JSONObject();
-            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_TYPE(), type);
-            object.put(SensorDataCons.INSTANCE.getTAG_SCAN_RESULT(), suc);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.INSTANCE.getTRACK_SCAN_QR(), object);
+            object.put(SensorDataCons.TAG_SCAN_TYPE, type);
+            object.put(SensorDataCons.TAG_SCAN_RESULT, suc);
+            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_SCAN_QR, object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
