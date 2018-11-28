@@ -244,9 +244,9 @@ public class MainActivity extends NBaseActivity {
                                     break;
                                 case CodeUtils.STRING_KEYSTORE:
                                     intent = new Intent(this, ImportWalletActivity.class);
-                                    intent.putExtra(ImportWalletActivity.QR_FROM, ImportWalletActivity.QR_FROM_VALUE);
-                                    intent.putExtra(ImportWalletActivity.QR_TYPE, ImportWalletActivity.QR_TYPE_KEYSTORE);
-                                    intent.putExtra(ImportWalletActivity.QR_VALUE, result);
+                                    intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
+                                    intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_KEYSTORE);
+                                    intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
                                     startActivity(intent);
                                     break;
                                 case CodeUtils.STRING_WEB:
@@ -254,9 +254,9 @@ public class MainActivity extends NBaseActivity {
                                     break;
                                 case CodeUtils.STRING_PRIVATE_KEY:
                                     intent = new Intent(this, ImportWalletActivity.class);
-                                    intent.putExtra(ImportWalletActivity.QR_FROM, ImportWalletActivity.QR_FROM_VALUE);
-                                    intent.putExtra(ImportWalletActivity.QR_TYPE, ImportWalletActivity.QR_TYPE_PRIVATEKEY);
-                                    intent.putExtra(ImportWalletActivity.QR_VALUE, result);
+                                    intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
+                                    intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_PRIVATEKEY);
+                                    intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
                                     startActivity(intent);
                                     break;
                             }

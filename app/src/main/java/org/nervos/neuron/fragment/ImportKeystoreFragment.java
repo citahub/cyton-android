@@ -49,8 +49,11 @@ public class ImportKeystoreFragment extends NBaseFragment {
     @Override
     protected void initData() {
         presenter = new ImportWalletPresenter(Objects.requireNonNull(getActivity()), show -> {
-            if (show) showProgressBar();
-            else dismissProgressBar();
+            if (show) {
+                showProgressBar();
+            } else {
+                dismissProgressBar();
+            }
             return null;
         });
         checkWalletStatus();
