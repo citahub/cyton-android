@@ -15,9 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.SensorDataCons;
-import org.nervos.neuron.fragment.ImportKeystoreFragment;
-import org.nervos.neuron.fragment.ImportMnemonicFragment;
-import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
+import org.nervos.neuron.fragment.importwallet.ImportKeystoreFragment;
+import org.nervos.neuron.fragment.importwallet.ImportMnemonicFragment;
+import org.nervos.neuron.fragment.importwallet.ImportPrivateKeyFragment;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 

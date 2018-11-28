@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment;
+package org.nervos.neuron.fragment.importwallet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,11 +6,11 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.runtime.PermissionRequest;
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportFingerTipActivity;
@@ -18,10 +18,10 @@ import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.MainActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TokenRefreshEvent;
+import org.nervos.neuron.fragment.NBaseFragment;
 import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -30,7 +30,6 @@ import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.view.button.CommonButton;
-import org.web3j.utils.Numeric;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,13 +37,12 @@ import java.util.concurrent.Executors;
 /**
  * Created by duanyytop on 2018/5/8
  */
-public class ImportPrivateKeyFragment extends NBaseFragment {
+public class ImportKeystoreFragment extends NBaseFragment {
 
     private static final int REQUEST_CODE = 0x01;
-    private AppCompatEditText privateKeyEdit;
+    private AppCompatEditText keystoreEdit;
     private AppCompatEditText walletNameEdit;
     private AppCompatEditText passwordEdit;
-    private AppCompatEditText rePasswordEdit;
     private CommonButton importButton;
     private ImageView scanImage;
 
@@ -52,17 +50,16 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
 
     @Override
     protected int getContentLayout() {
-        return R.layout.fragment_import_private_key;
+        return R.layout.fragment_import_keystore;
     }
 
     @Override
     protected void initView() {
         super.initView();
-        privateKeyEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_private_key);
+        keystoreEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_keystore);
         walletNameEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_name);
         passwordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_password);
-        rePasswordEdit = (AppCompatEditText) findViewById(R.id.edit_wallet_repassword);
-        importButton = (CommonButton) findViewById(R.id.import_private_key_button);
+        importButton = (CommonButton) findViewById(R.id.import_keystore_button);
         scanImage = (ImageView) findViewById(R.id.wallet_scan);
     }
 
@@ -70,60 +67,54 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     protected void initData() {
         super.initData();
         checkWalletStatus();
-        if (!TextUtils.isEmpty(ImportWalletActivity.PrivateKey)) {
-            privateKeyEdit.setText(ImportWalletActivity.PrivateKey);
-            privateKeyEdit.setSelection(ImportWalletActivity.PrivateKey.length());
-            ImportWalletActivity.PrivateKey = "";
+        if (!TextUtils.isEmpty(ImportWalletActivity.KeyStore)) {
+            keystoreEdit.setText(ImportWalletActivity.KeyStore);
+            keystoreEdit.setSelection(ImportWalletActivity.KeyStore.length());
+            ImportWalletActivity.KeyStore = "";
         }
-
     }
 
     @Override
     protected void initAction() {
         importButton.setOnClickListener(view -> {
-            if (!NumberUtil.isPasswordOk(passwordEdit.getText().toString().trim())) {
-                Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
-            } else if (!TextUtils.equals(passwordEdit.getText().toString().trim(), rePasswordEdit.getText().toString().trim())) {
-                Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
+            if (DBWalletUtil.checkWalletName(getContext(), walletNameEdit.getText().toString())) {
                 Toast.makeText(getContext(), R.string.wallet_name_exist, Toast.LENGTH_SHORT).show();
-            } else {
-                cachedThreadPool.execute(() -> generateAndSaveWallet());
+                return;
             }
+            cachedThreadPool.execute(() -> generateAndSaveWallet());
         });
-        scanImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
-                        .onGranted(permissions -> {
-                            Intent intent = new Intent(getActivity(), QrCodeActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE);
-                        }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start();
-            }
+        scanImage.setOnClickListener(v -> {
+            PermissionRequest request = AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA);
+            request.rationale(new RuntimeRationale()).onGranted(permissions -> {
+                Intent intent = new Intent(getActivity(), QrCodeActivity.class);
+                intent.putExtra(QrCodeActivity.SHOW_RIGHT, false);
+                startActivityForResult(intent, REQUEST_CODE);
+            });
+            request.onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions));
+            request.start();
         });
     }
+
 
     private void generateAndSaveWallet() {
         passwordEdit.post(() -> showProgressBar(R.string.wallet_importing));
         WalletEntity walletEntity;
-        String password = passwordEdit.getText().toString().trim();
-        String privateKey = privateKeyEdit.getText().toString().trim();
         try {
-            walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privateKey), password);
+            walletEntity = WalletEntity.fromKeyStore(passwordEdit.getText().toString().trim(), keystoreEdit.getText().toString().trim());
         } catch (Exception e) {
             e.printStackTrace();
-            ImportWalletActivity.track("3", false, "");
             passwordEdit.post(() -> {
+                ImportWalletActivity.track("1", false, "");
                 dismissProgressBar();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.import_keystore_error), Toast.LENGTH_SHORT).show();
             });
             return;
         }
-        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getAddress())) {
-            ImportWalletActivity.track("3", false, "");
+        if (walletEntity == null || DBWalletUtil.checkWalletAddress(getContext(), walletEntity.getCredentials().getAddress())) {
             passwordEdit.post(() -> {
                 dismissProgressBar();
                 Toast.makeText(getContext(), R.string.wallet_address_exist, Toast.LENGTH_SHORT).show();
+                ImportWalletActivity.track("1", false, "");
             });
             return;
         }
@@ -132,7 +123,7 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         walletItem = DBWalletUtil.addOriginTokenToWallet(getContext(), walletItem);
         DBWalletUtil.saveWallet(getContext(), walletItem);
         SharePrefUtil.putCurrentWalletName(walletItem.name);
-        ImportWalletActivity.track("3", true, walletEntity.getAddress());
+        ImportWalletActivity.track("1", true, walletEntity.getAddress());
         passwordEdit.post(() -> {
             Toast.makeText(getContext(), R.string.wallet_export_success, Toast.LENGTH_SHORT).show();
             dismissProgressBar();
@@ -153,10 +144,11 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     }
 
     private boolean isWalletValid() {
-        return check1 && check2 && check3 && check4;
+        return check1 && check2 && check3;
     }
 
-    private boolean check1 = false, check2 = false, check3 = false, check4 = false;
+
+    private boolean check1 = false, check2 = false, check3 = false;
 
     private void checkWalletStatus() {
         walletNameEdit.addTextChangedListener(new WalletTextWatcher() {
@@ -171,30 +163,18 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim()) &&
-                        passwordEdit.getText().toString().trim().length() >= 8;
+                check2 = !TextUtils.isEmpty(passwordEdit.getText().toString().trim());
                 importButton.setClickAble(isWalletValid());
             }
         });
-
-        rePasswordEdit.addTextChangedListener(new WalletTextWatcher() {
+        keystoreEdit.addTextChangedListener(new WalletTextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 super.onTextChanged(charSequence, i, i1, i2);
-                check3 = !TextUtils.isEmpty(rePasswordEdit.getText().toString().trim()) &&
-                        rePasswordEdit.getText().toString().trim().length() >= 8;
+                check3 = !TextUtils.isEmpty(keystoreEdit.getText().toString().trim());
                 importButton.setClickAble(isWalletValid());
             }
         });
-        privateKeyEdit.addTextChangedListener(new WalletTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                super.onTextChanged(charSequence, i, i1, i2);
-                check4 = !TextUtils.isEmpty(privateKeyEdit.getText().toString().trim());
-                importButton.setClickAble(isWalletValid());
-            }
-        });
-
     }
 
 
@@ -221,24 +201,23 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
         if (requestCode == REQUEST_CODE) {
             if (null != data) {
                 Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
+                if (bundle == null) return;
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                        case CodeUtils.STRING_PRIVATE_KEY:
+                        case CodeUtils.STRING_KEYSTORE:
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
-                            privateKeyEdit.setText(result);
+                            keystoreEdit.setText(result);
                             break;
                         default:
-                            Toast.makeText(getActivity(), R.string.private_key_error, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.keystore_error, Toast.LENGTH_LONG).show();
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    QrCodeActivity.track("2", false);
+                    QrCodeActivity.track("3", false);
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }
         }
     }
+
 }

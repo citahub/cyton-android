@@ -1,21 +1,18 @@
 package org.nervos.neuron.activity;
 
 import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import org.nervos.neuron.R;
-import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.Blockies;
+import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.button.CommonButton;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by duanyytop on 2018/5/20
@@ -122,20 +119,4 @@ public class ChangePasswordActivity extends NBaseActivity {
         });
     }
 
-    private static class WalletTextWatcher implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    }
 }
