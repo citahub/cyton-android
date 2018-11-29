@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_marginStart="@dimen/default_margin"
-    android:layout_marginTop="10dp"
     android:layout_marginEnd="@dimen/default_margin"
     android:background="@drawable/bg_wallet_change_item_un">
 
