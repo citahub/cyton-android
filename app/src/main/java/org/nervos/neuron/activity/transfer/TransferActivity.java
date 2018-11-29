@@ -326,8 +326,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         if (appSendTransaction == null) {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
         } else if (appSendTransaction.getError() != null
-                &&
-                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
+                && !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();
         } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
