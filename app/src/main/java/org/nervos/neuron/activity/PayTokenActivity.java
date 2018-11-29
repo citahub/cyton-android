@@ -96,16 +96,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         if (!TextUtils.isEmpty(payload)) {
             mTransactionInfo = new Gson().fromJson(payload, TransactionInfo.class);
-            try {
-                mTransactionInfo.checkTransactionFormat();
-            } catch (TransactionFormatException e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(mActivity)
-                        .setTitle(e.getMessage())
-                        .setPositiveButton(R.string.have_known, (dialog, which) -> dialog.dismiss())
-                        .create()
-                        .show();
-            }
         }
         mWalletItem = DBWalletUtil.getCurrentWallet(mActivity);
         mAppItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
