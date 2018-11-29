@@ -156,12 +156,11 @@
     <string name="web_url_error">请扫描正确的网址二维码</string>
     <string name="keystore_error">请扫描正确的Keystore二维码</string>
     <string name="private_key_error">请扫描正确的私钥二维码</string>
-    <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">您的代币没有名称，无法成功导入！</string>
     <string name="exist_erc20_token">您的列表已有该代币</string>
     <string name="keystore">Keystore</string>
-    <string name="nmemonic">助记词</string>
+    <string name="mnemonic">助记词</string>
     <string name="private_key">私钥</string>
     <string name="dialog_title_tip">提示</string>
     <string name="dialog_finger_setting">您尚未设置Touch ID，请在手机系统“设置>Touch ID与密码”中添加指纹</string>

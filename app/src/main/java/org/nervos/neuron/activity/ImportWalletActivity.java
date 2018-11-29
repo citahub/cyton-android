@@ -76,7 +76,7 @@ public class ImportWalletActivity extends NBaseActivity {
         tabLayout.post(() -> setTabWidth(tabLayout));
 
         tabTitles.add(getString(R.string.keystore));
-        tabTitles.add(getString(R.string.nmemonic));
+        tabTitles.add(getString(R.string.mnemonic));
         tabTitles.add(getString(R.string.private_key));
         FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
