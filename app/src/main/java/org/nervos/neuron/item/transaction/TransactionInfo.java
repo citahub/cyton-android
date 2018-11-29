@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.exception.TransactionFormatException;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -17,7 +18,7 @@ public class TransactionInfo implements Parcelable {
     public String to;
     public String nonce;
     private String quota;
-    public String validUntilBlock;
+    private String validUntilBlock;
     public String data;
     private String value;
     public String chainId;
@@ -32,35 +33,64 @@ public class TransactionInfo implements Parcelable {
     }
 
     public String getStringValue() {
-        value = isValid(value) ? value : "0";
-        return NumberUtil.getEthFromWeiForString(value);
+        return NumberUtil.getEthFromWeiForString(getBigIntegerValue().toString(16));
     }
 
     public double getDoubleValue() {
-        value = isValid(value) ? value : "0";
-        return NumberUtil.getEthFromWeiForDouble(value);
+        return NumberUtil.getEthFromWeiForDouble(getBigIntegerValue().toString(16));
     }
 
     public BigInteger getBigIntegerValue() {
-        if (isValid(value)) {
-            return BigInteger.ZERO;
+        if (NumberUtil.isNumeric(value)) {
+            return new BigInteger(value);
         }
-        return Numeric.toBigInt(value);
+        if (Numeric.containsHexPrefix(value)) {
+            return toBigInt(value);
+        }
+        return BigInteger.ZERO;
+    }
+
+    public BigInteger getValidUntilBlock() {
+        if (NumberUtil.isNumeric(validUntilBlock)) {
+            return new BigInteger(validUntilBlock);
+        }
+        if (Numeric.containsHexPrefix(validUntilBlock)) {
+            return toBigInt(validUntilBlock);
+        }
+        return BigInteger.ZERO;
+    }
+
+    public BigInteger getQuota() {
+        if (NumberUtil.isNumeric(quota)) {
+            return new BigInteger(quota);
+        }
+        if (Numeric.containsHexPrefix(quota)) {
+            return toBigInt(quota);
+        }
+        return BigInteger.ZERO;
     }
 
     public double getDoubleQuota() {
-        quota = isValid(quota) ? quota : "0";
-        return NumberUtil.getEthFromWeiForDouble(String.valueOf(quota));
+        return NumberUtil.getEthFromWeiForDouble(getQuota().toString(16));
     }
 
-    public long getLongQuota() {
-        quota = isValid(quota) ? quota : "0";
-        return Numeric.toBigInt(quota).longValue();
-    }
 
     public double getGas() {
-        BigInteger limitBig = isValid(gasLimit) ? Numeric.toBigInt(gasLimit) : BigInteger.ZERO;
-        BigInteger priceBig = isValid(gasPrice) ? Numeric.toBigInt(gasPrice) : BigInteger.ZERO;
+        BigInteger limitBig = BigInteger.ZERO;
+        if (NumberUtil.isNumeric(gasLimit)) {
+            limitBig = new BigInteger(gasLimit);
+        }
+        if (Numeric.containsHexPrefix(gasLimit)) {
+            limitBig = toBigInt(gasLimit);
+        }
+
+        BigInteger priceBig = BigInteger.ZERO;
+        if (NumberUtil.isNumeric(gasPrice)) {
+            priceBig = new BigInteger(gasPrice);
+        }
+        if (Numeric.containsHexPrefix(gasPrice)) {
+            priceBig = toBigInt(gasPrice);
+        }
         return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));
     }
 
@@ -68,10 +98,37 @@ public class TransactionInfo implements Parcelable {
         return !TextUtils.isEmpty(chainType) && TYPE_ETH.equals(chainType);
     }
 
-    private boolean isValid(String value) {
-        return !TextUtils.isEmpty(value) && NumberUtil.isHex(value);
+    private BigInteger toBigInt(String hex) {
+        try {
+            return Numeric.toBigInt(hex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BigInteger.ZERO;
+        }
     }
 
+    public void checkTransactionFormat() throws TransactionFormatException {
+        checkNumberFormat(value, "value");
+        checkNumberFormat(quota, "quota");
+        checkNumberFormat(validUntilBlock, "ValidUntilBlock");
+        checkNumberFormat(gasPrice, "GasPrice");
+        checkNumberFormat(gasLimit, "GasLimit");
+    }
+
+    private void checkNumberFormat(String str, String strName) throws TransactionFormatException {
+        if (!TextUtils.isEmpty(str)) {
+            if (!NumberUtil.isNumeric(str) && !Numeric.containsHexPrefix(str)) {
+                throw new TransactionFormatException(String.format("Transaction %s format error", strName));
+            } else if (Numeric.containsHexPrefix(str)) {
+                try {
+                    Numeric.toBigInt(str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new TransactionFormatException(String.format("Transaction %s format error", strName));
+                }
+            }
+        }
+    }
 
     @Override
     public int describeContents() {
