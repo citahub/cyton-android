@@ -27,6 +27,7 @@ import org.nervos.neuron.constant.NeuronDAppCallback;
 import org.nervos.neuron.item.*;
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem;
 import org.nervos.neuron.item.dapp.QrCodeItem;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
@@ -38,6 +39,7 @@ import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.exception.TransactionFormatException;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
@@ -268,11 +270,23 @@ public class AppWebActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
-                Intent intent = new Intent(mActivity, PayTokenActivity.class);
-                intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
-                intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
-                startActivityForResult(intent, REQUEST_CODE);
+                Gson gson = new Gson();
+                TransactionInfo transactionInfo = gson.fromJson(gson.toJson(transaction), TransactionInfo.class);
+                try {
+                    transactionInfo.checkTransactionFormat();
+                    Intent intent = new Intent(mActivity, PayTokenActivity.class);
+                    intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
+                    intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
+                    intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
+                    startActivityForResult(intent, REQUEST_CODE);
+                } catch (TransactionFormatException e) {
+                    e.printStackTrace();
+                    new android.app.AlertDialog.Builder(mActivity)
+                            .setTitle(e.getMessage())
+                            .setPositiveButton(R.string.have_known, (dialog, which) -> dialog.dismiss())
+                            .create()
+                            .show();
+                }
             }
         });
     }
