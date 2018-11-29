@@ -3,8 +3,6 @@ package org.nervos.neuron.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
-import org.web3j.crypto.Keys;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
@@ -46,6 +44,12 @@ public class NumberUtil {
 
     public static String getDecimal8ENotation(String value) {
         return getDecimal8ENotation(Double.parseDouble(value));
+    }
+
+    public static String getDecimal2ENotation(String value){
+        Double price = java.lang.Double.parseDouble(value.trim());
+        DecimalFormat df = new DecimalFormat("######0.00");
+        return df.format(price);
     }
 
     /**

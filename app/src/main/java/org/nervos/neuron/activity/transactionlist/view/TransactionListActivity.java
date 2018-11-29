@@ -21,9 +21,9 @@ import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
+import org.nervos.neuron.view.TokenProfileView;
 import org.nervos.neuron.view.loadmore.OnLoadMoreListener;
 import org.nervos.neuron.view.loadmore.RecyclerViewLoadMoreScroll;
-import org.nervos.neuron.view.tokenprofile.TokenProfileView;
 
 import java.util.ArrayList;
 import java.util.List;

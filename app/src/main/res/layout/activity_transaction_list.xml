@@ -30,7 +30,7 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <org.nervos.neuron.view.tokenprofile.TokenProfileView
+    <org.nervos.neuron.view.TokenProfileView
         android:id="@+id/view_token_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
