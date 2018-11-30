@@ -85,9 +85,7 @@ class TransactionDetailActivity : NBaseActivity() {
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(price: String) {
                             super.onNext(price)
-                            var gasUsed = Numeric.toBigInt(transactionResponse!!.gasUsed)
-                            var gasPrice = Numeric.toBigInt(HexUtils.IntToHex(price.toInt()))
-                            var gas = gasUsed.multiply(gasPrice)
+                            var gas = Numeric.toBigInt(transactionResponse!!.gasUsed).multiply(Numeric.toBigInt(price))
                             tv_transaction_gas.text =
                                     NumberUtil.getEthFromWeiForStringDecimal8(gas) + transactionResponse!!.nativeSymbol
                         }

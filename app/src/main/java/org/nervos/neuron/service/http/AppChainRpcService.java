@@ -156,7 +156,7 @@ public class AppChainRpcService {
     public static Observable<String> getQuotaPrice(String from) {
         return Observable.fromCallable(() -> {
             try {
-                return BigInteger.valueOf(new AppChainjSystemContract(service).getQuotaPrice(from)).toString();
+                return BigInteger.valueOf(new AppChainjSystemContract(service).getQuotaPrice(from)).toString(16);
             } catch (Exception e) {
                 e.printStackTrace();
                 Observable.error(e);

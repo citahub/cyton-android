@@ -180,7 +180,7 @@ public class TransferPresenter {
                     @Override
                     public void onNext(String quotaPrice) {
                         mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(HexUtils.IntToHex(Integer.valueOf(quotaPrice))));
+                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(quotaPrice));
                         mTransferFee = NumberUtil.getEthFromWei(mQuota);
                         mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
                     }
