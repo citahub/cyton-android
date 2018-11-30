@@ -109,18 +109,14 @@ public class TransactionInfo implements Parcelable {
 
     public void checkTransactionFormat() throws TransactionFormatException {
         checkNumberFormat(value, "value");
-        checkNumberFormat(quota, "quota", false);
+        checkNumberFormat(quota, "quota");
         checkNumberFormat(validUntilBlock, "ValidUntilBlock");
         checkNumberFormat(gasPrice, "GasPrice");
         checkNumberFormat(gasLimit, "GasLimit");
     }
 
-    private void checkNumberFormat(String str, String strName) throws TransactionFormatException {
-        checkNumberFormat(str, strName, true);
-    }
-
     private static final String TRANSACTION_FORMAT_ERROR = "Transaction's %s format error";
-    private void checkNumberFormat(String str, String strName, boolean allowNull) throws TransactionFormatException {
+    private void checkNumberFormat(String str, String strName) throws TransactionFormatException {
         if (!TextUtils.isEmpty(str)) {
             if (!NumberUtil.isNumeric(str) && !Numeric.containsHexPrefix(str)) {
                 throw new TransactionFormatException(String.format(TRANSACTION_FORMAT_ERROR, strName));
@@ -132,8 +128,6 @@ public class TransactionInfo implements Parcelable {
                     throw new TransactionFormatException(String.format(TRANSACTION_FORMAT_ERROR, strName));
                 }
             }
-        } else if (!allowNull) {
-            throw new TransactionFormatException(String.format(TRANSACTION_FORMAT_ERROR, strName));
         }
     }
 
