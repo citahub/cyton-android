@@ -22,98 +22,20 @@
         android:background="@color/warning_background"
         android:drawableStart="@drawable/warning"
         android:drawablePadding="5dp"
-        android:visibility="gone"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/default_margin"
         android:paddingEnd="@dimen/default_margin"
         android:text="@string/token_warning_message"
         android:textColor="@color/warning_font"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/cl_token_des"
+    <org.nervos.neuron.view.TokenProfileView
+        android:id="@+id/view_token_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_token_warning"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/iv_token_logo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/token_image_circle_border"
-            android:padding="5dp"
-            android:src="@drawable/ether_big"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_token_symbol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="23dp"
-            android:textColor="@color/font_title"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/iv_token_logo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:textColor="@color/font_title"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_token_symbol"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_token_des_first"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:maxLines="1"
-            android:textColor="@color/font_title"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_token_logo"
-            app:layout_constraintTop_toBottomOf="@id/tv_token_symbol" />
-
-        <TextView
-            android:id="@+id/tv_token_des_second"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:maxLines="1"
-            android:textColor="@color/font_title"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/tv_token_des_first"
-            app:layout_constraintTop_toBottomOf="@id/tv_token_des_first" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:text="@string/token_detail_btn"
-            android:textColor="@color/font_link"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_token_des_second"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <View
-            android:id="@+id/line"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/default_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_token_des_second" />
-    </android.support.constraint.ConstraintLayout>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/transfer_layout"
@@ -155,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/transfer_layout"
-        android:layout_below="@id/cl_token_des">
+        android:layout_below="@id/view_token_profile">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_recycler"
