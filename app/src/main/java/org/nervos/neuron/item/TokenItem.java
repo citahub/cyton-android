@@ -22,6 +22,7 @@ public class TokenItem implements Parcelable {
     public String chainName;
     public double balance;
     public double currencyPrice;
+    public boolean selected = true;
 
     public TokenItem() {
     }
@@ -85,7 +86,9 @@ public class TokenItem implements Parcelable {
     }
 
     @Override
-    public int describeContents() { return 0; }
+    public int describeContents() {
+        return 0;
+    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -101,6 +104,7 @@ public class TokenItem implements Parcelable {
         dest.writeString(this.chainName);
         dest.writeDouble(this.balance);
         dest.writeDouble(this.currencyPrice);
+        dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
     }
 
     protected TokenItem(Parcel in) {
@@ -116,13 +120,18 @@ public class TokenItem implements Parcelable {
         this.chainName = in.readString();
         this.balance = in.readDouble();
         this.currencyPrice = in.readDouble();
+        this.selected = in.readByte() != 0;
     }
 
     public static final Creator<TokenItem> CREATOR = new Creator<TokenItem>() {
         @Override
-        public TokenItem createFromParcel(Parcel source) {return new TokenItem(source);}
+        public TokenItem createFromParcel(Parcel source) {
+            return new TokenItem(source);
+        }
 
         @Override
-        public TokenItem[] newArray(int size) {return new TokenItem[size];}
+        public TokenItem[] newArray(int size) {
+            return new TokenItem[size];
+        }
     };
 }

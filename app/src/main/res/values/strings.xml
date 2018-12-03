@@ -9,7 +9,8 @@
     <string name="add_wallet">添加钱包</string>
     <string name="manage_token_list">列表设置</string>
     <string name="add">添加</string>
-    <string name="title_token_management">ERC20列表</string>
+    <string name="edit">编辑</string>
+    <string name="title_token_management">列表设置</string>
     <string name="title_receive_qrcode">收款</string>
     <string name="backup_mnemonic">备份助记词</string>
     <string name="confirm_mnemonic">确认助记词</string>

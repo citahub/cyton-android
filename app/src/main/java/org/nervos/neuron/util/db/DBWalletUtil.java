@@ -2,9 +2,7 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.snappydb.SnappydbException;
-
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -12,12 +10,7 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by duanyytop on 2018/5/8
@@ -206,6 +199,24 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
+    public static void updateTokenToWallet(Context context, String walletName, TokenItem tokenItem) {
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.tokenItems == null) {
+                walletItem.tokenItems = new ArrayList<>();
+            }
+            for (int i = 0; i < walletItem.tokenItems.size(); i++) {
+                if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
+                        && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())
+                        && walletItem.tokenItems.get(i).name.equals(tokenItem.name)) {
+                    walletItem.tokenItems.set(i, tokenItem);
+                    break;
+                }
+            }
+            saveWallet(context, walletItem);
+        }
+    }
+
     private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (TokenItem token : walletItem.tokenItems) {
             if (token.symbol.equals(tokenItem.symbol) && token.getChainId().equals(tokenItem.getChainId())) {
@@ -235,6 +246,11 @@ public class DBWalletUtil extends DBUtil {
     public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
         WalletItem walletItem = getCurrentWallet(context);
         addTokenToWallet(context, walletItem.name, tokenItem);
+    }
+
+    public static void updateTokenToCurrentWallet(Context context, TokenItem tokenItem) {
+        WalletItem walletItem = getCurrentWallet(context);
+        updateTokenToWallet(context, walletItem.name, tokenItem);
     }
 
     public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem) {

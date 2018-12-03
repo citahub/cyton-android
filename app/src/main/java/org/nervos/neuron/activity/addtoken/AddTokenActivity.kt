@@ -79,6 +79,7 @@ class AddTokenActivity : NBaseActivity() {
                                 DBWalletUtil.addTokenToWallet(mActivity, walletItem!!.name, tokenItem)
                                 DBTokenUtil.saveToken(mActivity, tokenItem)
                                 erc20InfoDialog.dismiss()
+                                finish()
                             }
                         }
 

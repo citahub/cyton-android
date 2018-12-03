@@ -10,7 +10,7 @@ import org.nervos.neuron.service.http.EthRpcService
 import org.nervos.neuron.util.AddressUtil
 import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.db.DBChainUtil
-import org.nervos.neuron.util.db.DBTokenUtil
+import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -69,7 +69,7 @@ class AddTokenManager(val context: Context) {
     }
 
     private fun checkRepetitionContract(contractAddress: String): Boolean {
-        val customList = DBTokenUtil.getAllTokens(context)
+        val customList = DBWalletUtil.getCurrentWallet(context).tokenItems
         if (customList != null && customList.size > 0) {
             for (item in customList) {
                 if (item.contractAddress.equals(contractAddress, ignoreCase = true)) return false

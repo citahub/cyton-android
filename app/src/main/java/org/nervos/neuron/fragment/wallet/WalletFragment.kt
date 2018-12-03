@@ -139,8 +139,9 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     private fun getMyTokens() {
         var list = DBWalletUtil.getCurrentWallet(context).tokenItems
         mTokenItemList.clear()
-        list.forEachIndexed { index, tokenItem ->
-            mTokenItemList.add(index, WalletTokenLoadItem(tokenItem))
+        list.forEachIndexed { _, tokenItem ->
+            if (tokenItem.selected)
+                mTokenItemList.add(WalletTokenLoadItem(tokenItem))
         }
     }
 
