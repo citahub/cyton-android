@@ -15,6 +15,6 @@ ext.appConfig = [
         devVersionName   : "1.0",
         devResConfigsEn  : "en",
         devResConfigsDraw: "xxhdpi",
-        isDebug: true
+        isDebug: false
 ]
 
