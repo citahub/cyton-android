@@ -5,8 +5,9 @@
     <string name="cancel">取消</string>
     <string name="setting">设置</string>
     <string name="select_wallet_unlock">选择钱包</string>
-    <string name="title_add_token">添加新资产</string>
+    <string name="title_add_token">添加资产</string>
     <string name="add_wallet">添加钱包</string>
+    <string name="manage_token_list">列表设置</string>
     <string name="add">添加</string>
     <string name="title_token_management">ERC20列表</string>
     <string name="title_receive_qrcode">收款</string>
@@ -155,8 +156,8 @@
     <string name="private_key_error">请扫描正确的私钥二维码</string>
     <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
-    <string name="input_token_info">请输入完整的代币信息</string>
-    <string name="exist_erc20_token">请勿添加重复Token</string>
+    <string name="input_token_info">您的代币没有名称，无法成功导入！</string>
+    <string name="exist_erc20_token">您的列表已有该代币</string>
     <string name="keystore">Keystore</string>
     <string name="nmemonic">助记词</string>
     <string name="private_key">私钥</string>
@@ -164,7 +165,7 @@
     <string name="dialog_finger_setting">您尚未设置Touch ID，请在手机系统“设置>Touch ID与密码”中添加指纹</string>
     <string name="have_known">知道了</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
-    <string name="contract_address_error">合约地址错误</string>
+    <string name="contract_address_error">请输入正确的合约地址</string>
     <string name="input_receive_address_hint">请输入收款地址</string>
     <string name="fee_value">矿工费用</string>
     <string name="advanced_setup">高级设置</string>
@@ -231,8 +232,9 @@
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
     <string name="input_erc20_address">请输入ERC20代币合约地址</string>
+    <string name="token_title">代币信息</string>
     <string name="token_name_hint">代币名称</string>
-    <string name="token_symbol_hint">代币符号</string>
+    <string name="token_symbol_hint">代币缩写</string>
     <string name="token_decimal_hint">小数位数</string>
     <string name="input_private_key_hint">请输入私钥原文</string>
     <string name="please_input_gas_price">请输入以GWei为单位的GasPrice</string>

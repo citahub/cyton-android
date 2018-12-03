@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWalletActivity
-import org.nervos.neuron.activity.TokenManageActivity
+import org.nervos.neuron.activity.addtoken.AddTokenActivity
 import org.nervos.neuron.activity.changewallet.ChangeWalletActivity
 import org.nervos.neuron.event.AddTokenRefreshEvent
 import org.nervos.neuron.event.CurrencyRefreshEvent
@@ -128,7 +128,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.iv_right_arrow, R.id.tv_add_token -> startActivity(Intent(activity, TokenManageActivity::class.java))
+            R.id.iv_right_arrow, R.id.tv_add_token -> startActivity(Intent(activity, AddTokenActivity::class.java))
             R.id.iv_refresh -> {
                 if (swipe_refresh_layout.isEnabled)
                     refreshTokens(true)

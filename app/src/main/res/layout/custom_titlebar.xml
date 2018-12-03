@@ -46,14 +46,14 @@
 
     <RelativeLayout
         android:id="@+id/title_bar_right"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/default_margin">
 
         <TextView
             android:id="@+id/title_bar_right_default"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"

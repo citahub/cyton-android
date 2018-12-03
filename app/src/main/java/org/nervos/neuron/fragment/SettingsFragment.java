@@ -149,7 +149,7 @@ public class SettingsFragment extends NBaseFragment {
                 SharePrefUtil.putString(ConstantUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
                 dialog.dismiss();
             }));
-            dialog.setOnDissmissListener(dialogInterface -> {
+            dialog.setOnDismissListener(dialogInterface -> {
                 EthRpcService.initNodeUrl();
                 updateEthNode();
                 String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);

@@ -50,10 +50,8 @@ class ReceiveQrCodeActivity : NBaseActivity() {
         tv_copy!!.setOnClickListener {
             val cm = mActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val mClipData = ClipData.newPlainText("qrCode", walletItem.address)
-            if (cm != null) {
-                cm.primaryClip = mClipData
-                Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show()
-            }
+            cm.primaryClip = mClipData
+            Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show()
         }
 
         tv_name!!.text = walletItem.name

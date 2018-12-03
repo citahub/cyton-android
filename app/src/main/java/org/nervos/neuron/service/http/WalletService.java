@@ -34,19 +34,22 @@ public class WalletService {
                 .flatMap(new Func1<String, Observable<Double>>() {
                     @Override
                     public Observable<Double> call(String address) {
-                            if (EtherUtil.isEther(tokenItem)) {
-                                tokenItem.chainName = ConstantUtil.ETH;
-                                return EtherUtil.isNative(tokenItem)
-                                        ? EthRpcService.getEthBalance(address)
-                                        : EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
+                        if (EtherUtil.isEther(tokenItem)) {
+                            tokenItem.chainName = ConstantUtil.ETH;
+                            if (EtherUtil.isNative(tokenItem)) {
+                                return EthRpcService.getEthBalance(address);
                             } else {
-                                ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                                tokenItem.chainName = Objects.requireNonNull(chainItem).name;
-                                AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
-                                return EtherUtil.isNative(tokenItem)
-                                        ? AppChainRpcService.getBalance(address)
-                                        : AppChainRpcService.getErc20Balance(tokenItem, address);
+                                EthRpcService.initNodeUrl(EtherUtil.getEthNodeUrl(tokenItem.getChainId()));
+                                return EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
                             }
+                        } else {
+                            ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+                            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
+                            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
+                            return EtherUtil.isNative(tokenItem)
+                                    ? AppChainRpcService.getBalance(address)
+                                    : AppChainRpcService.getErc20Balance(tokenItem, address);
+                        }
                     }
                 }).map(balance -> {
                     tokenItem.balance = balance;
@@ -73,7 +76,7 @@ public class WalletService {
         Observable<Double> balanceObservable;
         if (EtherUtil.isEther(tokenItem)) {
             tokenItem.chainName = ConstantUtil.ETH;
-            balanceObservable =  EtherUtil.isNative(tokenItem)
+            balanceObservable = EtherUtil.isNative(tokenItem)
                     ? EthRpcService.getEthBalance(walletItem.address)
                     : EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
         } else {

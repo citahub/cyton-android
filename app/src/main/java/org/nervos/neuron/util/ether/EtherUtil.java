@@ -1,7 +1,6 @@
 package org.nervos.neuron.util.ether;
 
 import android.text.TextUtils;
-
 import org.nervos.appchain.utils.Numeric;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.ConstantUtil;
@@ -38,7 +37,6 @@ public class EtherUtil {
     }
 
 
-
     public static String getEthNodeName() {
         switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
             case ConstantUtil.ETH_NET_RINKEBY_TEST:
@@ -54,7 +52,6 @@ public class EtherUtil {
     }
 
 
-
     public static String getEthNodeUrl() {
         switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
             case ConstantUtil.ETH_NET_RINKEBY_TEST:
@@ -64,6 +61,20 @@ public class EtherUtil {
             case ConstantUtil.ETH_NET_ROPSTEN_TEST:
                 return HttpEtherUrls.ETH_NODE_URL_ROPSTEN;
             case ConstantUtil.ETH_NET_MAIN:
+            default:
+                return HttpEtherUrls.ETH_NODE_MAIN_URL;
+        }
+    }
+
+    public static String getEthNodeUrl(String id) {
+        switch (id) {
+            case ConstantUtil.ETHEREUM_RINKEBY_ID:
+                return HttpEtherUrls.ETH_NODE_URL_RINKEBY;
+            case ConstantUtil.ETHEREUM_KOVAN_ID:
+                return HttpEtherUrls.ETH_NODE_URL_KOVAN;
+            case ConstantUtil.ETHEREUM_ROPSTEN_ID:
+                return HttpEtherUrls.ETH_NODE_URL_ROPSTEN;
+            case ConstantUtil.ETHEREUM_MAIN_ID:
             default:
                 return HttpEtherUrls.ETH_NODE_MAIN_URL;
         }

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.addtoken.AddTokenActivity;
 import org.nervos.neuron.event.AddTokenRefreshEvent;
 import org.nervos.neuron.item.TokenEntity;
 import org.nervos.neuron.item.TokenItem;

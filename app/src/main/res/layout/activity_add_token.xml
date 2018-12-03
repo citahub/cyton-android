@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background"
-    android:orientation="vertical">
+    android:background="@color/default_background">
 
     <org.nervos.neuron.view.TitleBar
         android:id="@+id/title"
@@ -13,20 +12,24 @@
         android:background="@color/colorPrimary"
         app:isShowBottomLine="true"
         app:isShowLeft="true"
+        app:isShowRight="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:right_text="@string/manage_token_list"
         app:title="@string/title_add_token" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingStart="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin">
+        android:paddingRight="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/title">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
             android:background="@android:color/white">
 
             <TextView
@@ -34,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/blockchain"
-                android:textColor="@color/font_title_third"
+                android:textColor="@color/font_title"
                 android:textSize="15sp" />
 
             <ImageView
@@ -56,13 +59,11 @@
 
         </RelativeLayout>
 
-        <View
-            style="@style/separateLineLong"/>
+        <View style="@style/separateLineLong" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
             android:background="@android:color/white">
 
             <TextView
@@ -71,16 +72,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/contract_address"
-                android:textColor="@color/font_title_third"
+                android:textColor="@color/font_title"
                 android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/add_token_contract_address_scan"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="5dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/scan" />
 
@@ -89,8 +90,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_toStartOf="@id/add_token_contract_address_scan"
                 android:layout_toEndOf="@id/add_token_contract_address_text"
                 android:background="@null"
@@ -105,99 +104,6 @@
 
         </RelativeLayout>
 
-        <View
-            style="@style/separateLineLong" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/white"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/token_name_hint"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp" />
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/edit_add_token_name"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginStart="5dp"
-                android:background="@android:color/white"
-                android:enabled="false"
-                android:gravity="end|center_vertical"
-                android:textColor="@color/font_title"
-                android:textSize="13sp" />
-
-        </LinearLayout>
-
-        <View
-            style="@style/separateLineLong"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/white"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/token_symbol_hint"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp" />
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/edit_add_token_symbol"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginStart="5dp"
-                android:background="@android:color/white"
-                android:enabled="false"
-                android:gravity="end|center_vertical"
-                android:textColor="@color/font_title"
-                android:textSize="13sp" />
-
-        </LinearLayout>
-
-        <View
-            style="@style/separateLineLong"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/white"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/token_decimal_hint"
-                android:textColor="@color/font_title_third"
-                android:textSize="15sp" />
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/edit_add_token_decimal"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginStart="5dp"
-                android:background="@android:color/white"
-                android:enabled="false"
-                android:gravity="end|center_vertical"
-                android:textColor="@color/font_title"
-                android:textSize="13sp" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <org.nervos.neuron.view.button.CommonButton
@@ -205,8 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:status="true"
         app:text="@string/add" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
