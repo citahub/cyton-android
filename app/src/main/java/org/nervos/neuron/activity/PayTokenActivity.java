@@ -1,6 +1,8 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +29,7 @@ import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.exception.TransactionFormatException;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -304,7 +307,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 mTransactionInfo.chainId));
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getStringValue(),
-                mTransactionInfo.data, mTransactionInfo.getLongQuota(),
+                mTransactionInfo.data, mTransactionInfo.getQuota().longValue(),
                 Numeric.toBigInt(mTransactionInfo.chainId), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
@@ -358,8 +361,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         if (appSendTransaction == null) {
             Toast.makeText(mActivity, R.string.operation_fail, Toast.LENGTH_SHORT).show();
             gotoSignFail(getCommonError());
-        } else if (appSendTransaction.getError() != null &&
-                !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
+        } else if (appSendTransaction.getError() != null
+                && !TextUtils.isEmpty(appSendTransaction.getError().getMessage())) {
             mTransferDialog.dismiss();
             Toast.makeText(mActivity, appSendTransaction.getError().getMessage(),
                     Toast.LENGTH_SHORT).show();

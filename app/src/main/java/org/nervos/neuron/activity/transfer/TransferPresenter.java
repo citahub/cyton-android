@@ -402,7 +402,7 @@ public class TransferPresenter {
             return " " + ConstantUtil.ETH;
         } else {
             ChainItem chainItem = DBChainUtil.getChain(mActivity, mTokenItem.getChainId());
-            return chainItem == null ? "" : " " + chainItem.tokenSymbol;
+            return chainItem == null || TextUtils.isEmpty(chainItem.tokenSymbol) ? "" : " " + chainItem.tokenSymbol;
         }
     }
 

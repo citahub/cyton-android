@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,39 +16,30 @@ import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.google.gson.Gson;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-
 import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.AppItem;
-import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.constant.NeuronDAppCallback;
+import org.nervos.neuron.item.*;
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem;
 import org.nervos.neuron.item.dapp.QrCodeItem;
-import org.nervos.neuron.item.TitleItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
-import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpEtherUrls;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.JSLoadUtils;
-import org.nervos.neuron.constant.NeuronDAppCallback;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.PickPicUtils;
 import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
+import org.nervos.neuron.util.exception.TransactionFormatException;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
@@ -62,11 +52,10 @@ import org.nervos.neuron.view.webview.SimpleWebViewClient;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
-
-import java.io.File;
-
 import rx.Observable;
 import rx.Subscriber;
+
+import java.io.File;
 
 /**
  * Created by duanyytop on 2018/5/28
@@ -89,6 +78,7 @@ public class AppWebActivity extends NBaseActivity {
     private TextView titleText;
     private ProgressBar progressBar;
     private SignDialog mSignDialog;
+    private RelativeLayout mRlTitle;
     private ImageView rightMenuView;
     private ImageView leftView;
     private WebErrorView webErrorView;
@@ -108,6 +98,7 @@ public class AppWebActivity extends NBaseActivity {
 
     @Override
     protected void initView() {
+        mRlTitle = findViewById(R.id.title_layout);
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
         titleText = findViewById(R.id.title_bar_center);
@@ -136,15 +127,7 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initAction() {
         leftView.setOnClickListener(v -> {
-            if (titleItem != null && TextUtils.equals(TitleItem.ACTION_BACK, titleItem.left.type)) {
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                } else {
-                    finish();
-                }
-            } else {
-                finish();
-            }
+            backAction();
         });
         rightMenuView.setOnClickListener(v -> initMenuView());
         webErrorView.setImpl((reloadUrl) -> {
@@ -152,6 +135,11 @@ public class AppWebActivity extends NBaseActivity {
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        backAction();
     }
 
     private void initWebView() {
@@ -178,7 +166,7 @@ public class AppWebActivity extends NBaseActivity {
 
             // For Lollipop 5.0+ Devices
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 mFilePathCallbacks = filePathCallback;
                 chooseImage();
                 return true;
@@ -282,11 +270,23 @@ public class AppWebActivity extends NBaseActivity {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
-                Intent intent = new Intent(mActivity, PayTokenActivity.class);
-                intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
-                intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
-                startActivityForResult(intent, REQUEST_CODE);
+                Gson gson = new Gson();
+                TransactionInfo transactionInfo = gson.fromJson(gson.toJson(transaction), TransactionInfo.class);
+                try {
+                    transactionInfo.checkTransactionFormat();
+                    Intent intent = new Intent(mActivity, PayTokenActivity.class);
+                    intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
+                    intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
+                    intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
+                    startActivityForResult(intent, REQUEST_CODE);
+                } catch (TransactionFormatException e) {
+                    e.printStackTrace();
+                    new android.app.AlertDialog.Builder(mActivity)
+                            .setTitle(e.getMessage())
+                            .setPositiveButton(R.string.have_known, (dialog, which) -> dialog.dismiss())
+                            .create()
+                            .show();
+                }
             }
         });
     }
@@ -310,36 +310,60 @@ public class AppWebActivity extends NBaseActivity {
         });
     }
 
+    private void backAction() {
+        if (titleItem != null) {
+            if (!TextUtils.isEmpty(titleItem.left.action)) {
+                JSLoadUtils.INSTANCE.loadFunc(webView, titleItem.left.action);
+            } else if (TextUtils.equals(TitleItem.ACTION_CLOSE, titleItem.left.type)) {
+                finish();
+            } else {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    finish();
+                }
+            }
+        } else {
+            finish();
+        }
+    }
+
     public class WebTitleBar {
 
         @JavascriptInterface
         public void getTitleBar(String data) {
+            mRlTitle.post(() -> {
+                if (!TextUtils.isEmpty(data)) {
+                    titleItem = new Gson().fromJson(data, TitleItem.class);
+                    mRlTitle.setVisibility(View.VISIBLE);
+                    if (titleItem.right != null) {
+                        rightMenuView.setVisibility(titleItem.right.isShow ? View.VISIBLE : View.INVISIBLE);
+                        if (TitleItem.ACTION_MENU.equals(titleItem.right.type)) {
+                            rightMenuView.setImageResource(R.drawable.title_more);
+                        } else if (TitleItem.ACTION_SHARE.equals(titleItem.right.type)) {
+                            rightMenuView.setImageResource(R.drawable.share);
+                        }
+                    }
 
-            titleItem = new Gson().fromJson(data, TitleItem.class);
+                    if (titleItem.left != null && !TextUtils.isEmpty(titleItem.left.type)) {
+                        if (TitleItem.ACTION_BACK.equals(titleItem.left.type)) {
+                            leftView.setImageResource(R.drawable.black_back);
+                        } else if (TitleItem.ACTION_CLOSE.equals(titleItem.left.type)) {
+                            leftView.setImageResource(R.drawable.title_close);
+                        }
+                    }
 
-            if (titleItem.right != null) {
-                rightMenuView.setVisibility(titleItem.right.isShow ? View.VISIBLE : View.INVISIBLE);
-                if (TitleItem.ACTION_MENU.equals(titleItem.right.type)) {
-                    rightMenuView.setImageResource(R.drawable.title_more);
-                } else if (TitleItem.ACTION_SHARE.equals(titleItem.right.type)) {
-                    rightMenuView.setImageResource(R.drawable.share);
+                    if (titleItem.title != null) {
+                        if (!TextUtils.isEmpty(titleItem.title.name)) {
+                            titleText.setText(titleItem.title.name);
+                        }
+                    }
+                } else {
+                    mRlTitle.setVisibility(View.GONE);
                 }
-            }
-
-            if (titleItem.left != null && !TextUtils.isEmpty(titleItem.left.type)) {
-                if (TitleItem.ACTION_BACK.equals(titleItem.left.type)) {
-                    leftView.setImageResource(R.drawable.black_back);
-                } else if (TitleItem.ACTION_CLOSE.equals(titleItem.left.type)) {
-                    leftView.setImageResource(R.drawable.title_close);
-                }
-            }
-
-            if (titleItem.title != null) {
-                if (!TextUtils.isEmpty(titleItem.title.name)) {
-                    titleText.setText(titleItem.title.name);
-                }
-            }
+            });
         }
+
     }
 
 
@@ -461,10 +485,25 @@ public class AppWebActivity extends NBaseActivity {
                             .start();
                     break;
                 case 1:
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "File Chooser"), REQUEST_CODE_INPUT_FILE_CHOOSE);
+                    String[] choosePermissionList = new String[]{Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE};
+                    AndPermission.with(this)
+                            .runtime()
+                            .permission(choosePermissionList)
+                            .rationale(new RuntimeRationale())
+                            .onGranted(permissions -> {
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                intent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(intent, "File Chooser"), REQUEST_CODE_INPUT_FILE_CHOOSE);
+                            })
+                            .onDenied(permissions -> {
+                                PermissionUtil.showSettingDialog(this, permissions);
+                                if (mFilePathCallbacks != null) {
+                                    mFilePathCallbacks.onReceiveValue(null);
+                                }
+                                mFilePathCallbacks = null;
+                            })
+                            .start();
                     break;
                 default:
                     break;

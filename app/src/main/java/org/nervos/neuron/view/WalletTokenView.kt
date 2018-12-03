@@ -13,7 +13,6 @@ import org.nervos.neuron.R
 import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity
 import org.nervos.neuron.event.TokenBalanceEvent
 import org.nervos.neuron.item.TokenItem
-import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.item.WalletTokenLoadItem
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.service.http.WalletService
@@ -50,10 +49,12 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                     override fun onCompleted() {
 
                     }
+
                     override fun onError(e: Throwable) {
                         tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)
                         EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                     }
+
                     override fun onNext(item: TokenItem) {
                         if (DBWalletUtil.getCurrentWallet(context).address == address && item.name == tokenItem.name) {
                             tokenItem = WalletTokenLoadItem(item)
@@ -83,7 +84,8 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         TokenService.getCurrency(tokenItem.symbol, currencyItem.name).subscribe(object : Subscriber<String>() {
             override fun onCompleted() {
                 if (DBWalletUtil.getCurrentWallet(context).address == address) {
-                    tv_token_currency.text = currencyItem.symbol + DecimalFormat("######0.00").format(tokenItem.currencyPrice)
+                    tv_token_currency.text =
+                            context.resources.getString(R.string.approximate) + currencyItem.symbol + DecimalFormat("######0.00").format(tokenItem.currencyPrice)
                     tv_token_currency.visibility = View.VISIBLE
                     EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                 }

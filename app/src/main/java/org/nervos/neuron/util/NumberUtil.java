@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 
 public class NumberUtil {
@@ -32,7 +33,7 @@ public class NumberUtil {
     public static String getDecimal8ENotation(double value) {
         if (value < 1) {
             double decimal = value - (long) value;
-            if (decimal < 0.00000001) {
+            if (decimal < 0.00000001 && decimal > 0) {
                 return String.valueOf(value);
             }
         }
@@ -70,6 +71,15 @@ public class NumberUtil {
             }
         }
         return true;
+    }
+
+
+    public static boolean isNumeric(String str) {
+        if (str == null || str.length() == 0) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
     }
 
     public static String hexToUtf8(String hex) {

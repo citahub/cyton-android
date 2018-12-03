@@ -24,6 +24,7 @@
     <string name="change_password">修改密码</string>
     <string name="delete_wallet">删除钱包</string>
     <string name="ok">确定</string>
+    <string name="go_on">继续</string>
     <string name="import_wallet_content">粘贴以太坊Keystore内容至输入框，或通过扫描二维码输入</string>
     <string name="import_wallet_content_hint">请导入Keystore文本</string>
     <string name="change_password_warning">钱包密码如丢失将无法找回，请您妥善保管密码</string>
@@ -140,12 +141,12 @@
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="press_back_finish">再按一次返回键退出</string>
     <string name="collect_title">我的藏品</string>
-    <string name="my_dapp">我的dapp</string>
+    <string name="my_dapp">我的ÐApp</string>
     <string name="collect_success">收藏成功</string>
     <string name="cancel_collect">取消收藏</string>
     <string name="reload">重新加载</string>
     <string name="transfer_address_not_null">转账地址不能为空</string>
-    <string name="balance_not_enough_fee">请确保账户剩余 %s 高于矿工费用，以便顺利完成转账～</string>
+    <string name="balance_not_enough_fee">请确保账户剩余%s 高于矿工费用，以便顺利完成转账～</string>
     <string name="transfer_amount_not_null">转账金额不能为空</string>
     <string name="input_correct_url">请输入正确的网页地址</string>
     <string name="address_error">您的地址错误，请重新输入</string>
@@ -515,4 +516,5 @@
     <string name="blockchain">区块链</string>
     <string name="contract_address">合约地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
+    <string name="approximate">≈</string>
 </resources>
