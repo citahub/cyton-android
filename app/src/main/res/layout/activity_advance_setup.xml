@@ -1,7 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <org.nervos.neuron.view.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:isShowBottomLine="true"
+        app:isShowLeft="true"
+        app:title="@string/advanced_setup" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_price"
+            android:textSize="15sp"
+            android:textColor="@color/font_title_third"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_margin"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edit_gas_price"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:gravity="end|center_vertical"
+            android:hint="@string/input_gas_price"
+            android:maxLength="15"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:singleLine="true"
+            android:textColor="@color/font_title"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <View
+        style="@style/inputSeparateLine"
+        android:layout_marginStart="@dimen/default_margin" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_limit"
+            android:textSize="15sp"
+            android:textColor="@color/font_title_third"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_margin"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edit_gas_limit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:gravity="end|center_vertical"
+            android:hint="@string/input_gas_limit"
+            android:maxLength="15"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:singleLine="true"
+            android:textColor="@color/font_title"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <View
+        style="@style/inputSeparateLine"
+        android:layout_marginStart="@dimen/default_margin" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_fee"
+            android:textSize="15sp"
+            android:textColor="@color/font_title_third"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/text_gas_fee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_gas_fee_detail"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="end|center_vertical"
+        android:textSize="13sp"
+        android:textColor="@color/font_title_second"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/transaction_data"
+        android:textSize="15sp"
+        android:textColor="@color/font_title_third"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/default_margin"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:orientation="vertical"
+        android:background="@drawable/rectangle_border_gray_corner">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/rectangle_border_gray_corner">
+
+            <View
+                android:id="@+id/pay_separate"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/line_input"
+                android:layout_centerInParent="true"/>
+
+            <LinearLayout
+                android:id="@+id/sign_hex_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@id/pay_separate"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:gravity="center"
+                    android:text="@string/hex"
+                    android:textColor="@color/font_title_second"
+                    android:textSize="15sp"/>
+
+                <View
+                    android:id="@+id/pay_data_left_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@color/colorPrimary"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sign_utf8_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/pay_separate"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:gravity="center"
+                    android:text="@string/utf8"
+                    android:textColor="@color/font_title_second"
+                    android:textSize="15sp"/>
+
+                <View
+                    android:id="@+id/pay_data_right_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:visibility="gone"
+                    android:background="@color/line_input"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/pay_data"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:lines="60"
+            android:textSize="15sp"
+            android:textColor="@color/font_title"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -87,6 +87,8 @@
     <string name="operation_fail">操作失败</string>
     <string name="transfer_success">转账成功</string>
     <string name="transfer_fail">转账失败</string>
+    <string name="input_gas_price">请输入Gas Price</string>
+    <string name="input_gas_limit">请输入Gas Limit</string>
     <string name="copy">复制</string>
     <string name="share">分享</string>
     <string name="wallet_title">钱包</string>
@@ -172,7 +174,6 @@
     <string name="input_receive_address_hint">请输入收款地址</string>
     <string name="fee_value">矿工费用</string>
     <string name="advanced_setup">高级设置</string>
-    <string name="gas_price">Gas Price</string>
     <string name="gas_fee">Gas费用</string>
     <string name="quota_fee">Quota费用</string>
     <string name="total_price">总费用</string>
@@ -525,4 +526,9 @@
     <string name="appchain_node">节点地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
     <string name="approximate">≈</string>
+    <string name="gas_limit">Gas Limit</string>
+    <string name="gas_price">Gas Price</string>
+    <string name="transaction_data">包含数据</string>
+    <string name="utf8">UTF8</string>
+    <string name="hex">HEX</string>
 </resources>
