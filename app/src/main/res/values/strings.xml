@@ -528,7 +528,4 @@
     <string name="approximate">≈</string>
     <string name="gas_limit">Gas Limit</string>
     <string name="gas_price">Gas Price</string>
-    <string name="transaction_data">包含数据</string>
-    <string name="utf8">UTF8</string>
-    <string name="hex">HEX</string>
 </resources>

@@ -400,27 +400,31 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     getConfirmTransferView();
                 break;
             case R.id.tv_gas_price:
-                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
-                DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick(View v, String gasPrice) {
-                        if (TextUtils.isEmpty(gasPrice)) {
-                            Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
-                            Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
-                        } else {
-                            mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
-                            setEthGasPrice();
-                        }
-                    }
-                });
-                dialog.setTransactionData(mTransactionInfo.data);
-                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
-                String gasPriceValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
-                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
-                dialog.show();
+                Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
+                intent.putExtra(AdvanceSetupActivity.Companion.getEXTRA_ADVANCE_SETUP(), mTransactionInfo);
+                startActivity(intent);
+
+//                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
+//                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
+//                DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
+//                    @Override
+//                    public void onOkClick(View v, String gasPrice) {
+//                        if (TextUtils.isEmpty(gasPrice)) {
+//                            Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
+//                        } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
+//                            Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
+//                            setEthGasPrice();
+//                        }
+//                    }
+//                });
+//                dialog.setTransactionData(mTransactionInfo.data);
+//                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
+//                String gasPriceValue = NumberUtil.getDecimalValid_2(
+//                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
+//                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
+//                dialog.show();
                 break;
             default:
                 break;
