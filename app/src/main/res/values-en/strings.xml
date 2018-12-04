@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Neuron</string>
-    <string name="transfer_button">SEND</string>
-    <string name="token_transfer_value">Amount to Send</string>
+    <string name="transfer_button">Send</string>
+    <string name="token_transfer_value">Amout to Send</string>
     <string name="cancel">Cancel</string>
     <string name="setting">Settings</string>
     <string name="select_wallet_unlock">Select Wallet</string>
@@ -10,12 +10,12 @@
     <string name="add">Add</string>
     <string name="title_token_management">ERC20</string>
     <string name="title_receive_qrcode">Receive</string>
-    <string name="backup_mnemonic">Your Mnemonic phrase</string>
-    <string name="confirm_mnemonic">Verify Mnemonic phrase</string>
-    <string name="title_transfer"> Transfer</string>
+    <string name="backup_mnemonic">Your Mnemonic Phrase</string>
+    <string name="confirm_mnemonic">Verify Mnemonic Phrase</string>
+    <string name="title_transfer"> Send</string>
     <string name="wallet_assets_start_query">----</string>
-    <string name="title_create_wallet">Create wallet</string>
-    <string name="title_import_wallet">Import wallet</string>
+    <string name="title_create_wallet">Create Wallet</string>
+    <string name="title_import_wallet">Import Wallet</string>
     <string name="next_action">Continue</string>
     <string name="backup_complete">Confirm</string>
     <string name="import_wallet">Import</string>
@@ -24,6 +24,7 @@
     <string name="change_password">Change Password</string>
     <string name="delete_wallet">Delete Wallet</string>
     <string name="ok">Confirm</string>
+    <string name="go_on">Continue</string>
     <string name="import_wallet_content">Please enter Keystore</string>
     <string name="import_wallet_content_hint">Please enter Keystore</string>
     <string name="change_password_warning">Neuron will not store your password, please backup diligently.</string>
@@ -31,9 +32,9 @@
     <string name="import_mnemonic_input_hint">Please separate each Mnemonic Phrase with a space.</string>
     <string name="import_private_key_warning">Please enter Private Key.</string>
     <string name="export_keystore_warning">A keystore file is an encrypted version of your unique private key that you will use to sign your transactions, please backup diligently.</string>
-    <string name="tab_application">DApp</string>
-    <string name="tab_wallet">wallet</string>
-    <string name="tab_me">me</string>
+    <string name="tab_application">ÐApp</string>
+    <string name="tab_wallet">Wallet</string>
+    <string name="tab_me">Me</string>
     <string name="wallet_token_total_money">Assets</string>
     <string name="copy_address">Copy</string>
     <string name="token_warning_message">The token has no value and is only used for developer testing.</string>
@@ -80,7 +81,7 @@
     <string name="copy_weixin_success">WeChat is copied to clipboard</string>
     <string name="password_fail">Incorrect Password</string>
     <string name="operation_success">Operation submitted</string>
-    <string name="operation_fail">operation failed</string>
+    <string name="operation_fail">Operation failed</string>
     <string name="transfer_success">Success</string>
     <string name="transfer_fail">Failed</string>
     <string name="copy">Copy</string>
@@ -91,7 +92,7 @@
     <string name="setting_currency">Local Currency</string>
     <string name="setting_fingerprint">Touch ID</string>
     <string name="setting_select_eth_net">Network</string>
-    <string name="dialog_finger_msg">please verify fingerprint and open Touch ID</string>
+    <string name="dialog_finger_msg">Please verify fingerprint and open Touch ID</string>
     <string name="fingerprint_setting_sucess">Touch ID authentication succeeded</string>
     <string name="fingerprint_setting_failed">Touch ID authentication failed,please try again</string>
     <string name="setting_about_us">About Us</string>
@@ -111,18 +112,18 @@
     <string name="password_weak">At least 8 characters, three types of uppercase and lowercase alphabets, numbers, and special symbols！</string>
     <string name="password_not_same">Password do not match</string>
     <string name="wallet_name_exist">Wallet Name is existed</string>
-    <string name="wallet_address_exist">Wallet address is existed</string>
+    <string name="wallet_address_exist">Wallet Address is existed</string>
     <string name="wallet_export_success">Wallet Inputted</string>
     <string name="wallet_creating">Wallet creating...</string>
     <string name="wallet_importing">Wallet inputting...</string>
     <string name="wallet_pwd_hint">Password</string>
-    <string name="wallet_total_money">Asset</string>
+    <string name="wallet_total_money">Total Assets </string>
     <string name="password_use_protect_private_key">Your password will be required when sending digital assets or accessing confidential information.</string>
     <string name="no_wallet_suggestion">Please create or input wallet first</string>
     <string name="collect">Add to Bookmark</string>
     <string name="password_not_null">Empty Password</string>
     <string name="wallet_name_not_null">Empty Wallet Name</string>
-    <string name="generate_wallet">Creat Wallet</string>
+    <string name="generate_wallet">Create Wallet</string>
     <string name="old_password_not_null">The current password can not be empty</string>
     <string name="new_password_not_null">The new password can not be empty</string>
     <string name="old_password_error">Incorrect current password </string>
@@ -133,7 +134,7 @@
     <string name="delete_success">Wallet Deleted</string>
     <string name="qrcode_handle_fail">QR Code failed</string>
     <string name="wallet_manage_title">Manager</string>
-    <string name="wallet_photo">Wallet Name</string>
+    <string name="wallet_photo">Wallet Photo</string>
     <string name="wallet_address">Wallet Address</string>
     <string name="export_keystore">Export Keystore</string>
     <string name="transaction_detail_title">Transaction Details</string>
@@ -165,12 +166,12 @@
     <string name="contract_address_error">Incorrect Contract address</string>
     <string name="input_receive_address_hint">Please enter recipient Address</string>
     <string name="fee_value">Miner Fee</string>
-    <string name="advanced_setup">Advanced settings</string>
+    <string name="advanced_setup">Advanced</string>
     <string name="gas_price">Gas Price</string>
     <string name="gas_fee">Gas Fee</string>
     <string name="quota_fee">Quota Fee</string>
     <string name="total_price">Total Fee</string>
-    <string name="pay_token_receiver_website">DApp Info</string>
+    <string name="pay_token_receiver_website">ÐApp Info</string>
     <string name="pay_token_receiver_address">To</string>
     <string name="pay_token_sender_address">From</string>
     <string name="quota">Quota</string>
@@ -201,7 +202,7 @@
     <string name="wallet_token_loading_failed">Load fail</string>
     <string name="wallet_token_no_assets">No Assets</string>
     <string name="dapp_title">ÐApp</string>
-    <string name="import_keystore_error">Import keystore fail, please input again</string>
+    <string name="import_keystore_error">Import Keystore fail, please input again</string>
     <string name="qrcode_receive_tips">Please do not deposit any digital assets other than ETH and AppChain to above address</string>
 
 
@@ -214,9 +215,9 @@
     <string name="transaction_blockchain_no">Block：</string>
     <string name="transaction_blockchain_time">TimeStamp：</string>
     <string name="finger_print_des">Use Touch ID</string>
-    <string name="finger_print_other_login">other authentication</string>
+    <string name="finger_print_other_login">Other authentication</string>
     <string name="fingerprint_lock_failed">Touch ID Failed</string>
-    <string name="pwd_auth_button">Authentication</string>
+    <string name="pwd_auth_button">Continue</string>
     <string name="pwd_auth_failed">Incorrect</string>
     <string name="pwd_auth_success">Touch ID Succeeded</string>
     <string name="import_finger_tip_title">Touch ID</string>
@@ -226,7 +227,7 @@
     <string name="web_error_hint">Network error, please try again later！</string>
     <string name="refresh">Fresh</string>
     <string name="token_detail_btn">Detail>></string>
-    <string name="wallet_exchange">Switch wallet</string>
+    <string name="wallet_exchange">Switch Wallet</string>
 
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
@@ -487,7 +488,7 @@ Nervos foundation\n
     </string>
     <string name="default_eth_gas_price">Recommend %sGWei</string>
     <string name="default_eth_gas_limit">Recommend Gas Limit</string>
-    <string name="gas_fee_token_value">Gas Price：%fETH</string>
+    <string name="gas_fee_token_value">Gas Price：%f ETH</string>
     <string name="gas_fee_sum_value"> ≈ Gas Limit(%1$s)*Gas Price(%2$s)</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">Enter Gas Price</string>
@@ -499,4 +500,5 @@ Nervos foundation\n
     <string name="blockchain">Blockchain</string>
     <string name="contract_address">Contract Address</string>
     <string name="no_more_transaction_data">No more transaction data</string>
+    <string name="approximate">≈</string>
 </resources>
