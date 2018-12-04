@@ -9,7 +9,6 @@ import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.EthRpcService
 import org.nervos.neuron.util.AddressUtil
 import org.nervos.neuron.util.ConstantUtil
-import org.nervos.neuron.util.db.DBChainUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import rx.Observable
@@ -22,13 +21,17 @@ import rx.schedulers.Schedulers
 class AddTokenManager(val context: Context) {
 
     fun getChainNameList(): List<String> {
-        var list = DBChainUtil.getAllChainName(context)
+        var chainList = DBWalletUtil.getCurrentWallet(context).chainItems
+        var list = mutableListOf<String>()
+        chainList.forEach {
+            list.add(it.name)
+        }
         list.add(1, ConstantUtil.ETH_RINKEBY_NAME)
         return list
     }
 
     fun getChainList(): List<ChainItem> {
-        var list = DBChainUtil.getAllChain(context)
+        var list = DBWalletUtil.getCurrentWallet(context).chainItems
         var item = ChainItem(ConstantUtil.ETHEREUM_RINKEBY_ID, ConstantUtil.ETH_RINKEBY_NAME, ConstantUtil.ETH, ConstantUtil.ETH)
         list.add(1, item)
         return list

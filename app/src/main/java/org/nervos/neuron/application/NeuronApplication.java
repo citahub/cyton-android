@@ -2,13 +2,10 @@ package org.nervos.neuron.application;
 
 import android.app.Application;
 import android.content.Intent;
-
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
-
+import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.service.http.EthRpcService;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 /**
@@ -23,7 +20,6 @@ public class NeuronApplication extends Application {
         ZXingLibrary.initDisplayOpinion(this);
         WalletEntity.initWalletMnemonic(this);
         SharePrefUtil.init(this);
-        DBChainUtil.initChainData(this);
         EthRpcService.init(this);
         AESCrypt.init(this);
 

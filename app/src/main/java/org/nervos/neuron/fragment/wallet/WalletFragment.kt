@@ -53,7 +53,6 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
         loadExchangeBtn()
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.isNestedScrollingEnabled = false
-        startIvRefresh()
         reloadTokens()
     }
 
@@ -79,14 +78,13 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWalletSaveEvent(event: TokenRefreshEvent) {
         loadExchangeBtn()
-        startIvRefresh()
         reloadTokens()
     }
 
     //refresh list after adding token
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAddTokenEvent(event: AddTokenRefreshEvent) {
-        refreshTokens(true)
+        reloadTokens()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -118,10 +116,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
             }
         }
         if (isLoadedAll) {
-            swipe_refresh_layout.isRefreshing = false
-            swipe_refresh_layout.isEnabled = true
-            iv_refresh.clearAnimation()
-            iv_refresh.visibility = View.VISIBLE
+            finishRefresh()
             if (totalAssets == 0.0) mWalletAssetsView!!.setTotalAssets(resources.getString(R.string.wallet_token_no_assets))
         }
     }
@@ -143,9 +138,14 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
             if (tokenItem.selected)
                 mTokenItemList.add(WalletTokenLoadItem(tokenItem))
         }
+        if (mTokenItemList.size == 0) {
+            finishRefresh()
+            mWalletAssetsView!!.setTotalAssets(resources.getString(R.string.wallet_token_no_assets))
+        }
     }
 
     private fun reloadTokens() {
+        startIvRefresh()
         getMyTokens()
         mAdapter = WalletTokenAdapter(DBWalletUtil.getCurrentWallet(context).address, mTokenItemList)
         recycler.adapter = mAdapter
@@ -165,6 +165,13 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
         var interpolator = LinearInterpolator()
         mCircleAnim.interpolator = interpolator
         iv_refresh.startAnimation(mCircleAnim)
+    }
+
+    private fun finishRefresh() {
+        swipe_refresh_layout.isRefreshing = false
+        swipe_refresh_layout.isEnabled = true
+        iv_refresh.clearAnimation()
+        iv_refresh.visibility = View.VISIBLE
     }
 
     private fun loadExchangeBtn() {

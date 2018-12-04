@@ -46,7 +46,7 @@ class TokenManageActivity : NBaseActivity() {
     override fun initAction() {
         titleBar!!.setOnRightClickListener { }
         titleBar!!.setOnLeftClickListener {
-            postTokenRefreshEvent()
+            EventBus.getDefault().post(AddTokenRefreshEvent())
             finish()
         }
     }
@@ -54,10 +54,6 @@ class TokenManageActivity : NBaseActivity() {
     private fun addCustomToken() {
         tokenList = DBWalletUtil.getCurrentWallet(mActivity).tokenItems
         adapter.notifyDataSetChanged()
-    }
-
-    private fun postTokenRefreshEvent() {
-        EventBus.getDefault().post(AddTokenRefreshEvent())
     }
 
     internal inner class TokenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -105,8 +101,8 @@ class TokenManageActivity : NBaseActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
+            EventBus.getDefault().post(AddTokenRefreshEvent())
             finish()
-            postTokenRefreshEvent()
             return true
         }
         return super.onKeyDown(keyCode, event)

@@ -6,6 +6,7 @@ import com.snappydb.SnappydbException;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
@@ -19,23 +20,137 @@ public class DBWalletUtil extends DBUtil {
 
     private static final String DB_WALLET = "db_wallet";
 
-    public static WalletItem getWallet(Context context, String walletName) {
+    //==============================Current Wallet====================================
+    public static WalletItem getCurrentWallet(Context context) {
+        WalletItem walletItem = getWallet(context, SharePrefUtil.getCurrentWalletName());
+        if (walletItem == null)
+            return null;
+        if (walletItem.chainItems == null || walletItem.chainItems.size() == 0) {
+            walletItem.chainItems = DBChainUtil.getAllChain(context);
+            saveWallet(context, walletItem);
+        }
+        return walletItem;
+    }
+
+    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
+        addTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
+    }
+
+    public static void updateTokenToCurrentWallet(Context context, TokenItem tokenItem) {
+        updateTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
+    }
+
+    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem) {
+        deleteTokenFromWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
+    }
+
+    public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH
+                , ConstantUtil.ETH));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
+                ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        for (ChainItem chainItem : walletItem.chainItems) {
+            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+                walletItem.tokenItems.add(new TokenItem(chainItem));
+            }
+        }
+        return walletItem;
+    }
+
+    public static boolean checkChainInCurrentWallet(Context context, ChainItem chainItem) {
+        return checkChainInWallet(getWallet(context, SharePrefUtil.getCurrentWalletName()), chainItem);
+    }
+
+    public static void saveChainInCurrentWallet(Context context, ChainItem chainItem) {
+        saveChainAndToken(context, SharePrefUtil.getCurrentWalletName(), chainItem);
+    }
+
+    public static ChainItem getChainItemFromCurrentWallet(Context context, String chainId) {
+        return getChainItem(context, SharePrefUtil.getCurrentWalletName(), chainId);
+    }
+
+    //==========================Check===============================================
+
+    public static boolean checkWalletName(Context context, String name) {
         synchronized (dbObject) {
-            if (TextUtils.isEmpty(walletName)) return null;
             try {
                 db = openDB(context, DB_WALLET);
-                WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
+                boolean isKeyExist = db.exists(getDbKey(name));
                 db.close();
-                return walletItem;
+                return isKeyExist;
             } catch (SnappydbException e) {
                 handleException(db, e);
-                return null;
             }
+            return false;
         }
     }
 
-    public static WalletItem getCurrentWallet(Context context) {
-        return getWallet(context, SharePrefUtil.getCurrentWalletName());
+    public static boolean checkWalletAddress(Context context, String address) {
+        synchronized (dbObject) {
+            boolean isKeyExist = false;
+            try {
+                db = openDB(context, DB_WALLET);
+                List<String> names = getAllWalletName(context);
+                for (String name : names) {
+                    WalletItem walletItem = getWallet(context, name);
+                    isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
+                    if (isKeyExist) return true;
+                }
+                db.close();
+                return false;
+            } catch (SnappydbException e) {
+                handleException(db, e);
+            }
+            return false;
+        }
+    }
+
+    private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
+        for (TokenItem token : walletItem.tokenItems) {
+            if (token.symbol.equals(tokenItem.symbol) && token.getChainId().equals(tokenItem.getChainId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
+        WalletItem walletItem = getCurrentWallet(context);
+        for (TokenItem token : walletItem.tokenItems) {
+            if (token.symbol.equals(symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
+        for (ChainItem chain : walletItem.chainItems) {
+            if (chain.name.equals(chainItem.name) && chain.getChainId().equals(chainItem.getChainId())
+                    && chain.tokenSymbol.equals(chain.tokenSymbol) && chain.tokenName.equals(chain.tokenName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //========================================Wallet Name==================================
+
+    public static boolean updateWalletName(Context context, String name, String newName) {
+        synchronized (dbObject) {
+            try {
+                db = openDB(context, DB_WALLET);
+                WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
+                db.del(getDbKey(name));
+                walletItem.name = newName;
+                db.put(getDbKey(newName), walletItem);
+                db.close();
+                return true;
+            } catch (SnappydbException e) {
+                handleException(db, e);
+                return false;
+            }
+        }
     }
 
     public static List<String> getAllWalletName(Context context) {
@@ -62,6 +177,23 @@ public class DBWalletUtil extends DBUtil {
                 handleException(db, e);
             }
             return walletList;
+        }
+    }
+
+    //==================================Wallet==============================================
+
+    public static WalletItem getWallet(Context context, String walletName) {
+        synchronized (dbObject) {
+            if (TextUtils.isEmpty(walletName)) return null;
+            try {
+                db = openDB(context, DB_WALLET);
+                WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
+                db.close();
+                return walletItem;
+            } catch (SnappydbException e) {
+                handleException(db, e);
+                return null;
+            }
         }
     }
 
@@ -123,57 +255,6 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static boolean updateWalletName(Context context, String name, String newName) {
-        synchronized (dbObject) {
-            try {
-                db = openDB(context, DB_WALLET);
-                WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
-                db.del(getDbKey(name));
-                walletItem.name = newName;
-                db.put(getDbKey(newName), walletItem);
-                db.close();
-                return true;
-            } catch (SnappydbException e) {
-                handleException(db, e);
-                return false;
-            }
-        }
-    }
-
-    public static boolean checkWalletName(Context context, String name) {
-        synchronized (dbObject) {
-            try {
-                db = openDB(context, DB_WALLET);
-                boolean isKeyExist = db.exists(getDbKey(name));
-                db.close();
-                return isKeyExist;
-            } catch (SnappydbException e) {
-                handleException(db, e);
-            }
-            return false;
-        }
-    }
-
-    public static boolean checkWalletAddress(Context context, String address) {
-        synchronized (dbObject) {
-            boolean isKeyExist = false;
-            try {
-                db = openDB(context, DB_WALLET);
-                List<String> names = getAllWalletName(context);
-                for (String name : names) {
-                    WalletItem walletItem = getWallet(context, name);
-                    isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
-                    if (isKeyExist) return true;
-                }
-                db.close();
-                return false;
-            } catch (SnappydbException e) {
-                handleException(db, e);
-            }
-            return false;
-        }
-    }
-
     public static void deleteWallet(Context context, String name) {
         synchronized (dbObject) {
             try {
@@ -185,6 +266,8 @@ public class DBWalletUtil extends DBUtil {
             }
         }
     }
+
+    //================================Token======================================================
 
     public static void addTokenToWallet(Context context, String walletName, TokenItem tokenItem) {
         WalletItem walletItem = getWallet(context, walletName);
@@ -217,40 +300,11 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
-        for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(tokenItem.symbol) && token.getChainId().equals(tokenItem.getChainId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
-        WalletItem walletItem = getCurrentWallet(context);
-        for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(symbol)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static void addTokenToAllWallet(Context context, TokenItem tokenItem) {
         List<String> walletNames = getAllWalletName(context);
         for (String walletName : walletNames) {
             addTokenToWallet(context, walletName, tokenItem);
         }
-    }
-
-    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        WalletItem walletItem = getCurrentWallet(context);
-        addTokenToWallet(context, walletItem.name, tokenItem);
-    }
-
-    public static void updateTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        WalletItem walletItem = getCurrentWallet(context);
-        updateTokenToWallet(context, walletItem.name, tokenItem);
     }
 
     public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem) {
@@ -270,32 +324,49 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem) {
-        WalletItem walletItem = getCurrentWallet(context);
-        deleteTokenFromWallet(context, walletItem.name, tokenItem);
-    }
-
-
     public static List<TokenItem> getAllTokenFromWallet(Context context, String walletName) {
         return Objects.requireNonNull(getWallet(context, walletName)).tokenItems;
     }
 
+    //================================Chain====================================
 
-    /**
-     * add origin token of ethereum and cita to wallet
-     *
-     * @param context
-     * @param walletItem
-     * @return
-     */
-    public static WalletItem addOriginTokenToWallet(Context context, WalletItem walletItem) {
-        List<ChainItem> chainItemList = DBChainUtil.getAllChain(context);
-        for (ChainItem chainItem : chainItemList) {
-            if (!TextUtils.isEmpty(chainItem.tokenName)) {
+    public static void saveChain(Context context, String walletName, ChainItem chainItem) {
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.tokenItems == null) {
+                walletItem.tokenItems = new ArrayList<>();
+            }
+            if (!checkChainInWallet(walletItem, chainItem)) {
+                walletItem.chainItems.add(chainItem);
+            }
+            saveWallet(context, walletItem);
+        }
+    }
+
+    public static void saveChainAndToken(Context context, String walletName, ChainItem chainItem) {
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.chainItems == null) {
+                walletItem.chainItems = new ArrayList<>();
+            }
+            if (!checkChainInWallet(walletItem, chainItem)) {
+                walletItem.chainItems.add(chainItem);
                 walletItem.tokenItems.add(new TokenItem(chainItem));
             }
+            saveWallet(context, walletItem);
         }
-        return walletItem;
+    }
+
+    public static ChainItem getChainItem(Context context, String walletName, String chainId) {
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null && walletItem.chainItems != null) {
+            for (ChainItem chainItem : walletItem.chainItems) {
+                if (chainId.equals(chainItem.getChainId())) {
+                    return chainItem;
+                }
+            }
+        }
+        return null;
     }
 
 }

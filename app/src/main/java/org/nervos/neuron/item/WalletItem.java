@@ -3,13 +3,12 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
-
 import org.nervos.neuron.util.crypto.WalletEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletItem implements Parcelable{
+public class WalletItem implements Parcelable {
 
     /**
      * wallet name
@@ -36,6 +35,12 @@ public class WalletItem implements Parcelable{
      */
     public List<TokenItem> tokenItems = new ArrayList<>();
 
+    /**
+     * all chain in wallet
+     */
+
+    public List<ChainItem> chainItems = new ArrayList<>();
+
     public long timestamp = System.currentTimeMillis();
 
     public boolean currentSelected = false;
@@ -47,7 +52,8 @@ public class WalletItem implements Parcelable{
         return walletItem;
     }
 
-    public WalletItem(){}
+    public WalletItem() {
+    }
 
     public WalletItem(String name, String address, @DrawableRes int image) {
         this.name = name;
@@ -68,6 +74,7 @@ public class WalletItem implements Parcelable{
         dest.writeString(this.address);
         dest.writeString(this.cryptPrivateKey);
         dest.writeTypedList(this.tokenItems);
+        dest.writeTypedList(this.chainItems);
         dest.writeLong(this.timestamp);
         dest.writeByte(this.currentSelected ? (byte) 1 : (byte) 0);
     }
@@ -78,6 +85,7 @@ public class WalletItem implements Parcelable{
         this.address = in.readString();
         this.cryptPrivateKey = in.readString();
         this.tokenItems = in.createTypedArrayList(TokenItem.CREATOR);
+        this.chainItems = in.createTypedArrayList(ChainItem.CREATOR);
         this.timestamp = in.readLong();
         this.currentSelected = in.readByte() != 0;
     }

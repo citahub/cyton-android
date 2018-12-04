@@ -8,16 +8,17 @@ import android.widget.Toast
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_add_token.*
+import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.NBaseActivity
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.activity.TokenManageActivity
+import org.nervos.neuron.event.AddTokenRefreshEvent
 import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
-import org.nervos.neuron.util.db.DBTokenUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
@@ -77,8 +78,8 @@ class AddTokenActivity : NBaseActivity() {
                             var erc20InfoDialog = Erc20InfoDialog(mActivity, tokenItem!!)
                             erc20InfoDialog.setOnOkListener {
                                 DBWalletUtil.addTokenToWallet(mActivity, walletItem!!.name, tokenItem)
-                                DBTokenUtil.saveToken(mActivity, tokenItem)
                                 erc20InfoDialog.dismiss()
+                                EventBus.getDefault().post(AddTokenRefreshEvent())
                                 finish()
                             }
                         }

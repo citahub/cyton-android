@@ -12,6 +12,7 @@ android {
         targetSdkVersion appConfig.targetSdkVersion
         minSdkVersion appConfig.minSdkVersion
         versionCode appConfig.versionCode
+        versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [InstallChannelValue: "cryptape"]
     }
@@ -100,7 +101,6 @@ android {
 //        wandoujia { dimension "default" }
         cryptape { dimension "default" }
         dev {
-            versionName = appConfig.devVersionName
             resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
         }
     }
@@ -108,7 +108,6 @@ android {
     productFlavors.all { flavor ->
         if (!name.equals("dev")) {
             flavor.manifestPlaceholders = [InstallChannelValue: name]
-            flavor.versionName = getVersionName(appConfig.isDebug)
             flavor.multiDexEnabled = true
         }
     }

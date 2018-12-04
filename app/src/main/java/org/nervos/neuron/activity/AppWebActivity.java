@@ -24,7 +24,10 @@ import com.yanzhenjie.permission.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.NeuronDAppCallback;
-import org.nervos.neuron.item.*;
+import org.nervos.neuron.item.AppItem;
+import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.TitleItem;
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem;
 import org.nervos.neuron.item.dapp.QrCodeItem;
 import org.nervos.neuron.item.transaction.TransactionInfo;
@@ -36,7 +39,6 @@ import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.PickPicUtils;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.exception.TransactionFormatException;
@@ -251,11 +253,7 @@ public class AppWebActivity extends NBaseActivity {
             public void onNext(ChainItem chainItem) {
                 if (TextUtils.isEmpty(chainItem.errorMessage)) {
                     WebAppUtil.addHistory();
-                    DBChainUtil.saveChain(webView.getContext(), chainItem);
-                    if (!TextUtils.isEmpty(chainItem.tokenName)) {
-                        TokenItem tokenItem = new TokenItem(chainItem);
-                        DBWalletUtil.addTokenToAllWallet(webView.getContext(), tokenItem);
-                    }
+                    DBWalletUtil.saveChainInCurrentWallet(webView.getContext(), chainItem);
                 } else {
                     Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
                 }
