@@ -29,7 +29,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_gas_price"
+            android:id="@+id/edit_advance_setup_gas_price"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
@@ -61,7 +61,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_gas_limit"
+            android:id="@+id/edit_advance_setup_gas_limit"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
@@ -93,7 +93,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <TextView
-            android:id="@+id/text_gas_fee"
+            android:id="@+id/text_advance_setup_gas_fee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -106,7 +106,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_gas_fee_detail"
+        android:id="@+id/text_advance_setup_gas_fee_detail"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="end|center_vertical"
@@ -140,17 +140,17 @@
             android:background="@drawable/rectangle_border_gray_corner">
 
             <View
-                android:id="@+id/pay_separate"
+                android:id="@+id/advance_setup_pay_separate"
                 android:layout_width="0.5dp"
                 android:layout_height="match_parent"
                 android:background="@color/line_input"
                 android:layout_centerInParent="true"/>
 
             <LinearLayout
-                android:id="@+id/sign_hex_layout"
+                android:id="@+id/advance_setup_sign_hex_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toStartOf="@id/pay_separate"
+                android:layout_toStartOf="@id/advance_setup_pay_separate"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -161,17 +161,17 @@
                     android:textSize="15sp"/>
 
                 <View
-                    android:id="@+id/pay_data_left_line"
+                    android:id="@+id/advance_setup_pay_data_left_line"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:background="@color/colorPrimary"/>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/sign_utf8_layout"
+                android:id="@+id/advance_setup_sign_utf8_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@id/pay_separate"
+                android:layout_toEndOf="@id/advance_setup_pay_separate"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -182,7 +182,7 @@
                     android:textSize="15sp"/>
 
                 <View
-                    android:id="@+id/pay_data_right_line"
+                    android:id="@+id/advance_setup_pay_data_right_line"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:visibility="gone"
@@ -192,7 +192,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/pay_data"
+            android:id="@+id/advance_setup_pay_data"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:padding="10dp"

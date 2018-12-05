@@ -131,6 +131,7 @@ public class TransactionInfo implements Parcelable {
         }
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -142,12 +143,14 @@ public class TransactionInfo implements Parcelable {
         dest.writeString(this.to);
         dest.writeString(this.nonce);
         dest.writeString(this.quota);
+        dest.writeString(this.validUntilBlock);
         dest.writeString(this.data);
         dest.writeString(this.value);
         dest.writeString(this.chainId);
         dest.writeInt(this.version);
         dest.writeString(this.gasLimit);
         dest.writeString(this.gasPrice);
+        dest.writeString(this.chainType);
     }
 
     protected TransactionInfo(Parcel in) {
@@ -155,12 +158,14 @@ public class TransactionInfo implements Parcelable {
         this.to = in.readString();
         this.nonce = in.readString();
         this.quota = in.readString();
+        this.validUntilBlock = in.readString();
         this.data = in.readString();
         this.value = in.readString();
         this.chainId = in.readString();
         this.version = in.readInt();
         this.gasLimit = in.readString();
         this.gasPrice = in.readString();
+        this.chainType = in.readString();
     }
 
     public static final Creator<TransactionInfo> CREATOR = new Creator<TransactionInfo>() {
