@@ -50,7 +50,6 @@ class AddTokenManager(val context: Context) {
             } else if (!checkRepetitionContract(contractAddress)) {
                 throw Throwable(context.resources.getString(R.string.exist_erc20_token))
             }
-        }.flatMap {
             val tokenItem = when (chainItem.chainId) {
                 ConstantUtil.ETHEREUM_MAIN_ID -> {
                     EthRpcService.initNodeUrl(EtherUtil.getEthNodeUrl(chainItem.chainId))
@@ -68,7 +67,7 @@ class AddTokenManager(val context: Context) {
                 else -> {
                     tokenItem.chainId = chainItem.chainId
                     tokenItem.chainName = chainItem.name
-                    Observable.just(tokenItem)
+                    tokenItem
                 }
             }
         }

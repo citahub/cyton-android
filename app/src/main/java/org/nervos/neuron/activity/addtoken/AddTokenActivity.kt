@@ -2,8 +2,6 @@ package org.nervos.neuron.activity.addtoken
 
 import android.content.Intent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
@@ -25,6 +23,7 @@ import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.qrcode.CodeUtils
 import org.nervos.neuron.util.url.HttpAppChainUrls
 import org.nervos.neuron.view.TitleBar
+import org.nervos.neuron.view.dialog.SimpleSelectDialog
 import org.nervos.neuron.view.dialog.TokenInfoDialog
 
 /**
@@ -32,53 +31,52 @@ import org.nervos.neuron.view.dialog.TokenInfoDialog
  */
 class AddTokenActivity : NBaseActivity() {
 
-    private lateinit var title: TitleBar
+    private lateinit var mTitle: TitleBar
 
-    private var chainNameList: List<String>? = null
-    private var chainItemList: List<ChainItem>? = null
-    private var chainItem: ChainItem? = null
-    private var walletItem: WalletItem? = null
+    private var mChainNameList: List<String>? = null
+    private var mChainItemList: List<ChainItem>? = null
+    private var mChainItem: ChainItem? = null
+    private var mWalletItem: WalletItem? = null
 
     private var manager: AddTokenManager? = null
+
 
     override fun getContentLayout(): Int {
         return R.layout.activity_add_token
     }
 
     override fun initView() {
-        title = findViewById(R.id.title)
+        mTitle = findViewById(R.id.title)
     }
 
     override fun initData() {
         AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL)
 
         manager = AddTokenManager(this)
-        walletItem = DBWalletUtil.getCurrentWallet(this)
-        chainItemList = manager!!.getChainList()
-        chainNameList = manager!!.getChainNameList()
-        chainItem = chainItemList!![0]
+        mWalletItem = DBWalletUtil.getCurrentWallet(this)
+        mChainItemList = manager!!.getChainList()
+        mChainNameList = manager!!.getChainNameList()
+        mChainItem = mChainItemList!![0]
 
-        var chainNames = chainNameList!!.toTypedArray<String?>()
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, chainNames)
-        spinner_add_token_block_chain.adapter = adapter
+        tv_chain_name.text = mChainNameList!![0]
     }
 
     override fun initAction() {
-        title.setOnRightClickListener {
+        mTitle.setOnRightClickListener {
             startActivity(Intent(this, TokenManageActivity::class.java))
         }
 
         // add token data into local database
-        add_token_button.setOnClickListener {
+        btn_add_token.setOnClickListener {
             showProgressBar()
-            if (chainItem != null) {
-                manager!!.loadErc20(walletItem!!.address, edit_add_token_contract_address.text.toString().trim(), chainItem!!)
+            if (mChainItem != null) {
+                manager!!.loadErc20(mWalletItem!!.address, edit_add_token_contract_address.text.toString().trim(), mChainItem!!)
                         .subscribe(object : NeuronSubscriber<TokenItem>() {
                             override fun onNext(tokenItem: TokenItem?) {
                                 dismissProgressBar()
-                                var tokenInfoDialog = TokenInfoDialog(mActivity, tokenItem!!)
+                                val tokenInfoDialog = TokenInfoDialog(mActivity, tokenItem!!)
                                 tokenInfoDialog.setOnOkListener {
-                                    DBWalletUtil.addTokenToWallet(mActivity, walletItem!!.name, tokenItem)
+                                    DBWalletUtil.addTokenToWallet(mActivity, mWalletItem!!.name, tokenItem)
                                     tokenInfoDialog.dismiss()
                                     EventBus.getDefault().post(AddTokenRefreshEvent())
                                     finish()
@@ -113,7 +111,7 @@ class AddTokenActivity : NBaseActivity() {
         }
 
         // scan qrcode to get contract address
-        add_token_contract_address_scan.setOnClickListener {
+        iv_add_token_contract_address_scan.setOnClickListener {
             AndPermission.with(mActivity)
                     .runtime().permission(*Permission.Group.CAMERA)
                     .rationale(RuntimeRationale())
@@ -126,20 +124,19 @@ class AddTokenActivity : NBaseActivity() {
         }
 
         // select the type of blockchain
-        spinner_add_token_block_chain.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (position == chainNameList!!.size - 1) {
-                    add_token_contract_address_text.text = resources.getString(R.string.appchain_node)
+        tv_chain_name.setOnClickListener {
+            var dialog = SimpleSelectDialog(mActivity, mChainNameList!!)
+            dialog.setOnOkListener(View.OnClickListener {
+                tv_chain_name.text = mChainNameList!![dialog.mSelected]
+                if (dialog.mSelected == mChainNameList!!.size - 1) {
+                    tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
                     edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
-                    chainItem = null
+                    mChainItem = null
                 } else {
-                    chainItem = chainItemList!![position]
+                    mChainItem = mChainItemList!![dialog.mSelected]
                 }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-
-            }
+                dialog.dismiss()
+            })
         }
     }
 

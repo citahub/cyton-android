@@ -80,6 +80,10 @@ public class EtherUtil {
         }
     }
 
+    public static boolean isMainNet() {
+        return SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN) == ConstantUtil.ETH_NET_MAIN;
+    }
+
     private static String getEtherBaseUrl() {
         switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
             case ConstantUtil.ETH_NET_RINKEBY_TEST:

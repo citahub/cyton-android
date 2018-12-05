@@ -52,7 +52,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
     private String mEthDefaultPrice;
-    private ImageView arrowImage;
+    private ImageView mIvArrow;
+    private ChainItem mChainItem;
 
     @Override
     protected int getContentLayout() {
@@ -71,7 +72,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverName = findViewById(R.id.tv_receriver_name);
         mTvReceiverWebsite = findViewById(R.id.tv_receiver_website);
         mTvReceiverAddress = findViewById(R.id.tv_receiver_address);
-        arrowImage = findViewById(R.id.iv_right);
+        mIvArrow = findViewById(R.id.iv_right);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void initTxFeeView() {
-        arrowImage.setVisibility(mTransactionInfo.isEthereum() ? View.VISIBLE : View.INVISIBLE);
+        mIvArrow.setVisibility(mTransactionInfo.isEthereum() ? View.VISIBLE : View.INVISIBLE);
         mTvPayFee.setEnabled(mTransactionInfo.isEthereum());
     }
 
@@ -214,9 +215,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void initBalance() {
-        ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo.chainId);
-        if (chainItem == null) finish();
-        mTokenItem = new TokenItem(chainItem);
+        mChainItem = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo.chainId);
+        if (mChainItem == null) {
+            finish();
+        }
+        mTokenItem = new TokenItem(mChainItem);
     }
 
     @SuppressLint("SetTextI18n")
@@ -287,9 +290,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void transferAppChain(String password, ProgressBar progressBar) {
-        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(this, mTransactionInfo.chainId);
-        if (item == null) return;
-        AppChainRpcService.setHttpProvider(item.httpProvider);
+        AppChainRpcService.setHttpProvider(mChainItem.httpProvider);
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getStringValue(),
                 mTransactionInfo.data, mTransactionInfo.getQuota().longValue(),
@@ -367,7 +368,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         if (mTransactionInfo.isEthereum()) {
             return ConstantUtil.ETH;
         } else {
-            return mTokenItem == null ? "" : " " + mTokenItem.symbol;
+            return mChainItem == null ? "" : " " + mChainItem.tokenSymbol;
         }
     }
 

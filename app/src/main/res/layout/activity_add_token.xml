@@ -42,21 +42,25 @@
                 android:textSize="15sp" />
 
             <ImageView
-                android:id="@+id/triangle_spinner"
+                android:id="@+id/iv_triangle_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/triangle" />
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/spinner_add_token_block_chain"
-                android:layout_width="150dp"
+            <TextView
+                android:id="@+id/tv_chain_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/triangle_spinner"
-                android:background="@android:color/white" />
+                android:layout_toLeftOf="@id/iv_triangle_spinner"
+                android:ellipsize="end"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:textColor="@color/font_title"
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
@@ -68,7 +72,7 @@
             android:background="@android:color/white">
 
             <TextView
-                android:id="@+id/add_token_contract_address_text"
+                android:id="@+id/tv_add_token_contract_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -77,7 +81,7 @@
                 android:textSize="15sp" />
 
             <ImageView
-                android:id="@+id/add_token_contract_address_scan"
+                android:id="@+id/iv_add_token_contract_address_scan"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_alignParentEnd="true"
@@ -91,8 +95,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/add_token_contract_address_scan"
-                android:layout_toEndOf="@id/add_token_contract_address_text"
+                android:layout_toStartOf="@id/iv_add_token_contract_address_scan"
+                android:layout_toEndOf="@id/tv_add_token_contract_address"
                 android:background="@null"
                 android:ellipsize="end"
                 android:gravity="end|center_vertical"
@@ -108,7 +112,7 @@
     </LinearLayout>
 
     <org.nervos.neuron.view.button.CommonButton
-        android:id="@+id/add_token_button"
+        android:id="@+id/btn_add_token"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
