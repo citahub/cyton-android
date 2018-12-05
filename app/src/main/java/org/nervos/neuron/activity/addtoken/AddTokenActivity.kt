@@ -25,7 +25,7 @@ import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.qrcode.CodeUtils
 import org.nervos.neuron.util.url.HttpAppChainUrls
 import org.nervos.neuron.view.TitleBar
-import org.nervos.neuron.view.dialog.Erc20InfoDialog
+import org.nervos.neuron.view.dialog.TokenInfoDialog
 
 /**
  * Created by BaojunCZ on 2018/12/3.
@@ -71,24 +71,45 @@ class AddTokenActivity : NBaseActivity() {
         // add token data into local database
         add_token_button.setOnClickListener {
             showProgressBar()
-            manager!!.loadErc20(walletItem!!.address, edit_add_token_contract_address.text.toString().trim(), chainItem!!)
-                    .subscribe(object : NeuronSubscriber<TokenItem>() {
-                        override fun onNext(tokenItem: TokenItem?) {
-                            dismissProgressBar()
-                            var erc20InfoDialog = Erc20InfoDialog(mActivity, tokenItem!!)
-                            erc20InfoDialog.setOnOkListener {
-                                DBWalletUtil.addTokenToWallet(mActivity, walletItem!!.name, tokenItem)
-                                erc20InfoDialog.dismiss()
-                                EventBus.getDefault().post(AddTokenRefreshEvent())
-                                finish()
+            if (chainItem != null) {
+                manager!!.loadErc20(walletItem!!.address, edit_add_token_contract_address.text.toString().trim(), chainItem!!)
+                        .subscribe(object : NeuronSubscriber<TokenItem>() {
+                            override fun onNext(tokenItem: TokenItem?) {
+                                dismissProgressBar()
+                                var tokenInfoDialog = TokenInfoDialog(mActivity, tokenItem!!)
+                                tokenInfoDialog.setOnOkListener {
+                                    DBWalletUtil.addTokenToWallet(mActivity, walletItem!!.name, tokenItem)
+                                    tokenInfoDialog.dismiss()
+                                    EventBus.getDefault().post(AddTokenRefreshEvent())
+                                    finish()
+                                }
                             }
-                        }
 
-                        override fun onError(e: Throwable?) {
-                            dismissProgressBar()
-                            Toast.makeText(mActivity, e!!.message, Toast.LENGTH_LONG).show()
-                        }
-                    })
+                            override fun onError(e: Throwable?) {
+                                dismissProgressBar()
+                                Toast.makeText(mActivity, e!!.message, Toast.LENGTH_LONG).show()
+                            }
+                        })
+            } else {
+                manager!!.loadAppChain(edit_add_token_contract_address.text.toString().trim())
+                        .subscribe(object : NeuronSubscriber<ChainItem>() {
+                            override fun onError(e: Throwable?) {
+                                dismissProgressBar()
+                                Toast.makeText(mActivity, resources.getString(R.string.appchain_node_error), Toast.LENGTH_LONG).show()
+                            }
+
+                            override fun onNext(chainItem: ChainItem) {
+                                dismissProgressBar()
+                                var tokenInfoDialog = TokenInfoDialog(mActivity, TokenItem(chainItem))
+                                tokenInfoDialog.setOnOkListener {
+                                    DBWalletUtil.saveChainInCurrentWallet(mActivity, chainItem)
+                                    tokenInfoDialog.dismiss()
+                                    EventBus.getDefault().post(AddTokenRefreshEvent())
+                                    finish()
+                                }
+                            }
+                        })
+            }
         }
 
         // scan qrcode to get contract address
@@ -107,7 +128,13 @@ class AddTokenActivity : NBaseActivity() {
         // select the type of blockchain
         spinner_add_token_block_chain.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                chainItem = chainItemList!![position]
+                if (position == chainNameList!!.size - 1) {
+                    add_token_contract_address_text.text = resources.getString(R.string.appchain_node)
+                    edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
+                    chainItem = null
+                } else {
+                    chainItem = chainItemList!![position]
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -122,13 +149,8 @@ class AddTokenActivity : NBaseActivity() {
             if (null != data) {
                 val bundle = data.extras ?: return
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    when (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                        CodeUtils.STRING_ADDRESS -> {
-                            val result = bundle.getString(CodeUtils.RESULT_STRING)
-                            edit_add_token_contract_address!!.setText(result)
-                        }
-                        else -> Toast.makeText(this, R.string.contract_address_error, Toast.LENGTH_LONG).show()
-                    }
+                    val result = bundle.getString(CodeUtils.RESULT_STRING)
+                    edit_add_token_contract_address!!.setText(result)
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     QrCodeActivity.track("1", false)
                     Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show()

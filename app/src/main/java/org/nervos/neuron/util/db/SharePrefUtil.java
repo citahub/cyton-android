@@ -64,16 +64,4 @@ public class SharePrefUtil {
     public static void deleteWalletName() {
         putCurrentWalletName(null);
     }
-
-    public static void putChainIdAndHost(String chainId, String chainHost) {
-        chainSharePreference.edit().putString(chainId, chainHost).apply();
-    }
-
-    public static String getChainHostFromId(String chainId) {
-        return chainSharePreference.getString(chainId, null);
-    }
-
-    public static String getChainHostFromId(long chainId) {
-        return getChainHostFromId(String.valueOf(chainId));
-    }
 }

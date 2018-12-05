@@ -12,7 +12,7 @@ import org.nervos.neuron.item.TokenItem
 /**
  * Created by BaojunCZ on 2018/12/3.
  */
-class Erc20InfoDialog(private val context: Context, private var mTokenItem: TokenItem) : BottomSheetDialog(context) {
+class TokenInfoDialog(private val context: Context, private var mTokenItem: TokenItem) : BottomSheetDialog(context) {
     init {
         setTitle(context.getString(R.string.token_title))
         setRecyclerView(Adapter())

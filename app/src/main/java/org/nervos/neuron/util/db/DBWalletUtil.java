@@ -58,7 +58,7 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static boolean checkChainInCurrentWallet(Context context, ChainItem chainItem) {
-        return checkChainInWallet(getWallet(context, SharePrefUtil.getCurrentWalletName()), chainItem);
+        return checkChainInWallet(getWallet(context, SharePrefUtil.getCurrentWalletName()), chainItem) == -1 ? false : true;
     }
 
     public static void saveChainInCurrentWallet(Context context, ChainItem chainItem) {
@@ -105,13 +105,13 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    private static boolean checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
-        for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(tokenItem.symbol) && token.getChainId().equals(tokenItem.getChainId())) {
-                return true;
+    private static int checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
+        for (int i = 0; i < walletItem.tokenItems.size(); i++) {
+            if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol) && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
@@ -124,14 +124,13 @@ public class DBWalletUtil extends DBUtil {
         return false;
     }
 
-    private static boolean checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
-        for (ChainItem chain : walletItem.chainItems) {
-            if (chain.name.equals(chainItem.name) && chain.getChainId().equals(chainItem.getChainId())
-                    && chain.tokenSymbol.equals(chain.tokenSymbol) && chain.tokenName.equals(chain.tokenName)) {
-                return true;
+    private static int checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
+        for (int i = 0; i < walletItem.chainItems.size(); i++) {
+            if (!TextUtils.isEmpty(walletItem.chainItems.get(i).httpProvider) && walletItem.chainItems.get(i).httpProvider.equals(chainItem.httpProvider)) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     //========================================Wallet Name==================================
@@ -275,7 +274,7 @@ public class DBWalletUtil extends DBUtil {
             if (walletItem.tokenItems == null) {
                 walletItem.tokenItems = new ArrayList<>();
             }
-            if (!checkTokenInWallet(walletItem, tokenItem)) {
+            if (checkTokenInWallet(walletItem, tokenItem) == -1) {
                 walletItem.tokenItems.add(tokenItem);
             }
             saveWallet(context, walletItem);
@@ -336,7 +335,7 @@ public class DBWalletUtil extends DBUtil {
             if (walletItem.tokenItems == null) {
                 walletItem.tokenItems = new ArrayList<>();
             }
-            if (!checkChainInWallet(walletItem, chainItem)) {
+            if (checkChainInWallet(walletItem, chainItem) == -1) {
                 walletItem.chainItems.add(chainItem);
             }
             saveWallet(context, walletItem);
@@ -349,9 +348,22 @@ public class DBWalletUtil extends DBUtil {
             if (walletItem.chainItems == null) {
                 walletItem.chainItems = new ArrayList<>();
             }
-            if (!checkChainInWallet(walletItem, chainItem)) {
+            int index = checkChainInWallet(walletItem, chainItem);
+            if (index == -1) {
                 walletItem.chainItems.add(chainItem);
                 walletItem.tokenItems.add(new TokenItem(chainItem));
+            } else {
+                ChainItem item = walletItem.chainItems.get(index);
+                TokenItem tokenItem = new TokenItem(chainItem);
+                walletItem.chainItems.remove(index);
+                walletItem.chainItems.add(index, chainItem);
+                int tokenIndex = checkTokenInWallet(walletItem, new TokenItem(item));
+                if (tokenIndex == -1) {
+                    walletItem.tokenItems.add(tokenItem);
+                } else {
+                    walletItem.tokenItems.remove(tokenIndex);
+                    walletItem.tokenItems.add(tokenIndex, tokenItem);
+                }
             }
             saveWallet(context, walletItem);
         }

@@ -74,7 +74,7 @@ class TokenManageActivity : NBaseActivity() {
                 holder.tokenSelectSwitch.setOnCheckedChangeListener(null)
                 holder.tokenSelectSwitch.isChecked = tokenList[position].selected
 
-                holder.tokenSelectSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+                holder.tokenSelectSwitch.setOnCheckedChangeListener { _, isChecked ->
                     tokenList[position].selected = isChecked
                     if (isChecked) {
                         DBWalletUtil.updateTokenToCurrentWallet(mActivity, tokenList[position])

@@ -6,9 +6,10 @@ import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,8 +26,11 @@ import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.url.HttpUrls;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,14 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/5/24
@@ -84,7 +80,6 @@ public class WebAppUtil {
             List<ChainItem> chainItemList = new ArrayList<>();
             for (Map.Entry<String, String> entry : appItem.chainSet.entrySet()) {
                 chainItemList.add(new ChainItem(entry.getKey(), mAppItem.name, entry.getValue()));
-                SharePrefUtil.putChainIdAndHost(entry.getKey(), entry.getValue());
             }
             return Observable.from(chainItemList);
         }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
@@ -93,6 +88,7 @@ public class WebAppUtil {
                 AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
                 AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
                 if (ethMetaData != null) {
+                    chainItem.setChainId(ethMetaData.getChainId().toString());
                     chainItem.name = ethMetaData.getChainName();
                     chainItem.tokenAvatar = ethMetaData.getTokenAvatar();
                     chainItem.tokenSymbol = ethMetaData.getTokenSymbol();

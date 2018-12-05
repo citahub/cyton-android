@@ -15,7 +15,6 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.HexUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
@@ -270,7 +269,8 @@ public class TransferPresenter {
      * @param transferValue transfer value
      */
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
-        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.getChainId()));
+        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
+        if (item == null) return;
         AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, "", ConstantUtil.QUOTA_TOKEN.longValue(),
                 new BigInteger(mTokenItem.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
@@ -293,7 +293,8 @@ public class TransferPresenter {
      * @param transferValue
      */
     private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
-        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(mTokenItem.getChainId()));
+        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
+        if (item == null) return;
         try {
             AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(),
                     Numeric.toBigInt(mTokenItem.getChainId()), password)

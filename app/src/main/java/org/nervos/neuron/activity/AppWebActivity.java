@@ -270,6 +270,7 @@ public class AppWebActivity extends NBaseActivity {
             } else {
                 Gson gson = new Gson();
                 TransactionInfo transactionInfo = gson.fromJson(gson.toJson(transaction), TransactionInfo.class);
+                if (DBWalletUtil.getChainItemFromCurrentWallet(mActivity, transactionInfo.chainId) == null) return;
                 try {
                     transactionInfo.checkTransactionFormat();
                     Intent intent = new Intent(mActivity, PayTokenActivity.class);

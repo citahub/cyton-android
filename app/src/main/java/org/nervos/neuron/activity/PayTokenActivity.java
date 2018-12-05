@@ -18,7 +18,6 @@ import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.DAppAdvanceSetupDialog;
@@ -216,7 +215,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void initBalance() {
         ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo.chainId);
-        if (chainItem == null) return;
+        if (chainItem == null) finish();
         mTokenItem = new TokenItem(chainItem);
     }
 
@@ -288,8 +287,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void transferAppChain(String password, ProgressBar progressBar) {
-        AppChainRpcService.setHttpProvider(SharePrefUtil.getChainHostFromId(
-                mTransactionInfo.chainId));
+        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(this, mTransactionInfo.chainId);
+        if (item == null) return;
+        AppChainRpcService.setHttpProvider(item.httpProvider);
         AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
                 mTransactionInfo.getStringValue(),
                 mTransactionInfo.data, mTransactionInfo.getQuota().longValue(),

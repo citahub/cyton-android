@@ -2,6 +2,10 @@ package org.nervos.neuron.activity.addtoken
 
 import android.content.Context
 import android.text.TextUtils
+import org.nervos.appchain.protocol.AppChainj
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName
+import org.nervos.appchain.protocol.core.methods.response.AppMetaData
+import org.nervos.appchain.protocol.http.HttpService
 import org.nervos.neuron.R
 import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
@@ -27,6 +31,7 @@ class AddTokenManager(val context: Context) {
             list.add(it.name)
         }
         list.add(1, ConstantUtil.ETH_RINKEBY_NAME)
+        list.add(context.resources.getString(R.string.appchain_native_token))
         return list
     }
 
@@ -65,6 +70,34 @@ class AddTokenManager(val context: Context) {
                     tokenItem.chainName = chainItem.name
                     Observable.just(tokenItem)
                 }
+            }
+        }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun loadAppChain(httpProvider: String): Observable<ChainItem> {
+        return Observable.fromCallable {
+            AppChainj.build(HttpService(httpProvider))
+        }.flatMap { service ->
+            try {
+                Observable.just(service.appMetaData(DefaultBlockParameterName.LATEST).send())
+            } catch (e: Exception) {
+                throw Throwable(context.resources.getString(R.string.appchain_node_error))
+            }
+        }.flatMap { metaData: AppMetaData? ->
+            if (metaData == null) {
+                throw Throwable(context.resources.getString(R.string.appchain_node_error))
+            } else {
+                var chainItem = ChainItem()
+                var result = metaData.appMetaDataResult
+                chainItem.chainId = result.chainId.toString()
+                chainItem.name = result.chainName
+                chainItem.httpProvider = httpProvider
+                chainItem.tokenAvatar = result.tokenAvatar
+                chainItem.tokenSymbol = result.tokenSymbol
+                chainItem.tokenName = result.tokenName
+                Observable.just(chainItem)
             }
         }
                 .subscribeOn(Schedulers.newThread())

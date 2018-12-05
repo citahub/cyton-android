@@ -33,6 +33,7 @@
             android:background="@android:color/white">
 
             <TextView
+                android:id="@+id/tv_chain_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -50,11 +51,11 @@
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinner_add_token_block_chain"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:layout_toStartOf="@id/triangle_spinner"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/triangle_spinner"
                 android:background="@android:color/white" />
 
         </RelativeLayout>
@@ -79,9 +80,9 @@
                 android:id="@+id/add_token_contract_address_scan"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="5dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/scan" />
 

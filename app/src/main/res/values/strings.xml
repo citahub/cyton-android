@@ -167,6 +167,7 @@
     <string name="have_known">知道了</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
     <string name="contract_address_error">请输入正确的合约地址</string>
+    <string name="appchain_node_error">请输入正确的节点地址</string>
     <string name="input_receive_address_hint">请输入收款地址</string>
     <string name="fee_value">矿工费用</string>
     <string name="advanced_setup">高级设置</string>
@@ -206,6 +207,7 @@
     <string name="dapp_title">ÐApp</string>
     <string name="import_keystore_error">您导入的Keystore失败，请重新输入</string>
     <string name="qrcode_receive_tips">此地址只接收AppChain、以太坊Token，发送其他币种到此地址将不可找回</string>
+    <string name="appchain_native_token">AppChain原生代币</string>
 
     <string name="transaction_network">区块链网络：</string>
     <string name="transaction_receiver">接收方：</string>
@@ -233,6 +235,7 @@
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
     <string name="input_erc20_address">请输入ERC20代币合约地址</string>
+    <string name="input_appchain_node">请输入AppChain节点地址</string>
     <string name="token_title">代币信息</string>
     <string name="token_name_hint">代币名称</string>
     <string name="token_symbol_hint">代币缩写</string>
@@ -518,6 +521,7 @@
     <string name="local_currency">本地货币</string>
     <string name="blockchain">区块链</string>
     <string name="contract_address">合约地址</string>
+    <string name="appchain_node">节点地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
     <string name="approximate">≈</string>
 </resources>
