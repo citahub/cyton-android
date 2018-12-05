@@ -44,7 +44,7 @@ public class TransactionInfo implements Parcelable {
         if (NumberUtil.isNumeric(value)) {
             return new BigInteger(value);
         }
-        if (Numeric.containsHexPrefix(value)) {
+        if (!TextUtils.isEmpty(value) && Numeric.containsHexPrefix(value)) {
             return toBigInt(value);
         }
         return BigInteger.ZERO;
@@ -60,11 +60,15 @@ public class TransactionInfo implements Parcelable {
         return BigInteger.ZERO;
     }
 
+    public void setQuota(String quota) {
+        this.quota = quota;
+    }
+
     public BigInteger getQuota() {
         if (NumberUtil.isNumeric(quota)) {
             return new BigInteger(quota);
         }
-        if (Numeric.containsHexPrefix(quota)) {
+        if (!TextUtils.isEmpty(quota) && Numeric.containsHexPrefix(quota)) {
             return toBigInt(quota);
         }
         return BigInteger.ZERO;
@@ -80,7 +84,7 @@ public class TransactionInfo implements Parcelable {
         if (NumberUtil.isNumeric(gasLimit)) {
             limitBig = new BigInteger(gasLimit);
         }
-        if (Numeric.containsHexPrefix(gasLimit)) {
+        if (!TextUtils.isEmpty(gasLimit) && Numeric.containsHexPrefix(gasLimit)) {
             limitBig = toBigInt(gasLimit);
         }
 
@@ -88,7 +92,7 @@ public class TransactionInfo implements Parcelable {
         if (NumberUtil.isNumeric(gasPrice)) {
             priceBig = new BigInteger(gasPrice);
         }
-        if (Numeric.containsHexPrefix(gasPrice)) {
+        if (!TextUtils.isEmpty(gasPrice) && Numeric.containsHexPrefix(gasPrice)) {
             priceBig = toBigInt(gasPrice);
         }
         return NumberUtil.getEthFromWei(limitBig.multiply(priceBig));

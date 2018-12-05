@@ -42,6 +42,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     public static final String EXTRA_HEX_HASH = "extra_hex_hash";
     public static final String EXTRA_PAY_ERROR = "extra_pay_error";
+    private static final int REQUEST_CODE = 0x01;
     private static int ERROR_CODE = -1;
 
     private TransactionInfo mTransactionInfo;
@@ -52,7 +53,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
     private String mEthDefaultPrice;
-    private ImageView mIvArrow;
     private ChainItem mChainItem;
 
     @Override
@@ -72,7 +72,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverName = findViewById(R.id.tv_receriver_name);
         mTvReceiverWebsite = findViewById(R.id.tv_receiver_website);
         mTvReceiverAddress = findViewById(R.id.tv_receiver_address);
-        mIvArrow = findViewById(R.id.iv_right);
     }
 
     @Override
@@ -98,7 +97,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
         mTvReceiverAddress.setText(mTransactionInfo.to);
         mTvReceiverName.setText(mAppItem.name);
-        initTxFeeView();
 
         if (mTransactionInfo.isEthereum()) {
             mTvPayFeeTitle.setText(R.string.gas_fee);
@@ -110,11 +108,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     + getNativeToken());
             mTvPayFeeTitle.setText(R.string.quota_fee);
         }
-    }
-
-    private void initTxFeeView() {
-        mIvArrow.setVisibility(mTransactionInfo.isEthereum() ? View.VISIBLE : View.INVISIBLE);
-        mTvPayFee.setEnabled(mTransactionInfo.isEthereum());
     }
 
     @Override
@@ -163,7 +156,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @Override
             public void onNext(BigInteger gasPrice) {
                 mEthDefaultPrice = gasPrice.toString(16);
-                mTransactionInfo.gasPrice = mEthDefaultPrice;
+                mTransactionInfo.gasPrice = Numeric.prependHexPrefix(mEthDefaultPrice);
                 setEthGasPrice();
             }
         });
@@ -174,14 +167,15 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
-                        mTransactionInfo.gasLimit = ConstantUtil.GAS_ERC20_LIMIT.toString(16);
+                        mTransactionInfo.gasLimit = Numeric.prependHexPrefix(ConstantUtil.GAS_ERC20_LIMIT.toString(16));
                         setEthGasPrice();
                     }
 
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.gasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER).toString(16);
+                        mTransactionInfo.gasLimit =
+                                Numeric.prependHexPrefix(gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER).toString(16));
                         setEthGasPrice();
                     }
                 });
@@ -401,30 +395,28 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_gas_price:
                 Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
-                intent.putExtra(AdvanceSetupActivity.Companion.getEXTRA_ADVANCE_SETUP(), mTransactionInfo);
-                startActivity(intent);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
+                startActivityForResult(intent, REQUEST_CODE);
+                break;
+            default:
+                break;
+        }
+    }
 
-//                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
-//                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
-//                DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
-//                    @Override
-//                    public void onOkClick(View v, String gasPrice) {
-//                        if (TextUtils.isEmpty(gasPrice)) {
-//                            Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-//                        } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
-//                            Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
-//                            setEthGasPrice();
-//                        }
-//                    }
-//                });
-//                dialog.setTransactionData(mTransactionInfo.data);
-//                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
-//                String gasPriceValue = NumberUtil.getDecimalValid_2(
-//                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
-//                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
-//                dialog.show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE:
+                switch (resultCode) {
+                    case AdvanceSetupActivity.RESULT_TRANSACTION:
+                        mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
+                        updateView();
+                        setEthGasPrice();
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
                 break;

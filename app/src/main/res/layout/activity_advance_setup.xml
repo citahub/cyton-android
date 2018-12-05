@@ -15,33 +15,51 @@
         app:isShowLeft="true"
         app:title="@string/advanced_setup" />
     
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
+
         <TextView
+            android:id="@+id/advance_setup_gas_price_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gas_price"
             android:textSize="15sp"
             android:textColor="@color/font_title_third"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/advance_setup_price_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginStart="3dp"
+            android:lines="1"
+            android:text="@string/gwei"
+            android:textSize="15sp"
+            android:textColor="@color/font_title_second"
+            android:layout_gravity="center_vertical"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edit_advance_setup_gas_price"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
             android:hint="@string/input_gas_price"
-            android:maxLength="15"
+            android:inputType="numberDecimal"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_toEndOf="@id/advance_setup_gas_price_label"
+            android:layout_toStartOf="@id/advance_setup_price_unit"
             android:singleLine="true"
             android:textColor="@color/font_title"
             android:textSize="13sp" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <View
         style="@style/inputSeparateLine"
@@ -66,6 +84,7 @@
             android:layout_height="50dp"
             android:background="@android:color/white"
             android:gravity="end|center_vertical"
+            android:inputType="number"
             android:hint="@string/input_gas_limit"
             android:maxLength="15"
             android:layout_marginStart="@dimen/default_margin"
@@ -81,7 +100,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -108,7 +127,7 @@
     <TextView
         android:id="@+id/text_advance_setup_gas_fee_detail"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:gravity="end|center_vertical"
         android:textSize="13sp"
         android:textColor="@color/font_title_second"
@@ -121,13 +140,14 @@
         android:text="@string/transaction_data"
         android:textSize="15sp"
         android:textColor="@color/font_title_third"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/default_margin"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="160dp"
         android:layout_marginTop="6dp"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
@@ -203,5 +223,22 @@
             android:textColor="@color/font_title"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginTop="5dp"
+        android:text="@string/advance_set_warning"
+        android:textColor="@color/font_title_third"
+        android:textSize="12sp"/>
+
+    <org.nervos.neuron.view.button.CommonButton
+        android:id="@+id/advance_setup_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        app:text="@string/ok" />
 
 </LinearLayout>
