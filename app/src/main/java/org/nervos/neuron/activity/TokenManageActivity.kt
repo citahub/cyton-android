@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity
 
 import android.annotation.SuppressLint
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_token_manage.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.event.AddTokenRefreshEvent
+import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -29,6 +31,7 @@ class TokenManageActivity : NBaseActivity() {
 
     private lateinit var mTitleBar: TitleBar
     private var mTokenList = mutableListOf<TokenItem>()
+    private var mTokenListNoDragged = mutableListOf<TokenItem>()
     private val mAdapter = TokenAdapter()
     //token item status true:normal false:draged
     private var mTokenStatus = true
@@ -52,17 +55,21 @@ class TokenManageActivity : NBaseActivity() {
     override fun initAction() {
         mTitleBar.setOnRightClickListener { }
         mTitleBar.setOnLeftClickListener {
-            EventBus.getDefault().post(AddTokenRefreshEvent())
-            finish()
+            if (mTokenStatus) {
+                finish()
+            } else {
+                mTokenStatus = !mTokenStatus
+                mTokenList = copyList(mTokenListNoDragged)
+                finishDrag()
+            }
         }
         mTitleBar.setOnRightClickListener {
-            if (mTokenStatus) {
-                mTitleBar.rightText = resources.getString(R.string.finish)
-            } else {
-                mTitleBar.rightText = resources.getString(R.string.edit)
-            }
             mTokenStatus = !mTokenStatus
-            mAdapter.notifyDataSetChanged()
+            if (!mTokenStatus) {
+                startDrag()
+            } else {
+                finishDrag()
+            }
         }
     }
 
@@ -71,7 +78,36 @@ class TokenManageActivity : NBaseActivity() {
         mAdapter.notifyDataSetChanged()
     }
 
-    internal inner class TokenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private fun startDrag() {
+        mTitleBar.rightText = resources.getString(R.string.finish)
+        mTitleBar.setLeftText(resources.getString(R.string.cancel))
+        mTokenListNoDragged = copyList(mTokenList)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    private fun finishDrag() {
+        mTitleBar.setLeftImage(R.drawable.black_back)
+        mTitleBar.rightText = resources.getString(R.string.edit)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun finish() {
+        var walletItem = DBWalletUtil.getCurrentWallet(mActivity)
+        walletItem.tokenItems = mTokenList
+        DBWalletUtil.saveWallet(mActivity, walletItem)
+        EventBus.getDefault().post(AddTokenRefreshEvent())
+        super.finish()
+    }
+
+    private fun copyList(listOrigin: List<TokenItem>): MutableList<TokenItem> {
+        var list = mutableListOf<TokenItem>()
+        listOrigin.forEach {
+            list.add(it)
+        }
+        return list
+    }
+
+    internal inner class TokenAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return TokenViewHolder(LayoutInflater.from(mActivity).inflate(R.layout.item_token_info, parent, false))
         }
@@ -135,14 +171,6 @@ class TokenManageActivity : NBaseActivity() {
             var mIvTokenDrag: ImageView = view.findViewById(R.id.iv_drag)
             var mRlRoot: RelativeLayout = view.findViewById(R.id.rl_root)
         }
-    }
-
-    override fun finish() {
-        var walletItem = DBWalletUtil.getCurrentWallet(mActivity)
-        walletItem.tokenItems = mTokenList
-        DBWalletUtil.saveWallet(mActivity, walletItem)
-        EventBus.getDefault().post(AddTokenRefreshEvent())
-        super.finish()
     }
 
     inner class SimpleItemTouchCallback : ItemTouchHelper.Callback() {

@@ -126,7 +126,7 @@ public class DBWalletUtil extends DBUtil {
 
     private static int checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
         for (int i = 0; i < walletItem.chainItems.size(); i++) {
-            if (!TextUtils.isEmpty(walletItem.chainItems.get(i).httpProvider) && walletItem.chainItems.get(i).httpProvider.equals(chainItem.httpProvider)) {
+            if (walletItem.chainItems.get(i).getChainId().equals(chainItem.getChainId())) {
                 return i;
             }
         }
