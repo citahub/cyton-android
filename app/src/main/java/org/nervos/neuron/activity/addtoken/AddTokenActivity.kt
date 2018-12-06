@@ -55,7 +55,7 @@ class AddTokenActivity : NBaseActivity() {
         manager = AddTokenManager(this)
         mWalletItem = DBWalletUtil.getCurrentWallet(this)
         mChainItemList = manager!!.getChainList()
-        mChainNameList = manager!!.getChainNameList()
+        mChainNameList = manager!!.getChainNameList(mChainItemList!!)
         mChainItem = mChainItemList!![0]
 
         tv_chain_name.text = mChainNameList!![0]

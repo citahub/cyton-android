@@ -37,12 +37,9 @@ public class WalletService {
                     public Observable<Double> call(String address) {
                         if (EtherUtil.isEther(tokenItem)) {
                             tokenItem.chainName = ConstantUtil.ETH;
-                            if (EtherUtil.isNative(tokenItem)) {
-                                return EthRpcService.getEthBalance(address);
-                            } else {
-                                return EthRpcService.getERC20Balance(Web3jFactory.build(new InfuraHttpService(EtherUtil.getEthNodeUrl(tokenItem.getChainId())))
-                                        , tokenItem.contractAddress, address);
-                            }
+                            return EtherUtil.isNative(tokenItem)
+                                    ? EthRpcService.getEthBalance(address)
+                                    :EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
                         } else {
                             ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
                             tokenItem.chainName = Objects.requireNonNull(chainItem).name;
