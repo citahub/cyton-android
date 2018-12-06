@@ -289,27 +289,6 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
 
     /**
-     * handle transfer advanced setup
-     */
-    private void initAdvancedSetupDialog() {
-        TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
-            @Override
-            public void onOkClick(View v, String gasPrice) {
-                if (TextUtils.isEmpty(gasPrice)) {
-                    Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
-                    Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
-                } else {
-                    mPresenter.updateGasPrice(Convert.toWei(gasPrice, GWEI).toBigInteger());
-                }
-            }
-        });
-        dialog.setGasLimitDefault(mPresenter.getGasLimit().toString());
-        dialog.show();
-    }
-
-
-    /**
      * show confirm transfer view
      */
     private void getConfirmTransferView() {
