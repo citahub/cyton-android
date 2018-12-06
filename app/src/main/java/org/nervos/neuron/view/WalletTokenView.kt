@@ -14,6 +14,7 @@ import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity
 import org.nervos.neuron.event.TokenBalanceEvent
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.item.WalletTokenLoadItem
+import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.service.http.WalletService
 import org.nervos.neuron.util.CurrencyUtil
@@ -45,10 +46,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         tv_loading.text = resources.getString(R.string.wallet_token_loading)
         tv_token_currency.visibility = View.GONE
         WalletService.getTokenBalance(context, tokenItem)
-                .subscribe(object : Subscriber<TokenItem>() {
-                    override fun onCompleted() {
-
-                    }
+                .subscribe(object : NeuronSubscriber<TokenItem>() {
 
                     override fun onError(e: Throwable) {
                         tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)
@@ -61,7 +59,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                             tv_loading.visibility = View.GONE
                             tv_token_balance.text = NumberUtil.getDecimal8ENotation(tokenItem.balance)
                             tv_token_balance.visibility = View.VISIBLE
-                            if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem)) {
+                            if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem) && EtherUtil.isMainNet()) {
                                 getPrice()
                             } else {
                                 EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))

@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWalletActivity
-import org.nervos.neuron.activity.TokenManageActivity
+import org.nervos.neuron.activity.addtoken.AddTokenActivity
 import org.nervos.neuron.activity.changewallet.ChangeWalletActivity
 import org.nervos.neuron.event.AddTokenRefreshEvent
 import org.nervos.neuron.event.CurrencyRefreshEvent
@@ -53,7 +53,6 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
         loadExchangeBtn()
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.isNestedScrollingEnabled = false
-        startIvRefresh()
         reloadTokens()
     }
 
@@ -79,14 +78,13 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWalletSaveEvent(event: TokenRefreshEvent) {
         loadExchangeBtn()
-        startIvRefresh()
         reloadTokens()
     }
 
     //refresh list after adding token
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAddTokenEvent(event: AddTokenRefreshEvent) {
-        refreshTokens(true)
+        reloadTokens()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -118,17 +116,14 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
             }
         }
         if (isLoadedAll) {
-            swipe_refresh_layout.isRefreshing = false
-            swipe_refresh_layout.isEnabled = true
-            iv_refresh.clearAnimation()
-            iv_refresh.visibility = View.VISIBLE
+            finishRefresh()
             if (totalAssets == 0.0) mWalletAssetsView!!.setTotalAssets(resources.getString(R.string.wallet_token_no_assets))
         }
     }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.iv_right_arrow, R.id.tv_add_token -> startActivity(Intent(activity, TokenManageActivity::class.java))
+            R.id.iv_right_arrow, R.id.tv_add_token -> startActivity(Intent(activity, AddTokenActivity::class.java))
             R.id.iv_refresh -> {
                 if (swipe_refresh_layout.isEnabled)
                     refreshTokens(true)
@@ -139,12 +134,18 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     private fun getMyTokens() {
         var list = DBWalletUtil.getCurrentWallet(context).tokenItems
         mTokenItemList.clear()
-        list.forEachIndexed { index, tokenItem ->
-            mTokenItemList.add(index, WalletTokenLoadItem(tokenItem))
+        list.forEachIndexed { _, tokenItem ->
+            if (tokenItem.selected)
+                mTokenItemList.add(WalletTokenLoadItem(tokenItem))
+        }
+        if (mTokenItemList.size == 0) {
+            finishRefresh()
+            mWalletAssetsView!!.setTotalAssets(resources.getString(R.string.wallet_token_no_assets))
         }
     }
 
     private fun reloadTokens() {
+        startIvRefresh()
         getMyTokens()
         mAdapter = WalletTokenAdapter(DBWalletUtil.getCurrentWallet(context).address, mTokenItemList)
         recycler.adapter = mAdapter
@@ -164,6 +165,13 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
         var interpolator = LinearInterpolator()
         mCircleAnim.interpolator = interpolator
         iv_refresh.startAnimation(mCircleAnim)
+    }
+
+    private fun finishRefresh() {
+        swipe_refresh_layout.isRefreshing = false
+        swipe_refresh_layout.isEnabled = true
+        iv_refresh.clearAnimation()
+        iv_refresh.visibility = View.VISIBLE
     }
 
     private fun loadExchangeBtn() {

@@ -81,7 +81,7 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
     private fun addWallet(entity: WalletEntity, name: String) {
         var walletItem = WalletItem.fromWalletEntity(entity)
         walletItem.name = name
-        walletItem = DBWalletUtil.addOriginTokenToWallet(activity, walletItem)
+        walletItem = DBWalletUtil.initChainToCurrentWallet(activity, walletItem)
         DBWalletUtil.saveWallet(activity, walletItem)
         SharePrefUtil.putCurrentWalletName(walletItem.name)
         ImportWalletActivity.track("2", true, entity.address)

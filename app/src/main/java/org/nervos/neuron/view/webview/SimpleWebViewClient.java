@@ -8,7 +8,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import org.nervos.neuron.R;
 import org.nervos.neuron.view.WebErrorView;
 
@@ -29,6 +28,7 @@ public class SimpleWebViewClient extends WebViewClient {
             switch (error.getErrorCode()) {
                 case ERROR_BAD_URL:
                 case ERROR_FAILED_SSL_HANDSHAKE:
+                case ERROR_HOST_LOOKUP:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);

@@ -120,7 +120,7 @@ public class CreateWalletActivity extends NBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(WalletSaveEvent event) {
         if (walletItem != null) {
-            walletItem = DBWalletUtil.addOriginTokenToWallet(mActivity, walletItem);
+            walletItem = DBWalletUtil.initChainToCurrentWallet(mActivity, walletItem);
             DBWalletUtil.saveWallet(mActivity, walletItem);
             SharePrefUtil.putCurrentWalletName(walletItem.name);
         }

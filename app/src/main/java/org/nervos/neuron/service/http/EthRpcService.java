@@ -3,11 +3,10 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.item.transaction.TransactionItem;
-import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -17,11 +16,7 @@ import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Bool;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
@@ -31,12 +26,15 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,11 +45,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/4/17
@@ -75,7 +68,12 @@ public class EthRpcService {
         service = Web3jFactory.build(new InfuraHttpService(EtherUtil.getEthNodeUrl()));
     }
 
+    public static void initNodeUrl(String url) {
+        service = Web3jFactory.build(new InfuraHttpService(url));
+    }
+
     public static Observable<Double> getEthBalance(String address) {
+        EthRpcService.initNodeUrl();
         return Observable.fromCallable(() ->
                 service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send())
                 .map(ethGetBalance -> NumberUtil.getEthFromWei(ethGetBalance.getBalance()))
@@ -114,7 +112,6 @@ public class EthRpcService {
     }
 
     /**
-     *
      * @param address
      * @param value
      * @param gasPrice
@@ -204,6 +201,25 @@ public class EthRpcService {
         }).subscribeOn(Schedulers.io());
     }
 
+    public static Observable<Double> getERC20Balance(Web3j service, String contractAddress, String address) {
+        return Observable.fromCallable(new Callable<Double>() {
+            @Override
+            public Double call() throws Exception {
+                long decimal = getErc20Decimal(service, address, contractAddress);
+                Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
+                        ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
+                String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
+                if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
+                    initIntTypes();
+                    Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
+                    double balances = balance.getValue().doubleValue();
+                    if (decimal == 0) return balance.getValue().doubleValue();
+                    else return balances / (Math.pow(10, decimal));
+                }
+                return 0.0;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
 
     public static Observable<EthSendTransaction> transferErc20(Context context, TokenItem tokenItem, String address, String value,
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
@@ -273,7 +289,8 @@ public class EthRpcService {
 
     public static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
-        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
+        });
         Function function = new Function("transfer", params, returnTypes);
         return FunctionEncoder.encode(function);
     }
@@ -305,6 +322,16 @@ public class EthRpcService {
         return 0;
     }
 
+    private static int getErc20Decimal(Web3j service, String address, String contractAddress) throws IOException {
+        Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.DECIMALS_HASH);
+        String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
+        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
+            initIntTypes();
+            Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
+            return type.getValue().intValue();
+        }
+        return 0;
+    }
 
     private static List<TypeReference<Type>> intTypes = new ArrayList<>();
 

@@ -12,10 +12,11 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBChainUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,19 +35,22 @@ public class WalletService {
                 .flatMap(new Func1<String, Observable<Double>>() {
                     @Override
                     public Observable<Double> call(String address) {
-                            if (EtherUtil.isEther(tokenItem)) {
-                                tokenItem.chainName = ConstantUtil.ETH;
-                                return EtherUtil.isNative(tokenItem)
-                                        ? EthRpcService.getEthBalance(address)
-                                        : EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
+                        if (EtherUtil.isEther(tokenItem)) {
+                            tokenItem.chainName = ConstantUtil.ETH;
+                            if (EtherUtil.isNative(tokenItem)) {
+                                return EthRpcService.getEthBalance(address);
                             } else {
-                                ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
-                                tokenItem.chainName = Objects.requireNonNull(chainItem).name;
-                                AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
-                                return EtherUtil.isNative(tokenItem)
-                                        ? AppChainRpcService.getBalance(address)
-                                        : AppChainRpcService.getErc20Balance(tokenItem, address);
+                                return EthRpcService.getERC20Balance(Web3jFactory.build(new InfuraHttpService(EtherUtil.getEthNodeUrl(tokenItem.getChainId())))
+                                        , tokenItem.contractAddress, address);
                             }
+                        } else {
+                            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
+                            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
+                            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
+                            return EtherUtil.isNative(tokenItem)
+                                    ? AppChainRpcService.getBalance(address)
+                                    : AppChainRpcService.getErc20Balance(tokenItem, address);
+                        }
                     }
                 }).map(balance -> {
                     tokenItem.balance = balance;
@@ -73,11 +77,11 @@ public class WalletService {
         Observable<Double> balanceObservable;
         if (EtherUtil.isEther(tokenItem)) {
             tokenItem.chainName = ConstantUtil.ETH;
-            balanceObservable =  EtherUtil.isNative(tokenItem)
+            balanceObservable = EtherUtil.isNative(tokenItem)
                     ? EthRpcService.getEthBalance(walletItem.address)
                     : EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
         } else {
-            ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
             tokenItem.chainName = Objects.requireNonNull(chainItem).name;
             AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
             balanceObservable = EtherUtil.isNative(tokenItem)
@@ -95,7 +99,7 @@ public class WalletService {
             tokenItem.chainName = ConstantUtil.ETH;
             balanceObservable = EthRpcService.getEthBalance(walletItem.address);
         } else {
-            ChainItem chainItem = DBChainUtil.getChain(context, tokenItem.getChainId());
+            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
             tokenItem.chainName = Objects.requireNonNull(chainItem).name;
             AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
             balanceObservable = AppChainRpcService.getBalance(walletItem.address);

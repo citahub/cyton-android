@@ -44,7 +44,7 @@ public class SettingsFragment extends NBaseFragment {
     private CircleImageView photoImage;
     private RelativeLayout walletLayout;
     private AuthFingerDialog mAuthFingerDialog = null;
-    private List<String> ethNodeList = Arrays.asList(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH_NET_ROPSTEN_TEST
+    private List<String> ethNodeList = Arrays.asList(ConstantUtil.ETH_NET_MAIN, ConstantUtil.ETH_NET_ROPSTEN_TEST
             , ConstantUtil.ETH_NET_KOVAN_TEST, ConstantUtil.ETH_NET_RINKEBY_TEST);
     private int ethNodeIndex;
     private FingerPrintController mFingerPrintController;
@@ -149,10 +149,10 @@ public class SettingsFragment extends NBaseFragment {
                 SharePrefUtil.putString(ConstantUtil.ETH_NET, ethNodeList.get(ethNodeIndex));
                 dialog.dismiss();
             }));
-            dialog.setOnDissmissListener(dialogInterface -> {
+            dialog.setOnDismissListener(dialogInterface -> {
                 EthRpcService.initNodeUrl();
                 updateEthNode();
-                String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET);
+                String node = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN);
                 if (node.contains("_")) node = node.replace("_", " ");
                 mSbvSelectEth.setRightText(node);
                 dialog.dismiss();

@@ -8,23 +8,22 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import org.nervos.neuron.R
 import org.nervos.neuron.util.DipUtils
-
+import org.nervos.neuron.view.TitleBar
+import org.nervos.neuron.view.button.CommonButton
 
 /**
- * Created by BaojunCZ on 2018/9/11.
+ * Created by BaojunCZ on 2018/12/3.
  */
-open class SelectorDialog(private val context: Context) {
-
+open class BottomSheetDialog(private val context: Context) {
     private val dialog: BottomSheetDialog = BottomSheetDialog(context)
-    private val view: View = LayoutInflater.from(context).inflate(R.layout.view_bottom_selector, null)
-    private var closeListener: View.OnClickListener? = null
-    private var okListener: View.OnClickListener? = null
+    private val view: View = LayoutInflater.from(context).inflate(R.layout.view_bottom_dialog, null)
+    private lateinit var closeMethod: () -> Unit
+    private lateinit var okMethod: () -> Unit
+    private var mTitleBar: TitleBar = view.findViewById(R.id.title)
+    private var mBtnOk: CommonButton = view.findViewById(R.id.btn_ok)
     private var mRecyclerView = view.findViewById<RecyclerView>(R.id.recycler)
-    private var mTvCancel = view.findViewById<TextView>(R.id.tv_cancel)
-    private var mTvOk = view.findViewById<TextView>(R.id.tv_ok)
 
     init {
         dialog.setContentView(view)
@@ -33,28 +32,24 @@ open class SelectorDialog(private val context: Context) {
     }
 
     private fun initAction() {
-        mTvCancel.setOnClickListener { view ->
-            if (closeListener != null) {
-                closeListener!!.onClick(view)
-            } else {
-                dialog.dismiss()
-            }
+        mTitleBar.setOnLeftClickListener {
+            closeMethod()
         }
-        mTvOk.setOnClickListener {
-            if (okListener != null) {
-                okListener!!.onClick(view)
-            } else {
-                dialog.dismiss()
-            }
+        mBtnOk.setOnClickListener {
+            okMethod()
         }
     }
 
-    fun setOnCloseListener(listener: View.OnClickListener) {
-        this.closeListener = listener
+    fun setTitle(title: String) {
+        mTitleBar.title = title
     }
 
-    fun setOnOkListener(listener: View.OnClickListener) {
-        this.okListener = listener
+    fun setOnCloseListener(closeMethod: () -> Unit) {
+        this.closeMethod = closeMethod
+    }
+
+    fun setOnOkListener(okMethod: () -> Unit) {
+        this.okMethod = okMethod
     }
 
     fun setRecyclerView(adapter: RecyclerView.Adapter<*>) {
@@ -73,5 +68,4 @@ open class SelectorDialog(private val context: Context) {
     fun dismiss() {
         dialog.dismiss()
     }
-
 }
