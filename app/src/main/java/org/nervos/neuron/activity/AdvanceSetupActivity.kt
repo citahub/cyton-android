@@ -2,8 +2,8 @@ package org.nervos.neuron.activity
 
 import android.content.Intent
 import android.text.TextUtils
-import android.text.method.ScrollingMovementMethod
 import android.view.View
+import android.widget.Toast
 import org.nervos.neuron.R
 
 import kotlinx.android.synthetic.main.activity_advance_setup.*
@@ -26,10 +26,14 @@ class AdvanceSetupActivity : NBaseActivity() {
     companion object {
         const val EXTRA_ADVANCE_SETUP = "extra_advance_setup"
         const val EXTRA_TRANSACTION = "extra_transaction"
+        const val EXTRA_TRANSFER = "extra_transfer"
+        const val EXTRA_NATIVE_TOKEN = "extra_native_token"
         const val RESULT_TRANSACTION = 0x01
     }
 
     private var mFeePrice : String = ""
+    private var isTransfer : Boolean = false
+    private var isNativeToken = false
 
     private var mTransactionInfo: TransactionInfo? = null
 
@@ -39,15 +43,33 @@ class AdvanceSetupActivity : NBaseActivity() {
 
     override fun initView() {
         mTransactionInfo = intent?.getParcelableExtra(EXTRA_ADVANCE_SETUP)
+        isTransfer = intent.getBooleanExtra(EXTRA_TRANSFER, false)
+        isNativeToken = intent.getBooleanExtra(EXTRA_NATIVE_TOKEN, false)
+
+        if (mTransactionInfo!!.isEthereum) {
+            advance_setup_gas_limit_label.setText(R.string.gas_limit)
+            advance_setup_gas_price_label.setText(R.string.gas_price)
+            advance_setup_gas_fee_label.setText(R.string.gas_fee)
+        } else {
+            advance_setup_gas_limit_label.setText(R.string.gas_limit)
+            advance_setup_gas_price_label.setText(R.string.gas_price)
+            advance_setup_gas_fee_label.setText(R.string.quota_fee)
+        }
 
         edit_advance_setup_gas_price.setText(mFeePrice)
         advance_setup_price_unit.text = getFeeUnit()
         edit_advance_setup_gas_limit.setText(
-                if (mTransactionInfo!!.isEthereum) NumberUtil.hexToDecimal(mTransactionInfo!!.gasLimit)
+                if (mTransactionInfo!!.isEthereum) mTransactionInfo!!.gasLimit.toString()
                 else mTransactionInfo!!.quota.toString())
         edit_advance_setup_gas_price.isEnabled = mTransactionInfo!!.isEthereum
-        advance_setup_pay_data.movementMethod = ScrollingMovementMethod.getInstance()
-        advance_setup_pay_data.text = mTransactionInfo!!.data
+        if (isTransfer) {
+            advance_setup_data_layout.visibility = View.GONE
+            advance_setup_pay_data.visibility = if (isNativeToken) View.VISIBLE else View.GONE
+        } else {
+            advance_setup_pay_data.isEnabled = false
+            advance_setup_pay_data.hint = ""
+        }
+        advance_setup_pay_data.setText(mTransactionInfo!!.data)
 
         initFeeInfo()
     }
@@ -59,22 +81,25 @@ class AdvanceSetupActivity : NBaseActivity() {
         advance_setup_sign_hex_layout.setOnClickListener {
             advance_setup_pay_data_left_line.visibility = View.VISIBLE
             advance_setup_pay_data_right_line.visibility = View.GONE
-            advance_setup_pay_data.text = mTransactionInfo!!.data
+            advance_setup_pay_data.setText(mTransactionInfo!!.data)
         }
 
         advance_setup_sign_utf8_layout.setOnClickListener {
             advance_setup_pay_data_left_line.visibility = View.GONE
             advance_setup_pay_data_right_line.visibility = View.VISIBLE
             if (!TextUtils.isEmpty(mTransactionInfo!!.data) && Numeric.containsHexPrefix(mTransactionInfo!!.data)) {
-                advance_setup_pay_data.text = NumberUtil.hexToUtf8(mTransactionInfo!!.data)
+                advance_setup_pay_data.setText(NumberUtil.hexToUtf8(mTransactionInfo!!.data))
             }
         }
 
         advance_setup_confirm.setOnClickListener {
+            if (mTransactionInfo!!.isEthereum && edit_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
+                Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
+            }
             if (mTransactionInfo!!.isEthereum) {
-                mTransactionInfo!!.gasLimit = edit_advance_setup_gas_limit.text.toString().trim()
+                mTransactionInfo!!.gasLimit = BigInteger(edit_advance_setup_gas_limit.text.toString().trim())
                 mTransactionInfo!!.gasPrice =
-                        NumberUtil.getWeiFromGWeiForHexString(edit_advance_setup_gas_price.text.toString().trim().toDouble())
+                        NumberUtil.getWeiFromGWeiForBigInt(edit_advance_setup_gas_price.text.toString().trim().toDouble())
             } else {
                 mTransactionInfo!!.setQuota(edit_advance_setup_gas_limit.text.toString().trim())
             }
@@ -119,7 +144,7 @@ class AdvanceSetupActivity : NBaseActivity() {
 
         text_advance_setup_gas_fee_detail.text =
                 String.format("Gas Limit(%s)*Gas Price(%s %s)",
-                        NumberUtil.hexToDecimal(mTransactionInfo!!.gasLimit),
+                        mTransactionInfo!!.gasLimit.toString(),
                         NumberUtil.getGWeiFromWeiForString(mTransactionInfo!!.gasPrice), getFeeUnit())
     }
 

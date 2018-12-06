@@ -199,14 +199,12 @@ public class NumberUtil {
         return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.ETHER).toString();
     }
 
-    public static String getGWeiFromWeiForString(String hex) {
-        if (TextUtils.isEmpty(hex)) return "0";
-        hex = Numeric.cleanHexPrefix(hex);
-        return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.GWEI).toString();
+    public static String getGWeiFromWeiForString(BigInteger num) {
+        return Convert.fromWei(num.toString(), Convert.Unit.GWEI).toString();
     }
 
-    public static String getWeiFromGWeiForHexString(double num) {
-        return Numeric.toHexStringWithPrefix(Convert.toWei(BigDecimal.valueOf(num), Convert.Unit.GWEI).toBigInteger());
+    public static BigInteger getWeiFromGWeiForBigInt(double num) {
+        return Convert.toWei(BigDecimal.valueOf(num), Convert.Unit.GWEI).toBigInteger();
     }
 
     public static double getEthFromWei(BigInteger value) {

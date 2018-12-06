@@ -119,13 +119,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         initBalance();
         if (mTransactionInfo.isEthereum()) {
             showProgressCircle();
-            if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
-                    || "0".equals(mTransactionInfo.gasPrice)) {
+            if (TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasPrice())) {
                 getEtherGasPrice();
             }
 
-            if (TextUtils.isEmpty(mTransactionInfo.gasLimit)
-                    || "0".equals(mTransactionInfo.gasLimit)) {
+            if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasLimit())) {
                 getEtherGasLimit();
             }
 
@@ -146,7 +144,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @Override
             public void onNext(BigInteger gasPrice) {
                 mEthDefaultPrice = gasPrice.toString(16);
-                mTransactionInfo.gasPrice = Numeric.prependHexPrefix(mEthDefaultPrice);
+                mTransactionInfo.setGasPrice(gasPrice);
                 setEthGasPrice();
             }
         });
@@ -157,15 +155,13 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
-                        mTransactionInfo.gasLimit = Numeric.prependHexPrefix(ConstantUtil.GAS_ERC20_LIMIT.toString(16));
+                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_ERC20_LIMIT);
                         setEthGasPrice();
                     }
 
-                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.gasLimit =
-                                Numeric.prependHexPrefix(gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER).toString(16));
+                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_LIMIT_PARAMETER);
                         setEthGasPrice();
                     }
                 });
@@ -174,7 +170,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
         dismissProgressCircle();
-        if (TextUtils.isEmpty(mTransactionInfo.gasLimit) || TextUtils.isEmpty(mTransactionInfo.gasPrice)) return;
+        if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString())) {
+            return;
+        }
 
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
         mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
@@ -186,11 +184,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price)) return;
                         try {
-                            String mCurrencyPrice = NumberUtil.getDecimalValid_2(
+                            String currencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
                             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
-                                    mTransactionInfo.getGas()) + getNativeToken()
-                                    + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
+                                            mTransactionInfo.getGas()) + getNativeToken()
+                                            + "≈" + currencyItem.getSymbol() + currencyPrice);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
@@ -249,25 +247,25 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void transferEth(String password, ProgressBar progressBar) {
-        Observable.just(mTransactionInfo.gasPrice)
-                .flatMap(new Func1<String, Observable<BigInteger>>() {
+        Observable.just(mTransactionInfo.getGasPrice())
+                .flatMap(new Func1<BigInteger, Observable<BigInteger>>() {
                     @Override
-                    public Observable<BigInteger> call(String gasPrice) {
-                        if (TextUtils.isEmpty(gasPrice) || "0".equals(gasPrice)) {
+                    public Observable<BigInteger> call(BigInteger gasPrice) {
+                        if (TextUtils.isEmpty(gasPrice.toString()) || BigInteger.ZERO.equals(gasPrice)) {
                             return EthRpcService.getEthGasPrice();
                         } else {
-                            return Observable.just(Numeric.toBigInt(gasPrice));
+                            return Observable.just(gasPrice);
                         }
                     }
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
-                        mTransactionInfo.getStringValue(), gasPrice,
-                        Numeric.toBigInt(mTransactionInfo.gasLimit),
-                        mTransactionInfo.data, password);
-            }
-        }).subscribeOn(Schedulers.io())
+                    @Override
+                    public Observable<EthSendTransaction> call(BigInteger gasPrice) {
+                        return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
+                                mTransactionInfo.getStringValue(), gasPrice,
+                                mTransactionInfo.getGasLimit(),
+                                mTransactionInfo.data, password);
+                    }
+                }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
@@ -415,8 +413,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     case AdvanceSetupActivity.RESULT_TRANSACTION:
                         mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
                         updateView();
-                        setEthGasPrice();
-                        getQuotaPrice();
+                        initRemoteData();
                         break;
                     default:
                         break;

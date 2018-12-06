@@ -44,7 +44,9 @@ public class TransferPresenter {
     private WalletItem mWalletItem;
     private CurrencyItem mCurrencyItem;
 
-    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstantUtil.GAS_LIMIT, mQuota, mQuotaLimit, mGas;
+    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstantUtil.GAS_LIMIT, mGas;
+    private BigInteger mQuota, mQuotaLimit, mQuotaPrice;
+    private String mData;
     private double mTokenBalance, mNativeTokenBalance, mTransferFee;
 
     public TransferPresenter(Activity activity, TransferView transferView) {
@@ -161,6 +163,7 @@ public class TransferPresenter {
 
 
     private void initAppChainQuota() {
+        mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
         AppChainRpcService.getQuotaPrice(mWalletItem.address)
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
@@ -170,13 +173,23 @@ public class TransferPresenter {
 
                     @Override
                     public void onNext(String quotaPrice) {
-                        mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-                        mQuota = mQuotaLimit.multiply(Numeric.toBigInt(HexUtils.IntToHex(Integer.valueOf(quotaPrice))));
-                        mTransferFee = NumberUtil.getEthFromWei(mQuota);
-                        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+                        mQuotaPrice = new BigInteger(quotaPrice);
+                        initQuotaFee();
+                        mTransferView.initTransferFeeView();
                     }
                 });
 
+    }
+
+    private void initQuotaFee() {
+        mQuota = mQuotaLimit.multiply(mQuotaPrice);
+        mTransferFee = NumberUtil.getEthFromWei(mQuota);
+        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+    }
+
+    public void updateQuotaLimit(BigInteger quotaLimit) {
+        mQuotaLimit = quotaLimit;
+        initQuotaFee();
     }
 
     public void initGasLimit(TransactionInfo transactionInfo) {
@@ -220,7 +233,7 @@ public class TransferPresenter {
      * @param value
      */
     private void transferEth(String password, String value, String receiveAddress) {
-        EthRpcService.transferEth(mActivity, receiveAddress, value, mGasPrice, mGasLimit, "", password)
+        EthRpcService.transferEth(mActivity, receiveAddress, value, mGasPrice, mGasLimit, mData, password)
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -271,7 +284,8 @@ public class TransferPresenter {
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
         ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
         if (item == null) return;
-        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, "", ConstantUtil.QUOTA_TOKEN.longValue(),
+        AppChainRpcService.setHttpProvider(item.httpProvider);
+        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, ConstantUtil.QUOTA_TOKEN.longValue(),
                 new BigInteger(mTokenItem.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
@@ -316,7 +330,7 @@ public class TransferPresenter {
     }
 
 
-    public void updateGasInfo() {
+    private void updateGasInfo() {
         mGas = mGasPrice.multiply(mGasLimit);
         mTransferFee = NumberUtil.getEthFromWei(mGas);
         mTransferView.initTransferFeeView();
@@ -325,9 +339,18 @@ public class TransferPresenter {
     /**
      * @param gasPrice wei
      */
-    public void updateGasInfo(BigInteger gasPrice) {
+    public void updateGasPrice(BigInteger gasPrice) {
         mGasPrice = gasPrice;
         updateGasInfo();
+    }
+
+    public void updateGasLimit(BigInteger gasLimit) {
+        mGasLimit = gasLimit;
+        updateGasInfo();
+    }
+
+    public void updateData(String data) {
+        mData = data;
     }
 
     public TokenItem getTokenItem() {
@@ -377,8 +400,8 @@ public class TransferPresenter {
         }
     }
 
-    public String getEthGasDefaultPrice() {
-        return NumberUtil.getDecimalValid_2(Convert.fromWei(mEthGasDefaultPrice.toString(), GWEI).doubleValue());
+    public BigInteger getEthGasDefaultPrice() {
+        return mEthGasDefaultPrice;
     }
 
     public boolean isEthERC20() {
@@ -388,6 +411,10 @@ public class TransferPresenter {
 
     public boolean isNativeToken() {
         return TextUtils.isEmpty(mTokenItem.contractAddress);
+    }
+
+    public boolean isEther() {
+        return Numeric.toBigInt(mTokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0;
     }
 
     public String getFeeTokenUnit() {
