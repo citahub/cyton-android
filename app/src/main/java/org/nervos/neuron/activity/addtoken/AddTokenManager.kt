@@ -24,21 +24,19 @@ import rx.schedulers.Schedulers
  */
 class AddTokenManager(val context: Context) {
 
-    fun getChainNameList(): List<String> {
-        var chainList = DBWalletUtil.getCurrentWallet(context).chainItems
+    fun getChainNameList(chainList: List<ChainItem>): List<String> {
         var list = mutableListOf<String>()
         chainList.forEach {
             list.add(it.name)
         }
-        list.add(1, ConstantUtil.ETH_RINKEBY_NAME)
         list.add(context.resources.getString(R.string.appchain_native_token))
         return list
     }
 
     fun getChainList(): List<ChainItem> {
         var list = DBWalletUtil.getCurrentWallet(context).chainItems
-        var item = ChainItem(ConstantUtil.ETHEREUM_RINKEBY_ID, ConstantUtil.ETH_RINKEBY_NAME, ConstantUtil.ETH, ConstantUtil.ETH)
-        list.add(1, item)
+        list.removeAt(0)
+        list.add(0, EtherUtil.getEthChainItem())
         return list
     }
 
@@ -47,19 +45,16 @@ class AddTokenManager(val context: Context) {
         return Observable.fromCallable {
             if (!AddressUtil.isAddressValid(contractAddress)) {
                 throw Throwable(context.resources.getString(R.string.contract_address_error))
-            } else if (!checkRepetitionContract(contractAddress)) {
+            } else if (!checkRepetitionContract(chainItem.chainId, contractAddress)) {
                 throw Throwable(context.resources.getString(R.string.exist_erc20_token))
             }
-            val tokenItem = when (chainItem.chainId) {
-                ConstantUtil.ETHEREUM_MAIN_ID -> {
-                    EthRpcService.initNodeUrl(EtherUtil.getEthNodeUrl(chainItem.chainId))
+            val tokenItem = when (EtherUtil.isEther(chainItem.chainId)) {
+                true -> {
                     EthRpcService.getTokenInfo(contractAddress, address)
                 }
-                ConstantUtil.ETHEREUM_RINKEBY_ID -> {
-                    EthRpcService.initNodeUrl(EtherUtil.getEthNodeUrl(chainItem.chainId))
-                    EthRpcService.getTokenInfo(contractAddress, address)
+                else -> {
+                    AppChainRpcService.getErc20TokenInfo(contractAddress)
                 }
-                else -> AppChainRpcService.getErc20TokenInfo(contractAddress)
             }
             when {
                 tokenItem == null -> throw Throwable(context.resources.getString(R.string.contract_address_error))
@@ -103,11 +98,13 @@ class AddTokenManager(val context: Context) {
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun checkRepetitionContract(contractAddress: String): Boolean {
+    private fun checkRepetitionContract(chainId: String, contractAddress: String): Boolean {
         val customList = DBWalletUtil.getCurrentWallet(context).tokenItems
         if (customList != null && customList.size > 0) {
             for (item in customList) {
-                if (item.contractAddress.equals(contractAddress, ignoreCase = true)) return false
+                if (item.chainId == chainId && item.contractAddress == contractAddress) {
+                    return false
+                }
             }
         }
         return true

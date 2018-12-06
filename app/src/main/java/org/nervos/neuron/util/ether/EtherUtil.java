@@ -1,7 +1,9 @@
 package org.nervos.neuron.util.ether;
 
 import android.text.TextUtils;
+
 import org.nervos.appchain.utils.Numeric;
+import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -16,6 +18,10 @@ public class EtherUtil {
 
     public static boolean isEther(TokenItem tokenItem) {
         return Numeric.toBigInt(tokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0;
+    }
+
+    public static boolean isEther(String chainID) {
+        return Numeric.toBigInt(chainID).compareTo(BigInteger.ZERO) < 0;
     }
 
     public static boolean isNative(TokenItem tokenItem) {
@@ -77,6 +83,20 @@ public class EtherUtil {
             case ConstantUtil.ETHEREUM_MAIN_ID:
             default:
                 return HttpEtherUrls.ETH_NODE_MAIN_URL;
+        }
+    }
+
+    public static ChainItem getEthChainItem() {
+        switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
+            case ConstantUtil.ETH_NET_RINKEBY_TEST:
+                return new ChainItem(ConstantUtil.ETHEREUM_RINKEBY_ID, ConstantUtil.ETH_RINKEBY_NAME, ConstantUtil.ETH, ConstantUtil.ETH);
+            case ConstantUtil.ETH_NET_KOVAN_TEST:
+                return new ChainItem(ConstantUtil.ETHEREUM_KOVAN_ID, ConstantUtil.ETH_KOVAN_NAME, ConstantUtil.ETH, ConstantUtil.ETH);
+            case ConstantUtil.ETH_NET_ROPSTEN_TEST:
+                return new ChainItem(ConstantUtil.ETHEREUM_ROPSTEN_ID, ConstantUtil.ETH_ROPSTEN_NAME, ConstantUtil.ETH, ConstantUtil.ETH);
+            case ConstantUtil.ETH_NET_MAIN:
+            default:
+                return new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAIN_NAME, ConstantUtil.ETH, ConstantUtil.ETH);
         }
     }
 
