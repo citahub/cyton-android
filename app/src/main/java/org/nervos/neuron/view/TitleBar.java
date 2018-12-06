@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -204,6 +205,10 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         showRight();
         mTitleBarRightDefaultView.setText(text);
         mTitleBarRightDefaultView.setCompoundDrawables(null, null, null, null);
+    }
+
+    public void setRightTextColor(int color) {
+        mTitleBarRightDefaultView.setTextColor(ContextCompat.getColor(getContext(), color));
     }
 
     /**
