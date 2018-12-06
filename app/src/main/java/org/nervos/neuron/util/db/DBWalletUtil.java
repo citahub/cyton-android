@@ -32,18 +32,6 @@ public class DBWalletUtil extends DBUtil {
         return walletItem;
     }
 
-    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        addTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
-    public static void updateTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        updateTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
-    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem) {
-        deleteTokenFromWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
     public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
         walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH
                 , ConstantUtil.ETH));
@@ -55,10 +43,6 @@ public class DBWalletUtil extends DBUtil {
             }
         }
         return walletItem;
-    }
-
-    public static boolean checkChainInCurrentWallet(Context context, ChainItem chainItem) {
-        return checkChainInWallet(getWallet(context, SharePrefUtil.getCurrentWalletName()), chainItem) == -1 ? false : true;
     }
 
     public static void saveChainInCurrentWallet(Context context, ChainItem chainItem) {
@@ -114,15 +98,6 @@ public class DBWalletUtil extends DBUtil {
         return -1;
     }
 
-    public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
-        WalletItem walletItem = getCurrentWallet(context);
-        for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(symbol)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private static int checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
         for (int i = 0; i < walletItem.chainItems.size(); i++) {
