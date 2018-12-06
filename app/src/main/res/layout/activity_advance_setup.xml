@@ -206,7 +206,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:visibility="gone"
-                    android:background="@color/line_input"/>
+                    android:background="@color/colorPrimary"/>
             </LinearLayout>
 
         </RelativeLayout>
@@ -214,11 +214,10 @@
         <TextView
             android:id="@+id/advance_setup_pay_data"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="match_parent"
             android:padding="10dp"
             android:scrollbars="vertical"
-            android:fadeScrollbars="false"
-            android:lines="60"
+            android:singleLine="false"
             android:textSize="15sp"
             android:textColor="@color/font_title"/>
 

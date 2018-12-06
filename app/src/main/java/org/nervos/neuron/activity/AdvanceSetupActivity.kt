@@ -7,14 +7,12 @@ import android.view.View
 import org.nervos.neuron.R
 
 import kotlinx.android.synthetic.main.activity_advance_setup.*
-import kotlinx.android.synthetic.main.activity_transaction_detail.*
 import org.nervos.neuron.item.transaction.TransactionInfo
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
-import org.nervos.neuron.util.HexUtils
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBChainUtil
 import org.web3j.utils.Numeric
@@ -48,6 +46,7 @@ class AdvanceSetupActivity : NBaseActivity() {
                 if (mTransactionInfo!!.isEthereum) NumberUtil.hexToDecimal(mTransactionInfo!!.gasLimit)
                 else mTransactionInfo!!.quota.toString())
         edit_advance_setup_gas_price.isEnabled = mTransactionInfo!!.isEthereum
+        advance_setup_pay_data.movementMethod = ScrollingMovementMethod.getInstance()
         advance_setup_pay_data.text = mTransactionInfo!!.data
 
         initFeeInfo()
@@ -60,7 +59,6 @@ class AdvanceSetupActivity : NBaseActivity() {
         advance_setup_sign_hex_layout.setOnClickListener {
             advance_setup_pay_data_left_line.visibility = View.VISIBLE
             advance_setup_pay_data_right_line.visibility = View.GONE
-            advance_setup_pay_data.movementMethod = ScrollingMovementMethod.getInstance()
             advance_setup_pay_data.text = mTransactionInfo!!.data
         }
 

@@ -51,6 +51,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private TransferDialog mTransferDialog;
     private String mEthDefaultPrice;
     private ChainItem mChainItem;
+    private Double mQuota;
 
     @Override
     protected int getContentLayout() {
@@ -202,10 +203,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @Override
             public void onNext(String price) {
                 super.onNext(price);
-                Double quota = NumberUtil.getEthFromWei(mTransactionInfo.getQuota().multiply(new BigInteger(price)));
+                mQuota = NumberUtil.getEthFromWei(mTransactionInfo.getQuota().multiply(new BigInteger(price)));
                 mTvTotalFee.setText(String.format("%s %s",
-                        NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue() + quota), getNativeToken()));
-                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(quota), getNativeToken()));
+                        NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue() + mQuota), getNativeToken()));
+                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(mQuota), getNativeToken()));
             }
         });
     }
@@ -241,7 +242,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         });
 
         String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()
-                ? mTransactionInfo.getGas() : mTransactionInfo.getDoubleQuota()) + getNativeToken();
+                ? mTransactionInfo.getGas() : mQuota) + getNativeToken();
 
         mTransferDialog.setConfirmData(mWalletItem.address, mTransactionInfo.to,
                 NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()) + getNativeToken(), fee);
