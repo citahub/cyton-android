@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,11 +19,9 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.view.dialog.DAppAdvanceSetupDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -97,17 +94,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
         mTvReceiverAddress.setText(mTransactionInfo.to);
         mTvReceiverName.setText(mAppItem.name);
-
-        if (mTransactionInfo.isEthereum()) {
-            mTvPayFeeTitle.setText(R.string.gas_fee);
-        } else {
-            mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
-                    mTransactionInfo.getDoubleValue() + mTransactionInfo.getDoubleQuota())
-                    + getNativeToken());
-            mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleQuota())
-                    + getNativeToken());
-            mTvPayFeeTitle.setText(R.string.quota_fee);
-        }
+        mTvPayFeeTitle.setText(mTransactionInfo.isEthereum() ? R.string.gas_fee : R.string.quota_fee);
     }
 
     @Override
@@ -142,6 +129,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             }
 
             setEthGasPrice();
+        } else {
+            getQuotaPrice();
         }
     }
 
@@ -206,6 +195,19 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         }
                     }
                 });
+    }
+
+    private void getQuotaPrice() {
+        AppChainRpcService.getQuotaPrice(mWalletItem.address).subscribe(new NeuronSubscriber<String>() {
+            @Override
+            public void onNext(String price) {
+                super.onNext(price);
+                Double quota = NumberUtil.getEthFromWei(mTransactionInfo.getQuota().multiply(new BigInteger(price)));
+                mTvTotalFee.setText(String.format("%s %s",
+                        NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue() + quota), getNativeToken()));
+                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(quota), getNativeToken()));
+            }
+        });
     }
 
     private void initBalance() {
@@ -413,6 +415,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
                         updateView();
                         setEthGasPrice();
+                        getQuotaPrice();
                         break;
                     default:
                         break;
