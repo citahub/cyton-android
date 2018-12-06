@@ -137,6 +137,7 @@
         android:layout_marginEnd="@dimen/default_margin"/>
 
     <TextView
+        android:id="@+id/advance_setup_data_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/transaction_data"
@@ -149,7 +150,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
@@ -215,12 +216,13 @@
         </RelativeLayout>
 
         <ScrollView
+            android:id="@+id/advance_setup_pay_data_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="120dp">
             <EditText
                 android:id="@+id/advance_setup_pay_data"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:hint="@string/input_hex_data"
                 android:padding="10dp"
                 android:background="@null"
@@ -234,6 +236,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/advance_setup_data_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin"

@@ -282,7 +282,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                             ? ConstantUtil.QUOTA_TOKEN.toString() : ConstantUtil.QUOTA_ERC20.toString());
                 }
                 intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_TRANSACTION);
             }
         });
     }

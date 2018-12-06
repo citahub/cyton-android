@@ -51,8 +51,8 @@ class AdvanceSetupActivity : NBaseActivity() {
             advance_setup_gas_price_label.setText(R.string.gas_price)
             advance_setup_gas_fee_label.setText(R.string.gas_fee)
         } else {
-            advance_setup_gas_limit_label.setText(R.string.gas_limit)
-            advance_setup_gas_price_label.setText(R.string.gas_price)
+            advance_setup_gas_limit_label.setText(R.string.quota_limit)
+            advance_setup_gas_price_label.setText(R.string.quota_price)
             advance_setup_gas_fee_label.setText(R.string.quota_fee)
         }
 
@@ -64,7 +64,7 @@ class AdvanceSetupActivity : NBaseActivity() {
         edit_advance_setup_gas_price.isEnabled = mTransactionInfo!!.isEthereum
         if (isTransfer) {
             advance_setup_data_layout.visibility = View.GONE
-            advance_setup_pay_data.visibility = if (isNativeToken) View.VISIBLE else View.GONE
+            hideDataLayout()
         } else {
             advance_setup_pay_data.isEnabled = false
             advance_setup_pay_data.hint = ""
@@ -72,6 +72,13 @@ class AdvanceSetupActivity : NBaseActivity() {
         advance_setup_pay_data.setText(mTransactionInfo!!.data)
 
         initFeeInfo()
+    }
+
+    private fun hideDataLayout() {
+        var hide = if (isNativeToken) View.VISIBLE else View.GONE
+        advance_setup_pay_data_layout.visibility = hide
+        advance_setup_data_tip.visibility = hide
+        advance_setup_data_warning.visibility = hide
     }
 
     override fun initData() {
@@ -95,6 +102,12 @@ class AdvanceSetupActivity : NBaseActivity() {
         advance_setup_confirm.setOnClickListener {
             if (mTransactionInfo!!.isEthereum && edit_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
                 Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (isTransfer && isNativeToken) {
+                if (!TextUtils.isEmpty(advance_setup_pay_data.text.toString().trim())) {
+                    mTransactionInfo!!.data = advance_setup_pay_data.text.toString().trim()
+                }
             }
             if (mTransactionInfo!!.isEthereum) {
                 mTransactionInfo!!.gasLimit = BigInteger(edit_advance_setup_gas_limit.text.toString().trim())
