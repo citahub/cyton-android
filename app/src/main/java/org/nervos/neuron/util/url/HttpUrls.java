@@ -32,4 +32,12 @@ public class HttpUrls {
     public static final String TOKEN_ERC20_DETAIL = "https://ntp.staging.cryptape.com?token=%s";
     public static final String TOKEN_DETAIL = "https://ntp.staging.cryptape.com?coin=%s";
 
+    //Eth Transaction Detail
+    public static final String ETH_MAINNET_TRANSACTION_DETAIL = "https://etherscan.io/tx/%s";
+    public static final String ETH_RINKEBY_TRANSACTION_DETAIL = "https://rinkeby.etherscan.io/tx/%s";
+    public static final String ETH_ROPSTEN_TRANSACTION_DETAIL = "https://ropsten.etherscan.io/tx/%s";
+    public static final String ETH_KOVAN_TRANSACTION_DETAIL = "https://kovan.etherscan.io/tx/%s";
+
+    //AppChain Transaction Detail
+    public static final String APPCHAIN_TEST_TRANSACTION_DETAIL = "http://microscope.cryptape.com/#/transaction/%s";
 }

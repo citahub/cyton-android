@@ -17,7 +17,6 @@ import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPrese
 import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
@@ -31,6 +30,7 @@ import java.util.List;
 public class TransactionListActivity extends NBaseActivity {
 
     public static final String TRANSACTION_TOKEN = "TRANSACTION_TOKEN";
+    public static final String TRANSACTION_STATUS = "TRANSACTION_STATUS";
 
     private List<TransactionResponse> transactionResponseList = new ArrayList<>();
     private WalletItem walletItem;
@@ -116,12 +116,11 @@ public class TransactionListActivity extends NBaseActivity {
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
             TransactionResponse response = transactionResponseList.get(position);
-            if (response.status != TransactionItem.PENDING) {
-                Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
-                intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, response);
-                intent.putExtra(TRANSACTION_TOKEN, tokenItem);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
+            intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, response);
+            intent.putExtra(TRANSACTION_TOKEN, tokenItem);
+            intent.putExtra(TRANSACTION_STATUS, response.status);
+            startActivity(intent);
         });
     }
 

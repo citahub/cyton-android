@@ -1,7 +1,6 @@
 package org.nervos.neuron.activity
 
 import android.annotation.SuppressLint
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -18,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_token_manage.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.event.AddTokenRefreshEvent
-import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -80,6 +78,7 @@ class TokenManageActivity : NBaseActivity() {
 
     private fun startDrag() {
         mTitleBar.rightText = resources.getString(R.string.finish)
+        mTitleBar.setRightTextColor(R.color.font_link)
         mTitleBar.setLeftText(resources.getString(R.string.cancel))
         mTokenListNoDragged = copyList(mTokenList)
         mAdapter.notifyDataSetChanged()
@@ -88,6 +87,7 @@ class TokenManageActivity : NBaseActivity() {
     private fun finishDrag() {
         mTitleBar.setLeftImage(R.drawable.black_back)
         mTitleBar.rightText = resources.getString(R.string.edit)
+        mTitleBar.setRightTextColor(R.color.font_title_second)
         mAdapter.notifyDataSetChanged()
     }
 
