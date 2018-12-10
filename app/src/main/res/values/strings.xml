@@ -524,4 +524,5 @@
     <string name="appchain_node">节点地址</string>
     <string name="no_more_transaction_data">没有更多交易数据了</string>
     <string name="approximate">≈</string>
+    <string name="mnemonic_auth_fail">助记词验证失败</string>
 </resources>

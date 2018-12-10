@@ -499,6 +499,8 @@ Nervos foundation\n
     <string name="local_currency">Local Currency</string>
     <string name="blockchain">Blockchain</string>
     <string name="contract_address">Contract Address</string>
+    <string name="appchain_node">Node Url</string>
     <string name="no_more_transaction_data">No more transaction data</string>
     <string name="approximate">≈</string>
+    <string name="mnemonic_auth_fail">Mnemonic verify fail</string>
 </resources>

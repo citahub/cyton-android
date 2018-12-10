@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/tv_token_warning"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:background="@color/warning_background"
         android:drawableStart="@drawable/warning"
@@ -25,6 +25,8 @@
         android:gravity="center_vertical"
         android:paddingStart="@dimen/default_margin"
         android:paddingEnd="@dimen/default_margin"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
         android:text="@string/token_warning_message"
         android:textColor="@color/warning_font"
         android:textSize="12sp"
