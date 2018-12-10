@@ -174,7 +174,7 @@ public class AppChainRpcService {
                         } else {
                             saveLocalTransaction(context, walletItem.address, address, String.valueOf(value),
                                     validUntilBlock.longValue(), chainId.toString(), tokenItem.contractAddress,
-                                    appSendTransaction.getSendTransactionResult().getHash());
+                                    appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
                         }
                         return Observable.just(appSendTransaction);
                     } catch (Exception e) {
@@ -209,7 +209,7 @@ public class AppChainRpcService {
                         } else {
                             saveLocalTransaction(context, walletItem.address, toAddress, String.valueOf(value),
                                     validUntilBlock.longValue(), chainId.toString(), "",
-                                    appSendTransaction.getSendTransactionResult().getHash());
+                                    appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
                         }
                         return Observable.just(appSendTransaction);
                     } catch (Exception e) {
@@ -231,18 +231,18 @@ public class AppChainRpcService {
 
 
     private static void saveLocalTransaction(Context context, String from, String to, String value,
-                                             long validUntilBlock, String chainId, String contractAddress, String hash) {
+                                             long validUntilBlock, String chainId, String contractAddress, String hash, String limit) {
         executorService.execute(() -> {
             String chainName = Objects.requireNonNull(DBWalletUtil.getChainItemFromCurrentWallet(context, chainId)).name;
             TransactionItem item = new TransactionItem(from, to, value, chainId, chainName,
                     TransactionItem.PENDING, System.currentTimeMillis(), hash);
+            item.gasUsed = NumberUtil.decimalToHex(limit);
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
             DBAppChainTransactionsUtil.save(context, item);
         });
 
     }
-
 
     public static TransactionReceipt getTransactionReceipt(String hash) {
         try {

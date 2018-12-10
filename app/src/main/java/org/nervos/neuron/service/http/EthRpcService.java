@@ -123,12 +123,14 @@ public class EthRpcService {
     public static Observable<EthSendTransaction> transferEth(Context context, String address, String value, BigInteger gasPrice,
                                                              BigInteger gasLimit, String data, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_LIMIT : gasLimit;
+        BigInteger finalGasLimit = gasLimit;
         return signRawTransaction(address, data == null ? "" : data, NumberUtil.getWeiFromEth(value), gasPrice, gasLimit, password)
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) hexValue -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(hexValue).sendAsync().get();
                         if (!ethSendTransaction.hasError()) {
-                            saveEtherTransaction(context, walletItem.address, address, value, ethSendTransaction.getTransactionHash());
+                            saveEtherTransaction(context, walletItem.address, address, value, ethSendTransaction.getTransactionHash(),
+                                    gasPrice.toString(), finalGasLimit.toString());
                         }
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
@@ -140,11 +142,13 @@ public class EthRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static void saveEtherTransaction(Context context, String from, String to, String value, String hash) {
+    private static void saveEtherTransaction(Context context, String from, String to, String value, String hash, String price, String limit) {
         executorService.execute(() -> {
             TransactionItem item = new TransactionItem(from, to, value, EtherUtil.getEtherId(),
                     EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
             item.blockNumber = EthRpcService.getBlockNumber().toString();
+            item.gasPrice = price;
+            item.gasUsed = limit;
             DBEtherTransactionUtil.save(context, item);
         });
     }
@@ -206,13 +210,14 @@ public class EthRpcService {
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_ERC20_LIMIT : gasLimit;
         String data = createTokenTransferData(address, createTransferValue(tokenItem, value));
+        BigInteger finalGasLimit = gasLimit;
         return signRawTransaction(tokenItem.contractAddress, data, gasPrice, gasLimit, password)
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
                         if (!ethSendTransaction.hasError()) {
                             saveEtherERC20Transaction(context, tokenItem, walletItem.address, address,
-                                    value, ethSendTransaction.getTransactionHash());
+                                    value, ethSendTransaction.getTransactionHash(), gasPrice.toString(), finalGasLimit.toString());
                         }
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
@@ -224,7 +229,7 @@ public class EthRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static void saveEtherERC20Transaction(Context context, TokenItem tokenItem, String from, String to, String value, String hash) {
+    private static void saveEtherERC20Transaction(Context context, TokenItem tokenItem, String from, String to, String value, String hash, String price, String limit) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -232,6 +237,8 @@ public class EthRpcService {
                         EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
                 item.blockNumber = EthRpcService.getBlockNumber().toString();
                 item.contractAddress = tokenItem.contractAddress;
+                item.gasUsed = limit;
+                item.gasPrice = price;
                 DBEtherTransactionUtil.save(context, item);
             }
         });

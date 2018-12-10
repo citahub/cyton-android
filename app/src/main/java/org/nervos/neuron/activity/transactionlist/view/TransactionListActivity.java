@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.ReceiveQrCodeActivity;
@@ -15,6 +17,7 @@ import org.nervos.neuron.activity.TransactionDetailActivity;
 import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
 import org.nervos.neuron.activity.transfer.TransferActivity;
+import org.nervos.neuron.event.TransferPushEvent;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionResponse;
@@ -95,6 +98,12 @@ public class TransactionListActivity extends NBaseActivity {
             mPage = 0;
             presenter.getTransactionList(mPage);
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTransferPush(TransferPushEvent event) {
+        mPage = 0;
+        presenter.getTransactionList(mPage);
     }
 
     private void initAdapter() {

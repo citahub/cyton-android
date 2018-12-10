@@ -2,15 +2,12 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.neuron.item.transaction.TransactionItem;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import org.nervos.neuron.util.db.DBEtherTransactionUtil;
+import rx.Observable;
 
 import java.math.BigInteger;
-
-import rx.Observable;
 
 /**
  * Created by BaojunCZ on 2018/10/11.
