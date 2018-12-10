@@ -85,7 +85,7 @@
     <string name="password_fail">密码错误</string>
     <string name="operation_success">操作已提交</string>
     <string name="operation_fail">操作失败</string>
-    <string name="transfer_success">转账成功</string>
+    <string name="transfer_success">交易打包中，请稍后确认交易～</string>
     <string name="transfer_fail">转账失败</string>
     <string name="input_gas_price">请输入Gas Price</string>
     <string name="input_gas_limit">请输入Gas Limit</string>

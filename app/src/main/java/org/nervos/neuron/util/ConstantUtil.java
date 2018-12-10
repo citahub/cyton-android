@@ -35,7 +35,7 @@ public class ConstantUtil {
     // AppChain Constant
     public static final String QUOTA_PRICE_DEFAULT = "1";
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
-    public static final BigInteger QUOTA_ERC20 = new BigInteger("100000");
+    public static final BigInteger QUOTA_ERC20 = new BigInteger("200000");
 
     public static final String CMB_CHAIN_ID = "2";
     public static final String CMB_CHAIN_NAME = "mba-testnet";
