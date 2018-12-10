@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
@@ -18,13 +17,14 @@
             android:layout_alignParentTop="true"
             app:isShowBottomLine="false"
             app:isShowLeft="true"
-            app:isShowRight="false"
+            app:isShowRight="true"
             app:right_img="@drawable/ic_share"
             app:title="@string/title_receive_qrcode"
             app:title_bg="@color/white"
             app:title_color="@color/font_title" />
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/rl_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
