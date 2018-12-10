@@ -104,6 +104,10 @@ class AdvanceSetupActivity : NBaseActivity() {
                 Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if (BigInteger.valueOf(et_advance_setup_gas_limit.text.toString().trim().toLong()) < ConstantUtil.GAS_LIMIT) {
+                Toast.makeText(mActivity, R.string.gas_limit_too_low, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (isTransfer && isNativeToken) {
                 if (!TextUtils.isEmpty(et_advance_setup_pay_data.text.toString().trim())) {
                     mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString().trim()
