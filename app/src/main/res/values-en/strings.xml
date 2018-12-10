@@ -7,7 +7,10 @@
     <string name="select_wallet_unlock">Select Wallet</string>
     <string name="title_add_token">Add</string>
     <string name="add_wallet">Import Wallet</string>
+    <string name="manage_token_list">List Setting</string>
     <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="finish">Finish</string>
     <string name="title_token_management">ERC20</string>
     <string name="title_receive_qrcode">Receive</string>
     <string name="backup_mnemonic">Your Mnemonic Phrase</string>
@@ -84,6 +87,8 @@
     <string name="operation_fail">Operation failed</string>
     <string name="transfer_success">Success</string>
     <string name="transfer_fail">Failed</string>
+    <string name="input_gas_price">Please input Gas Price</string>
+    <string name="input_gas_limit">Please input Gas Limit</string>
     <string name="copy">Copy</string>
     <string name="share">Share</string>
     <string name="wallet_title">Wallet</string>
@@ -164,10 +169,10 @@
     <string name="have_known">Got it</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
     <string name="contract_address_error">Incorrect Contract address</string>
+    <string name="appchain_node_error">Please input correct node url</string>
     <string name="input_receive_address_hint">Please enter recipient Address</string>
     <string name="fee_value">Miner Fee</string>
     <string name="advanced_setup">Advanced</string>
-    <string name="gas_price">Gas Price</string>
     <string name="gas_fee">Gas Fee</string>
     <string name="quota_fee">Quota Fee</string>
     <string name="total_price">Total Fee</string>
@@ -204,16 +209,21 @@
     <string name="dapp_title">ÐApp</string>
     <string name="import_keystore_error">Import Keystore fail, please input again</string>
     <string name="qrcode_receive_tips">Please do not deposit any digital assets other than ETH and AppChain to above address</string>
-
+    <string name="appchain_native_token">AppChain Native Token</string>
 
     <string name="transaction_network">Network：</string>
     <string name="transaction_receiver">To：</string>
     <string name="transaction_sender">From：</string>
+    <string name="go_to_microscope_tips">Go to microscope to visit more information</string>
     <string name="transaction_gas">Miner Fee：</string>
     <string name="transaction_gas_price">Gas Price：</string>
+    <string name="transaction_quota_price">Quota Prices</string>
     <string name="transaction_number">TxID：</string>
     <string name="transaction_blockchain_no">Block：</string>
     <string name="transaction_blockchain_time">TimeStamp：</string>
+    <string name="transaction_detail_status_success">completed</string>
+    <string name="transaction_detail_status_pending">in transaction</string>
+    <string name="transaction_detail_status_fail">failed</string>
     <string name="finger_print_des">Use Touch ID</string>
     <string name="finger_print_other_login">Other authentication</string>
     <string name="fingerprint_lock_failed">Touch ID Failed</string>
@@ -232,6 +242,8 @@
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
     <string name="input_erc20_address">Enter token contract</string>
+    <string name="input_appchain_node">Please input AppChain node url</string>
+    <string name="token_title">Token information</string>
     <string name="token_name_hint">Token Name</string>
     <string name="token_symbol_hint">Token Symbol</string>
     <string name="token_decimal_hint">Decimal</string>
@@ -503,4 +515,6 @@ Nervos foundation\n
     <string name="no_more_transaction_data">No more transaction data</string>
     <string name="approximate">≈</string>
     <string name="mnemonic_auth_fail">Mnemonic verify fail</string>
+    <string name="gas_limit">Gas Limit</string>
+    <string name="gas_price">Gas Price</string>
 </resources>
