@@ -26,7 +26,10 @@ public class DBUtil {
     }
 
     static DB openDB(Context context, String dbName) throws SnappydbException {
-        return DBFactory.open(context, dbName, kryo);
+        if (db == null || !db.isOpen()) {
+            db = DBFactory.open(context, dbName, kryo);
+        }
+        return db;
     }
 
     static String getDbKey(String origin) {
