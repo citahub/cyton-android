@@ -160,9 +160,11 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             List<WalletItem> walletItems = new ArrayList<>();
             try {
-                db = openDB(context);
-                walletItems = Arrays.asList(db.getObjectArray(DB_PREFIX, WalletItem.class));
-                db.close();
+                db = openDB(context, DB_WALLET);
+                String[] keys = db.findKeys(DB_PREFIX);
+                for (String key : keys) {
+                    walletItems.add(db.getObject(key, WalletItem.class));
+                }
                 compare(walletItems);
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -324,6 +326,7 @@ public class DBWalletUtil extends DBUtil {
         kryo.register(WalletItem.class);
         kryo.register(ChainItem.class);
         kryo.register(TokenItem.class);
+        kryo.register(List.class);
         return db;
     }
 
