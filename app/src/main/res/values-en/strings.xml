@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Neuron</string>
     <string name="transfer_button">Send</string>
-    <string name="token_transfer_value">Amout to Send</string>
+    <string name="token_transfer_value">Amount to Send</string>
     <string name="cancel">Cancel</string>
     <string name="setting">Settings</string>
     <string name="select_wallet_unlock">Select Wallet</string>
@@ -85,8 +85,8 @@
     <string name="password_fail">Incorrect Password</string>
     <string name="operation_success">Operation submitted</string>
     <string name="operation_fail">Operation failed</string>
-    <string name="transfer_success">Success</string>
-    <string name="transfer_fail">Failed</string>
+    <string name="transfer_success">The transaction is in progress, please confirm the transaction later</string>
+    <string name="transfer_fail">Transfer Failed</string>
     <string name="input_gas_price">Please input Gas Price</string>
     <string name="input_gas_limit">Please input Gas Limit</string>
     <string name="copy">Copy</string>
@@ -199,6 +199,7 @@
     <string name="contract_create">"Contract Created"</string>
     <string name="empty_collect">No Collectives Found</string>
     <string name="gas_too_low">Gas Price too low, Please set above the recommended gas</string>
+    <string name="gas_limit_too_low">Gas Limit too low, Please set reasonable value</string>
     <string name="about_blank">about:blank</string>
 
     <string name="token">Token</string>
@@ -214,7 +215,7 @@
     <string name="transaction_network">Network：</string>
     <string name="transaction_receiver">To：</string>
     <string name="transaction_sender">From：</string>
-    <string name="go_to_microscope_tips">Go to microscope to visit more information</string>
+    <string name="go_to_microscope_tips">Go to block browser to visit more information</string>
     <string name="transaction_gas">Miner Fee：</string>
     <string name="transaction_gas_price">Gas Price：</string>
     <string name="transaction_quota_price">Quota Prices</string>
@@ -517,4 +518,10 @@ Nervos foundation\n
     <string name="mnemonic_auth_fail">Mnemonic verify fail</string>
     <string name="gas_limit">Gas Limit</string>
     <string name="gas_price">Gas Price</string>
+    <string name="quota_limit">Quota Limit</string>
+    <string name="quota_price">Quota Price</string>
+    <string name="gas">Gas</string>
+    <string name="gwei">GWei</string>
+    <string name="advance_set_warning">数据将上传至区块链，您的数据安全将得到一百分保障！</string>
+    <string name="input_hex_data">Please input hex data</string>
 </resources>

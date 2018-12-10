@@ -85,7 +85,7 @@
     <string name="password_fail">密码错误</string>
     <string name="operation_success">操作已提交</string>
     <string name="operation_fail">操作失败</string>
-    <string name="transfer_success">转账成功</string>
+    <string name="transfer_success">交易打包中，请稍后确认交易～</string>
     <string name="transfer_fail">转账失败</string>
     <string name="input_gas_price">请输入Gas Price</string>
     <string name="input_gas_limit">请输入Gas Limit</string>
@@ -520,7 +520,8 @@
     <string name="gas_fee_sum_value">≈ Gas Limit(%1$s)*Gas Price(%2$s)</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">请输入正确的GasPrice</string>
-    <string name="gas_price_too_low">您的GasPrice设置过低，建议输入推荐值以快速转账</string>
+    <string name="gas_price_too_low">您的Gas Price设置过低，建议输入推荐值以快速转账</string>
+    <string name="gas_limit_too_low">您的Gas Limit设置过低，建议输入推荐值以快速转账</string>
     <string name="balance_more_gas">请确保账户剩余%s高于矿工费用，以便顺利完成转账～</string>
     <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
     <string name="transaction_data">包含数据</string>
