@@ -9,6 +9,7 @@ import org.nervos.appchain.protocol.http.HttpService
 import org.nervos.neuron.R
 import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.EthRpcService
 import org.nervos.neuron.util.AddressUtil

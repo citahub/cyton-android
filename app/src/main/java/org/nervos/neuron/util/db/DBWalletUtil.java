@@ -2,6 +2,10 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.LinearLayout;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.snappydb.DB;
 import com.snappydb.SnappydbException;
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
@@ -32,18 +36,6 @@ public class DBWalletUtil extends DBUtil {
         return walletItem;
     }
 
-    public static void addTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        addTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
-    public static void updateTokenToCurrentWallet(Context context, TokenItem tokenItem) {
-        updateTokenToWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
-    public static void deleteTokenFromCurrentWallet(Context context, TokenItem tokenItem) {
-        deleteTokenFromWallet(context, SharePrefUtil.getCurrentWalletName(), tokenItem);
-    }
-
     public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
         walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH
                 , ConstantUtil.ETH));
@@ -55,10 +47,6 @@ public class DBWalletUtil extends DBUtil {
             }
         }
         return walletItem;
-    }
-
-    public static boolean checkChainInCurrentWallet(Context context, ChainItem chainItem) {
-        return checkChainInWallet(getWallet(context, SharePrefUtil.getCurrentWalletName()), chainItem) == -1 ? false : true;
     }
 
     public static void saveChainInCurrentWallet(Context context, ChainItem chainItem) {
@@ -74,7 +62,7 @@ public class DBWalletUtil extends DBUtil {
     public static boolean checkWalletName(Context context, String name) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 boolean isKeyExist = db.exists(getDbKey(name));
                 db.close();
                 return isKeyExist;
@@ -87,17 +75,15 @@ public class DBWalletUtil extends DBUtil {
 
     public static boolean checkWalletAddress(Context context, String address) {
         synchronized (dbObject) {
-            boolean isKeyExist = false;
             try {
-                db = openDB(context, DB_WALLET);
-                List<String> names = getAllWalletName(context);
-                for (String name : names) {
-                    WalletItem walletItem = getWallet(context, name);
-                    isKeyExist = (walletItem != null && walletItem.address.equalsIgnoreCase(address));
-                    if (isKeyExist) return true;
+                db = openDB(context);
+                List<WalletItem> walletItemList = getAllWallet(context);
+                for (WalletItem item : walletItemList) {
+                    if (item != null && item.address.equalsIgnoreCase(address)) {
+                        return true;
+                    }
                 }
                 db.close();
-                return false;
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
@@ -107,22 +93,14 @@ public class DBWalletUtil extends DBUtil {
 
     private static int checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (int i = 0; i < walletItem.tokenItems.size(); i++) {
-            if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol) && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
+            if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
+                    && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static boolean checkTokenInCurrentWallet(Context context, String symbol) {
-        WalletItem walletItem = getCurrentWallet(context);
-        for (TokenItem token : walletItem.tokenItems) {
-            if (token.symbol.equals(symbol)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private static int checkChainInWallet(WalletItem walletItem, ChainItem chainItem) {
         for (int i = 0; i < walletItem.chainItems.size(); i++) {
@@ -138,7 +116,7 @@ public class DBWalletUtil extends DBUtil {
     public static boolean updateWalletName(Context context, String name, String newName) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
                 db.del(getDbKey(name));
                 walletItem.name = newName;
@@ -153,30 +131,12 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static List<String> getAllWalletName(Context context) {
-        synchronized (dbObject) {
-            List<String> walletList = new ArrayList<>();
-            try {
-                db = openDB(context, DB_WALLET);
-                String[] keys = db.findKeys(DB_PREFIX);
-                List<WalletItem> walletItems = new ArrayList<>();
-                for (String key : keys) {
-                    walletItems.add(db.getObject(key, WalletItem.class));
-                }
-                db.close();
-                Collections.sort(walletItems, new Comparator<WalletItem>() {
-                    @Override
-                    public int compare(WalletItem o1, WalletItem o2) {
-                        return (int) (o2.timestamp - o1.timestamp);
-                    }
-                });
-                for (WalletItem walletItem : walletItems) {
-                    walletList.add(walletItem.name);
-                }
-            } catch (SnappydbException e) {
-                handleException(db, e);
-            }
-            return walletList;
+        List<String> walletList = new ArrayList<>();
+        List<WalletItem> walletItems = getAllWallet(context);
+        for (WalletItem walletItem : walletItems) {
+            walletList.add(walletItem.name);
         }
+        return walletList;
     }
 
     //==================================Wallet==============================================
@@ -185,7 +145,7 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             if (TextUtils.isEmpty(walletName)) return null;
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
                 db.close();
                 return walletItem;
@@ -200,18 +160,10 @@ public class DBWalletUtil extends DBUtil {
         synchronized (dbObject) {
             List<WalletItem> walletItems = new ArrayList<>();
             try {
-                db = openDB(context, DB_WALLET);
-                String[] keys = db.findKeys(DB_PREFIX);
-                for (String key : keys) {
-                    walletItems.add(db.getObject(key, WalletItem.class));
-                }
+                db = openDB(context);
+                walletItems = Arrays.asList(db.getObjectArray(DB_PREFIX, WalletItem.class));
                 db.close();
-                Collections.sort(walletItems, new Comparator<WalletItem>() {
-                    @Override
-                    public int compare(WalletItem o1, WalletItem o2) {
-                        return (int) (o2.timestamp - o1.timestamp);
-                    }
-                });
+                compare(walletItems);
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
@@ -222,7 +174,7 @@ public class DBWalletUtil extends DBUtil {
     public static void saveWallet(Context context, WalletItem walletItem) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 db.put(getDbKey(walletItem.name), walletItem);
                 db.close();
             } catch (SnappydbException e) {
@@ -234,7 +186,7 @@ public class DBWalletUtil extends DBUtil {
     public static boolean updateWalletPassword(Context context, String name, String oldPassword, String newPassword) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 WalletItem walletItem = db.getObject(getDbKey(name), WalletItem.class);
                 try {
                     WalletEntity walletEntity = WalletEntity.fromKeyStore(oldPassword, walletItem.keystore);
@@ -257,7 +209,7 @@ public class DBWalletUtil extends DBUtil {
     public static void deleteWallet(Context context, String name) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_WALLET);
+                db = openDB(context);
                 db.del(getDbKey(name));
                 db.close();
             } catch (SnappydbException e) {
@@ -299,13 +251,6 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static void addTokenToAllWallet(Context context, TokenItem tokenItem) {
-        List<String> walletNames = getAllWalletName(context);
-        for (String walletName : walletNames) {
-            addTokenToWallet(context, walletName, tokenItem);
-        }
-    }
-
     public static void deleteTokenFromWallet(Context context, String walletName, TokenItem tokenItem) {
         WalletItem walletItem = getWallet(context, walletName);
         if (walletItem != null) {
@@ -314,8 +259,7 @@ public class DBWalletUtil extends DBUtil {
             }
             Iterator<TokenItem> iterator = walletItem.tokenItems.iterator();
             while (iterator.hasNext()) {
-                TokenItem item = iterator.next();
-                if (tokenItem.symbol.equals(item.symbol)) {
+                if (tokenItem.symbol.equals(iterator.next().symbol)) {
                     iterator.remove();
                 }
             }
@@ -323,24 +267,8 @@ public class DBWalletUtil extends DBUtil {
         }
     }
 
-    public static List<TokenItem> getAllTokenFromWallet(Context context, String walletName) {
-        return Objects.requireNonNull(getWallet(context, walletName)).tokenItems;
-    }
-
     //================================Chain====================================
 
-    public static void saveChain(Context context, String walletName, ChainItem chainItem) {
-        WalletItem walletItem = getWallet(context, walletName);
-        if (walletItem != null) {
-            if (walletItem.tokenItems == null) {
-                walletItem.tokenItems = new ArrayList<>();
-            }
-            if (checkChainInWallet(walletItem, chainItem) == -1) {
-                walletItem.chainItems.add(chainItem);
-            }
-            saveWallet(context, walletItem);
-        }
-    }
 
     public static void saveChainAndToken(Context context, String walletName, ChainItem chainItem) {
         WalletItem walletItem = getWallet(context, walletName);
@@ -379,6 +307,24 @@ public class DBWalletUtil extends DBUtil {
             }
         }
         return null;
+    }
+
+    private static void compare(List<WalletItem> walletItems) {
+        Collections.sort(walletItems, new Comparator<WalletItem>() {
+            @Override
+            public int compare(WalletItem o1, WalletItem o2) {
+                return (int) (o2.timestamp - o1.timestamp);
+            }
+        });
+    }
+
+    private static DB openDB(Context context) throws SnappydbException {
+        db = openDB(context, DB_WALLET);
+        Kryo kryo = db.getKryoInstance();
+        kryo.register(WalletItem.class);
+        kryo.register(ChainItem.class);
+        kryo.register(TokenItem.class);
+        return db;
     }
 
 }
