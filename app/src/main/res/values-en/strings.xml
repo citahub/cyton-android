@@ -46,7 +46,7 @@
     <string name="input_password">Set Password</string>
     <string name="confirm_action">Confirm</string>
     <string name="confirm_transfer_action">Confirm</string>
-    <string name="input_app_website_hint">Explore the decentralized web</string>
+    <string name="input_app_website_hint">Please input the decentralized web url</string>
     <string name="import_mnemonic_path_err">Please input custom path</string>
 
     <string name="collection_id_place_holder">ID:%s</string>

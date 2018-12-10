@@ -103,7 +103,7 @@ public class TransferPresenter {
 
     private void initTokenItem() {
         mTokenItem = mActivity.getIntent().getParcelableExtra(EXTRA_TOKEN);
-        mTransferView.updateTitleData(mTokenItem.symbol + mActivity.getString(R.string.title_transfer));
+        mTransferView.updateTitleData(mTokenItem.symbol + " " + mActivity.getString(R.string.title_transfer));
     }
 
     private void initWalletData() {
