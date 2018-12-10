@@ -21,7 +21,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/advance_setup_gas_price_label"
+            android:id="@+id/tv_advance_setup_gas_price_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gas_price"
@@ -31,7 +31,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <TextView
-            android:id="@+id/advance_setup_price_unit"
+            android:id="@+id/tv_advance_setup_price_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -45,7 +45,7 @@
             android:layout_gravity="center_vertical"/>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_advance_setup_gas_price"
+            android:id="@+id/et_advance_setup_gas_price"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
@@ -53,8 +53,8 @@
             android:hint="@string/input_gas_price"
             android:inputType="numberDecimal"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_toEndOf="@id/advance_setup_gas_price_label"
-            android:layout_toStartOf="@id/advance_setup_price_unit"
+            android:layout_toEndOf="@id/tv_advance_setup_gas_price_label"
+            android:layout_toStartOf="@id/tv_advance_setup_price_unit"
             android:singleLine="true"
             android:textColor="@color/font_title"
             android:textSize="13sp" />
@@ -70,7 +70,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/advance_setup_gas_limit_label"
+            android:id="@+id/tv_advance_setup_gas_limit_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gas_limit"
@@ -80,7 +80,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edit_advance_setup_gas_limit"
+            android:id="@+id/et_advance_setup_gas_limit"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/white"
@@ -104,7 +104,7 @@
         android:layout_height="40dp"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/advance_setup_gas_fee_label"
+            android:id="@+id/tv_advance_setup_gas_fee_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gas_fee"
@@ -114,7 +114,7 @@
             android:layout_marginStart="@dimen/default_margin"/>
 
         <TextView
-            android:id="@+id/text_advance_setup_gas_fee"
+            android:id="@+id/tv_advance_setup_gas_fee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -127,7 +127,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_advance_setup_gas_fee_detail"
+        android:id="@+id/tv_advance_setup_gas_fee_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end|center_vertical"
@@ -137,7 +137,7 @@
         android:layout_marginEnd="@dimen/default_margin"/>
 
     <TextView
-        android:id="@+id/advance_setup_data_tip"
+        android:id="@+id/tv_advance_setup_data_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/transaction_data"
@@ -158,23 +158,23 @@
         android:background="@drawable/rectangle_border_gray_corner">
 
         <RelativeLayout
-            android:id="@+id/advance_setup_data_layout"
+            android:id="@+id/rl_advance_setup_data_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/rectangle_border_gray_corner">
 
             <View
-                android:id="@+id/advance_setup_pay_separate"
+                android:id="@+id/view_advance_setup_pay_separate"
                 android:layout_width="0.5dp"
                 android:layout_height="match_parent"
                 android:background="@color/line_input"
                 android:layout_centerInParent="true"/>
 
             <LinearLayout
-                android:id="@+id/advance_setup_sign_hex_layout"
+                android:id="@+id/ll_advance_setup_sign_hex_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toStartOf="@id/advance_setup_pay_separate"
+                android:layout_toStartOf="@id/view_advance_setup_pay_separate"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -185,17 +185,17 @@
                     android:textSize="15sp"/>
 
                 <View
-                    android:id="@+id/advance_setup_pay_data_left_line"
+                    android:id="@+id/view_advance_setup_pay_data_left_line"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:background="@color/colorPrimary"/>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/advance_setup_sign_utf8_layout"
+                android:id="@+id/ll_advance_setup_sign_utf8_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@id/advance_setup_pay_separate"
+                android:layout_toEndOf="@id/view_advance_setup_pay_separate"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -206,7 +206,7 @@
                     android:textSize="15sp"/>
 
                 <View
-                    android:id="@+id/advance_setup_pay_data_right_line"
+                    android:id="@+id/view_advance_setup_pay_data_right_line"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:visibility="gone"
@@ -216,11 +216,11 @@
         </RelativeLayout>
 
         <ScrollView
-            android:id="@+id/advance_setup_pay_data_layout"
+            android:id="@+id/sv_advance_setup_pay_data_layout"
             android:layout_width="match_parent"
             android:layout_height="120dp">
             <EditText
-                android:id="@+id/advance_setup_pay_data"
+                android:id="@+id/et_advance_setup_pay_data"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/input_hex_data"
@@ -236,7 +236,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/advance_setup_data_warning"
+        android:id="@+id/tv_advance_setup_data_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin"
@@ -247,7 +247,7 @@
         android:textSize="12sp"/>
 
     <org.nervos.neuron.view.button.CommonButton
-        android:id="@+id/advance_setup_confirm"
+        android:id="@+id/btn_advance_setup_confirm"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="40dp"
