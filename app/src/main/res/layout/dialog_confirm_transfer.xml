@@ -64,7 +64,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/transfer_to_address"
@@ -75,7 +75,6 @@
                 android:id="@+id/to_address"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/default_margin"
                 android:ellipsize="middle"
                 android:gravity="center_vertical"
                 android:singleLine="true"
@@ -97,7 +96,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/pay_wallet"
@@ -108,7 +107,6 @@
                 android:id="@+id/from_address"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/default_margin"
                 android:ellipsize="middle"
                 android:gravity="center_vertical"
                 android:singleLine="true"
@@ -128,7 +126,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/fee_value"
@@ -139,7 +137,6 @@
                 android:id="@+id/transfer_fee"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/default_margin"
                 android:ellipsize="middle"
                 android:gravity="center_vertical"
                 android:singleLine="true"

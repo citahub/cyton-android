@@ -12,7 +12,9 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             android:background="@color/warning_background"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/warning"

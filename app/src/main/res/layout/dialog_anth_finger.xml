@@ -5,8 +5,8 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="61dip"
-        android:layout_height="65dip"
+        android:layout_width="60dp"
+        android:layout_height="65dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:src="@drawable/ic_finger_print_logo" />
@@ -15,7 +15,9 @@
         android:id="@+id/tv_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dip"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
         android:gravity="center"
         android:text="@string/dialog_finger_msg"
         android:textColor="@color/font_title"
