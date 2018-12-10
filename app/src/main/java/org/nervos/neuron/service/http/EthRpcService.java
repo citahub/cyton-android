@@ -99,7 +99,7 @@ public class EthRpcService {
     public static Observable<BigInteger> getEthGasLimit(TransactionInfo transactionInfo) {
         String data = TextUtils.isEmpty(transactionInfo.data) ? "" : Numeric.prependHexPrefix(transactionInfo.data);
         Transaction transaction = new Transaction(walletItem.address, null, null, null,
-                Numeric.prependHexPrefix(transactionInfo.to), transactionInfo.getBigIntegerValue(), data);
+                transactionInfo.to, transactionInfo.getBigIntegerValue(), data);
         return Observable.fromCallable(() -> {
             try {
                 return service.ethEstimateGas(transaction).send().getAmountUsed();
@@ -201,25 +201,6 @@ public class EthRpcService {
         }).subscribeOn(Schedulers.io());
     }
 
-    public static Observable<Double> getERC20Balance(Web3j service, String contractAddress, String address) {
-        return Observable.fromCallable(new Callable<Double>() {
-            @Override
-            public Double call() throws Exception {
-                long decimal = getErc20Decimal(service, address, contractAddress);
-                Transaction balanceCall = Transaction.createEthCallTransaction(address, contractAddress,
-                        ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
-                String balanceOf = service.ethCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
-                if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
-                    initIntTypes();
-                    Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
-                    double balances = balance.getValue().doubleValue();
-                    if (decimal == 0) return balance.getValue().doubleValue();
-                    else return balances / (Math.pow(10, decimal));
-                }
-                return 0.0;
-            }
-        }).subscribeOn(Schedulers.io());
-    }
 
     public static Observable<EthSendTransaction> transferErc20(Context context, TokenItem tokenItem, String address, String value,
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
@@ -312,17 +293,6 @@ public class EthRpcService {
     }
 
     private static int getErc20Decimal(String address, String contractAddress) throws IOException {
-        Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.DECIMALS_HASH);
-        String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
-        if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
-            initIntTypes();
-            Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
-            return type.getValue().intValue();
-        }
-        return 0;
-    }
-
-    private static int getErc20Decimal(Web3j service, String address, String contractAddress) throws IOException {
         Transaction decimalsCall = Transaction.createEthCallTransaction(address, contractAddress, ConstantUtil.DECIMALS_HASH);
         String decimals = service.ethCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {

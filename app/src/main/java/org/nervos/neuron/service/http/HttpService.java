@@ -102,7 +102,7 @@ public class HttpService {
                             List<TransactionResponse> transactionRepons = response.result;
                             for (TransactionResponse item : transactionRepons) {
                                 item.chainName = ConstantUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.divideDecimal8Sub(
+                                item.value = (NumberUtil.divideDecimalSub(
                                         new BigDecimal(item.value), tokenItem.decimals));
                                 item.symbol = tokenItem.symbol;
                                 item.nativeSymbol = ConstantUtil.ETH;
@@ -175,7 +175,7 @@ public class HttpService {
                     AppChainERC20TransferResponse response = new Gson().fromJson(appChainCall.execute().body().string(),
                             AppChainERC20TransferResponse.class);
                     for (TransactionResponse item : response.result.transfers) {
-                        item.value = (NumberUtil.divideDecimal8Sub(
+                        item.value = (NumberUtil.divideDecimalSub(
                                 new BigDecimal(item.value), tokenItem.decimals));
                         item.symbol = tokenItem.symbol;
                         item.nativeSymbol = result.getTokenSymbol();

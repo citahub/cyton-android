@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,11 +19,9 @@ import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.view.dialog.DAppAdvanceSetupDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,6 +39,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     public static final String EXTRA_HEX_HASH = "extra_hex_hash";
     public static final String EXTRA_PAY_ERROR = "extra_pay_error";
+    private static final int REQUEST_CODE = 0x01;
     private static int ERROR_CODE = -1;
 
     private TransactionInfo mTransactionInfo;
@@ -52,8 +50,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
     private String mEthDefaultPrice;
-    private ImageView mIvArrow;
     private ChainItem mChainItem;
+    private Double mQuota;
 
     @Override
     protected int getContentLayout() {
@@ -72,7 +70,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverName = findViewById(R.id.tv_receriver_name);
         mTvReceiverWebsite = findViewById(R.id.tv_receiver_website);
         mTvReceiverAddress = findViewById(R.id.tv_receiver_address);
-        mIvArrow = findViewById(R.id.iv_right);
     }
 
     @Override
@@ -98,23 +95,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
         mTvReceiverAddress.setText(mTransactionInfo.to);
         mTvReceiverName.setText(mAppItem.name);
-        initTxFeeView();
-
-        if (mTransactionInfo.isEthereum()) {
-            mTvPayFeeTitle.setText(R.string.gas_fee);
-        } else {
-            mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
-                    mTransactionInfo.getDoubleValue() + mTransactionInfo.getDoubleQuota())
-                    + getNativeToken());
-            mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleQuota())
-                    + getNativeToken());
-            mTvPayFeeTitle.setText(R.string.quota_fee);
-        }
-    }
-
-    private void initTxFeeView() {
-        mIvArrow.setVisibility(mTransactionInfo.isEthereum() ? View.VISIBLE : View.INVISIBLE);
-        mTvPayFee.setEnabled(mTransactionInfo.isEthereum());
+        mTvPayFeeTitle.setText(mTransactionInfo.isEthereum() ? R.string.gas_fee : R.string.quota_fee);
     }
 
     @Override
@@ -138,17 +119,17 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         initBalance();
         if (mTransactionInfo.isEthereum()) {
             showProgressCircle();
-            if (TextUtils.isEmpty(mTransactionInfo.gasPrice)
-                    || "0".equals(mTransactionInfo.gasPrice)) {
+            if (TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasPrice())) {
                 getEtherGasPrice();
             }
 
-            if (TextUtils.isEmpty(mTransactionInfo.gasLimit)
-                    || "0".equals(mTransactionInfo.gasLimit)) {
+            if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasLimit())) {
                 getEtherGasLimit();
             }
 
             setEthGasPrice();
+        } else {
+            getQuotaPrice();
         }
     }
 
@@ -163,7 +144,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @Override
             public void onNext(BigInteger gasPrice) {
                 mEthDefaultPrice = gasPrice.toString(16);
-                mTransactionInfo.gasPrice = mEthDefaultPrice;
+                mTransactionInfo.setGasPrice(gasPrice);
                 setEthGasPrice();
             }
         });
@@ -174,14 +155,13 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
-                        mTransactionInfo.gasLimit = ConstantUtil.GAS_ERC20_LIMIT.toString(16);
+                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_ERC20_LIMIT);
                         setEthGasPrice();
                     }
 
-                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.gasLimit = gasLimit.multiply(ConstantUtil.GAS_LIMIT_PARAMETER).toString(16);
+                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_LIMIT_PARAMETER);
                         setEthGasPrice();
                     }
                 });
@@ -190,7 +170,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
         dismissProgressCircle();
-        if (TextUtils.isEmpty(mTransactionInfo.gasLimit) || TextUtils.isEmpty(mTransactionInfo.gasPrice)) return;
+        if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString())) {
+            return;
+        }
 
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
         mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
@@ -202,16 +184,29 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price)) return;
                         try {
-                            String mCurrencyPrice = NumberUtil.getDecimalValid_2(
+                            String currencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
                             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
-                                    mTransactionInfo.getGas()) + getNativeToken()
-                                    + "≈" + currencyItem.getSymbol() + mCurrencyPrice);
+                                            mTransactionInfo.getGas()) + getNativeToken()
+                                            + "≈" + currencyItem.getSymbol() + currencyPrice);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
                     }
                 });
+    }
+
+    private void getQuotaPrice() {
+        AppChainRpcService.getQuotaPrice(mWalletItem.address).subscribe(new NeuronSubscriber<String>() {
+            @Override
+            public void onNext(String price) {
+                super.onNext(price);
+                mQuota = NumberUtil.getEthFromWei(mTransactionInfo.getQuota().multiply(new BigInteger(price)));
+                mTvTotalFee.setText(String.format("%s %s",
+                        NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue() + mQuota), getNativeToken()));
+                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(mQuota), getNativeToken()));
+            }
+        });
     }
 
     private void initBalance() {
@@ -245,32 +240,32 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         });
 
         String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()
-                ? mTransactionInfo.getGas() : mTransactionInfo.getDoubleQuota()) + getNativeToken();
+                ? mTransactionInfo.getGas() : mQuota) + getNativeToken();
 
         mTransferDialog.setConfirmData(mWalletItem.address, mTransactionInfo.to,
                 NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()) + getNativeToken(), fee);
     }
 
     private void transferEth(String password, ProgressBar progressBar) {
-        Observable.just(mTransactionInfo.gasPrice)
-                .flatMap(new Func1<String, Observable<BigInteger>>() {
+        Observable.just(mTransactionInfo.getGasPrice())
+                .flatMap(new Func1<BigInteger, Observable<BigInteger>>() {
                     @Override
-                    public Observable<BigInteger> call(String gasPrice) {
-                        if (TextUtils.isEmpty(gasPrice) || "0".equals(gasPrice)) {
+                    public Observable<BigInteger> call(BigInteger gasPrice) {
+                        if (TextUtils.isEmpty(gasPrice.toString()) || BigInteger.ZERO.equals(gasPrice)) {
                             return EthRpcService.getEthGasPrice();
                         } else {
-                            return Observable.just(Numeric.toBigInt(gasPrice));
+                            return Observable.just(gasPrice);
                         }
                     }
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
-            @Override
-            public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
-                        mTransactionInfo.getStringValue(), gasPrice,
-                        Numeric.toBigInt(mTransactionInfo.gasLimit),
-                        mTransactionInfo.data, password);
-            }
-        }).subscribeOn(Schedulers.io())
+                    @Override
+                    public Observable<EthSendTransaction> call(BigInteger gasPrice) {
+                        return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
+                                mTransactionInfo.getStringValue(), gasPrice,
+                                mTransactionInfo.getGasLimit(),
+                                mTransactionInfo.data, password);
+                    }
+                }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
@@ -400,27 +395,29 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                     getConfirmTransferView();
                 break;
             case R.id.tv_gas_price:
-                String ethGasPriceDefaultValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mEthDefaultPrice).toString(), GWEI).doubleValue());
-                DAppAdvanceSetupDialog dialog = new DAppAdvanceSetupDialog(mActivity, new DAppAdvanceSetupDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick(View v, String gasPrice) {
-                        if (TextUtils.isEmpty(gasPrice)) {
-                            Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                        } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
-                            Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
-                        } else {
-                            mTransactionInfo.gasPrice = Convert.toWei(gasPrice, GWEI).toBigInteger().toString(16);
-                            setEthGasPrice();
-                        }
-                    }
-                });
-                dialog.setTransactionData(mTransactionInfo.data);
-                dialog.setGasPriceDefault(ethGasPriceDefaultValue);
-                String gasPriceValue = NumberUtil.getDecimalValid_2(
-                        Convert.fromWei(Numeric.toBigInt(mTransactionInfo.gasPrice).toString(), GWEI).doubleValue());
-                dialog.setGasFeeDefault(mTransactionInfo.gasLimit, gasPriceValue, mTransactionInfo.getGas());
-                dialog.show();
+                Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
+                startActivityForResult(intent, REQUEST_CODE);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE:
+                switch (resultCode) {
+                    case AdvanceSetupActivity.RESULT_TRANSACTION:
+                        mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
+                        updateView();
+                        initRemoteData();
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
                 break;

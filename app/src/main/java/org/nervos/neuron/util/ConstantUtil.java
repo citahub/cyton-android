@@ -47,6 +47,8 @@ public class ConstantUtil {
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 
 
+    public static final String TYPE_ETH = "ETH";
+    public static final String TYPE_APPCHAIN = "AppChain";
 
     // Ether Constant
     public static final String ETH = "ETH";

@@ -1,6 +1,5 @@
 package org.nervos.neuron.activity.transfer;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import com.yanzhenjie.permission.Permission;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
+import org.nervos.neuron.activity.AdvanceSetupActivity;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.item.transaction.TransactionInfo;
@@ -29,6 +29,9 @@ import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
+import org.nervos.neuron.util.SharePicUtils;
+import org.nervos.neuron.util.db.SharePrefUtil;
+import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
@@ -54,6 +57,7 @@ import static org.web3j.utils.Convert.Unit.GWEI;
 public class TransferActivity extends NBaseActivity implements TransferView {
 
     private static final int REQUEST_CODE_SCAN = 0x01;
+    private static final int REQUEST_CODE_TRANSACTION = 0x02;
     public static final String EXTRA_TOKEN = "extra_token";
     public static final String EXTRA_ADDRESS = "extra_address";
 
@@ -68,6 +72,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     private TitleBar titleBar;
     private TransferDialog transferDialog;
+    private TransactionInfo mTransactionInfo = new TransactionInfo();
 
     @Override
     protected int getContentLayout() {
@@ -152,9 +157,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     @Override
     public void initTransferFeeView() {
         feeValueText.setText(mPresenter.getTransferFee());
-        if (mPresenter.isNativeToken()) {
-            initAdvancedSetup();
-        }
+        initAdvancedSetup();
     }
 
     @Override
@@ -246,7 +249,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     private void updateTransferEditValue() {
-        if (isAddressOk && isValueOk && mPresenter.isEthERC20()) {
+        if (isAddressOk && isValueOk) {
             initAdvancedSetup();
             mPresenter.initGasLimit(getTransactionInfo());
         }
@@ -265,39 +268,29 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         feeValueText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initAdvancedSetupDialog();
-            }
-        });
-    }
-
-
-    /**
-     * handle transfer advanced setup
-     */
-    private void initAdvancedSetupDialog() {
-        String gasPriceDefaultValue = mPresenter.getEthGasDefaultPrice();
-        TransferAdvanceSetupDialog dialog = new TransferAdvanceSetupDialog(mActivity, new TransferAdvanceSetupDialog.OnOkClickListener() {
-            @Override
-            public void onOkClick(View v, String gasPrice) {
-                if (TextUtils.isEmpty(gasPrice)) {
-                    Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show();
-                } else if (Double.parseDouble(gasPrice) < ConstantUtil.MIN_GWEI) {
-                    Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_TRANSFER, true);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_NATIVE_TOKEN, mPresenter.isNativeToken());
+                if (mPresenter.isEther()) {
+                    mTransactionInfo.setGasLimit(mPresenter.getGasLimit());
+                    mTransactionInfo.setGasPrice(mPresenter.getEthGasDefaultPrice());
+                    mTransactionInfo.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
+                    mTransactionInfo.chainId = EtherUtil.getEtherId();
                 } else {
-                    mPresenter.updateGasInfo(Convert.toWei(gasPrice, GWEI).toBigInteger());
+                    mTransactionInfo.chainId = mPresenter.getTokenItem().getChainId();
+                    mTransactionInfo.setQuota(mPresenter.isNativeToken()
+                            ? ConstantUtil.QUOTA_TOKEN.toString() : ConstantUtil.QUOTA_ERC20.toString());
                 }
+                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
+                startActivityForResult(intent, REQUEST_CODE_TRANSACTION);
             }
         });
-        dialog.setGasPriceDefault(String.format(getString(R.string.default_eth_gas_price), gasPriceDefaultValue));
-        dialog.setGasLimitDefault(mPresenter.getGasLimit().toString());
-        dialog.show();
     }
 
 
     /**
      * show confirm transfer view
      */
-    @SuppressLint("SetTextI18n")
     private void getConfirmTransferView() {
         if (isFastDoubleClick()) return;
         String transferValue = transferValueEdit.getText().toString().trim();
@@ -405,8 +398,25 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                             Toast.LENGTH_LONG).show();
                 }
                 break;
+            case REQUEST_CODE_TRANSACTION:
+                switch (resultCode) {
+                    case AdvanceSetupActivity.RESULT_TRANSACTION:
+                        mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
+                        mPresenter.updateData(mTransactionInfo.data);
+                        if (mTransactionInfo.isEthereum()) {
+                            mPresenter.updateGasLimit(mTransactionInfo.getGasLimit());
+                            mPresenter.updateGasPrice(mTransactionInfo.getGasPrice());
+                        } else {
+                            mPresenter.updateQuotaLimit(mTransactionInfo.getQuota());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
     }
+
 }

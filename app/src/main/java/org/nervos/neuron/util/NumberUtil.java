@@ -47,7 +47,7 @@ public class NumberUtil {
         return getDecimal8ENotation(Double.parseDouble(value));
     }
 
-    public static String getDecimal2ENotation(String value){
+    public static String getDecimal2ENotation(String value) {
         Double price = java.lang.Double.parseDouble(value.trim());
         DecimalFormat df = new DecimalFormat("######0.00");
         return df.format(price);
@@ -155,6 +155,12 @@ public class NumberUtil {
         return result == null ? null : result.toString(10);
     }
 
+    @Nullable
+    public static String decimalToHex(@Nullable String value) {
+        BigInteger result = new BigInteger(value);
+        return Numeric.prependHexPrefix(result.toString(16));
+    }
+
     public static String utf8ToHex(String value) {
         byte[] bytes = new byte[0];
         try {
@@ -193,18 +199,21 @@ public class NumberUtil {
         return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.ETHER).toString();
     }
 
+    public static String getGWeiFromWeiForString(BigInteger num) {
+        return Convert.fromWei(num.toString(), Convert.Unit.GWEI).toString();
+    }
+
+    public static BigInteger getWeiFromGWeiForBigInt(double num) {
+        return Convert.toWei(BigDecimal.valueOf(num), Convert.Unit.GWEI).toBigInteger();
+    }
+
     public static double getEthFromWei(BigInteger value) {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
 
-    public static String divideDecimal8Sub(BigDecimal value, int decimal) {
+    public static String divideDecimalSub(BigDecimal value, int decimal) {
         return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
     }
-
-    public static String divideDecimal8ENotation(BigInteger value, int decimal) {
-        return getDecimal8ENotation(value.divide(BigInteger.TEN.pow(decimal)).doubleValue());
-    }
-
 
     public static boolean isPasswordOk(String password) {
         int len = password.length();

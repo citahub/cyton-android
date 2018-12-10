@@ -88,7 +88,7 @@ public class WebAppUtil {
                 AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
                 AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
                 if (ethMetaData != null) {
-                    chainItem.setChainId(ethMetaData.getChainId().toString());
+                    chainItem.setChainId(ethMetaData.getChainIdV1());
                     chainItem.name = ethMetaData.getChainName();
                     chainItem.tokenAvatar = ethMetaData.getTokenAvatar();
                     chainItem.tokenSymbol = ethMetaData.getTokenSymbol();
