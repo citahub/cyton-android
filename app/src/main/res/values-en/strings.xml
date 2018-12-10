@@ -42,7 +42,7 @@
     <string name="backup_mnemonic_warning2">- Anyone who has the mnemonic phrase can transfer the corresponding digital assets.</string>
     <string name="backup_mnemonic_warning3">- Do not email them or screenshot them.</string>
     <string name="backup_mnemonic_warning4">- Carefully write down these 12 words or save them in your password manager.</string>
-    <string name="confirm_mnemonic_warning">Please separate each Mnemonic Phrase with a space.</string>
+    <string name="confirm_mnemonic_warning">Please click on the mnemonic in order to confirm that your backup mnemonic is correct.</string>
     <string name="input_password">Set Password</string>
     <string name="confirm_action">Confirm</string>
     <string name="confirm_transfer_action">Confirm</string>
