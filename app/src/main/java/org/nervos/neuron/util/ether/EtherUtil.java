@@ -6,6 +6,7 @@ import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.url.HttpEtherUrls;
+import org.nervos.neuron.util.url.HttpUrls;
 
 import java.math.BigInteger;
 
@@ -82,6 +83,20 @@ public class EtherUtil {
 
     public static boolean isMainNet() {
         return SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN) == ConstantUtil.ETH_NET_MAIN;
+    }
+
+    public static String getEtherTransactionDetailUrl() {
+        switch (SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN)) {
+            case ConstantUtil.ETH_NET_RINKEBY_TEST:
+                return HttpUrls.ETH_RINKEBY_TRANSACTION_DETAIL;
+            case ConstantUtil.ETH_NET_KOVAN_TEST:
+                return HttpUrls.ETH_KOVAN_TRANSACTION_DETAIL;
+            case ConstantUtil.ETH_NET_ROPSTEN_TEST:
+                return HttpUrls.ETH_ROPSTEN_TRANSACTION_DETAIL;
+            case ConstantUtil.ETH_NET_MAIN:
+            default:
+                return HttpUrls.ETH_MAINNET_TRANSACTION_DETAIL;
+        }
     }
 
     private static String getEtherBaseUrl() {
