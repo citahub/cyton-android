@@ -134,7 +134,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                 EventBus.getDefault().post(new CloseWalletInfoEvent());
                 finish();
             } else {
-                Toast.makeText(ConfirmMnemonicActivity.this, "助记词验证失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConfirmMnemonicActivity.this, R.string.mnemonic_auth_fail, Toast.LENGTH_SHORT).show();
             }
         });
     }

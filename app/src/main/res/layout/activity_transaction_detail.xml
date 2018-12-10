@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <org.nervos.neuron.view.TitleBar
@@ -15,193 +15,363 @@
         app:right_img="@drawable/ic_transaction_share"
         app:title="@string/transaction_detail_title" />
 
-    <LinearLayout
-        android:id="@+id/ll_screenshot"
+    <View
+        android:id="@+id/view_block"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="10dp"
+        android:background="@color/default_background" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/cl_top"
+            android:id="@+id/cl_share"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_success"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/ic_transaction_success"
-                app:layout_constraintBottom_toTopOf="@id/transaction_amount"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <TextView
-                android:id="@+id/transaction_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="29dp"
-                android:layout_marginTop="9dp"
-                android:textColor="@color/font_title"
-                android:textSize="26sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_token_unit"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_success"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <TextView
-                android:id="@+id/tv_token_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2.5dp"
-                android:layout_marginStart="1dp"
-                android:textColor="@color/font_title_third"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@id/transaction_amount"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/transaction_amount" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:layout_height="match_parent">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/cl_top_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_top">
+                android:layout_height="80dp"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/tv_chain_name_title"
-                    style="@style/TransactionDetailTitle"
-                    android:layout_marginTop="19dp"
-                    android:text="@string/transaction_network"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                <ImageView
+                    android:id="@+id/iv_token_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_status_bg"
+                    android:layout_width="51dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/bg_transaction_detail_success"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_token_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_chain_name"
-                    style="@style/TransactionDetailContent"
-                    android:textSize="14sp"
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_status_bg"
+                    app:layout_constraintEnd_toEndOf="@id/iv_status_bg"
+                    app:layout_constraintStart_toStartOf="@id/iv_status_bg"
+                    app:layout_constraintTop_toTopOf="@id/iv_status_bg" />
+
+                <TextView
+                    android:id="@+id/tv_transaction_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:textColor="@color/font_title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tv_transaction_blockchain_time"
+                    app:layout_constraintEnd_toStartOf="@id/tv_token_unit"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/tv_token_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_transaction_amount"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_chain_name_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_chain_name_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_receiver_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_receiver"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_chain_name" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_receiver"
-                    style="@style/TransactionDetailContent"
-                    android:textColor="@color/font_link"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_receiver_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_receiver_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_sender_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_sender"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_receiver" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_sender"
-                    style="@style/TransactionDetailContent"
-                    android:textColor="@color/font_link"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_sender_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_sender_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_gas_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_gas"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_sender" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_gas"
-                    style="@style/TransactionDetailContent"
-                    android:layout_height="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_gas_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_gas_price_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_gas_price"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_gas_price"
-                    style="@style/TransactionDetailContent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_gas_price_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_price_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_number_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_number"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_price" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_number"
-                    style="@style/TransactionDetailContent"
-                    android:textColor="@color/font_link"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_number_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_number_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_blockchain_no_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_blockchain_no"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_number" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_blockchain_no"
-                    style="@style/TransactionDetailContent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_blockchain_no_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no_title" />
-
-                <TextView
-                    android:id="@+id/tv_transaction_blockchain_time_title"
-                    style="@style/TransactionDetailTitle"
-                    android:text="@string/transaction_blockchain_time"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no" />
+                    app:layout_constraintTop_toTopOf="@id/tv_transaction_amount" />
 
                 <TextView
                     android:id="@+id/tv_transaction_blockchain_time"
-                    style="@style/TransactionDetailContent"
-                    android:layout_marginBottom="45dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/font_title_second"
+                    android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/tv_transaction_blockchain_time_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_time_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_transaction_amount" />
 
             </android.support.constraint.ConstraintLayout>
-        </ScrollView>
-    </LinearLayout>
+
+            <View
+                android:id="@+id/line1"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/cl_top_info" />
+
+            <TextView
+                android:id="@+id/tv_transaction_sender_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_sender"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/line1" />
+
+            <TextView
+                android:id="@+id/tv_transaction_sender"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/font_title"
+                app:layout_constraintEnd_toStartOf="@id/iv_transaction_sender_copy"
+                app:layout_constraintStart_toStartOf="@id/tv_transaction_sender_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_sender_title" />
+
+            <ImageView
+                android:id="@+id/iv_transaction_sender_copy"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/ic_transaction_detail_copy"
+                app:layout_constraintBottom_toBottomOf="@id/tv_transaction_sender"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintTop_toTopOf="@id/tv_transaction_sender" />
+
+            <View
+                android:id="@+id/line2"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_sender" />
+
+            <TextView
+                android:id="@+id/tv_transaction_receiver_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_receiver"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/line2" />
+
+            <TextView
+                android:id="@+id/tv_transaction_receiver"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/font_title"
+                app:layout_constraintEnd_toStartOf="@id/iv_transaction_receiver_copy"
+                app:layout_constraintStart_toStartOf="@id/tv_transaction_receiver_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_receiver_title" />
+
+            <ImageView
+                android:id="@+id/iv_transaction_receiver_copy"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/ic_transaction_detail_copy"
+                app:layout_constraintBottom_toBottomOf="@id/tv_transaction_receiver"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintTop_toTopOf="@id/tv_transaction_receiver" />
+
+            <View
+                android:id="@+id/line3"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/iv_transaction_receiver_copy" />
+
+            <ImageView
+                android:id="@+id/iv_microscope"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/line3" />
+
+            <TextView
+                android:id="@+id/tv_microscope"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginStart="5dp"
+                android:text="@string/go_to_microscope_tips"
+                android:textColor="@color/font_link"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_microscope"
+                app:layout_constraintStart_toEndOf="@+id/iv_microscope"
+                app:layout_constraintTop_toTopOf="@+id/iv_microscope" />
+
+            <ImageView
+                android:id="@+id/iv_microscope_arrow"
+                android:layout_width="6dp"
+                android:layout_height="11dp"
+                android:layout_marginStart="1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_microscope"
+                app:layout_constraintStart_toEndOf="@+id/tv_microscope"
+                app:layout_constraintTop_toTopOf="@+id/tv_microscope"
+                app:srcCompat="@drawable/icon_microscope_right_arrow" />
+
+            <View
+                android:id="@+id/view_block1"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="@color/default_background"
+                app:layout_constraintTop_toBottomOf="@id/iv_microscope_arrow" />
+
+            <TextView
+                android:id="@+id/tv_transaction_number_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_number"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@+id/view_block1" />
+
+            <TextView
+                android:id="@+id/tv_transaction_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/font_title"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_number_title" />
+
+            <View
+                android:id="@+id/line4"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_number" />
+
+            <TextView
+                android:id="@+id/tv_chain_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_network"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@+id/line4" />
+
+            <TextView
+                android:id="@+id/tv_chain_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/font_title"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_chain_name_title" />
+
+            <View
+                android:id="@+id/line7"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_chain_name" />
+
+            <TextView
+                android:id="@+id/tv_transaction_blockchain_no_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_blockchain_no"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@+id/line7" />
+
+            <TextView
+                android:id="@+id/tv_transaction_blockchain_no"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/font_title"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no_title" />
+
+            <View
+                android:id="@+id/line5"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_blockchain_no" />
+
+            <TextView
+                android:id="@+id/tv_transaction_gas_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_gas"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@+id/line5" />
+
+            <TextView
+                android:id="@+id/tv_transaction_gas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/font_title"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_title" />
+
+            <View
+                android:id="@+id/line6"
+                style="@style/separateLineLong"
+                android:layout_width="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas" />
+
+            <TextView
+                android:id="@+id/tv_transaction_gas_price_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/transaction_gas_price"
+                android:textColor="@color/font_title_second"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@+id/line6" />
+
+            <TextView
+                android:id="@+id/tv_transaction_gas_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/font_title"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/cl_top_info"
+                app:layout_constraintStart_toStartOf="@+id/cl_top_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_transaction_gas_price_title" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
 </LinearLayout>

@@ -158,12 +158,11 @@
     <string name="web_url_error">请扫描正确的网址二维码</string>
     <string name="keystore_error">请扫描正确的Keystore二维码</string>
     <string name="private_key_error">请扫描正确的私钥二维码</string>
-    <string name="address_from_equal_to">发送地址和收款地址不能相同</string>
     <string name="network_error">网络错误，请稍后重试</string>
     <string name="input_token_info">您的代币没有名称，无法成功导入！</string>
     <string name="exist_erc20_token">您的列表已有该代币</string>
     <string name="keystore">Keystore</string>
-    <string name="nmemonic">助记词</string>
+    <string name="mnemonic">助记词</string>
     <string name="private_key">私钥</string>
     <string name="dialog_title_tip">提示</string>
     <string name="dialog_finger_setting">您尚未设置Touch ID，请在手机系统“设置>Touch ID与密码”中添加指纹</string>
@@ -212,13 +211,18 @@
     <string name="appchain_native_token">AppChain原生代币</string>
 
     <string name="transaction_network">区块链网络：</string>
-    <string name="transaction_receiver">接收方：</string>
-    <string name="transaction_sender">发送方：</string>
-    <string name="transaction_gas">手续费：</string>
-    <string name="transaction_gas_price">Gas价格</string>
+    <string name="transaction_receiver">接收地址：</string>
+    <string name="transaction_sender">付款地址：</string>
+    <string name="go_to_microscope_tips">到区块链浏览器查看更多</string>
+    <string name="transaction_gas">矿工费：</string>
+    <string name="transaction_gas_price">Gas Prices</string>
+    <string name="transaction_quota_price">Quota Prices</string>
     <string name="transaction_number">交易流水号：</string>
-    <string name="transaction_blockchain_no">所在区块：</string>
+    <string name="transaction_blockchain_no">区块：</string>
     <string name="transaction_blockchain_time">入块时间：</string>
+    <string name="transaction_detail_status_success">已完成</string>
+    <string name="transaction_detail_status_pending">交易中</string>
+    <string name="transaction_detail_status_fail">已失败</string>
     <string name="finger_print_des">点击进行指纹验证</string>
     <string name="finger_print_other_login">其它方式验证</string>
     <string name="fingerprint_lock_failed">指纹解锁失败！</string>
@@ -534,4 +538,5 @@
     <string name="gwei">GWei</string>
     <string name="advance_set_warning">数据将上传至区块链，您的数据安全将得到一百分保障！</string>
     <string name="input_hex_data">请输入十六进制数据</string>
+    <string name="mnemonic_auth_fail">助记词验证失败</string>
 </resources>

@@ -31,4 +31,8 @@
     <color name="qr_receive_bg">#252A3E</color>
 
     <color name="red">#ff0000</color>
+
+    <color name="transaction_detail_failed">#FF706B</color>
+    <color name="transaction_detail_pending">#FBB900</color>
+    <color name="transaction_detail_success">#37CC92</color>
 </resources>

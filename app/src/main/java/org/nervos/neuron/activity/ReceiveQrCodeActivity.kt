@@ -70,7 +70,7 @@ class ReceiveQrCodeActivity : NBaseActivity() {
                     .onGranted {
                         try {
                             tv_copy!!.visibility = View.GONE
-                            SharePicUtils.savePic(savePath, SharePicUtils.getCacheBitmapFromView(root))
+                            SharePicUtils.savePic(savePath, SharePicUtils.getCacheBitmapFromView(rl_root))
                             tv_copy!!.visibility = View.VISIBLE
                             SharePicUtils.SharePic(this, savePath)
                             dismissProgressBar()
