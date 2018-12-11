@@ -109,8 +109,8 @@ class AdvanceSetupActivity : NBaseActivity() {
                 return@setOnClickListener
             }
             if (isTransfer && isNativeToken) {
-                if (!TextUtils.isEmpty(et_advance_setup_pay_data.text.toString().trim())) {
-                    mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString().trim()
+                if (!TextUtils.isEmpty(et_advance_setup_pay_data.text.toString())) {
+                    mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString()
                 }
             }
             if (mTransactionInfo!!.isEthereum) {
