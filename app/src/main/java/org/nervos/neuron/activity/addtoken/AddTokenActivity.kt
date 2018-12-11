@@ -133,6 +133,8 @@ class AddTokenActivity : NBaseActivity() {
                     edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
                     mChainItem = null
                 } else {
+                    tv_add_token_contract_address.text = resources.getString(R.string.contract_address)
+                    edit_add_token_contract_address.hint = resources.getString(R.string.input_erc20_address)
                     mChainItem = mChainItemList!![dialog.mSelected]
                 }
                 dialog.dismiss()
