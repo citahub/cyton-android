@@ -31,7 +31,9 @@ public class DBWalletUtil extends DBUtil {
     //==============================Current Wallet====================================
     public static WalletItem getCurrentWallet(Context context) {
         WalletItem walletItem = getWallet(context, SharePrefUtil.getCurrentWalletName());
-        if (walletItem == null) return null;
+        if (walletItem == null) {
+            return null;
+        }
         if (walletItem.chainItems == null || walletItem.chainItems.size() == 0) {
             walletItem.chainItems = DBChainUtil.getAllChain(context);
             saveWallet(context, walletItem);
@@ -95,8 +97,8 @@ public class DBWalletUtil extends DBUtil {
 
     private static int checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (int i = 0; i < walletItem.tokenItems.size(); i++) {
-            if (TextUtils.isEmpty(walletItem.tokenItems.get(i).symbol) || walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol) &&
-                    walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
+            if (TextUtils.isEmpty(walletItem.tokenItems.get(i).symbol) || walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
+                    && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
                 return i;
             }
         }
@@ -247,9 +249,9 @@ public class DBWalletUtil extends DBUtil {
                 walletItem.tokenItems = new ArrayList<>();
             }
             for (int i = 0; i < walletItem.tokenItems.size(); i++) {
-                if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol) &&
-                        walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId()) &&
-                        walletItem.tokenItems.get(i).name.equals(tokenItem.name)) {
+                if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
+                        && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())
+                        && walletItem.tokenItems.get(i).name.equals(tokenItem.name)) {
                     walletItem.tokenItems.set(i, tokenItem);
                     break;
                 }
