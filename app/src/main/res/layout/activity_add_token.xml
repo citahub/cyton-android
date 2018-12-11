@@ -118,6 +118,6 @@
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:status="true"
-        app:text="@string/add" />
+        app:text="@string/query" />
 
 </android.support.constraint.ConstraintLayout>

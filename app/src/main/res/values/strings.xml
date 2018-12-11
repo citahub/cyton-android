@@ -11,6 +11,7 @@
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="finish">完成</string>
+    <string name="query">查询</string>
     <string name="title_token_management">列表设置</string>
     <string name="title_receive_qrcode">收款</string>
     <string name="backup_mnemonic">备份助记词</string>
