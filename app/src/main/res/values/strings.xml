@@ -198,7 +198,6 @@
     <string name="photo_album">相册</string>
     <string name="contract_create">"Contract Created"</string>
     <string name="empty_collect">空空如也</string>
-    <string name="gas_too_low">您的GasPrice设置过低，建议输入推荐值以快速转账</string>
     <string name="about_blank">about:blank</string>
     <string name="token">代币</string>
     <string name="add_assets">添加资产</string>
