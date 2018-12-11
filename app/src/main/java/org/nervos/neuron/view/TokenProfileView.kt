@@ -16,7 +16,10 @@ import org.nervos.neuron.item.TokenItem
 import org.nervos.neuron.service.http.HttpService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
-import org.nervos.neuron.util.*
+import org.nervos.neuron.util.AddressUtil
+import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.util.CurrencyUtil
+import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import org.nervos.neuron.util.url.HttpUrls
 import org.web3j.crypto.Keys
@@ -125,7 +128,7 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(s: String) {
                             if (!TextUtils.isEmpty(s)) {
-                                method(CurrencyUtil.getCurrencyItem(context).symbol + NumberUtil.getDecimal2ENotation(s))
+                                method(CurrencyUtil.getCurrencyItem(context).symbol + CurrencyUtil.formatCurrency(s.toDouble()))
                             } else {
                                 method("")
                             }

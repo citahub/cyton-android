@@ -24,7 +24,6 @@ import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.WalletAssetsView
-import java.text.DecimalFormat
 
 /**
  * Created by BaojunCZ on 2018/11/19.
@@ -110,9 +109,8 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
             }
             totalAssets += item.currencyPrice
             if (totalAssets != 0.0) {
-                val df = DecimalFormat("######0.0000")
                 mWalletAssetsView!!.setTotalAssets("≈" + CurrencyUtil.getCurrencyItem(context).symbol
-                        + df.format(totalAssets))
+                        + CurrencyUtil.formatCurrency(totalAssets))
             }
         }
         if (isLoadedAll) {
