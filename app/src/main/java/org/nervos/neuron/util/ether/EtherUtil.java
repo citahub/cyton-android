@@ -102,7 +102,7 @@ public class EtherUtil {
     }
 
     public static boolean isMainNet() {
-        return SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN) == ConstantUtil.ETH_NET_MAIN;
+        return SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_NET_MAIN).equals(ConstantUtil.ETH_NET_MAIN);
     }
 
     public static String getEtherTransactionDetailUrl() {
