@@ -179,9 +179,8 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                             .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
                 } else {
                     tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
-                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
-                    gas = Numeric.toBigInt(transactionResponse!!.gasUsed)
-                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                    tv_transaction_gas_limit.text = BigInteger(transactionResponse!!.gasUsed).toString()
+                    gas = BigInteger(transactionResponse!!.gasPrice).multiply(BigInteger(transactionResponse!!.gasUsed))
                 }
                 tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + ConstantUtil.ETH
             }
