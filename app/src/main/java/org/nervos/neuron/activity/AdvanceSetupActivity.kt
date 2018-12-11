@@ -192,15 +192,15 @@ class AdvanceSetupActivity : NBaseActivity() {
                         mTransactionInfo!!.quota.toString(), price, getFeeUnit())
     }
 
-    private fun getNativeToken() : String {
+    private fun getNativeToken() : String? {
         return if (mTransactionInfo!!.isEthereum) {
             ConstantUtil.ETH
         } else {
-            DBChainUtil.getChain(mActivity, mTransactionInfo!!.chainId)!!.tokenSymbol
+            DBChainUtil.getChain(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
         }
     }
 
-    private fun getFeeUnit() : String {
+    private fun getFeeUnit() : String? {
         return if (mTransactionInfo!!.isEthereum) getString(R.string.gwei) else getNativeToken()
     }
 
