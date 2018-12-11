@@ -243,6 +243,7 @@
     <string name="product">product</string>
     <string name="input_erc20_address">请输入代币合约地址</string>
     <string name="input_appchain_node">请输入节点地址</string>
+    <string name="add_token_success">添加代币成功</string>
     <string name="token_title">代币信息</string>
     <string name="token_name_hint">代币名称</string>
     <string name="token_symbol_hint">代币缩写</string>
