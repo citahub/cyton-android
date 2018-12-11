@@ -9,11 +9,9 @@ import org.nervos.appchain.protocol.http.HttpService
 import org.nervos.neuron.R
 import org.nervos.neuron.item.ChainItem
 import org.nervos.neuron.item.TokenItem
-import org.nervos.neuron.item.WalletItem
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.EthRpcService
 import org.nervos.neuron.util.AddressUtil
-import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import rx.Observable
@@ -44,10 +42,8 @@ class AddTokenManager(val context: Context) {
     //load erc20 by contract address
     fun loadErc20(address: String, contractAddress: String, chainItem: ChainItem): Observable<TokenItem> {
         return Observable.fromCallable {
-            if (!AddressUtil.isAddressValid(contractAddress)) {
+            if (!AddressUtil.isAddressValid(contractAddress) || !checkRepetitionContract(chainItem.chainId, contractAddress)) {
                 throw Throwable(context.resources.getString(R.string.contract_address_error))
-            } else if (!checkRepetitionContract(chainItem.chainId, contractAddress)) {
-                throw Throwable(context.resources.getString(R.string.exist_erc20_token))
             }
             val tokenItem = when (EtherUtil.isEther(chainItem.chainId)) {
                 true -> {
