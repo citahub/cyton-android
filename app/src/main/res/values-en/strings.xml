@@ -198,7 +198,7 @@
     <string name="photo_album">Album</string>
     <string name="contract_create">"Contract Created"</string>
     <string name="empty_collect">No Collectives Found</string>
-    <string name="gas_too_low">Gas Price too low, Please set above the recommended gas</string>
+    <string name="gas_price_too_low">Gas Price too low, Please set above the recommended gas</string>
     <string name="gas_limit_too_low">Gas Limit too low, Please set reasonable value</string>
     <string name="about_blank">about:blank</string>
 
@@ -506,7 +506,6 @@ Nervos foundation\n
     <string name="gas_fee_sum_value"> ≈ Gas Limit(%1$s)*Gas Price(%2$s)</string>
     <string name="default_eth_gas_limit_value">21000</string>
     <string name="input_correct_gas_price_tip">Enter Gas Price</string>
-    <string name="gas_price_too_low">Gas Price too low, Please set above %sGWei</string>
     <string name="balance_more_gas">Insufficient %s Balance for miner fee</string>
     <string name="all_balance_transfer_tip">The amount you entered exceeds your account balance, are all transferred out?</string>
     <string name="transaction_data">Data</string>
