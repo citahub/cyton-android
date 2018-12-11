@@ -32,7 +32,7 @@ public class TokenPricePlugin {
                             JSLoadUtils.INSTANCE.loadFunc(mWebView, callback, "");
                         } else {
                             JSLoadUtils.INSTANCE.loadFunc(mWebView, callback
-                                    , currencyItem.getSymbol() + price);
+                                    , currencyItem.getSymbol() + CurrencyUtil.formatCurrency(Double.valueOf(price)));
                         }
                     }
                 });

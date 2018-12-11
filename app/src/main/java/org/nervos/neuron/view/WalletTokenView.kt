@@ -83,7 +83,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             override fun onCompleted() {
                 if (DBWalletUtil.getCurrentWallet(context).address == address) {
                     tv_token_currency.text =
-                            context.resources.getString(R.string.approximate) + currencyItem.symbol + DecimalFormat("######0.00").format(tokenItem.currencyPrice)
+                            context.resources.getString(R.string.approximate) + currencyItem.symbol + CurrencyUtil.formatCurrency(tokenItem.currencyPrice)
                     tv_token_currency.visibility = View.VISIBLE
                     EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                 }

@@ -9,6 +9,7 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.CurrencyListItem;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CurrencyUtil {
@@ -29,9 +30,13 @@ public class CurrencyUtil {
                 break;
             }
         }
-        if (currencyItem == null)
-            currencyItem = list.get(0);
+        if (currencyItem == null) currencyItem = list.get(0);
         return currencyItem;
+    }
+
+    public static String formatCurrency(Double currency) {
+        DecimalFormat df = new DecimalFormat("######0.0000");
+        return df.format(currency);
     }
 
 }
