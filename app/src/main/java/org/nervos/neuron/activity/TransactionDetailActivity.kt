@@ -67,7 +67,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         when (mTransactionStatus) {
             TransactionResponse.FAILED -> {
                 tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_failed)
-                if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty()) {
+                if (checkReceiver(transactionResponse!!.to)) {
                     tv_status.text = resources.getString(R.string.transaction_detail_status_fail)
                 } else {
                     tv_status.text = resources.getString(R.string.transaction_detail_contract_status_fail)
@@ -96,7 +96,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             }
             TransactionResponse.PENDING -> {
                 tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_pending)
-                if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty()) {
+                if (checkReceiver(transactionResponse!!.to)) {
                     tv_status.text = resources.getString(R.string.transaction_detail_contract_status_pending)
                 } else {
                     tv_status.text = resources.getString(R.string.transaction_detail_status_pending)
@@ -106,7 +106,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             }
             TransactionResponse.SUCCESS -> {
                 tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_success)
-                if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty()) {
+                if (checkReceiver(transactionResponse!!.to)) {
                     tv_status.text = resources.getString(R.string.transaction_detail_contract_status_success)
                 } else {
                     tv_status.text = resources.getString(R.string.transaction_detail_status_success)
@@ -127,8 +127,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                     tv_transaction_blockchain_height!!.text = transactionResponse!!.blockNumber
                 } else {
                     try {
-                        val blockNumber = Numeric.toBigInt(transactionResponse!!.blockNumber).toString(10)
-                        tv_transaction_blockchain_height!!.text = blockNumber.toString()
+                        tv_transaction_blockchain_height.text = Numeric.toBigInt(transactionResponse!!.blockNumber).toString(10)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -143,7 +142,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         iv_transaction_sender_copy.setOnClickListener {
             copyText(transactionResponse!!.from)
         }
-        if (ConstantUtil.RPC_RESULT_ZERO == transactionResponse!!.to || transactionResponse!!.to.isEmpty()) {
+        if (checkReceiver(transactionResponse!!.to)) {
             tv_transaction_receiver.text = resources.getString(R.string.contract_create)
             iv_transaction_receiver_copy.visibility = View.GONE
         } else {
@@ -161,8 +160,9 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         tv_transaction_blockchain_time.text = transactionResponse!!.date
 
         tv_transaction_receiver!!.setOnClickListener {
-            if (transactionResponse!!.to != ConstantUtil.RPC_RESULT_ZERO && !transactionResponse!!.to.isEmpty())
+            if (checkReceiver(transactionResponse!!.to)) {
                 copyText(transactionResponse!!.to)
+            }
         }
         tv_transaction_sender!!.setOnClickListener { copyText(transactionResponse!!.from) }
         tv_transaction_hash!!.setOnClickListener { copyText(transactionResponse!!.hash) }
@@ -170,11 +170,21 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         if (isEther) {
             tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             if (mTransactionStatus != TransactionResponse.FAILED && !TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
+                val gas: BigInteger
                 val gasPriceBig = BigInteger(transactionResponse!!.gasPrice)
-                val gasUsedBig = BigInteger(transactionResponse!!.gasUsed)
-                tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gasPriceBig.multiply(gasUsedBig)) + ConstantUtil.ETH
                 tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
-                tv_transaction_gas_limit.text = gasUsedBig.toString()
+                if (mTransactionStatus == TransactionResponse.PENDING) {
+                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_limit)
+                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasLimit).toString()
+                    gas = Numeric.toBigInt(transactionResponse!!.gasLimit)
+                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                } else {
+                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
+                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
+                    gas = Numeric.toBigInt(transactionResponse!!.gasUsed)
+                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                }
+                tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + ConstantUtil.ETH
             }
             Glide.with(this)
                     .load(R.drawable.icon_eth_microscope)
@@ -199,18 +209,26 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                         .subscribe(object : NeuronSubscriber<String>() {
                             override fun onNext(price: String) {
                                 super.onNext(price)
-                                var gasUsed = Numeric.toBigInt(transactionResponse!!.gasUsed)
-                                var gasPrice = Numeric.toBigInt(HexUtils.IntToHex(price.toInt()))
-                                var gas = gasUsed.multiply(gasPrice)
-                                tv_transaction_gas_limit.text = gasUsed.toString()
-                                var token = if (TextUtils.isEmpty(transactionResponse!!.nativeSymbol)) {
+                                val token = if (TextUtils.isEmpty(transactionResponse!!.nativeSymbol)) {
                                     DBWalletUtil.getChainItemFromCurrentWallet(mActivity, transactionResponse!!.chainId).tokenSymbol
                                 } else {
                                     transactionResponse!!.nativeSymbol
                                 }
+                                tv_transaction_gas_price.text = Convert.fromWei(price, Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
+                                val gas: BigInteger
+                                if (mTransactionStatus == TransactionResponse.PENDING) {
+                                    tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
+                                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasLimit).toString()
+                                    gas = Numeric.toBigInt(transactionResponse!!.gasLimit)
+                                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(price.toInt())))
+                                } else {
+                                    tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used)
+                                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
+                                    gas = Numeric.toBigInt(transactionResponse!!.gasUsed)
+                                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(price.toInt())))
+                                }
                                 tv_transaction_gas.text =
                                         NumberUtil.getEthFromWeiForStringDecimal8(gas) + token
-                                tv_transaction_gas_price.text = Convert.fromWei(price, Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
                             }
                         })
             }
@@ -261,6 +279,10 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         val mClipData = ClipData.newPlainText("value", value)
         cm.primaryClip = mClipData
         Toast.makeText(mActivity, R.string.copy_success, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkReceiver(receiver: String): Boolean {
+        return ConstantUtil.RPC_RESULT_ZERO == receiver || receiver.isEmpty()
     }
 
 }

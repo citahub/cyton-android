@@ -533,8 +533,10 @@
     <string name="approximate">≈</string>
     <string name="mnemonic_auth_fail">助记词验证失败</string>
     <string name="gas_limit">Gas Limit</string>
+    <string name="gas_used">Gas Used</string>
     <string name="gas_price">Gas Price</string>
     <string name="quota_limit">Quota Limit</string>
+    <string name="quota_used">Quota Used</string>
     <string name="quota_price">Quota Price</string>
     <string name="gas">Gas</string>
     <string name="gwei">GWei</string>

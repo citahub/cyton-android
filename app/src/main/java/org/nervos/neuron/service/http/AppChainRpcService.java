@@ -2,6 +2,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
@@ -25,22 +26,31 @@ import org.nervos.neuron.util.exception.TransactionErrorException;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.*;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.utils.Numeric;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/4/17
@@ -236,7 +246,7 @@ public class AppChainRpcService {
             String chainName = Objects.requireNonNull(DBWalletUtil.getChainItemFromCurrentWallet(context, chainId)).name;
             TransactionItem item = new TransactionItem(from, to, value, chainId, chainName,
                     TransactionItem.PENDING, System.currentTimeMillis(), hash);
-            item.gasUsed = NumberUtil.decimalToHex(limit);
+            item.gasLimit = NumberUtil.decimalToHex(limit);
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
             DBAppChainTransactionsUtil.save(context, item);

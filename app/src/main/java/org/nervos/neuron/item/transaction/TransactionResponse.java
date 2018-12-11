@@ -33,6 +33,7 @@ public class TransactionResponse extends BaseResponse implements Parcelable {
         this.hash = hash;
         this.gasUsed = transactionItem.gasUsed;
         this.gasPrice = transactionItem.gasPrice;
+        this.gasLimit = transactionItem.gasLimit;
     }
 
     public TransactionResponse() {

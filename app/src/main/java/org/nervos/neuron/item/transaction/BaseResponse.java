@@ -32,6 +32,7 @@ public class BaseResponse implements Parcelable {
 
     // ethereum data
     public String gasUsed;
+    public String gasLimit;
     public String gas;
     public String gasPrice;
     public String blockNumber;
@@ -67,7 +68,7 @@ public class BaseResponse implements Parcelable {
         this.hash = hash;
     }
 
-    public BaseResponse(){}
+    public BaseResponse() {}
 
     @Override
     public boolean equals(Object obj) {
@@ -75,7 +76,7 @@ public class BaseResponse implements Parcelable {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        BaseResponse other = (BaseResponse)obj;
+        BaseResponse other = (BaseResponse) obj;
 
         if (hash == null) {
             return other.hash == null;
@@ -98,6 +99,7 @@ public class BaseResponse implements Parcelable {
         dest.writeString(this.contractAddress);
         dest.writeInt(this.status);
         dest.writeString(this.gasUsed);
+        dest.writeString(this.gasLimit);
         dest.writeString(this.gas);
         dest.writeString(this.gasPrice);
         dest.writeString(this.blockNumber);
@@ -119,6 +121,7 @@ public class BaseResponse implements Parcelable {
         this.contractAddress = in.readString();
         this.status = in.readInt();
         this.gasUsed = in.readString();
+        this.gasLimit = in.readString();
         this.gas = in.readString();
         this.gasPrice = in.readString();
         this.blockNumber = in.readString();

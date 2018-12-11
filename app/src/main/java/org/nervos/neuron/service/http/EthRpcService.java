@@ -3,6 +3,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionInfo;
@@ -16,7 +17,11 @@ import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.*;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
@@ -31,10 +36,6 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -45,6 +46,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/4/17
@@ -148,7 +154,7 @@ public class EthRpcService {
                     EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
             item.blockNumber = EthRpcService.getBlockNumber().toString();
             item.gasPrice = price;
-            item.gasUsed = limit;
+            item.gasLimit = limit;
             DBEtherTransactionUtil.save(context, item);
         });
     }
@@ -237,7 +243,7 @@ public class EthRpcService {
                         EtherUtil.getEthNodeName(), TransactionItem.PENDING, System.currentTimeMillis(), hash);
                 item.blockNumber = EthRpcService.getBlockNumber().toString();
                 item.contractAddress = tokenItem.contractAddress;
-                item.gasUsed = limit;
+                item.gasLimit = limit;
                 item.gasPrice = price;
                 DBEtherTransactionUtil.save(context, item);
             }
