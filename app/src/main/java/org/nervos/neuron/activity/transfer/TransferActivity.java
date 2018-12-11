@@ -12,32 +12,30 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-
+import de.hdodenhof.circleimageview.CircleImageView;
+import org.greenrobot.eventbus.EventBus;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AdvanceSetupActivity;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.event.TransferPushEvent;
 import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
-import org.nervos.neuron.util.SharePicUtils;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
+import org.nervos.neuron.util.qrcode.CodeUtils;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
-import org.nervos.neuron.view.dialog.TransferAdvanceSetupDialog;
 import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.nervos.neuron.view.dialog.listener.OnDialogCancelClickListener;
@@ -45,11 +43,8 @@ import org.nervos.neuron.view.dialog.listener.OnDialogOKClickListener;
 import org.nervos.neuron.view.tool.NeuronTextWatcher;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
+
 import java.math.BigInteger;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static org.web3j.utils.Convert.Unit.GWEI;
 
 /**
  * Created by duanyytop on 2018/11/4
@@ -325,6 +320,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         } else if (!TextUtils.isEmpty(appSendTransaction.getSendTransactionResult().getHash())) {
             Toast.makeText(TransferActivity.this, R.string.transfer_success, Toast.LENGTH_SHORT).show();
             transferDialog.dismiss();
+            EventBus.getDefault().post(new TransferPushEvent());
             finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
@@ -351,6 +347,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         } else if (!TextUtils.isEmpty(ethSendTransaction.getTransactionHash())) {
             Toast.makeText(mActivity, R.string.transfer_success, Toast.LENGTH_SHORT).show();
             transferDialog.dismiss();
+            EventBus.getDefault().post(new TransferPushEvent());
             finish();
         } else {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
@@ -360,7 +357,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     @Override
     public void transferEtherFail(String message) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(mActivity,message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
         transferDialog.dismiss();
     }
 

@@ -31,12 +31,18 @@ public class TransactionResponse extends BaseResponse implements Parcelable {
         this.status = transactionItem.status;
         this.setTimestamp(transactionItem.getTimestamp());
         this.hash = hash;
+        this.gasUsed = transactionItem.gasUsed;
+        this.gasPrice = transactionItem.gasPrice;
+        this.gasLimit = transactionItem.gasLimit;
     }
 
-    public TransactionResponse() {}
+    public TransactionResponse() {
+    }
 
     @Override
-    public int describeContents() { return 0; }
+    public int describeContents() {
+        return 0;
+    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -51,9 +57,13 @@ public class TransactionResponse extends BaseResponse implements Parcelable {
 
     public static final Creator<TransactionResponse> CREATOR = new Creator<TransactionResponse>() {
         @Override
-        public TransactionResponse createFromParcel(Parcel source) {return new TransactionResponse(source);}
+        public TransactionResponse createFromParcel(Parcel source) {
+            return new TransactionResponse(source);
+        }
 
         @Override
-        public TransactionResponse[] newArray(int size) {return new TransactionResponse[size];}
+        public TransactionResponse[] newArray(int size) {
+            return new TransactionResponse[size];
+        }
     };
 }

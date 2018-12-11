@@ -2,8 +2,6 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.LinearLayout;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.snappydb.DB;
 import com.snappydb.SnappydbException;
@@ -93,7 +91,7 @@ public class DBWalletUtil extends DBUtil {
 
     private static int checkTokenInWallet(WalletItem walletItem, TokenItem tokenItem) {
         for (int i = 0; i < walletItem.tokenItems.size(); i++) {
-            if (walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
+            if (TextUtils.isEmpty(walletItem.tokenItems.get(i).symbol) || walletItem.tokenItems.get(i).symbol.equals(tokenItem.symbol)
                     && walletItem.tokenItems.get(i).getChainId().equals(tokenItem.getChainId())) {
                 return i;
             }
