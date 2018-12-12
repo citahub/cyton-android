@@ -46,7 +46,7 @@ public class ConstantUtil {
     public static final String NATT_TOKEN_NAME = "Nervos AppChain Test Token";
     public static final String NATT_TOKEN_SYMBOL = "NATT";
     public static final String NATT_TOKEN_AVATAR = "https://cdn.cryptape.com/icon_appchain.png";
-    public static final String NATT_HTTP_PROVIDER = "http://121.196.200.225:1337";
+    public static final String NATT_HTTP_PROVIDER = "https://node.cryptape.com";
 
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 
