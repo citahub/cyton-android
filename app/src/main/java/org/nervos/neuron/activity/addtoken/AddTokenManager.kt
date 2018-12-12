@@ -54,8 +54,7 @@ class AddTokenManager(val context: Context) {
                 }
             }
             when {
-                tokenItem == null -> throw Throwable(context.resources.getString(R.string.contract_address_error))
-                TextUtils.isEmpty(tokenItem.symbol) -> throw Throwable(context.resources.getString(R.string.input_token_info))
+                tokenItem == null || TextUtils.isEmpty(tokenItem.symbol) -> throw Throwable(context.resources.getString(R.string.contract_address_error))
                 else -> {
                     tokenItem.chainId = chainItem.chainId
                     tokenItem.chainName = chainItem.name

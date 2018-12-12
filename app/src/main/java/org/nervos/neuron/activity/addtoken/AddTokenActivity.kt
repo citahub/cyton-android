@@ -78,8 +78,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                                 tokenInfoDialog.setOnOkListener {
                                     DBWalletUtil.addTokenToWallet(mActivity, mWalletItem!!.name, tokenItem)
                                     tokenInfoDialog.dismiss()
-                                    Toast.makeText(mActivity, resources.getString(R.string.add_token_success), Toast.LENGTH_LONG)
-                                            .show()
+                                    Toast.makeText(mActivity, resources.getString(R.string.add_token_success), Toast.LENGTH_LONG).show()
                                     EventBus.getDefault().post(AddTokenRefreshEvent())
                                     finish()
                                 }
