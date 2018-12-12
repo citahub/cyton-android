@@ -15,6 +15,7 @@ import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBChainUtil
+import org.nervos.neuron.util.db.DBWalletUtil
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
@@ -213,7 +214,7 @@ class AdvanceSetupActivity : NBaseActivity() {
         return if (mTransactionInfo!!.isEthereum) {
             ConstantUtil.ETH
         } else {
-            DBChainUtil.getChain(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
+            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
         }
     }
 
