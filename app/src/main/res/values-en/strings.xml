@@ -11,6 +11,7 @@
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="finish">Finish</string>
+    <string name="query">Search</string>
     <string name="title_token_management">ERC20</string>
     <string name="title_receive_qrcode">Receive</string>
     <string name="backup_mnemonic">Your Mnemonic Phrase</string>
@@ -50,6 +51,7 @@
     <string name="confirm_action">Confirm</string>
     <string name="confirm_transfer_action">Confirm</string>
     <string name="input_app_website_hint">Please input the decentralized web url</string>
+    <string name="add_token_success">Token is added</string>
     <string name="import_mnemonic_path_err">Please input custom path</string>
 
     <string name="collection_id_place_holder">ID:%s</string>
