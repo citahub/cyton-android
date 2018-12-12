@@ -68,9 +68,9 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             TransactionResponse.FAILED -> {
                 tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_failed)
                 if (checkReceiver(transactionResponse!!.to)) {
-                    tv_status.text = resources.getString(R.string.transaction_detail_status_fail)
-                } else {
                     tv_status.text = resources.getString(R.string.transaction_detail_contract_status_fail)
+                } else {
+                    tv_status.text = resources.getString(R.string.transaction_detail_status_fail)
                 }
                 tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_failed))
 
@@ -101,7 +101,6 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                 } else {
                     tv_status.text = resources.getString(R.string.transaction_detail_status_pending)
                 }
-
                 tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_pending))
             }
             TransactionResponse.SUCCESS -> {
@@ -180,9 +179,8 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                             .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
                 } else {
                     tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
-                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
-                    gas = Numeric.toBigInt(transactionResponse!!.gasUsed)
-                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                    tv_transaction_gas_limit.text = BigInteger(transactionResponse!!.gasUsed).toString()
+                    gas = BigInteger(transactionResponse!!.gasPrice).multiply(BigInteger(transactionResponse!!.gasUsed))
                 }
                 tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + ConstantUtil.ETH
             }

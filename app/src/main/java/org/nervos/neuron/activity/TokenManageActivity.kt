@@ -116,7 +116,7 @@ class TokenManageActivity : NBaseActivity() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (holder is TokenViewHolder) {
                 TokenLogoUtil.setLogo(mTokenList[position], mActivity, holder.mIvTokenImage)
-                holder.mTvTokenName.text = mTokenList[position].name
+                holder.mTvTokenChainName.text = mTokenList[position].chainName
                 holder.mTvTokenSymbol.text = mTokenList[position].symbol
                 if (!TextUtils.isEmpty(mTokenList[position].contractAddress)) {
                     holder.mTvTokenContractAddress.text = mTokenList[position].contractAddress
@@ -164,7 +164,7 @@ class TokenManageActivity : NBaseActivity() {
 
         internal inner class TokenViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             var mIvTokenImage: ImageView = view.findViewById(R.id.token_image)
-            var mTvTokenName: TextView = view.findViewById(R.id.token_name_text)
+            var mTvTokenChainName: TextView = view.findViewById(R.id.token_chain_name_text)
             var mTvTokenSymbol: TextView = view.findViewById(R.id.token_symbol_text)
             var mTvTokenContractAddress: TextView = view.findViewById(R.id.token_contract_address)
             var mSwtTokenSelect: Switch = view.findViewById(R.id.switch_token_select)

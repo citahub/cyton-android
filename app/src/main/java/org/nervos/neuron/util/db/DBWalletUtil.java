@@ -2,9 +2,11 @@ package org.nervos.neuron.util.db;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.snappydb.DB;
 import com.snappydb.SnappydbException;
+
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -13,7 +15,11 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by duanyytop on 2018/5/8
@@ -25,8 +31,9 @@ public class DBWalletUtil extends DBUtil {
     //==============================Current Wallet====================================
     public static WalletItem getCurrentWallet(Context context) {
         WalletItem walletItem = getWallet(context, SharePrefUtil.getCurrentWalletName());
-        if (walletItem == null)
+        if (walletItem == null) {
             return null;
+        }
         if (walletItem.chainItems == null || walletItem.chainItems.size() == 0) {
             walletItem.chainItems = DBChainUtil.getAllChain(context);
             saveWallet(context, walletItem);
@@ -35,10 +42,9 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH
-                , ConstantUtil.ETH));
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
-                ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER, ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil.NATT_HTTP_PROVIDER, ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
         for (ChainItem chainItem : walletItem.chainItems) {
             if (!TextUtils.isEmpty(chainItem.tokenName)) {
                 walletItem.tokenItems.add(new TokenItem(chainItem));
@@ -161,7 +167,10 @@ public class DBWalletUtil extends DBUtil {
                 db = openDB(context, DB_WALLET);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
-                    walletItems.add(db.getObject(key, WalletItem.class));
+                    WalletItem item = db.getObject(key, WalletItem.class);
+                    if (!TextUtils.isEmpty(item.address)) {
+                        walletItems.add(db.getObject(key, WalletItem.class));
+                    }
                 }
                 compare(walletItems);
             } catch (SnappydbException e) {

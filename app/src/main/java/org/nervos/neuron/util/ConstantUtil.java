@@ -2,9 +2,6 @@ package org.nervos.neuron.util;
 
 import android.os.Environment;
 
-import org.nervos.neuron.util.db.SharePrefUtil;
-import org.web3j.utils.Numeric;
-
 import java.math.BigInteger;
 
 /**
@@ -43,6 +40,13 @@ public class ConstantUtil {
     public static final String CMB_TOKEN_SYMBOL = "MBA";
     public static final String CMB_TOKEN_AVATAR = "https://download.mba.cmbchina.biz/images/MBA-logo.jpg";
     public static final String CMB_HTTP_PROVIDER = "http://testnet.mba.cmbchina.biz:1337";
+
+    public static final String NATT_CHAIN_ID = "1";
+    public static final String NATT_CHAIN_NAME = "test-chain";
+    public static final String NATT_TOKEN_NAME = "Nervos AppChain Test Token";
+    public static final String NATT_TOKEN_SYMBOL = "NATT";
+    public static final String NATT_TOKEN_AVATAR = "https://cdn.cryptape.com/icon_appchain.png";
+    public static final String NATT_HTTP_PROVIDER = "https://node.cryptape.com";
 
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 
