@@ -29,7 +29,7 @@ import org.nervos.neuron.view.dialog.TokenInfoDialog
 /**
  * Created by BaojunCZ on 2018/12/3.
  */
-class AddTokenActivity : NBaseActivity() {
+class AddTokenActivity : NBaseActivity(), View.OnClickListener {
 
     private lateinit var mTitle: TitleBar
 
@@ -78,7 +78,8 @@ class AddTokenActivity : NBaseActivity() {
                                 tokenInfoDialog.setOnOkListener {
                                     DBWalletUtil.addTokenToWallet(mActivity, mWalletItem!!.name, tokenItem)
                                     tokenInfoDialog.dismiss()
-                                    Toast.makeText(mActivity, resources.getString(R.string.add_token_success), Toast.LENGTH_LONG).show()
+                                    Toast.makeText(mActivity, resources.getString(R.string.add_token_success), Toast.LENGTH_LONG)
+                                            .show()
                                     EventBus.getDefault().post(AddTokenRefreshEvent())
                                     finish()
                                 }
@@ -94,7 +95,8 @@ class AddTokenActivity : NBaseActivity() {
                         .subscribe(object : NeuronSubscriber<ChainItem>() {
                             override fun onError(e: Throwable?) {
                                 dismissProgressBar()
-                                Toast.makeText(mActivity, resources.getString(R.string.appchain_node_error), Toast.LENGTH_LONG).show()
+                                Toast.makeText(mActivity, resources.getString(R.string.appchain_node_error), Toast.LENGTH_LONG)
+                                        .show()
                             }
 
                             override fun onNext(chainItem: ChainItem) {
@@ -125,21 +127,28 @@ class AddTokenActivity : NBaseActivity() {
         }
 
         // select the type of blockchain
-        tv_chain_name.setOnClickListener {
-            var dialog = SimpleSelectDialog(mActivity, mChainNameList!!)
-            dialog.setOnOkListener(View.OnClickListener {
-                tv_chain_name.text = mChainNameList!![dialog.mSelected]
-                if (dialog.mSelected == mChainNameList!!.size - 1) {
-                    tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
-                    edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
-                    mChainItem = null
-                } else {
-                    tv_add_token_contract_address.text = resources.getString(R.string.contract_address)
-                    edit_add_token_contract_address.hint = resources.getString(R.string.input_erc20_address)
-                    mChainItem = mChainItemList!![dialog.mSelected]
-                }
-                dialog.dismiss()
-            })
+        tv_chain_name.setOnClickListener(this)
+        iv_triangle_spinner.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.tv_chain_name, R.id.iv_triangle_spinner -> {
+                var dialog = SimpleSelectDialog(mActivity, mChainNameList!!)
+                dialog.setOnOkListener(View.OnClickListener {
+                    tv_chain_name.text = mChainNameList!![dialog.mSelected]
+                    if (dialog.mSelected == mChainNameList!!.size - 1) {
+                        tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
+                        edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
+                        mChainItem = null
+                    } else {
+                        tv_add_token_contract_address.text = resources.getString(R.string.contract_address)
+                        edit_add_token_contract_address.hint = resources.getString(R.string.input_erc20_address)
+                        mChainItem = mChainItemList!![dialog.mSelected]
+                    }
+                    dialog.dismiss()
+                })
+            }
         }
     }
 
