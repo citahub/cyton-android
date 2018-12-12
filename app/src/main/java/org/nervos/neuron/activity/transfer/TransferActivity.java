@@ -229,7 +229,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                isAddressOk = !TextUtils.isEmpty(s) && NumberUtil.isHex(s.toString());
+                isAddressOk = AddressUtil.isAddressValid(s.toString());
                 updateTransferEditValue();
             }
         });

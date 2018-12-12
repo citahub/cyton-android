@@ -285,7 +285,7 @@ public class TransferPresenter {
         ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
         if (item == null) return;
         AppChainRpcService.setHttpProvider(item.httpProvider);
-        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, ConstantUtil.QUOTA_TOKEN.longValue(),
+        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
                 new BigInteger(mTokenItem.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
