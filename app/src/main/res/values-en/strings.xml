@@ -509,6 +509,7 @@ Nervos foundation\n
     <string name="input_correct_gas_price_tip">Please enter correct Gas Price</string>
     <string name="input_correct_gas_limit_tip">Please enter correct Gas Limit</string>
     <string name="input_correct_quota_limit_tip">Please enter correct Quota Limit</string>
+    <string name="input_correct_value_tip">Please enter correct value</string>
     <string name="balance_more_gas">Insufficient %s Balance for miner fee</string>
     <string name="all_balance_transfer_tip">The amount you entered exceeds your account balance, are all transferred out?</string>
     <string name="transaction_data">Data</string>

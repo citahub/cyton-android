@@ -177,6 +177,13 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         nextActionButton.setOnClickListener(v -> {
             String receiveAddressValue = receiveAddressEdit.getText().toString().trim();
             String transferValue = transferValueEdit.getText().toString().trim();
+            try {
+                Double.parseDouble(transferValue);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(mActivity, R.string.input_correct_value_tip, Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (TextUtils.isEmpty(receiveAddressValue)) {
                 Toast.makeText(mActivity, R.string.transfer_address_not_null, Toast.LENGTH_SHORT).show();
             } else if (!AddressUtil.isAddressValid(receiveAddressValue)) {
@@ -237,8 +244,19 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                isValueOk = !TextUtils.isEmpty(s);
-                updateTransferEditValue();
+                try {
+                    if (!TextUtils.isEmpty(s)) {
+                        Double.parseDouble(s.toString());
+                        isValueOk = true;
+                        updateTransferEditValue();
+                    } else {
+                        isValueOk = false;
+                        Toast.makeText(mActivity, R.string.input_correct_value_tip, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    isValueOk = false;
+                    Toast.makeText(mActivity, R.string.input_correct_value_tip, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
