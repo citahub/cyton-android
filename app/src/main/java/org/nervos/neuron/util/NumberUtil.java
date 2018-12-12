@@ -3,6 +3,7 @@ package org.nervos.neuron.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
@@ -185,6 +186,12 @@ public class NumberUtil {
 
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
+    }
+
+    public static String getEthFromWeiFroStringDecimal8ForGasPrice(String value){
+        String gwei=getDecimal8ENotation(Convert.fromWei(value, Convert.Unit.GWEI).toString());
+        BigInteger wei=getWeiFromGWeiForBigInt(Double.valueOf(gwei));
+       return getEthFromWeiForStringDecimal8(wei);
     }
 
     public static double getEthFromWeiForDouble(String hex) {

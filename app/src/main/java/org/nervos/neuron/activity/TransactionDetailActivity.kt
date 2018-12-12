@@ -28,7 +28,6 @@ import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.url.HttpUrls
 import org.nervos.neuron.view.TitleBar
-import org.web3j.utils.Convert
 import org.web3j.utils.Numeric
 import java.io.IOException
 import java.math.BigInteger
@@ -171,15 +170,14 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             if (mTransactionStatus != TransactionResponse.FAILED && !TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
                 val gas: BigInteger
                 val gasPriceBig = BigInteger(transactionResponse!!.gasPrice)
-                tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
+                tv_transaction_gas_price.text = NumberUtil.getEthFromWeiFroStringDecimal8ForGasPrice(transactionResponse!!.gasPrice) + " " + ConstantUtil.ETH
                 if (mTransactionStatus == TransactionResponse.PENDING) {
                     tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_limit)
-                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasLimit).toString()
-                    gas = Numeric.toBigInt(transactionResponse!!.gasLimit)
-                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                    tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
+                    gas = BigInteger(transactionResponse!!.gasLimit).multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
                 } else {
                     tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
-                    tv_transaction_gas_limit.text = BigInteger(transactionResponse!!.gasUsed).toString()
+                    tv_transaction_gas_limit.text = transactionResponse!!.gasUsed
                     gas = BigInteger(transactionResponse!!.gasPrice).multiply(BigInteger(transactionResponse!!.gasUsed))
                 }
                 tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + ConstantUtil.ETH
@@ -212,7 +210,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                                 } else {
                                     transactionResponse!!.nativeSymbol
                                 }
-                                tv_transaction_gas_price.text = Convert.fromWei(price, Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
+                                tv_transaction_gas_price.text = NumberUtil.getEthFromWeiFroStringDecimal8ForGasPrice(price) + " " + token
                                 val gas: BigInteger
                                 if (mTransactionStatus == TransactionResponse.PENDING) {
                                     tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
