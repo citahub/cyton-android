@@ -204,7 +204,7 @@
     <string name="about_blank">about:blank</string>
 
     <string name="token">Token</string>
-    <string name="add_assets">Add assets</string>
+    <string name="add_assets">Add Assets</string>
     <string name="wallet_token_loading">Loading...</string>
     <string name="wallet_token_loading_failed">Load fail</string>
     <string name="wallet_token_no_assets">No Assets</string>
