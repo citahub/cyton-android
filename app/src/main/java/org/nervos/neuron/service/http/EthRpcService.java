@@ -216,14 +216,14 @@ public class EthRpcService {
                                                                BigInteger gasPrice, BigInteger gasLimit, String password) {
         gasLimit = gasLimit.equals(BigInteger.ZERO) ? ConstantUtil.GAS_ERC20_LIMIT : gasLimit;
         String data = createTokenTransferData(address, createTransferValue(tokenItem, value));
-        BigInteger finalGasLimit = gasLimit;
+        String finalGasLimit = gasLimit.toString();
         return signRawTransaction(tokenItem.contractAddress, data, gasPrice, gasLimit, password)
                 .flatMap((Func1<String, Observable<EthSendTransaction>>) signData -> {
                     try {
                         EthSendTransaction ethSendTransaction = service.ethSendRawTransaction(signData).sendAsync().get();
                         if (!ethSendTransaction.hasError()) {
                             saveEtherERC20Transaction(context, tokenItem, walletItem.address, address,
-                                    value, ethSendTransaction.getTransactionHash(), gasPrice.toString(), finalGasLimit.toString());
+                                    value, ethSendTransaction.getTransactionHash(), gasPrice.toString(), finalGasLimit);
                         }
                         return Observable.just(ethSendTransaction);
                     } catch (Exception e) {
@@ -235,7 +235,9 @@ public class EthRpcService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static void saveEtherERC20Transaction(Context context, TokenItem tokenItem, String from, String to, String value, String hash, String price, String limit) {
+
+    private static void saveEtherERC20Transaction(Context context, TokenItem tokenItem, String from, String to,
+                                                  String value, String hash, String price, String limit) {
         executorService.execute(new Runnable() {
             @Override
             public void run() {

@@ -29,7 +29,6 @@ import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.url.HttpUrls
 import org.nervos.neuron.view.TitleBar
-import org.web3j.utils.Convert
 import org.web3j.utils.Numeric
 import java.io.IOException
 import java.math.BigInteger
@@ -61,81 +60,12 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         transactionResponse = intent.getParcelableExtra(TRANSACTION_DETAIL)
         mTransactionStatus = intent.getIntExtra(TRANSACTION_STATUS, TransactionResponse.PENDING)
 
-        LogUtil.d("transaction: " + Gson().toJson(transactionResponse))
-
         tokenItem = intent.getParcelableExtra(TRANSACTION_TOKEN)
         isEther = EtherUtil.isEther(tokenItem)
 
+        initTransactionStatusView()
+
         TokenLogoUtil.setLogo(tokenItem!!, mActivity, iv_token_icon)
-        when (mTransactionStatus) {
-            TransactionResponse.FAILED -> {
-                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_failed)
-                if (checkReceiver(transactionResponse!!.to)) {
-                    tv_status.text = resources.getString(R.string.transaction_detail_contract_status_fail)
-                } else {
-                    tv_status.text = resources.getString(R.string.transaction_detail_status_fail)
-                }
-                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_failed))
-
-                //hide gas
-                line_gas.visibility = View.GONE
-                tv_transaction_gas_title.visibility = View.GONE
-                tv_transaction_gas.visibility = View.GONE
-
-                //hide gas price
-                tv_transaction_gas_price_title.visibility = View.GONE
-                tv_transaction_gas_price.visibility = View.GONE
-                line_gas_price.visibility = View.GONE
-
-                //hide query transaction
-                line_receiver.visibility = View.GONE
-                iv_microscope.visibility = View.GONE
-                tv_microscope.visibility = View.GONE
-                iv_microscope_arrow.visibility = View.GONE
-
-                //hide gas limit
-                tv_transaction_gas_limit_title.visibility = View.GONE
-                tv_transaction_gas_limit.visibility = View.GONE
-            }
-            TransactionResponse.PENDING -> {
-                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_pending)
-                if (checkReceiver(transactionResponse!!.to)) {
-                    tv_status.text = resources.getString(R.string.transaction_detail_contract_status_pending)
-                } else {
-                    tv_status.text = resources.getString(R.string.transaction_detail_status_pending)
-                }
-                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_pending))
-            }
-            TransactionResponse.SUCCESS -> {
-                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_success)
-                if (checkReceiver(transactionResponse!!.to)) {
-                    tv_status.text = resources.getString(R.string.transaction_detail_contract_status_success)
-                } else {
-                    tv_status.text = resources.getString(R.string.transaction_detail_status_success)
-                }
-                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_success))
-
-                //show transaction hash
-                tv_transaction_hash_title.visibility = View.VISIBLE
-                tv_transaction_hash.visibility = View.VISIBLE
-                line_transaction_hash.visibility = View.VISIBLE
-                tv_transaction_hash.text = transactionResponse!!.hash
-
-                //show block chain height
-                tv_transaction_blockchain_height_title.visibility = View.VISIBLE
-                tv_transaction_blockchain_height.visibility = View.VISIBLE
-                line_blockchain_height.visibility = View.VISIBLE
-                if (isEther) {
-                    tv_transaction_blockchain_height!!.text = transactionResponse!!.blockNumber
-                } else {
-                    try {
-                        tv_transaction_blockchain_height.text = Numeric.toBigInt(transactionResponse!!.blockNumber).toString(10)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
         tv_token_unit.text = tokenItem!!.symbol
         tv_transaction_sender.text = transactionResponse!!.from
         tv_transaction_sender.setOnClickListener {
@@ -172,17 +102,17 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         if (isEther) {
             tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             if (mTransactionStatus != TransactionResponse.FAILED && !TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
+
+                tv_transaction_gas_price.text = NumberUtil.getGWeiFromWeiForString(BigInteger(transactionResponse!!.gasPrice))+ " " + ConstantUtil.GWEI
+
                 val gas: BigInteger
-                val gasPriceBig = BigInteger(transactionResponse!!.gasPrice)
-                tv_transaction_gas_price.text = Convert.fromWei(gasPriceBig.toString(), Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
                 if (mTransactionStatus == TransactionResponse.PENDING) {
-                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_limit)
-                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasLimit).toString()
-                    gas = Numeric.toBigInt(transactionResponse!!.gasLimit)
-                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(gasPriceBig.toInt())))
+                    tv_transaction_gas_limit_title.setText(R.string.gas_limit)
+                    tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
+                    gas = BigInteger(transactionResponse!!.gasLimit).multiply(BigInteger(transactionResponse!!.gasPrice))
                 } else {
                     tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
-                    tv_transaction_gas_limit.text = BigInteger(transactionResponse!!.gasUsed).toString()
+                    tv_transaction_gas_limit.text = transactionResponse!!.gasUsed
                     gas = BigInteger(transactionResponse!!.gasPrice).multiply(BigInteger(transactionResponse!!.gasUsed))
                 }
                 tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + ConstantUtil.ETH
@@ -205,33 +135,8 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             tv_chain_name.text = transactionResponse!!.chainName
 
             if (mTransactionStatus != TransactionResponse.FAILED) {
-                tv_transaction_gas_price_title.text = resources.getString(R.string.quota_price)
-                AppChainRpcService.getQuotaPrice(transactionResponse!!.from)
-                        .subscribe(object : NeuronSubscriber<String>() {
-                            override fun onNext(price: String) {
-                                super.onNext(price)
-                                val token = if (TextUtils.isEmpty(transactionResponse!!.nativeSymbol)) {
-                                    DBWalletUtil.getChainItemFromCurrentWallet(mActivity, transactionResponse!!.chainId).tokenSymbol
-                                } else {
-                                    transactionResponse!!.nativeSymbol
-                                }
-                                tv_transaction_gas_price.text = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(price))) + transactionResponse!!.symbol
-                                val gas: BigInteger
-                                if (mTransactionStatus == TransactionResponse.PENDING) {
-                                    tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
-                                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasLimit).toString()
-                                    gas = Numeric.toBigInt(transactionResponse!!.gasLimit)
-                                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(price.toInt())))
-                                } else {
-                                    tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used)
-                                    tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
-                                    gas = Numeric.toBigInt(transactionResponse!!.gasUsed)
-                                            .multiply(Numeric.toBigInt(HexUtils.IntToHex(price.toInt())))
-                                }
-                                tv_transaction_gas.text =
-                                        NumberUtil.getEthFromWeiForStringDecimal8(gas) + token
-                            }
-                        })
+                tv_transaction_gas_price_title.setText(R.string.quota_price)
+                initQuotaInfo()
             }
         }
     }
@@ -286,6 +191,33 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                 tv_transaction_blockchain_height.text = if (isEther) transactionResponse!!.blockNumber else NumberUtil.hexToDecimal(transactionResponse!!.blockNumber)
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initQuotaInfo() {
+        AppChainRpcService.getQuotaPrice(transactionResponse!!.from)
+                .subscribe(object : NeuronSubscriber<String>() {
+                    override fun onNext(price: String) {
+                        super.onNext(price)
+                        val tokenUnit = if (TextUtils.isEmpty(transactionResponse!!.nativeSymbol)) {
+                            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, transactionResponse!!.chainId).tokenSymbol
+                        } else {
+                            transactionResponse!!.nativeSymbol
+                        }
+                        tv_transaction_gas_price.text = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(price))) + tokenUnit
+                        val gas: BigInteger
+                        if (mTransactionStatus == TransactionResponse.PENDING) {
+                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
+                            tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
+                            gas = Numeric.toBigInt(transactionResponse!!.gasLimit).multiply(BigInteger(price))
+                        } else {
+                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used)
+                            tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
+                            gas = Numeric.toBigInt(transactionResponse!!.gasUsed).multiply(BigInteger(price))
+                        }
+                        tv_transaction_gas.text = NumberUtil.getEthFromWeiForStringDecimal8(gas) + tokenUnit
+                    }
+                })
     }
 
     override fun initAction() {
