@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import kotlinx.android.synthetic.main.activity_transaction_detail.*
@@ -41,6 +42,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
 
     private var walletItem: WalletItem? = null
     private var transactionResponse: TransactionResponse? = null
+    private var tokenItem: TokenItem? = null
     private var title: TitleBar? = null
     private var isEther = false
     private var mTransactionStatus = TransactionResponse.PENDING
@@ -59,11 +61,12 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         transactionResponse = intent.getParcelableExtra(TRANSACTION_DETAIL)
         mTransactionStatus = intent.getIntExtra(TRANSACTION_STATUS, TransactionResponse.PENDING)
 
-        val tokenItem: TokenItem = intent.getParcelableExtra(TRANSACTION_TOKEN)
-        if (EtherUtil.isEther(tokenItem)) {
-            isEther = true
-        }
-        TokenLogoUtil.setLogo(tokenItem, mActivity, iv_token_icon)
+        LogUtil.d("transaction: " + Gson().toJson(transactionResponse))
+
+        tokenItem = intent.getParcelableExtra(TRANSACTION_TOKEN)
+        isEther = EtherUtil.isEther(tokenItem)
+
+        TokenLogoUtil.setLogo(tokenItem!!, mActivity, iv_token_icon)
         when (mTransactionStatus) {
             TransactionResponse.FAILED -> {
                 tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_failed)
@@ -133,7 +136,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                 }
             }
         }
-        tv_token_unit.text = tokenItem.symbol
+        tv_token_unit.text = tokenItem!!.symbol
         tv_transaction_sender.text = transactionResponse!!.from
         tv_transaction_sender.setOnClickListener {
             copyText(transactionResponse!!.from)
@@ -188,7 +191,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                     .load(R.drawable.icon_eth_microscope)
                     .into(iv_microscope)
         } else {
-            if (tokenItem.chainId != "1") {
+            if (tokenItem!!.chainId != "1") {
                 line_receiver.visibility = View.GONE
                 iv_microscope.visibility = View.GONE
                 tv_microscope.visibility = View.GONE
@@ -212,7 +215,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                                 } else {
                                     transactionResponse!!.nativeSymbol
                                 }
-                                tv_transaction_gas_price.text = Convert.fromWei(price, Convert.Unit.GWEI).toString() + " " + ConstantUtil.GWEI
+                                tv_transaction_gas_price.text = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(price))) + transactionResponse!!.symbol
                                 val gas: BigInteger
                                 if (mTransactionStatus == TransactionResponse.PENDING) {
                                     tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
@@ -229,6 +232,58 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                                         NumberUtil.getEthFromWeiForStringDecimal8(gas) + token
                             }
                         })
+            }
+        }
+    }
+
+    private fun initTransactionStatusView() {
+        when (mTransactionStatus) {
+            TransactionResponse.FAILED -> {
+                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_failed)
+                tv_status.setText(if (checkReceiver(transactionResponse!!.to)) R.string.transaction_detail_contract_status_fail else R.string.transaction_detail_status_fail)
+                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_failed))
+
+                //hide gas
+                line_gas.visibility = View.GONE
+                tv_transaction_gas_title.visibility = View.GONE
+                tv_transaction_gas.visibility = View.GONE
+
+                //hide gas price
+                tv_transaction_gas_price_title.visibility = View.GONE
+                tv_transaction_gas_price.visibility = View.GONE
+                line_gas_price.visibility = View.GONE
+
+                //hide query transaction
+                line_receiver.visibility = View.GONE
+                iv_microscope.visibility = View.GONE
+                tv_microscope.visibility = View.GONE
+                iv_microscope_arrow.visibility = View.GONE
+
+                //hide gas limit
+                tv_transaction_gas_limit_title.visibility = View.GONE
+                tv_transaction_gas_limit.visibility = View.GONE
+            }
+            TransactionResponse.PENDING -> {
+                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_pending)
+                tv_status.setText(if (checkReceiver(transactionResponse!!.to)) R.string.transaction_detail_contract_status_pending else R.string.transaction_detail_status_pending)
+                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_pending))
+            }
+            TransactionResponse.SUCCESS -> {
+                tv_status.background = ContextCompat.getDrawable(this, R.drawable.bg_transaction_detail_success)
+                tv_status.setText(if (checkReceiver(transactionResponse!!.to)) R.string.transaction_detail_contract_status_success else R.string.transaction_detail_status_success)
+                tv_status.setTextColor(ContextCompat.getColor(this, R.color.transaction_detail_success))
+
+                //show transaction hash
+                tv_transaction_hash_title.visibility = View.VISIBLE
+                tv_transaction_hash.visibility = View.VISIBLE
+                line_transaction_hash.visibility = View.VISIBLE
+                tv_transaction_hash.text = transactionResponse!!.hash
+
+                //show block chain height
+                tv_transaction_blockchain_height_title.visibility = View.VISIBLE
+                tv_transaction_blockchain_height.visibility = View.VISIBLE
+                line_blockchain_height.visibility = View.VISIBLE
+                tv_transaction_blockchain_height.text = if (isEther) transactionResponse!!.blockNumber else NumberUtil.hexToDecimal(transactionResponse!!.blockNumber)
             }
         }
     }
