@@ -284,15 +284,15 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                 Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_TRANSFER, true);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_NATIVE_TOKEN, mPresenter.isNativeToken());
+                mTransactionInfo.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
+                mTransactionInfo.data = mPresenter.getData();
                 if (mPresenter.isEther()) {
                     mTransactionInfo.setGasLimit(mPresenter.getGasLimit());
-                    mTransactionInfo.setGasPrice(mPresenter.getEthGasDefaultPrice());
-                    mTransactionInfo.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
+                    mTransactionInfo.setGasPrice(mPresenter.getGasPrice());
                     mTransactionInfo.chainId = EtherUtil.getEtherId();
                 } else {
                     mTransactionInfo.chainId = mPresenter.getTokenItem().getChainId();
-                    mTransactionInfo.setQuota(mPresenter.isNativeToken()
-                            ? ConstantUtil.QUOTA_TOKEN.toString() : ConstantUtil.QUOTA_ERC20.toString());
+                    mTransactionInfo.setQuota(mPresenter.getQuotaLimit().toString());
                 }
                 intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
                 startActivityForResult(intent, REQUEST_CODE_TRANSACTION);

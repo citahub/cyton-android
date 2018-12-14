@@ -601,7 +601,8 @@ public class AppWebActivity extends NBaseActivity {
                             }
                             if (fail) {
                                 if (!TextUtils.isEmpty(mCallback)) {
-                                    BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL_CODE, NeuronDAppCallback.INSTANCE.USER_CANCEL);
+                                    BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                                            NeuronDAppCallback.USER_CANCEL_CODE, NeuronDAppCallback.USER_CANCEL);
                                     JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                                 }
                             }
@@ -609,7 +610,8 @@ public class AppWebActivity extends NBaseActivity {
                         break;
                     default:
                         if (!TextUtils.isEmpty(mCallback)) {
-                            BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
+                            BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                                    NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
                             JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                         }
                         break;

@@ -12,14 +12,12 @@ import org.nervos.neuron.item.transaction.TransactionInfo;
 import org.nervos.neuron.service.http.*;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.HexUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import rx.Subscriber;
 
@@ -28,7 +26,6 @@ import java.math.BigInteger;
 
 import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_ADDRESS;
 import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_TOKEN;
-import static org.web3j.utils.Convert.Unit.GWEI;
 
 /**
  * Created by duanyytop on 2018/11/4
@@ -44,7 +41,7 @@ public class TransferPresenter {
     private WalletItem mWalletItem;
     private CurrencyItem mCurrencyItem;
 
-    private BigInteger mGasPrice, mEthGasDefaultPrice, mGasLimit = ConstantUtil.GAS_LIMIT, mGas;
+    private BigInteger mGasPrice, mGasLimit, mGas;
     private BigInteger mQuota, mQuotaLimit, mQuotaPrice;
     private String mData;
     private double mTokenBalance, mNativeTokenBalance, mTransferFee;
@@ -115,7 +112,7 @@ public class TransferPresenter {
 
     private void initTransferFee() {
         if (EtherUtil.isEther(mTokenItem)) {
-            initEthGasPrice();
+            initEthGasInfo();
             mTransferView.initTransferEditValue();
             initTokenPrice();
         } else {
@@ -123,7 +120,8 @@ public class TransferPresenter {
         }
     }
 
-    private void initEthGasPrice() {
+    private void initEthGasInfo() {
+        mGasLimit = EtherUtil.isNative(mTokenItem) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
         mTransferView.startUpdateEthGasPrice();
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
@@ -134,7 +132,7 @@ public class TransferPresenter {
 
             @Override
             public void onNext(BigInteger gasPrice) {
-                mEthGasDefaultPrice = mGasPrice = gasPrice;
+                mGasPrice = gasPrice;
                 updateGasInfo();
                 mTransferView.updateEthGasPriceSuccess(gasPrice);
             }
@@ -190,6 +188,10 @@ public class TransferPresenter {
     public void updateQuotaLimit(BigInteger quotaLimit) {
         mQuotaLimit = quotaLimit;
         initQuotaFee();
+    }
+
+    public BigInteger getQuotaLimit() {
+        return mQuotaLimit;
     }
 
     public void initGasLimit(TransactionInfo transactionInfo) {
@@ -353,6 +355,10 @@ public class TransferPresenter {
         mData = data;
     }
 
+    public String getData() {
+        return mData;
+    }
+
     public TokenItem getTokenItem() {
         return mTokenItem;
     }
@@ -400,8 +406,8 @@ public class TransferPresenter {
         }
     }
 
-    public BigInteger getEthGasDefaultPrice() {
-        return mEthGasDefaultPrice;
+    public BigInteger getGasPrice() {
+        return mGasPrice;
     }
 
     public boolean isEthERC20() {
