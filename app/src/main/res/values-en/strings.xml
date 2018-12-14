@@ -200,9 +200,9 @@
     <string name="photo_album">Album</string>
     <string name="contract_create">"Contract Created"</string>
     <string name="empty_collect">No Collectives Found</string>
-    <string name="gas_price_too_low">Gas Price too low, Please set above the recommended gas</string>
-    <string name="gas_limit_too_low">Gas Limit too low, Please set reasonable value</string>
-    <string name="quota_limit_too_low">Quota Limit too low, Please set reasonable value</string>
+    <string name="gas_price_too_low">The Gas Price you entered is too low, please enter a reasonable value.</string>
+    <string name="gas_limit_too_low">The Gas Limit you entered is too low, please enter a reasonable value.</string>
+    <string name="quota_limit_too_low">The Quota Limit you entered is too low, please enter a reasonable value.</string>
     <string name="about_blank">about:blank</string>
 
     <string name="token">Token</string>

@@ -525,9 +525,9 @@
     <string name="input_correct_gas_limit_tip">请输入正确的GasLimit</string>
     <string name="input_correct_quota_limit_tip">请输入正确的QuotaLimit</string>
     <string name="input_correct_value_tip">请输入正确的金额</string>
-    <string name="gas_price_too_low">您的Gas Price设置过低，建议输入推荐值以快速转账</string>
-    <string name="gas_limit_too_low">您的Gas Limit设置过低，建议输入推荐值以快速转账</string>
-    <string name="quota_limit_too_low">您的Quota Limit设置过低，建议输入推荐值以快速转账</string>
+    <string name="gas_price_too_low">您输入的Gas Price过低，请输入合理的数值</string>
+    <string name="gas_limit_too_low">您输入的Gas Limit过低，请输入合理的数值</string>
+    <string name="quota_limit_too_low">您输入的Quota Limit过低，请输入合理的数值</string>
     <string name="balance_more_gas">请确保账户剩余%s高于矿工费用，以便顺利完成转账～</string>
     <string name="all_balance_transfer_tip">您输入的金额超过你的账号余额，是否全部转出？</string>
     <string name="transaction_data">包含数据</string>

@@ -209,7 +209,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                         if (mTransactionStatus == TransactionResponse.PENDING) {
                             tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
                             tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
-                            gas = Numeric.toBigInt(transactionResponse!!.gasLimit).multiply(BigInteger(price))
+                            gas = BigInteger(transactionResponse!!.gasLimit).multiply(BigInteger(price))
                         } else {
                             tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used)
                             tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
