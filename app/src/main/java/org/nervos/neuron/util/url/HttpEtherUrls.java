@@ -25,5 +25,7 @@ public class HttpEtherUrls {
             + "&module=account&action=txlist&sort=desc&address=%s&page=%s&offset=%s";
     public static final String ERC20_END_URL = "?apikey=" + ETHER_SCAN_API_KEY
             + "&module=account&action=tokentx&sort=desc&contractaddress=%s&address=%s&page=%s&offset=%s";
+    public static final String ETH_TRANSACTION_STATUS_URL = "?apikey=" + ETHER_SCAN_API_KEY
+            + "&module=transaction&action=gettxreceiptstatus&txhash=%s";
 
 }

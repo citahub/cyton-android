@@ -141,4 +141,9 @@ public class EtherUtil {
         return getEtherBaseUrl() + HttpEtherUrls.ERC20_END_URL;
     }
 
+
+    public static String getEtherTransactionStatusUrl() {
+        return getEtherBaseUrl() + HttpEtherUrls.ETH_TRANSACTION_STATUS_URL;
+    }
+
 }

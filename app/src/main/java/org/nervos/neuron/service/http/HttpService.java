@@ -11,6 +11,7 @@ import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.response.AppChainERC20TransferResponse;
 import org.nervos.neuron.item.response.EthTransactionResponse;
 import org.nervos.neuron.item.response.AppChainTransactionResponse;
+import org.nervos.neuron.item.response.EthTransactionStatusResponse;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -188,6 +189,20 @@ public class HttpService {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    public static EthTransactionStatusResponse getEthTransactionStatus(String hash) {
+        String appChainUrl = String.format(EtherUtil.getEtherTransactionStatusUrl(), hash);
+        final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
+        Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
+        try {
+            return new Gson().fromJson(appChainCall.execute().body().string(),
+                    EthTransactionStatusResponse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
