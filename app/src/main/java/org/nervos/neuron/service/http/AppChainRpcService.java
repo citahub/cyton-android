@@ -246,7 +246,7 @@ public class AppChainRpcService {
             String chainName = Objects.requireNonNull(DBWalletUtil.getChainItemFromCurrentWallet(context, chainId)).name;
             TransactionItem item = new TransactionItem(from, to, value, chainId, chainName,
                     TransactionItem.PENDING, System.currentTimeMillis(), hash);
-            item.gasLimit = NumberUtil.decimalToHex(limit);
+            item.gasLimit = limit;
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
             DBAppChainTransactionsUtil.save(context, item);

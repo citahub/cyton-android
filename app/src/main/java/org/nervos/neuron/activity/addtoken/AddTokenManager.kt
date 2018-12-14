@@ -42,8 +42,10 @@ class AddTokenManager(val context: Context) {
     //load erc20 by contract address
     fun loadErc20(address: String, contractAddress: String, chainItem: ChainItem): Observable<TokenItem> {
         return Observable.fromCallable {
-            if (!AddressUtil.isAddressValid(contractAddress) || !checkRepetitionContract(chainItem.chainId, contractAddress)) {
+            if (!AddressUtil.isAddressValid(contractAddress)) {
                 throw Throwable(context.resources.getString(R.string.contract_address_error))
+            } else if (!checkRepetitionContract(chainItem.chainId, contractAddress)) {
+                throw Throwable(context.resources.getString(R.string.exist_erc20_token))
             }
             val tokenItem = when (EtherUtil.isEther(chainItem.chainId)) {
                 true -> {

@@ -15,6 +15,7 @@ import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBChainUtil
+import org.nervos.neuron.util.db.DBWalletUtil
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
@@ -100,17 +101,34 @@ class AdvanceSetupActivity : NBaseActivity() {
         }
 
         btn_advance_setup_confirm.setOnClickListener {
-            if (mTransactionInfo!!.isEthereum && et_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
+            if (TextUtils.isEmpty(et_advance_setup_gas_price.text.toString())) {
+                Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else if (mTransactionInfo!!.isEthereum && et_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
                 Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (BigInteger.valueOf(et_advance_setup_gas_limit.text.toString().trim().toLong()) < ConstantUtil.GAS_LIMIT) {
-                Toast.makeText(mActivity, R.string.gas_limit_too_low, Toast.LENGTH_SHORT).show()
+
+            if (TextUtils.isEmpty(et_advance_setup_gas_limit.text.toString())) {
+                Toast.makeText(mActivity, if (mTransactionInfo!!.isEthereum) R.string.input_correct_gas_limit_tip else R.string.input_correct_quota_limit_tip,
+                        Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else if (BigInteger.valueOf(et_advance_setup_gas_limit.text.toString().trim().toLong()) < ConstantUtil.GAS_LIMIT) {
+                Toast.makeText(mActivity, if (mTransactionInfo!!.isEthereum) R.string.gas_limit_too_low else R.string.quota_limit_too_low,
+                        Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             if (isTransfer && isNativeToken) {
                 if (!TextUtils.isEmpty(et_advance_setup_pay_data.text.toString())) {
-                    mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString()
+                    if (NumberUtil.isHex(et_advance_setup_pay_data.text.toString())) {
+                        mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString()
+                    } else {
+                        Toast.makeText(mActivity, R.string.input_hex_data, Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
+                } else {
+                    mTransactionInfo!!.data = ""
                 }
             }
             if (mTransactionInfo!!.isEthereum) {
@@ -196,7 +214,7 @@ class AdvanceSetupActivity : NBaseActivity() {
         return if (mTransactionInfo!!.isEthereum) {
             ConstantUtil.ETH
         } else {
-            DBChainUtil.getChain(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
+            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
         }
     }
 

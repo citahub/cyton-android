@@ -49,7 +49,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private TextView mTvValue, mTvSymbol, mTvPayFee, mTvPayFeeTitle, mTvTotalFee,
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
-    private String mEthDefaultPrice;
     private ChainItem mChainItem;
     private Double mQuota;
 
@@ -143,7 +142,6 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
-                mEthDefaultPrice = gasPrice.toString(16);
                 mTransactionInfo.setGasPrice(gasPrice);
                 setEthGasPrice();
             }
