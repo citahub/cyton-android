@@ -33,8 +33,8 @@ public class MainActivity extends NBaseActivity {
 
     public static final String EXTRA_TAG = "extra_tag";
     public static final int REQUEST_CODE_SCAN = 0x01;
-    private static final int APPCAHIN_TRANSACTION_FETCH_PERIOD = 30000;
-    private static final int ETHER_TRANSACTION_FETCH_PERIOD = 30000;
+    private static final int APPCAHIN_TRANSACTION_FETCH_PERIOD = 300000;
+    private static final int ETHER_TRANSACTION_FETCH_PERIOD = 300000;
 
     private RadioGroup navigation;
     private AppFragment appFragment;
