@@ -7,7 +7,7 @@
     <string name="select_wallet_unlock">Select Wallet</string>
     <string name="title_add_token">Add</string>
     <string name="add_wallet">Import Wallet</string>
-    <string name="manage_token_list">List Setting</string>
+    <string name="manage_token_list">Setting</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="finish">Finish</string>
@@ -51,7 +51,7 @@
     <string name="confirm_action">Confirm</string>
     <string name="confirm_transfer_action">Confirm</string>
     <string name="input_app_website_hint">Please input the decentralized web url</string>
-    <string name="add_token_success">Token has added</string>
+    <string name="add_token_success">Token added</string>
     <string name="import_mnemonic_path_err">Please input custom path</string>
 
     <string name="collection_id_place_holder">ID:%s</string>
@@ -147,8 +147,8 @@
     <string name="transaction_detail_title">Transaction Details</string>
     <string name="ethereum_mainnet">Ethereum Mainnet</string>
     <string name="press_back_finish">Press the return key again to exit</string>
-    <string name="collect_title">Your bookmarks</string>
-    <string name="my_dapp">Your DApp</string>
+    <string name="collect_title">My Collectibles</string>
+    <string name="my_dapp">My ÐApp</string>
     <string name="collect_success">Added to Bookmark</string>
     <string name="cancel_collect">Remove Bookmark</string>
     <string name="reload">Reload</string>
