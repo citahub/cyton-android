@@ -17,13 +17,18 @@
 
     <TextView
         android:id="@+id/tv_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="@dimen/default_margin"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:singleLine="true"
         android:textColor="@color/font_title"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
