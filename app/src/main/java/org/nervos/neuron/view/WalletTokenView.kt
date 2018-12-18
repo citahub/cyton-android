@@ -45,6 +45,11 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         tv_token_name.text = tokenItem.symbol
         tv_loading.text = resources.getString(R.string.wallet_token_loading)
         tv_token_currency.visibility = View.GONE
+        if (EtherUtil.isEther(tokenItem)) {
+            tv_chain_name.text = EtherUtil.getEthChainItem().name
+        } else {
+            tv_chain_name.text = tokenItem.chainName
+        }
         WalletService.getTokenBalance(context, tokenItem)
                 .subscribe(object : NeuronSubscriber<TokenItem>() {
 
