@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity.addtoken
 
 import android.content.Intent
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import com.yanzhenjie.permission.AndPermission
@@ -50,6 +51,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
+        edit_add_token_contract_address.gravity = Gravity.END
         AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL)
 
         manager = AddTokenManager(this)
@@ -70,7 +72,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
         btn_add_token.setOnClickListener {
             showProgressBar()
             if (mChainItem != null) {
-                manager!!.loadErc20(mWalletItem!!.address, edit_add_token_contract_address.text.toString().trim(), mChainItem!!)
+                manager!!.loadErc20(mWalletItem!!.address, edit_add_token_contract_address.text!!, mChainItem!!)
                         .subscribe(object : NeuronSubscriber<TokenItem>() {
                             override fun onNext(tokenItem: TokenItem?) {
                                 dismissProgressBar()
@@ -90,7 +92,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                             }
                         })
             } else {
-                manager!!.loadAppChain(edit_add_token_contract_address.text.toString().trim())
+                manager!!.loadAppChain(edit_add_token_contract_address.text!!)
                         .subscribe(object : NeuronSubscriber<ChainItem>() {
                             override fun onError(e: Throwable?) {
                                 dismissProgressBar()
@@ -138,11 +140,11 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                     tv_chain_name.text = mChainNameList!![dialog.mSelected]
                     if (dialog.mSelected == mChainNameList!!.size - 1) {
                         tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
-                        edit_add_token_contract_address.hint = resources.getString(R.string.input_appchain_node)
+                        edit_add_token_contract_address.hint = R.string.input_appchain_node
                         mChainItem = null
                     } else {
                         tv_add_token_contract_address.text = resources.getString(R.string.contract_address)
-                        edit_add_token_contract_address.hint = resources.getString(R.string.input_erc20_address)
+                        edit_add_token_contract_address.hint = R.string.input_erc20_address
                         mChainItem = mChainItemList!![dialog.mSelected]
                     }
                     dialog.dismiss()
@@ -158,7 +160,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                 val bundle = data.extras ?: return
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     val result = bundle.getString(CodeUtils.RESULT_STRING)
-                    edit_add_token_contract_address!!.setText(result)
+                    edit_add_token_contract_address!!.text = result
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     QrCodeActivity.track("1", false)
                     Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show()

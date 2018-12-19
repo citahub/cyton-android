@@ -35,4 +35,10 @@
         <attr name="status" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="CompressEditText">
+        <attr name="text_size" format="dimension" />
+        <attr name="text_color" format="reference" />
+        <attr name="edit_hint" format="reference" />
+    </declare-styleable>
+
 </resources>
