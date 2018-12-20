@@ -162,21 +162,29 @@ public class NumberUtil {
         return Convert.toWei(value, Convert.Unit.ETHER).toBigInteger();
     }
 
+
+
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
 
     public static double getEthFromWeiForDouble(String hex) {
-        if (TextUtils.isEmpty(hex)) return 0.0;
+        if (Strings.isEmpty(hex)) return 0.0;
         hex = Numeric.cleanHexPrefix(hex);
         return getEthFromWei(Numeric.toBigInt(hex));
     }
 
     public static String getEthFromWeiForString(String hex) {
-        if (TextUtils.isEmpty(hex)) return "0";
-        hex = Numeric.cleanHexPrefix(hex);
-        return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.ETHER).toString();
+        if (Strings.isEmpty(hex)) return "0";
+        return String.valueOf(getEthFromWeiForDouble(hex));
     }
+
+    public static double getEthFromWei(BigInteger value) {
+        return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
+    }
+
+
+
 
     public static String getGWeiFromWeiForString(BigInteger num) {
         return Convert.fromWei(num.toString(), Convert.Unit.GWEI).toString();
@@ -186,9 +194,7 @@ public class NumberUtil {
         return Convert.toWei(BigDecimal.valueOf(num), Convert.Unit.GWEI).toBigInteger();
     }
 
-    public static double getEthFromWei(BigInteger value) {
-        return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
-    }
+
 
     public static String divideDecimalSub(BigDecimal value, int decimal) {
         return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
