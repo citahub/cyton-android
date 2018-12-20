@@ -113,7 +113,7 @@ public class NumberUtil {
 
     @Nullable
     public static BigInteger hexToBigInteger(String input) {
-        if (TextUtils.isEmpty(input)) {
+        if (Strings.isEmpty(input)) {
             return null;
         }
         try {

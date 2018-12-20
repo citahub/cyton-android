@@ -3,6 +3,8 @@ package neuron;
 import org.junit.Test;
 import org.nervos.neuron.util.NumberUtil;
 
+import java.math.BigInteger;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -41,5 +43,38 @@ public class NumberUtilTest {
         assertFalse(NumberUtil.isHex("0xabc12@#"));
         assertFalse(NumberUtil.isHex("0xabc12@#"));
     }
+    
+
+    @Test
+    public void testIsNumeric() {
+        assertFalse(NumberUtil.isNumeric("0x123"));
+        assertTrue(NumberUtil.isNumeric("123"));
+        assertFalse(NumberUtil.isNumeric("12.087"));
+    }
+
+    @Test
+    public void testHexToUtf8() {
+        assertEquals("hello", NumberUtil.hexToUtf8("0x68656c6c6f"));
+    }
+
+    @Test
+    public void testUtf8ToHex() {
+        assertEquals("68656c6c6f", NumberUtil.utf8ToHex("hello"));
+    }
+
+    @Test
+    public void testHexToDecimal() {
+        assertEquals(Integer.valueOf(4660), NumberUtil.hexToInteger("0x1234"));
+        assertEquals(Long.valueOf(305419896), NumberUtil.hexToLong("0x12345678"));
+        assertEquals(new BigInteger("78187493520"), NumberUtil.hexToBigInteger("0x1234567890"));
+        assertEquals("4660", NumberUtil.hexToDecimal("0x1234"));
+        assertEquals("0x1234", NumberUtil.decimalToHex("4660"));
+    }
+
+    @Test
+    public void testToLowerCaseWithout0x() {
+        assertEquals("12a3abce", NumberUtil.toLowerCaseWithout0x("0x12A3aBcE"));
+    }
+
 
 }
