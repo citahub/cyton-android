@@ -72,7 +72,7 @@ public class HttpService {
                             List<TransactionResponse> transactionRepons = response.result;
                             for (TransactionResponse item : transactionRepons) {
                                 item.chainName = ConstantUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8Sub(new BigInteger(item.value)));
+                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8(new BigInteger(item.value)));
                                 item.symbol = ConstantUtil.ETH;
                                 item.nativeSymbol = ConstantUtil.ETH;
                             }
@@ -141,7 +141,7 @@ public class HttpService {
                     AppChainTransactionResponse response = new Gson().fromJson(res, AppChainTransactionResponse.class);
                     for (TransactionResponse item : response.result.transactions) {
                         item.chainName = result.getChainName();
-                        item.value = NumberUtil.getEthFromWeiForStringDecimal8Sub(Numeric.toBigInt(item.value));
+                        item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value));
                         item.symbol = result.getTokenSymbol();
                         item.nativeSymbol = result.getTokenSymbol();
                     }

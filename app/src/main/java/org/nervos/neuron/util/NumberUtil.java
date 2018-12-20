@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
+import org.web3j.utils.Strings;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -21,13 +22,7 @@ import java.util.regex.Pattern;
 public class NumberUtil {
 
     public static String getDecimalValid_2(double value) {
-        long integer = (long) value;
-        double decimal = value - integer;
-        BigDecimal b = new BigDecimal(decimal);
-        BigDecimal divisor = BigDecimal.ONE;
-        MathContext mc = new MathContext(2);
-        decimal = b.divide(divisor, mc).doubleValue();
-        return getDecimal8ENotation(integer + decimal);
+        return String.valueOf(new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
     }
 
     public static String getDecimal8ENotation(double value) {
@@ -47,23 +42,17 @@ public class NumberUtil {
         return getDecimal8ENotation(Double.parseDouble(value));
     }
 
-    public static String getDecimal2ENotation(String value) {
-        Double price = java.lang.Double.parseDouble(value.trim());
-        DecimalFormat df = new DecimalFormat("######0.00");
-        return df.format(price);
-    }
-
     /**
      * WARNING: not very sure
      * @param value
      * @return
      */
     public static boolean isHex(String value) {
-        if (TextUtils.isEmpty(value)) {
+        if (Strings.isEmpty(value)) {
             return false;
         }
         value = Numeric.cleanHexPrefix(value);
-        for (int i = 0; i < value.length(); i ++) {
+        for (int i = 0; i < value.length(); i++) {
             if (('0' > value.charAt(i) || '9' < value.charAt(i))
                     && ('A' > value.charAt(i) || 'F' < value.charAt(i))
                     && ('a' > value.charAt(i) || 'f' < value.charAt(i))) {
@@ -124,7 +113,7 @@ public class NumberUtil {
 
     @Nullable
     public static BigInteger hexToBigInteger(String input) {
-        if (TextUtils.isEmpty(input)) {
+        if (Strings.isEmpty(input)) {
             return null;
         }
         try {
@@ -140,12 +129,6 @@ public class NumberUtil {
 
     public static String toLowerCaseWithout0x(String hex) {
         return Numeric.cleanHexPrefix(hex).toLowerCase();
-    }
-
-    @NonNull
-    public static BigInteger hexToBigInteger(String input, BigInteger def) {
-        BigInteger value = hexToBigInteger(input);
-        return value == null ? def : value;
     }
 
 
@@ -179,25 +162,29 @@ public class NumberUtil {
         return Convert.toWei(value, Convert.Unit.ETHER).toBigInteger();
     }
 
-    public static String getEthFromWeiForStringDecimal8Sub(BigInteger value) {
-        return getDecimal8ENotation(getEthFromWei(value));
-    }
+
 
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
 
     public static double getEthFromWeiForDouble(String hex) {
-        if (TextUtils.isEmpty(hex)) return 0.0;
+        if (Strings.isEmpty(hex)) return 0.0;
         hex = Numeric.cleanHexPrefix(hex);
         return getEthFromWei(Numeric.toBigInt(hex));
     }
 
     public static String getEthFromWeiForString(String hex) {
-        if (TextUtils.isEmpty(hex)) return "0";
-        hex = Numeric.cleanHexPrefix(hex);
-        return Convert.fromWei(Numeric.toBigInt(hex).toString(), Convert.Unit.ETHER).toString();
+        if (Strings.isEmpty(hex)) return "0";
+        return String.valueOf(getEthFromWeiForDouble(hex));
     }
+
+    public static double getEthFromWei(BigInteger value) {
+        return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
+    }
+
+
+
 
     public static String getGWeiFromWeiForString(BigInteger num) {
         return Convert.fromWei(num.toString(), Convert.Unit.GWEI).toString();
@@ -207,9 +194,7 @@ public class NumberUtil {
         return Convert.toWei(BigDecimal.valueOf(num), Convert.Unit.GWEI).toBigInteger();
     }
 
-    public static double getEthFromWei(BigInteger value) {
-        return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
-    }
+
 
     public static String divideDecimalSub(BigDecimal value, int decimal) {
         return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
