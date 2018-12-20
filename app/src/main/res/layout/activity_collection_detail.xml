@@ -35,35 +35,41 @@
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="17dp"
+            android:ellipsize="end"
             android:textColor="@color/font_title"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rl_image" />
+            app:layout_constraintTop_toBottomOf="@id/rl_image"
+            app:layout_constraintWidth_percent="0.58" />
 
         <TextView
             android:id="@+id/tv_token_id"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:ellipsize="end"
             android:textColor="@color/font_title_third"
             android:textSize="15sp"
             app:layout_constraintLeft_toLeftOf="@id/tv_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:layout_constraintWidth_percent="0.4" />
 
         <TextView
             android:id="@+id/tv_contract_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
             android:layout_marginTop="3dp"
+            android:layout_marginEnd="15dp"
+            android:ellipsize="end"
             android:textColor="@color/font_title_third"
             android:textSize="15sp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:layout_constraintWidth_percent="0.4" />
 
         <View
             android:id="@+id/view_line1"
@@ -89,8 +95,8 @@
             android:id="@+id/rv_attrs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
             android:layout_marginStart="15dp"
+            android:layout_marginEnd="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_collection_attrs" />
@@ -130,9 +136,9 @@
             android:id="@+id/tv_collection_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="@color/font_title_third"
@@ -153,8 +159,8 @@
                 android:id="@+id/btn_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="66dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="66dp"
                 app:status="true"
                 app:text="@string/check" />
 
