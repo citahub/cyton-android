@@ -220,16 +220,14 @@ public class TransferPresenter {
 
     public void handleTransferAction(String password, String transferValue, String receiveAddress) {
         if (EtherUtil.isEther(mTokenItem)) {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, ConstantUtil.ETH,
-                    "2");
+            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, ConstantUtil.ETH, "2");
             if (ConstantUtil.ETH.equals(mTokenItem.symbol)) {
                 transferEth(password, transferValue, receiveAddress);
             } else {
                 transferEthErc20(password, transferValue, receiveAddress);
             }
         } else {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, mTokenItem
-                    .chainName, "2");
+            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, mTokenItem.chainName, "2");
             if (isNativeToken()) {
                 transferAppChainToken(password, transferValue, receiveAddress.toLowerCase());
             } else {

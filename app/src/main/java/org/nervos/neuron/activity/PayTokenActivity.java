@@ -183,7 +183,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
         mTvTotalFee.setText(CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(
-                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas())) + getNativeToken());
+                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas())) + " " + getNativeToken());
         CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(ConstantUtil.ETH, currencyItem.getName())
                 .subscribe(new NeuronSubscriber<String>() {
@@ -195,8 +195,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                             String currencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
                             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
-                                    mTransactionInfo.getGas()) + getNativeToken()
-                                    + "≈" + currencyItem.getSymbol() + currencyPrice);
+                                    mTransactionInfo.getGas()) + " " + getNativeToken() + " "
+                                    + "≈" + currencyItem.getSymbol() + " " + currencyPrice);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }

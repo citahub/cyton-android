@@ -30,8 +30,9 @@ public class CurrencyUtil {
                 break;
             }
         }
-        if (currencyItem == null)
+        if (currencyItem == null) {
             currencyItem = list.get(0);
+        }
         return currencyItem;
     }
 
@@ -41,8 +42,8 @@ public class CurrencyUtil {
     }
 
     public static String fmtMicrometer(String text) {
-        DecimalFormat df = new DecimalFormat("###,##0.########");;
-        double number = 0.0;
+        DecimalFormat df = new DecimalFormat("###,##0.########");
+        double number;
         try {
             number = Double.parseDouble(text);
         } catch (Exception e) {
