@@ -110,7 +110,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
             totalAssets += item.currencyPrice
             if (totalAssets != 0.0) {
                 mWalletAssetsView!!.setTotalAssets("≈" + CurrencyUtil.getCurrencyItem(context).symbol
-                        + CurrencyUtil.formatCurrency(totalAssets))
+                        + " " + CurrencyUtil.formatCurrency(totalAssets))
             }
         }
         if (isLoadedAll) {
@@ -160,7 +160,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     private fun startIvRefresh() {
         swipe_refresh_layout.isEnabled = false
         mCircleAnim = AnimationUtils.loadAnimation(context, R.anim.anim_round_rotate)
-        var interpolator = LinearInterpolator()
+        val interpolator = LinearInterpolator()
         mCircleAnim.interpolator = interpolator
         iv_refresh.startAnimation(mCircleAnim)
     }

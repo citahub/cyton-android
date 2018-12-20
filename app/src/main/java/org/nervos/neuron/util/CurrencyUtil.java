@@ -30,13 +30,25 @@ public class CurrencyUtil {
                 break;
             }
         }
-        if (currencyItem == null) currencyItem = list.get(0);
+        if (currencyItem == null)
+            currencyItem = list.get(0);
         return currencyItem;
     }
 
     public static String formatCurrency(Double currency) {
-        DecimalFormat df = new DecimalFormat("######0.0000");
-        return df.format(currency);
+        DecimalFormat df = new DecimalFormat("######0.00");
+        return fmtMicrometer(df.format(currency));
+    }
+
+    public static String fmtMicrometer(String text) {
+        DecimalFormat df = new DecimalFormat("###,##0.########");;
+        double number = 0.0;
+        try {
+            number = Double.parseDouble(text);
+        } catch (Exception e) {
+            number = 0.0;
+        }
+        return df.format(number);
     }
 
 }

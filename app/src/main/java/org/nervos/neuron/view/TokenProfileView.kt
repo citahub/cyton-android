@@ -128,7 +128,7 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(s: String) {
                             if (!TextUtils.isEmpty(s)) {
-                                method(CurrencyUtil.getCurrencyItem(context).symbol + CurrencyUtil.formatCurrency(s.toDouble()))
+                                method(CurrencyUtil.getCurrencyItem(context).symbol + " " + CurrencyUtil.formatCurrency(s.toDouble()))
                             } else {
                                 method("")
                             }

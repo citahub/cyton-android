@@ -7,12 +7,22 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
+
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.*;
+import org.nervos.neuron.item.AppItem;
+import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.CurrencyItem;
+import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionInfo;
-import org.nervos.neuron.service.http.*;
+import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.http.NeuronSubscriber;
+import org.nervos.neuron.service.http.TokenService;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -23,14 +33,13 @@ import org.nervos.neuron.view.dialog.TransferDialog;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import java.math.BigInteger;
-
-import static org.web3j.utils.Convert.Unit.GWEI;
 
 /**
  * Created by duanyytop on 2018/5/28
@@ -173,20 +182,21 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         }
 
         mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
-        mTvTotalFee.setText(NumberUtil.getDecimal8ENotation(
-                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas()) + getNativeToken());
+        mTvTotalFee.setText(CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(
+                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas())) + getNativeToken());
         CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(ConstantUtil.ETH, currencyItem.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
-                        if (TextUtils.isEmpty(price)) return;
+                        if (TextUtils.isEmpty(price))
+                            return;
                         try {
                             String currencyPrice = NumberUtil.getDecimalValid_2(
                                     mTransactionInfo.getGas() * Double.parseDouble(price));
                             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
-                                            mTransactionInfo.getGas()) + getNativeToken()
-                                            + "≈" + currencyItem.getSymbol() + currencyPrice);
+                                    mTransactionInfo.getGas()) + getNativeToken()
+                                    + "≈" + currencyItem.getSymbol() + currencyPrice);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
@@ -256,14 +266,14 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         }
                     }
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
-                    @Override
-                    public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                        return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
-                                mTransactionInfo.getStringValue(), gasPrice,
-                                mTransactionInfo.getGasLimit(),
-                                mTransactionInfo.data, password);
-                    }
-                }).subscribeOn(Schedulers.io())
+            @Override
+            public Observable<EthSendTransaction> call(BigInteger gasPrice) {
+                return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
+                        mTransactionInfo.getStringValue(), gasPrice,
+                        mTransactionInfo.getGasLimit(),
+                        mTransactionInfo.data, password);
+            }
+        }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override

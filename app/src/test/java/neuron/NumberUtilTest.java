@@ -1,6 +1,7 @@
 package neuron;
 
 import org.junit.Test;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
@@ -26,11 +27,11 @@ public class NumberUtilTest {
 
     @Test
     public void testDecimal8ENotation() {
-       assertEquals("1.0E-10", NumberUtil.getDecimal8ENotation(0.0000000001));
-       assertEquals("0.00000001", NumberUtil.getDecimal8ENotation(0.00000001));
-       assertEquals("1.00000001", NumberUtil.getDecimal8ENotation(1.00000001));
-       assertEquals("1.12345678", NumberUtil.getDecimal8ENotation(1.123456789));
-       assertEquals("1", NumberUtil.getDecimal8ENotation(1.0000000001));
+        assertEquals("1.0E-10", NumberUtil.getDecimal8ENotation(0.0000000001));
+        assertEquals("0.00000001", NumberUtil.getDecimal8ENotation(0.00000001));
+        assertEquals("1.00000001", NumberUtil.getDecimal8ENotation(1.00000001));
+        assertEquals("1.12345678", NumberUtil.getDecimal8ENotation(1.123456789));
+        assertEquals("1", NumberUtil.getDecimal8ENotation(1.0000000001));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class NumberUtilTest {
         assertFalse(NumberUtil.isHex("0xabc12@#"));
         assertFalse(NumberUtil.isHex("0xabc12@#"));
     }
-    
+
 
     @Test
     public void testIsNumeric() {
@@ -96,5 +97,13 @@ public class NumberUtilTest {
         assertFalse(NumberUtil.isPasswordOk("123456ASDF"));
         assertFalse(NumberUtil.isPasswordOk("123456$$$$"));
         assertFalse(NumberUtil.isPasswordOk("123456"));
+    }
+
+    @Test
+    public void testFmtMicrometer() {
+        assertEquals("100,000,000", CurrencyUtil.fmtMicrometer("100000000"));
+        assertEquals("0.00101", CurrencyUtil.fmtMicrometer("0.00101"));
+        assertEquals("10.1", CurrencyUtil.fmtMicrometer("10.1"));
+        assertEquals("1,000.1", CurrencyUtil.fmtMicrometer("1000.1"));
     }
 }

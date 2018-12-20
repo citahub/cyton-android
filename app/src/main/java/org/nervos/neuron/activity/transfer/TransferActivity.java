@@ -30,6 +30,7 @@ import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -117,9 +118,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     @Override
     public void updateAnyTokenBalance(Double balance) {
-        balanceText.setText(String.format(
-                getString(R.string.transfer_balance_place_holder),
-                NumberUtil.getDecimal8ENotation(balance) + " " + mPresenter.getTokenItem().symbol));
+        balanceText.setText(String.format(getString(R.string.transfer_balance_place_holder),
+                CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(balance)) + " " + mPresenter.getTokenItem().symbol));
     }
 
     @Override
