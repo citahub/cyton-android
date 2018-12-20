@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -88,10 +87,10 @@ public class TransferDialog {
     }
 
     public void setConfirmData(String address, String receiveAddress, String value, String feeSeek) {
-        ((TextView) confirmView.findViewById(R.id.from_address)).setText(address);
-        ((TextView) confirmView.findViewById(R.id.to_address)).setText(receiveAddress);
-        ((TextView) confirmView.findViewById(R.id.transfer_value)).setText(value);
-        ((TextView) confirmView.findViewById(R.id.transfer_fee)).setText(feeSeek);
+        ((TextView) confirmView.findViewById(R.id.tv_from_address)).setText(address);
+        ((TextView) confirmView.findViewById(R.id.tv_to_address)).setText(receiveAddress);
+        ((TextView) confirmView.findViewById(R.id.tv_transfer_value)).setText(value);
+        ((TextView) confirmView.findViewById(R.id.tv_transfer_fee)).setText(feeSeek);
     }
 
     private void initAction() {

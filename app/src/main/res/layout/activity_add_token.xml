@@ -44,10 +44,10 @@
             <ImageView
                 android:id="@+id/iv_triangle_spinner"
                 android:layout_width="wrap_content"
-                android:paddingStart="5dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:paddingStart="5dp"
                 android:src="@drawable/triangle" />
 
             <TextView
@@ -90,23 +90,16 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/scan" />
 
-            <android.support.v7.widget.AppCompatEditText
+            <org.nervos.neuron.view.CompressEditText
                 android:id="@+id/edit_add_token_contract_address"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/iv_add_token_contract_address_scan"
                 android:layout_toEndOf="@id/tv_add_token_contract_address"
-                android:background="@null"
-                android:ellipsize="end"
-                android:gravity="end|center_vertical"
-                android:hint="@string/input_erc20_address"
-                android:lines="1"
-                android:maxEms="20"
-                android:singleLine="true"
-                android:textColor="@color/font_title"
-                android:textSize="13sp" />
-
+                app:edit_hint="@string/input_erc20_address"
+                app:text_color="@color/font_title"
+                app:text_size="13sp" />
         </RelativeLayout>
 
     </LinearLayout>

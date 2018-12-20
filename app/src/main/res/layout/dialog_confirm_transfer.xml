@@ -47,7 +47,7 @@
             android:background="@color/line_form" />
 
         <TextView
-            android:id="@+id/transfer_value"
+            android:id="@+id/tv_transfer_value"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginStart="@dimen/default_margin"
@@ -56,7 +56,7 @@
             android:textColor="@color/font_title"
             android:textSize="35sp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -64,6 +64,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
+                android:id="@+id/tv_to_address_title"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -72,23 +73,27 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/to_address"
+                android:id="@+id/tv_to_address"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/tv_to_address_title"
                 android:ellipsize="middle"
-                android:gravity="center_vertical"
+                android:gravity="right"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
                 android:textSize="15sp" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <View
             style="@style/separateLineLong"
             android:layout_marginStart="@dimen/default_margin" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -96,6 +101,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
+                android:id="@+id/tv_from_address_title"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -104,21 +110,25 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/from_address"
+                android:id="@+id/tv_from_address"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/tv_from_address_title"
                 android:ellipsize="middle"
-                android:gravity="center_vertical"
+                android:gravity="right"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
                 android:textSize="15sp" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <View
             style="@style/separateLineLong"
             android:layout_marginStart="@dimen/default_margin" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -126,6 +136,7 @@
             android:paddingRight="@dimen/default_margin">
 
             <TextView
+                android:id="@+id/tv_fee"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -134,15 +145,19 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/transfer_fee"
+                android:id="@+id/tv_transfer_fee"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/tv_fee"
                 android:ellipsize="middle"
-                android:gravity="center_vertical"
+                android:gravity="right"
                 android:singleLine="true"
                 android:textColor="@color/font_title"
                 android:textSize="15sp" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <View
             style="@style/separateLineLong"

@@ -12,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-import de.hdodenhof.circleimageview.CircleImageView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
@@ -34,6 +35,7 @@ import org.nervos.neuron.util.ether.EtherUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.view.CompressEditText;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
 import org.nervos.neuron.view.dialog.ToastDoubleButtonDialog;
@@ -45,6 +47,8 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
 import java.math.BigInteger;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by duanyytop on 2018/11/4
@@ -60,7 +64,8 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     private TextView walletAddressText, walletNameText, feeValueText, balanceText;
     private ImageView scanImage;
-    private AppCompatEditText receiveAddressEdit, transferValueEdit;
+    private CompressEditText mCetReceiverAddress;
+    private AppCompatEditText  transferValueEdit;
     private CommonButton nextActionButton;
     private CircleImageView photoImage;
     private ProgressBar progressBar;
@@ -82,7 +87,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         walletNameText = findViewById(R.id.wallet_name);
         balanceText = findViewById(R.id.wallet_balance_text);
         feeValueText = findViewById(R.id.fee_value_text);
-        receiveAddressEdit = findViewById(R.id.transfer_address);
+        mCetReceiverAddress = findViewById(R.id.cet_address);
         transferValueEdit = findViewById(R.id.transfer_value);
         photoImage = findViewById(R.id.wallet_photo);
         titleBar = findViewById(R.id.title);
@@ -107,7 +112,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     @Override
     public void updaterReceiveAddress(String address) {
-        receiveAddressEdit.setText(address);
+        mCetReceiverAddress.setText(address);
     }
 
     @Override
@@ -175,7 +180,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
         });
 
         nextActionButton.setOnClickListener(v -> {
-            String receiveAddressValue = receiveAddressEdit.getText().toString().trim();
+            String receiveAddressValue = mCetReceiverAddress.getText();
             String transferValue = transferValueEdit.getText().toString().trim();
             try {
                 Double.parseDouble(transferValue);
@@ -232,7 +237,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     @Override
     public void initTransferEditValue() {
-        receiveAddressEdit.addTextChangedListener(new NeuronTextWatcher() {
+        mCetReceiverAddress.setTextWatcher(new NeuronTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
@@ -271,7 +276,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     private TransactionInfo getTransactionInfo() {
         TransactionInfo transactionInfo = new TransactionInfo(mPresenter.getTokenItem().contractAddress, "0");
-        transactionInfo.data = EthRpcService.createTokenTransferData(receiveAddressEdit.getText().toString(),
+        transactionInfo.data = EthRpcService.createTokenTransferData(mCetReceiverAddress.getText(),
                 Convert.toWei(transferValueEdit.getText().toString(), Convert.Unit.ETHER).toBigInteger());
         return transactionInfo;
     }
@@ -307,7 +312,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     private void getConfirmTransferView() {
         if (isFastDoubleClick()) return;
         String transferValue = transferValueEdit.getText().toString().trim();
-        String receiveAddress = receiveAddressEdit.getText().toString().trim();
+        String receiveAddress = mCetReceiverAddress.getText();
         transferDialog = new TransferDialog(this, (password, progressBar) -> {
             this.progressBar = progressBar;
             if (TextUtils.isEmpty(password)) {
@@ -400,7 +405,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                     switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
                         case org.nervos.neuron.util.qrcode.CodeUtils.STRING_ADDRESS:
                             String result = bundle.getString(CodeUtils.RESULT_STRING);
-                            receiveAddressEdit.setText(result);
+                            mCetReceiverAddress.setText(result);
                             break;
                         default:
                             Toast.makeText(this, R.string.address_error,

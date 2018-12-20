@@ -20,12 +20,16 @@
 
     <TextView
         android:id="@+id/tv_token_symbol"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="23dp"
+        android:layout_marginEnd="30dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/font_title"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/tv_price"
         app:layout_constraintStart_toEndOf="@id/iv_token_logo"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin"
+        android:singleLine="true"
         android:textColor="@color/font_title"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/tv_token_symbol"
