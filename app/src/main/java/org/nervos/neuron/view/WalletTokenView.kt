@@ -62,7 +62,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                         if (DBWalletUtil.getCurrentWallet(context).address == address && item.name == tokenItem.name) {
                             tokenItem = WalletTokenLoadItem(item)
                             tv_loading.visibility = View.GONE
-                            tv_token_balance.text = NumberUtil.getDecimal8ENotation(tokenItem.balance)
+                            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))
                             tv_token_balance.visibility = View.VISIBLE
                             if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem) && EtherUtil.isMainNet()) {
                                 getPrice()
@@ -88,7 +88,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             override fun onCompleted() {
                 if (DBWalletUtil.getCurrentWallet(context).address == address) {
                     tv_token_currency.text =
-                            context.resources.getString(R.string.approximate) + currencyItem.symbol + CurrencyUtil.formatCurrency(tokenItem.currencyPrice)
+                            context.resources.getString(R.string.approximate) + currencyItem.symbol + " " + CurrencyUtil.formatCurrency(tokenItem.currencyPrice)
                     tv_token_currency.visibility = View.VISIBLE
                     EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                 }

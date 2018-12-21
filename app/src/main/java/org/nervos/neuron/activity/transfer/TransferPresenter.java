@@ -2,6 +2,7 @@ package org.nervos.neuron.activity.transfer;
 
 import android.app.Activity;
 import android.text.TextUtils;
+
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.ChainItem;
@@ -9,7 +10,11 @@ import org.nervos.neuron.item.CurrencyItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
 import org.nervos.neuron.item.transaction.TransactionInfo;
-import org.nervos.neuron.service.http.*;
+import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.EthRpcService;
+import org.nervos.neuron.service.http.NeuronSubscriber;
+import org.nervos.neuron.service.http.TokenService;
+import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -19,10 +24,11 @@ import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
-import rx.Subscriber;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import rx.Subscriber;
 
 import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_ADDRESS;
 import static org.nervos.neuron.activity.transfer.TransferActivity.EXTRA_TOKEN;
@@ -148,7 +154,8 @@ public class TransferPresenter {
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
-                        if (TextUtils.isEmpty(price)) return;
+                        if (TextUtils.isEmpty(price))
+                            return;
                         try {
                             mTokenPrice = Double.parseDouble(price);
                             mTransferView.initTransferFeeView();
@@ -285,7 +292,8 @@ public class TransferPresenter {
      */
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
         ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
-        if (item == null) return;
+        if (item == null)
+            return;
         AppChainRpcService.setHttpProvider(item.httpProvider);
         AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
                 new BigInteger(mTokenItem.getChainId()), password)
@@ -310,7 +318,8 @@ public class TransferPresenter {
      */
     private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
         ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
-        if (item == null) return;
+        if (item == null)
+            return;
         try {
             AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(),
                     Numeric.toBigInt(mTokenItem.getChainId()), password)
@@ -399,7 +408,7 @@ public class TransferPresenter {
     public String getTransferFee() {
         if (mTokenPrice > 0) {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
-                    + " ≈ " + mCurrencyItem.getSymbol()
+                    + " ≈ " + mCurrencyItem.getSymbol() + " "
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();

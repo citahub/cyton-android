@@ -30,9 +30,10 @@
 
         <TextView
             android:id="@+id/token_chain_name_text"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:ellipsize="end"
             android:textColor="@color/font_title_second"
             android:textSize="13sp" />
 

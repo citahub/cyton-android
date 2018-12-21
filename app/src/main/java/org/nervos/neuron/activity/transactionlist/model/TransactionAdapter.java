@@ -13,6 +13,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.BaseResponse;
 import org.nervos.neuron.item.transaction.TransactionResponse;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
@@ -81,11 +82,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof TransactionViewHolder) {
             TransactionResponse transactionResponse = transactionResponseList.get(position);
             TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to)
-                    || TextUtils.isEmpty(transactionResponse.to)
-                    ? context.getResources().getString(R.string.contract_create) : transactionResponse.to);
-            String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+")
-                    + NumberUtil.getDecimal8ENotation(transactionResponse.value);
+            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to) ||
+                    TextUtils.isEmpty(transactionResponse.to) ?
+                    context.getResources().getString(R.string.contract_create) : transactionResponse.to);
+            String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") +
+                    CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(Double.valueOf(transactionResponse.value)));
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(transactionResponse.getDate());
             switch (transactionResponse.status) {

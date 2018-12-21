@@ -47,12 +47,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:layout_marginBottom="4dp"
                 android:textColor="@color/font_title"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_value"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_value" />
+                app:layout_constraintStart_toEndOf="@id/tv_value"
+                app:layout_constraintTop_toTopOf="@id/tv_value" />
 
             <TextView
                 android:id="@+id/tv_gas_price_title"
