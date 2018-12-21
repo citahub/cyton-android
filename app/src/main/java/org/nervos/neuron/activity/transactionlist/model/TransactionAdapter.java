@@ -83,8 +83,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TransactionResponse transactionResponse = transactionResponseList.get(position);
             TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
             viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to) ||
-                    TextUtils.isEmpty(transactionResponse.to) ? context.getResources()
-                    .getString(R.string.contract_create) : transactionResponse.to);
+                    TextUtils.isEmpty(transactionResponse.to) ?
+                    context.getResources().getString(R.string.contract_create) : transactionResponse.to);
             String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") +
                     CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(Double.valueOf(transactionResponse.value)));
             viewHolder.transactionAmountText.setText(value);

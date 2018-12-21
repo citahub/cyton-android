@@ -122,15 +122,15 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
     /**
      * get token price
      */
-    private fun getPrice(context: Context, mTokenItem: TokenItem, method: (String) -> Unit) {
+    private fun getPrice(context: Context, mTokenItem: TokenItem, callback: (String) -> Unit) {
         if (EtherUtil.isEther(mTokenItem)) {
             TokenService.getCurrency(mTokenItem.symbol, CurrencyUtil.getCurrencyItem(context).name)
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(s: String) {
                             if (!TextUtils.isEmpty(s)) {
-                                method(CurrencyUtil.getCurrencyItem(context).symbol + " " + CurrencyUtil.formatCurrency(s.toDouble()))
+                                callback(CurrencyUtil.getCurrencyItem(context).symbol + " " + CurrencyUtil.formatCurrency(s.toDouble()))
                             } else {
-                                method("")
+                                callback("")
                             }
                         }
                     })
