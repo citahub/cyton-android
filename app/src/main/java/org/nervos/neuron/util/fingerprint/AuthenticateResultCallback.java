@@ -1,7 +1,7 @@
 package org.nervos.neuron.util.fingerprint;
 
 /**
- * Created by 包俊 on 2018/7/30.
+ * Created by BaojunCZ on 2018/7/30.
  */
 
 public interface AuthenticateResultCallback {

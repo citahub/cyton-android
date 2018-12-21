@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CurrencyRefreshEvent;
@@ -20,7 +21,7 @@ import org.nervos.neuron.view.TitleBar;
 import java.util.List;
 
 /**
- * Created by 包俊 on 2018/7/31.
+ * Created by BaojunCZ on 2018/7/31.
  */
 public class CurrencyActivity extends NBaseActivity {
 

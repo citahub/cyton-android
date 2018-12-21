@@ -4,12 +4,12 @@ import android.content.pm.PackageManager;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.util.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.TitleBar;
-import org.nervos.neuron.util.url.HttpUrls;
 
 /**
- * Created by 包俊 on 2018/7/30.
+ * Created by BaojunCZ on 2018/7/30.
  */
 public class AboutUsActivity extends NBaseActivity {
 

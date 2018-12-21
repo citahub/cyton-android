@@ -1,16 +1,11 @@
 package org.nervos.neuron.activity;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.view.Window;
-import android.view.WindowManager;
 
 import org.greenrobot.eventbus.EventBus;
-import org.nervos.neuron.R;
 
 /**
- * Created by 包俊 on 2018/7/30.
+ * Created by BaojunCZ on 2018/7/30.
  */
 public abstract class NBaseActivity extends BaseActivity {
 

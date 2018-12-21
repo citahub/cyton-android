@@ -24,12 +24,12 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingStart="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
         app:layout_constraintTop_toBottomOf="@id/title">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginRight="@dimen/default_margin"
             android:background="@android:color/white">
 
             <TextView
@@ -69,6 +69,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginRight="@dimen/default_margin"
             android:background="@android:color/white">
 
             <TextView
@@ -95,11 +96,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="30dp"
                 android:layout_toStartOf="@id/iv_add_token_contract_address_scan"
                 android:layout_toEndOf="@id/tv_add_token_contract_address"
                 app:edit_hint="@string/input_erc20_address"
                 app:text_color="@color/font_title"
-                app:text_size="13sp" />
+                app:text_size="15sp" />
         </RelativeLayout>
 
     </LinearLayout>
