@@ -16,7 +16,7 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.util.DipUtils;
 
 /**
- * Created by 包俊 on 2018/7/30.
+ * Created by BaojunCZ on 2018/7/30.
  */
 public class SettingButtonView extends ConstraintLayout {
 

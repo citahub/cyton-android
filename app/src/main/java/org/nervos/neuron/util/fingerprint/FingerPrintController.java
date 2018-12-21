@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
-import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 包俊 on 2018/7/30.
+ * Created by BaojunCZ on 2018/7/30.
  */
 
 public class FingerPrintController {
