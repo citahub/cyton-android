@@ -101,16 +101,16 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
         if (isEther) {
             tv_chain_name.text = SharePrefUtil.getString(ConstantUtil.ETH_NET, ConstantUtil.ETH_MAINNET).replace("_", " ")
             if (mTransactionStatus != TransactionResponse.FAILED && !TextUtils.isEmpty(transactionResponse!!.gasPrice)) {
-
+                tv_transaction_gas_price_title.text = resources.getString(R.string.gas_price) + ":"
                 tv_transaction_gas_price.text = NumberUtil.getGWeiFromWeiForString(BigInteger(transactionResponse!!.gasPrice)) + " " + ConstantUtil.GWEI
 
                 val gas: BigInteger
                 if (mTransactionStatus == TransactionResponse.PENDING) {
-                    tv_transaction_gas_limit_title.setText(R.string.gas_limit)
+                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_limit) + ":"
                     tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
                     gas = BigInteger(transactionResponse!!.gasLimit).multiply(BigInteger(transactionResponse!!.gasPrice))
                 } else {
-                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used)
+                    tv_transaction_gas_limit_title.text = resources.getString(R.string.gas_used) + ":"
                     tv_transaction_gas_limit.text = transactionResponse!!.gasUsed
                     gas = BigInteger(transactionResponse!!.gasPrice).multiply(BigInteger(transactionResponse!!.gasUsed))
                 }
@@ -134,7 +134,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             tv_chain_name.text = transactionResponse!!.chainName
 
             if (mTransactionStatus != TransactionResponse.FAILED) {
-                tv_transaction_gas_price_title.setText(R.string.quota_price)
+                tv_transaction_gas_price_title.text = resources.getString(R.string.quota_price) + ":"
                 initQuotaInfo()
             }
         }
@@ -206,11 +206,11 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                         tv_transaction_gas_price.text = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(price))) + " " + tokenUnit
                         val gas: BigInteger
                         if (mTransactionStatus == TransactionResponse.PENDING) {
-                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit)
+                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit) + ":"
                             tv_transaction_gas_limit.text = transactionResponse!!.gasLimit
                             gas = BigInteger(transactionResponse!!.gasLimit).multiply(BigInteger(price))
                         } else {
-                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used)
+                            tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_used) + ":"
                             tv_transaction_gas_limit.text = Numeric.toBigInt(transactionResponse!!.gasUsed).toString()
                             gas = Numeric.toBigInt(transactionResponse!!.gasUsed).multiply(BigInteger(price))
                         }

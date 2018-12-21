@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:ellipsize="end"
-            android:textColor="@color/font_title_second"
+            android:textColor="@color/font_title_third"
             android:textSize="13sp" />
 
         <TextView
