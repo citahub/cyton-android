@@ -121,7 +121,7 @@ public class AppWebActivity extends NBaseActivity {
         mNeuronDAppPlugin = new NeuronDAppPlugin(this, webView);
         mNeuronDAppPlugin.setImpl(mNeuronDAppPluginImpl);
         WebAppUtil.init();
-        webView.loadUrl(url);
+        WebAppUtil.loadUrl(webView, url);
         initManifest(url);
         initWebView();
     }
@@ -133,7 +133,7 @@ public class AppWebActivity extends NBaseActivity {
         });
         rightMenuView.setOnClickListener(v -> initMenuView());
         webErrorView.setImpl((reloadUrl) -> {
-            webView.loadUrl(reloadUrl);
+            WebAppUtil.loadUrl(webView, reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });

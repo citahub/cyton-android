@@ -4,17 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -43,7 +38,7 @@ public class SimpleWebActivity extends BaseActivity {
         setContentView(R.layout.activity_simple_web);
         String url = getIntent().getStringExtra(EXTRA_URL);
         initWebView();
-        webView.loadUrl(url);
+        WebAppUtil.loadUrl(webView, url);
     }
 
     public static void gotoSimpleWeb(Context context, String url) {
@@ -61,7 +56,7 @@ public class SimpleWebActivity extends BaseActivity {
         WebAppUtil.initWebSettings(webView.getSettings());
         webView.addJavascriptInterface(new TokenPricePlugin(webView), "tokenPricePlugin");
         webErrorView.setImpl((reloadUrl) -> {
-            webView.loadUrl(reloadUrl);
+            WebAppUtil.loadUrl(webView, reloadUrl);
             webView.setVisibility(View.VISIBLE);
             webErrorView.setVisibility(View.GONE);
         });
@@ -98,7 +93,7 @@ public class SimpleWebActivity extends BaseActivity {
                     }
                 }
                 if (url.startsWith("http:") || url.startsWith("https:")) {
-                    webView.loadUrl(url);
+                    WebAppUtil.loadUrl(webView, url);
                 }
                 return false;
             }

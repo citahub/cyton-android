@@ -35,7 +35,9 @@ import rx.schedulers.Schedulers;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -242,6 +244,13 @@ public class WebAppUtil {
         String cacheDirPath = context.getFilesDir().getAbsolutePath() + "cache/";
         webSettings.setAppCachePath(cacheDirPath);
         webSettings.setAppCacheEnabled(true);
+    }
+
+    private static final String ACCEPT_LANGUAGE = "Accept-Language";
+    public static void loadUrl(WebView web, String url) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(ACCEPT_LANGUAGE, Locale.getDefault().getLanguage());
+        web.loadUrl(url, headers);
     }
 
 
