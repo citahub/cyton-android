@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.widget.Toast;
+
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
@@ -17,6 +19,7 @@ import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
 import org.nervos.neuron.util.permission.RuntimeRationale;
 import org.nervos.neuron.util.qrcode.CodeUtils;
+import org.nervos.neuron.util.qrcode.QRResultCheck;
 import org.nervos.neuron.view.button.CommonButton;
 import org.web3j.utils.Numeric;
 
@@ -52,8 +55,11 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     @Override
     protected void initData() {
         presenter = new ImportWalletPresenter(Objects.requireNonNull(getActivity()), show -> {
-            if (show) showProgressBar();
-            else dismissProgressBar();
+            if (show) {
+                showProgressBar();
+            } else {
+                dismissProgressBar();
+            }
             return null;
         });
         checkWalletStatus();
@@ -67,7 +73,9 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
     @Override
     protected void initAction() {
         mCbImport.setOnClickListener(view -> {
-            if (!NumberUtil.isPasswordOk(mEtPassword.getText().toString().trim())) {
+            if (!QRResultCheck.isPrivateKey(mEtPrivateKey.getText().toString().trim())) {
+                Toast.makeText(getContext(), R.string.wrong_private_key, Toast.LENGTH_SHORT).show();
+            } else if (!NumberUtil.isPasswordOk(mEtPassword.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_weak, Toast.LENGTH_SHORT).show();
             } else if (!TextUtils.equals(mEtPassword.getText().toString().trim(), mEtRePassword.getText().toString().trim())) {
                 Toast.makeText(getContext(), R.string.password_not_same, Toast.LENGTH_SHORT).show();
@@ -78,11 +86,16 @@ public class ImportPrivateKeyFragment extends NBaseFragment {
                         , mEtPassword.getText().toString().trim(), mEtWalletName.getText().toString().trim());
             }
         });
-        findViewById(R.id.wallet_scan).setOnClickListener(v -> AndPermission.with(getActivity()).runtime().permission(Permission.Group.CAMERA).rationale(new RuntimeRationale())
+        findViewById(R.id.wallet_scan).setOnClickListener(v -> AndPermission.with(getActivity())
+                .runtime()
+                .permission(Permission.Group.CAMERA)
+                .rationale(new RuntimeRationale())
                 .onGranted(permissions -> {
                     Intent intent = new Intent(getActivity(), QrCodeActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
-                }).onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions)).start());
+                })
+                .onDenied(permissions -> PermissionUtil.showSettingDialog(getActivity(), permissions))
+                .start());
     }
 
     private boolean isWalletValid() {
