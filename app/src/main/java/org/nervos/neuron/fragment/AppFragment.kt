@@ -15,7 +15,6 @@ import org.nervos.neuron.util.web.WebAppUtil
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.WebErrorView
 import org.nervos.neuron.view.webview.SimpleWebViewClient
-import java.util.*
 
 /**
  * Created by duanyytop on 2018/5/18
@@ -25,7 +24,6 @@ class AppFragment : NBaseFragment() {
     companion object {
         val TAG = AppFragment::class.java.name!!
         const val COLLECT_WEBSITE = "https://dapp.cryptape.com/mine"
-        const val ACCEPT_LANGUAGE = "Accept-Language"
     }
 
     private var webView: WebView? = null
@@ -40,16 +38,14 @@ class AppFragment : NBaseFragment() {
     }
 
     override fun initData() {
-        val headers = HashMap<String, String>()
-        headers[ACCEPT_LANGUAGE] = Locale.getDefault().language
-        webView!!.loadUrl(HttpUrls.DISCOVER_URL, headers)
+        WebAppUtil.loadUrl(webView!!, HttpUrls.DISCOVER_URL)
         initWebSettings()
         initWebView()
     }
 
     override fun initAction() {
         webErrorView!!.setImpl { reloadUrl ->
-            webView!!.loadUrl(reloadUrl)
+            WebAppUtil.loadUrl(webView!!, reloadUrl)
             webView!!.visibility = View.VISIBLE
             webErrorView!!.visibility = View.GONE
         }
@@ -81,6 +77,7 @@ class AppFragment : NBaseFragment() {
         }
         webView!!.addJavascriptInterface(AppTabPlugin(activity!!), "appHybrid")
     }
+
 
     fun canGoBack(): Boolean {
         return webView!!.canGoBack()

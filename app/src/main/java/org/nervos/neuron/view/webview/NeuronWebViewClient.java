@@ -12,6 +12,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.nervos.neuron.util.web.WebAppUtil;
+
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
@@ -77,7 +79,7 @@ public class NeuronWebViewClient extends WebViewClient {
 //            webView.loadUrl(urlToOpen);
 //        }
         if (url.startsWith("http:") || url.startsWith("https:")) {
-            webView.loadUrl(url);
+            WebAppUtil.loadUrl(webView, url);
         }
         return true;
     }
