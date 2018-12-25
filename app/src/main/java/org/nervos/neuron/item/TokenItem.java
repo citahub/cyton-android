@@ -8,6 +8,7 @@ import android.text.TextUtils;
 public class TokenItem implements Parcelable {
 
     private static int APPCHAIN_DECIMAL = 18;
+    private static double NO_CACHE = -1.0;
 
     public String name;
     @DrawableRes
@@ -20,7 +21,7 @@ public class TokenItem implements Parcelable {
     private int chainId;
     private String chainIdV1;        // hex string
     public String chainName;
-    public double balance = -1.0;
+    public double balance = NO_CACHE;
     public double currencyPrice;
     public boolean selected = true;
 

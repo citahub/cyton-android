@@ -78,7 +78,7 @@ class WalletManageActivity : NBaseActivity() {
 
     private fun updateWalletName(simpleDialog: SimpleDialog) {
         when {
-            TextUtils.isEmpty(simpleDialog.message) || simpleDialog.message.trim().isEmpty() -> Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show()
+            TextUtils.isEmpty(simpleDialog.message.trim()) -> Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show()
             DBWalletUtil.checkWalletName(mActivity, simpleDialog.message) -> Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show()
             else -> {
                 wallet_name_text.text = simpleDialog.message
