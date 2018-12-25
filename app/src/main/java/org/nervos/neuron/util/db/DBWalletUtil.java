@@ -42,12 +42,11 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil
-                .ETH));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
         walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
                 ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil
-                .NATT_HTTP_PROVIDER, ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil.NATT_HTTP_PROVIDER,
+                ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
         for (ChainItem chainItem : walletItem.chainItems) {
             if (!TextUtils.isEmpty(chainItem.tokenName)) {
                 walletItem.tokenItems.add(new TokenItem(chainItem));
@@ -254,8 +253,7 @@ public class DBWalletUtil extends DBUtil {
             }
             int index = checkTokenInWallet(walletItem, tokenItem);
             if (index != -1) {
-                walletItem.tokenItems.remove(index);
-                walletItem.tokenItems.add(index, tokenItem);
+                walletItem.tokenItems.set(index, tokenItem);
                 saveWallet(context, walletItem);
             }
         }
