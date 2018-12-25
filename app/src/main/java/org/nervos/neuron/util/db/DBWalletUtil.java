@@ -42,9 +42,12 @@ public class DBWalletUtil extends DBUtil {
     }
 
     public static WalletItem initChainToCurrentWallet(Context context, WalletItem walletItem) {
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER, ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
-        walletItem.chainItems.add(new ChainItem(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil.NATT_HTTP_PROVIDER, ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil
+                .ETH));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
+                ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        walletItem.chainItems.add(new ChainItem(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil
+                .NATT_HTTP_PROVIDER, ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
         for (ChainItem chainItem : walletItem.chainItems) {
             if (!TextUtils.isEmpty(chainItem.tokenName)) {
                 walletItem.tokenItems.add(new TokenItem(chainItem));
@@ -147,7 +150,8 @@ public class DBWalletUtil extends DBUtil {
 
     public static WalletItem getWallet(Context context, String walletName) {
         synchronized (dbObject) {
-            if (TextUtils.isEmpty(walletName)) return null;
+            if (TextUtils.isEmpty(walletName))
+                return null;
             try {
                 db = openDB(context);
                 WalletItem walletItem = db.getObject(getDbKey(walletName), WalletItem.class);
@@ -239,6 +243,21 @@ public class DBWalletUtil extends DBUtil {
                 walletItem.tokenItems.add(tokenItem);
             }
             saveWallet(context, walletItem);
+        }
+    }
+
+    public static void saveTokenBalanceCacheToWallet(Context context, String walletName, TokenItem tokenItem) {
+        WalletItem walletItem = getWallet(context, walletName);
+        if (walletItem != null) {
+            if (walletItem.tokenItems == null) {
+                walletItem.tokenItems = new ArrayList<>();
+            }
+            int index = checkTokenInWallet(walletItem, tokenItem);
+            if (index != -1) {
+                walletItem.tokenItems.remove(index);
+                walletItem.tokenItems.add(index, tokenItem);
+                saveWallet(context, walletItem);
+            }
         }
     }
 

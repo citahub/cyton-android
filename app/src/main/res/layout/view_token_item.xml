@@ -57,6 +57,7 @@
             android:text="@string/wallet_token_loading"
             android:textColor="@color/font_title_third"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -69,7 +70,7 @@
             android:gravity="end"
             android:textColor="@color/font_title"
             android:textSize="16sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/tv_token_currency"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

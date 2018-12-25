@@ -20,7 +20,7 @@ public class TokenItem implements Parcelable {
     private int chainId;
     private String chainIdV1;        // hex string
     public String chainName;
-    public double balance;
+    public double balance = -1.0;
     public double currencyPrice;
     public boolean selected = true;
 
@@ -76,9 +76,25 @@ public class TokenItem implements Parcelable {
         this.chainIdV1 = tokenEntity.chainId;
     }
 
+    public TokenItem(WalletTokenLoadItem tokenItem) {
+        this.amount = tokenItem.amount;
+        this.avatar = tokenItem.avatar;
+        this.balance = tokenItem.balance;
+        this.setChainId(tokenItem.getChainId());
+        this.chainName = tokenItem.chainName;
+        this.contractAddress = tokenItem.contractAddress;
+        this.currencyPrice = tokenItem.currencyPrice;
+        this.decimals = tokenItem.decimals;
+        this.image = tokenItem.image;
+        this.name = tokenItem.name;
+        this.symbol = tokenItem.symbol;
+    }
+
     public String getChainId() {
-        if (TextUtils.isEmpty(chainIdV1)) return String.valueOf(chainId);
-        else return chainIdV1;
+        if (TextUtils.isEmpty(chainIdV1))
+            return String.valueOf(chainId);
+        else
+            return chainIdV1;
     }
 
     public void setChainId(String chainId) {

@@ -21,6 +21,7 @@ import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.util.db.SharePrefUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import rx.Subscriber
 import java.text.DecimalFormat
@@ -43,13 +44,20 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         this.address = address
         TokenLogoUtil.setLogo(tokenItem, context, iv_token_logo)
         tv_token_name.text = tokenItem.symbol
-        tv_loading.text = resources.getString(R.string.wallet_token_loading)
+        if (tokenItem.balance == -1.0) {
+            tv_loading.text = resources.getString(R.string.wallet_token_loading)
+            tv_loading.visibility = View.VISIBLE
+            tv_token_balance.visibility = View.GONE
+        } else {
+            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))
+        }
         tv_token_currency.visibility = View.GONE
         if (EtherUtil.isEther(tokenItem)) {
             tv_chain_name.text = EtherUtil.getEthChainItem().name
         } else {
             tv_chain_name.text = tokenItem.chainName
         }
+        val oldBalance = tokenItem.balance
         WalletService.getTokenBalance(context, tokenItem)
                 .subscribe(object : NeuronSubscriber<TokenItem>() {
 
@@ -61,6 +69,9 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                     override fun onNext(item: TokenItem) {
                         if (DBWalletUtil.getCurrentWallet(context).address == address && item.name == tokenItem.name) {
                             tokenItem = WalletTokenLoadItem(item)
+                            if (tokenItem.balance != oldBalance) {
+                                DBWalletUtil.saveTokenBalanceCacheToWallet(context, SharePrefUtil.getCurrentWalletName(), TokenItem(tokenItem))
+                            }
                             tv_loading.visibility = View.GONE
                             tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))
                             tv_token_balance.visibility = View.VISIBLE
