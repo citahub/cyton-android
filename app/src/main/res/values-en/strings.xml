@@ -13,6 +13,7 @@
     <string name="finish">Finish</string>
     <string name="title_token_management">ERC20</string>
     <string name="query">Search</string>
+    <string name="wrong_private_key">Please enter your private key with correct format</string>
     <string name="title_receive_qrcode">Receive</string>
     <string name="backup_mnemonic">Your Mnemonic Phrase</string>
     <string name="confirm_mnemonic">Verify Mnemonic Phrase</string>
