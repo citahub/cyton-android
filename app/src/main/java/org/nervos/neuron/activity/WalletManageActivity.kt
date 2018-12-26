@@ -3,19 +3,17 @@ package org.nervos.neuron.activity
 import android.content.Intent
 import android.text.TextUtils
 import android.widget.Toast
-
+import kotlinx.android.synthetic.main.activity_wallet_manage.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
-import org.nervos.neuron.service.http.WalletService
-import org.nervos.neuron.view.dialog.SimpleDialog
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.service.http.WalletService
 import org.nervos.neuron.util.Blockies
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil
-
-import kotlinx.android.synthetic.main.activity_wallet_manage.*
 import org.nervos.neuron.view.SettingButtonView
+import org.nervos.neuron.view.dialog.SimpleDialog
 
 /**
  * Created by duanyytop on 2018/11/7
@@ -49,7 +47,8 @@ class WalletManageActivity : NBaseActivity() {
         }
 
         change_password.setOnClickListener(SettingButtonView.OnClickListener {
-            startActivity(Intent(mActivity, ChangePasswordActivity::class.java)) })
+            startActivity(Intent(mActivity, ChangePasswordActivity::class.java))
+        })
 
         export_keystore.setOnClickListener(SettingButtonView.OnClickListener {
             val simpleDialog = SimpleDialog(mActivity)
@@ -79,7 +78,7 @@ class WalletManageActivity : NBaseActivity() {
 
     private fun updateWalletName(simpleDialog: SimpleDialog) {
         when {
-            TextUtils.isEmpty(simpleDialog.message) -> Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show()
+            TextUtils.isEmpty(simpleDialog.message.trim()) -> Toast.makeText(mActivity, R.string.wallet_name_not_null, Toast.LENGTH_SHORT).show()
             DBWalletUtil.checkWalletName(mActivity, simpleDialog.message) -> Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show()
             else -> {
                 wallet_name_text.text = simpleDialog.message
