@@ -11,7 +11,7 @@
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="finish">Finish</string>
-    <string name="title_token_management">ERC20</string>
+    <string name="title_token_management">Token</string>
     <string name="query">Search</string>
     <string name="wrong_private_key">Please enter your private key with correct format</string>
     <string name="title_receive_qrcode">Receive</string>
@@ -24,7 +24,7 @@
     <string name="next_action">Continue</string>
     <string name="backup_complete">Confirm</string>
     <string name="import_wallet">Import</string>
-    <string name="exist_wallet">Imported Wallets</string>
+    <string name="exist_wallet">I already have a wallet</string>
     <string name="create_wallet_name">Wallet Name</string>
     <string name="change_password">Change Password</string>
     <string name="delete_wallet">Delete Wallet</string>
@@ -46,7 +46,7 @@
     <string name="backup_mnemonic_warning1">Mnemonic phrase will allow you to recover access to your wallet if your phone is lost or stolen.</string>
     <string name="backup_mnemonic_warning2">- Anyone who has the mnemonic phrase can transfer the corresponding digital assets.</string>
     <string name="backup_mnemonic_warning3">- Do not email them or screenshot them.</string>
-    <string name="backup_mnemonic_warning4">- Carefully write down these 12 words or save them in your password manager.</string>
+    <string name="backup_mnemonic_warning4">- Carefully write these 12 words down or save them in your password manager.</string>
     <string name="confirm_mnemonic_warning">Please click on the mnemonic in order to confirm that your backup mnemonic is correct.</string>
     <string name="input_password">Set Password</string>
     <string name="confirm_action">Confirm</string>
@@ -62,7 +62,7 @@
     <string name="message_permission_always_failed">Please allow us to use the permissions:\n\n%1$s</string>
     <string name="resume">Recovery</string>
     <string name="message_permission_rationale">Apply for the following permissions :\n\n%1$s</string>
-    <string name="password_suggestion">At least 8 characters three types of uppercase and lowercase alphabets, numbers, and special symbols！</string>
+    <string name="password_suggestion">At least 8 characters， three types of uppercase and lowercase alphabets, numbers, and special symbols！</string>
     <string name="empty_no_token_data">No tokens found</string>
     <string name="empty_no_collection_data">No collectibles found</string>
     <string name="empty_no_transaction_data">No transactions found</string>
