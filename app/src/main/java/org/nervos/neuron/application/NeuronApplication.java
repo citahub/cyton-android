@@ -1,8 +1,9 @@
 package org.nervos.neuron.application;
 
 import android.app.Application;
-import android.content.Intent;
+
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -22,8 +23,5 @@ public class NeuronApplication extends Application {
         SharePrefUtil.init(this);
         EthRpcService.init(this);
         AESCrypt.init(this);
-
-        Intent serverIntent = new Intent(getApplicationContext(), ApplicationService.class);
-        startService(serverIntent);
     }
 }

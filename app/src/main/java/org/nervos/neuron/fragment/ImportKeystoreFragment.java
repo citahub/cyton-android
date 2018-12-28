@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.widget.Toast;
+
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.runtime.PermissionRequest;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.ImportWalletActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
-import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.permission.PermissionUtil;
@@ -137,7 +138,6 @@ public class ImportKeystoreFragment extends NBaseFragment {
                             break;
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    QrCodeActivity.track(SensorDataCons.TAG_SCAN_TYPE_KEYSTORE, false);
                     Toast.makeText(getActivity(), R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                 }
             }

@@ -7,7 +7,6 @@ import android.widget.Toast
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.ImportFingerTipActivity
-import org.nervos.neuron.activity.ImportWalletActivity
 import org.nervos.neuron.activity.MainActivity
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.fragment.wallet.WalletFragment
@@ -46,7 +45,7 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
                 .subscribe({
                     addWallet(it, name)
                 }, {
-                    handleError(it, id)
+                    handleError(it)
                 }, {
                     importSuccess()
                 })
@@ -68,9 +67,8 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
         return !(DBWalletUtil.checkWalletAddress(activity, entity.credentials.address))
     }
 
-    private fun handleError(e: Throwable, id: String) {
+    private fun handleError(e: Throwable) {
         progress(false)
-        ImportWalletActivity.track(id, false, "")
         if (TextUtils.isEmpty(e.message)) {
             Toast.makeText(activity, activity.getString(R.string.mnemonic_import_failed), Toast.LENGTH_SHORT).show()
         } else {
@@ -84,7 +82,6 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
         walletItem = DBWalletUtil.initChainToCurrentWallet(activity, walletItem)
         DBWalletUtil.saveWallet(activity, walletItem)
         SharePrefUtil.putCurrentWalletName(walletItem.name)
-        ImportWalletActivity.track("2", true, entity.address)
     }
 
     private fun importSuccess() {

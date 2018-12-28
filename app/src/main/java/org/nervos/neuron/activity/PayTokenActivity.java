@@ -27,7 +27,6 @@ import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.dialog.TransferDialog;
 import org.web3j.protocol.core.Response;
@@ -236,12 +235,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 mTransferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
                 if (mTransactionInfo.isEthereum()) {
-                    SensorDataTrackUtils.transferAccount(mTokenItem.symbol, "",
-                            "", mWalletItem.address, ConstantUtil.ETH, "1");
                     transferEth(password, progressBar);
                 } else {
-                    SensorDataTrackUtils.transferAccount(mTokenItem.symbol, "",
-                            "", mWalletItem.address, mTokenItem.chainName, "1");
                     transferAppChain(password, progressBar);
                 }
             }

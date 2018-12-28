@@ -16,11 +16,17 @@ import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+
 import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.NeuronDAppCallback;
@@ -54,10 +60,11 @@ import org.nervos.neuron.view.webview.SimpleWebViewClient;
 import org.nervos.neuron.view.webview.item.Address;
 import org.nervos.neuron.view.webview.item.Message;
 import org.nervos.neuron.view.webview.item.Transaction;
-import rx.Observable;
-import rx.Subscriber;
 
 import java.io.File;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by duanyytop on 2018/5/28
@@ -145,7 +152,6 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true);
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

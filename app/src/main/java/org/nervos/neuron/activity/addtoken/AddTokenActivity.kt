@@ -162,7 +162,6 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                     val result = bundle.getString(CodeUtils.RESULT_STRING)
                     edit_add_token_contract_address!!.text = result
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    QrCodeActivity.track("1", false)
                     Toast.makeText(mActivity, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show()
                 }
             }

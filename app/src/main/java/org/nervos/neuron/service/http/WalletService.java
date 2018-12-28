@@ -2,10 +2,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.nervos.neuron.constant.SensorDataCons;
+
 import org.nervos.neuron.item.ChainItem;
 import org.nervos.neuron.item.TokenItem;
 import org.nervos.neuron.item.WalletItem;
@@ -15,15 +12,14 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.crypto.Credentials;
-import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.utils.Numeric;
+
+import java.util.Objects;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import java.util.Objects;
 
 /**
  * Created by duanyytop on 2018/5/31
@@ -51,22 +47,9 @@ public class WalletService {
                     }
                 }).map(balance -> {
                     tokenItem.balance = balance;
-                    track(tokenItem.chainName, tokenItem.symbol, tokenItem.balance);
                     return tokenItem;
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private static void track(String chain, String type, double number) {
-        try {
-            JSONObject object = new JSONObject();
-            object.put(SensorDataCons.TAG_POSSESS_MONEY_CHAIN, chain);
-            object.put(SensorDataCons.TAG_POSSESS_MONEY_TYPE, type);
-            object.put(SensorDataCons.TAG_POSSESS_MONEY_NUMBER, number);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_POSSESS_MONEY, object);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public static Observable<Double> getBalanceWithToken(Context context, TokenItem tokenItem) {

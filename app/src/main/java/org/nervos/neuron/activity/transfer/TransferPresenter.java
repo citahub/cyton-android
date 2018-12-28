@@ -20,7 +20,6 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.sensor.SensorDataTrackUtils;
 import org.nervos.neuron.util.url.HttpAppChainUrls;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
@@ -220,14 +219,12 @@ public class TransferPresenter {
 
     public void handleTransferAction(String password, String transferValue, String receiveAddress) {
         if (EtherUtil.isEther(mTokenItem)) {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, ConstantUtil.ETH, "2");
             if (ConstantUtil.ETH.equals(mTokenItem.symbol)) {
                 transferEth(password, transferValue, receiveAddress);
             } else {
                 transferEthErc20(password, transferValue, receiveAddress);
             }
         } else {
-            SensorDataTrackUtils.transferAccount(mTokenItem.symbol, transferValue, receiveAddress, mWalletItem.address, mTokenItem.chainName, "2");
             if (isNativeToken()) {
                 transferAppChainToken(password, transferValue, receiveAddress.toLowerCase());
             } else {
