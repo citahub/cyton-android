@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.webkit.WebView
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWebsiteActivity
 import org.nervos.neuron.activity.AppWebActivity
@@ -57,7 +56,6 @@ class AppFragment : NBaseFragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebSettings() {
-        SensorsDataAPI.sharedInstance().showUpWebView(webView, false, true)
         WebAppUtil.initWebSettings(webView!!.settings)
         WebAppUtil.initWebViewCache(context, webView!!.settings)
     }

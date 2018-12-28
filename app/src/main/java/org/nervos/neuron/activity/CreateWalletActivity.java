@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.widget.Toast;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.nervos.neuron.R;
-import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.item.WalletItem;
@@ -90,13 +87,6 @@ public class CreateWalletActivity extends NBaseActivity {
                 cachedThreadPool.execute(() -> {
                     saveWalletInfo();
                     rePasswordEdit.post(() -> {
-                        try {
-                            JSONObject object = new JSONObject();
-                            object.put(SensorDataCons.TAG_CREATE_WALLET_ADDRESS, walletEntity.getAddress());
-                            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_CREATE_WALLET, object);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                         dismissProgressBar();
                         Intent intent = new Intent(CreateWalletActivity.this, BackupMnemonicActivity.class);
                         intent.putExtra(EXTRA_MNEMONIC, walletEntity.getMnemonic());

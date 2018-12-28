@@ -10,11 +10,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import org.nervos.neuron.R;
-import org.nervos.neuron.constant.SensorDataCons;
 import org.nervos.neuron.fragment.ImportKeystoreFragment;
 import org.nervos.neuron.fragment.ImportMnemonicFragment;
 import org.nervos.neuron.fragment.ImportPrivateKeyFragment;
@@ -175,17 +172,5 @@ public class ImportWalletActivity extends NBaseActivity {
             }
         });
 
-    }
-
-    public static void track(String id, boolean suc, String address) {
-        try {
-            JSONObject object = new JSONObject();
-            object.put(SensorDataCons.TAG_INPUT_WALLET_TYPE, id);
-            object.put(SensorDataCons.TAG_INPUT_WALLET_RESULT, suc);
-            object.put(SensorDataCons.TAG_INPUT_WALLET_ADDRESS, address);
-            SensorsDataAPI.sharedInstance().track(SensorDataCons.TRACK_INPUT_WALLET, object);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 }

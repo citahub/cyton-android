@@ -200,7 +200,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".application.ApplicationService" />
         <service android:name=".service.intent.AppChainTransactionCheckService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>

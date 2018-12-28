@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.fragment.AppFragment;
@@ -261,7 +262,6 @@ public class MainActivity extends NBaseActivity {
                                     break;
                             }
                         } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                            QrCodeActivity.track("0", false);
                             Toast.makeText(this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                         }
                     }
