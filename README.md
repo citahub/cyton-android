@@ -26,7 +26,7 @@ AppChain is an open source blockchain solution, so you can publish your blockcha
 
 ### DApp
 
-Neuron is also a DApp browser, which supprts DApps of Ethereum and [AppChain](https://docs.nervos.org/#/). Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Neuron directly. Neuron also supports AppChain DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an AppChain DApp](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-app).
+Neuron is also a DApp browser, which supprts DApps of Ethereum and [AppChain](https://docs.nervos.org/#/). Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Neuron directly. Neuron also supports AppChain DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an AppChain DApp](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
 
 Getting Started
 ===============
