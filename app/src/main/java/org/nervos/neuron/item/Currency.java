@@ -3,7 +3,7 @@ package org.nervos.neuron.item;
 /**
  * Created by BaojunCZ on 2018/8/3.
  */
-public class CurrencyItem {
+public class Currency {
     private String name, unit, symbol;
 
     public String getSymbol() {

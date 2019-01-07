@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.WalletTextWatcher;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -38,7 +38,7 @@ public class CreateWalletActivity extends NBaseActivity {
     private TitleBar titleBar;
 
     private WalletEntity walletEntity;
-    private WalletItem walletItem;
+    private Wallet wallet;
 
     @Override
     protected int getContentLayout() {
@@ -103,16 +103,16 @@ public class CreateWalletActivity extends NBaseActivity {
     private void saveWalletInfo() {
         String password = rePasswordEdit.getText().toString().trim();
         walletEntity = WalletEntity.createWithMnemonic(MnemonicPath, password);
-        walletItem = WalletItem.fromWalletEntity(walletEntity);
-        walletItem.name = walletNameEdit.getText().toString().trim();
+        wallet = Wallet.fromWalletEntity(walletEntity);
+        wallet.name = walletNameEdit.getText().toString().trim();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWalletSaveEvent(WalletSaveEvent event) {
-        if (walletItem != null) {
-            walletItem = DBWalletUtil.initChainToCurrentWallet(mActivity, walletItem);
-            DBWalletUtil.saveWallet(mActivity, walletItem);
-            SharePrefUtil.putCurrentWalletName(walletItem.name);
+        if (wallet != null) {
+            wallet = DBWalletUtil.initChainToCurrentWallet(mActivity, wallet);
+            DBWalletUtil.saveWallet(mActivity, wallet);
+            SharePrefUtil.putCurrentWalletName(wallet.name);
         }
     }
 

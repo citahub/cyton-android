@@ -8,7 +8,7 @@ import org.nervos.neuron.util.crypto.WalletEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletItem implements Parcelable {
+public class Wallet implements Parcelable {
 
     /**
      * wallet name
@@ -33,29 +33,29 @@ public class WalletItem implements Parcelable {
     /**
      * all tokens in wallet
      */
-    public List<TokenItem> tokenItems = new ArrayList<>();
+    public List<Token> tokens = new ArrayList<>();
 
     /**
      * all chain in wallet
      */
 
-    public List<ChainItem> chainItems = new ArrayList<>();
+    public List<Chain> chains = new ArrayList<>();
 
     public long timestamp = System.currentTimeMillis();
 
     public boolean currentSelected = false;
 
-    public static WalletItem fromWalletEntity(WalletEntity walletEntity) {
-        WalletItem walletItem = new WalletItem();
-        walletItem.address = walletEntity.getAddress();
-        walletItem.keystore = walletEntity.getKeystore();
-        return walletItem;
+    public static Wallet fromWalletEntity(WalletEntity walletEntity) {
+        Wallet wallet = new Wallet();
+        wallet.address = walletEntity.getAddress();
+        wallet.keystore = walletEntity.getKeystore();
+        return wallet;
     }
 
-    public WalletItem() {
+    public Wallet() {
     }
 
-    public WalletItem(String name, String address, @DrawableRes int image) {
+    public Wallet(String name, String address, @DrawableRes int image) {
         this.name = name;
         this.address = address;
         this.image = image;
@@ -73,32 +73,32 @@ public class WalletItem implements Parcelable {
         dest.writeInt(this.image);
         dest.writeString(this.address);
         dest.writeString(this.cryptPrivateKey);
-        dest.writeTypedList(this.tokenItems);
-        dest.writeTypedList(this.chainItems);
+        dest.writeTypedList(this.tokens);
+        dest.writeTypedList(this.chains);
         dest.writeLong(this.timestamp);
         dest.writeByte(this.currentSelected ? (byte) 1 : (byte) 0);
     }
 
-    protected WalletItem(Parcel in) {
+    protected Wallet(Parcel in) {
         this.name = in.readString();
         this.image = in.readInt();
         this.address = in.readString();
         this.cryptPrivateKey = in.readString();
-        this.tokenItems = in.createTypedArrayList(TokenItem.CREATOR);
-        this.chainItems = in.createTypedArrayList(ChainItem.CREATOR);
+        this.tokens = in.createTypedArrayList(Token.CREATOR);
+        this.chains = in.createTypedArrayList(Chain.CREATOR);
         this.timestamp = in.readLong();
         this.currentSelected = in.readByte() != 0;
     }
 
-    public static final Creator<WalletItem> CREATOR = new Creator<WalletItem>() {
+    public static final Creator<Wallet> CREATOR = new Creator<Wallet>() {
         @Override
-        public WalletItem createFromParcel(Parcel source) {
-            return new WalletItem(source);
+        public Wallet createFromParcel(Parcel source) {
+            return new Wallet(source);
         }
 
         @Override
-        public WalletItem[] newArray(int size) {
-            return new WalletItem[size];
+        public Wallet[] newArray(int size) {
+            return new Wallet[size];
         }
     };
 }

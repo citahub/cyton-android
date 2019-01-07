@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_token_manage.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.event.AddTokenRefreshEvent
-import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.view.TitleBar
@@ -28,8 +28,8 @@ import org.nervos.neuron.view.TitleBar
 class TokenManageActivity : NBaseActivity() {
 
     private lateinit var mTitleBar: TitleBar
-    private var mTokenList = mutableListOf<TokenItem>()
-    private var mTokenListNoDragged = mutableListOf<TokenItem>()
+    private var mTokenList = mutableListOf<Token>()
+    private var mTokenListNoDragged = mutableListOf<Token>()
     private val mAdapter = TokenAdapter()
     //token item status true:normal false:draged
     private var mTokenStatus = true
@@ -72,7 +72,7 @@ class TokenManageActivity : NBaseActivity() {
     }
 
     private fun addCustomToken() {
-        mTokenList = DBWalletUtil.getCurrentWallet(mActivity).tokenItems
+        mTokenList = DBWalletUtil.getCurrentWallet(mActivity).tokens
         mAdapter.notifyDataSetChanged()
     }
 
@@ -93,14 +93,14 @@ class TokenManageActivity : NBaseActivity() {
 
     override fun finish() {
         var walletItem = DBWalletUtil.getCurrentWallet(mActivity)
-        walletItem.tokenItems = mTokenList
+        walletItem.tokens = mTokenList
         DBWalletUtil.saveWallet(mActivity, walletItem)
         EventBus.getDefault().post(AddTokenRefreshEvent())
         super.finish()
     }
 
-    private fun copyList(listOrigin: List<TokenItem>): MutableList<TokenItem> {
-        var list = mutableListOf<TokenItem>()
+    private fun copyList(listOrigin: List<Token>): MutableList<Token> {
+        var list = mutableListOf<Token>()
         listOrigin.forEach {
             list.add(it)
         }

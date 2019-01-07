@@ -1,7 +1,7 @@
 package org.nervos.neuron.activity.transfer;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ public interface TransferView {
 
     void updateTitleData(String title);
 
-    void updateWalletData(WalletItem walletItem);
+    void updateWalletData(Wallet wallet);
 
     void startUpdateEthGasPrice();
 

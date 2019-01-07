@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.item.CurrencyListItem;
+import org.nervos.neuron.item.Currency;
+import org.nervos.neuron.item.CurrencyList;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.text.DecimalFormat;
@@ -14,26 +14,26 @@ import java.util.List;
 
 public class CurrencyUtil {
 
-    public static List<CurrencyItem> getCurrencyList(Context context) {
+    public static List<Currency> getCurrencyList(Context context) {
         String data = StreamUtils.get(context, R.raw.currency);
         Gson gson = new Gson();
-        return gson.fromJson(data, CurrencyListItem.class).getCurrency();
+        return gson.fromJson(data, CurrencyList.class).getCurrency();
     }
 
-    public static CurrencyItem getCurrencyItem(Context context) {
-        CurrencyItem currencyItem = null;
-        List<CurrencyItem> list = getCurrencyList(context);
+    public static Currency getCurrencyItem(Context context) {
+        Currency currency = null;
+        List<Currency> list = getCurrencyList(context);
         String currencyName = SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY);
-        for (CurrencyItem item : list) {
+        for (Currency item : list) {
             if (item.getName().equals(currencyName)) {
-                currencyItem = item;
+                currency = item;
                 break;
             }
         }
-        if (currencyItem == null) {
-            currencyItem = list.get(0);
+        if (currency == null) {
+            currency = list.get(0);
         }
-        return currencyItem;
+        return currency;
     }
 
     public static String formatCurrency(Double currency) {

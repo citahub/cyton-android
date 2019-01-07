@@ -5,11 +5,11 @@ import android.text.TextUtils;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.item.Chain;
+import org.nervos.neuron.item.Currency;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.AppTransaction;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
@@ -41,10 +41,10 @@ public class TransferPresenter {
     private Activity mActivity;
     private TransferView mTransferView;
 
-    private TokenItem mTokenItem;
+    private Token mToken;
     private double mTokenPrice = 0;
-    private WalletItem mWalletItem;
-    private CurrencyItem mCurrencyItem;
+    private Wallet mWallet;
+    private Currency mCurrency;
 
     private BigInteger mGasPrice, mGasLimit, mGas;
     private BigInteger mQuota, mQuotaLimit, mQuotaPrice;
@@ -72,7 +72,7 @@ public class TransferPresenter {
     }
 
     private void getTokenBalance() {
-        WalletService.getBalanceWithToken(mActivity, mTokenItem).subscribe(new NeuronSubscriber<Double>() {
+        WalletService.getBalanceWithToken(mActivity, mToken).subscribe(new NeuronSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
                 mTokenBalance = balance;
@@ -80,7 +80,7 @@ public class TransferPresenter {
             }
         });
 
-        WalletService.getBalanceWithNativeToken(mActivity, mTokenItem).subscribe(new Subscriber<Double>() {
+        WalletService.getBalanceWithNativeToken(mActivity, mToken).subscribe(new Subscriber<Double>() {
             @Override
             public void onNext(Double balance) {
                 mNativeTokenBalance = balance;
@@ -106,17 +106,17 @@ public class TransferPresenter {
     }
 
     private void initTokenItem() {
-        mTokenItem = mActivity.getIntent().getParcelableExtra(EXTRA_TOKEN);
-        mTransferView.updateTitleData(mTokenItem.symbol + " " + mActivity.getString(R.string.title_transfer));
+        mToken = mActivity.getIntent().getParcelableExtra(EXTRA_TOKEN);
+        mTransferView.updateTitleData(mToken.symbol + " " + mActivity.getString(R.string.title_transfer));
     }
 
     private void initWalletData() {
-        mWalletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        mTransferView.updateWalletData(mWalletItem);
+        mWallet = DBWalletUtil.getCurrentWallet(mActivity);
+        mTransferView.updateWalletData(mWallet);
     }
 
     private void initTransferFee() {
-        if (EtherUtil.isEther(mTokenItem)) {
+        if (EtherUtil.isEther(mToken)) {
             initEthGasInfo();
             mTransferView.initTransferEditValue();
             initTokenPrice();
@@ -126,7 +126,7 @@ public class TransferPresenter {
     }
 
     private void initEthGasInfo() {
-        mGasLimit = EtherUtil.isNative(mTokenItem) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
+        mGasLimit = EtherUtil.isNative(mToken) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
         mTransferView.startUpdateEthGasPrice();
         EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
             @Override
@@ -148,8 +148,8 @@ public class TransferPresenter {
      * get the price of token
      */
     private void initTokenPrice() {
-        mCurrencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(ConstantUtil.ETH, mCurrencyItem.getName())
+        mCurrency = CurrencyUtil.getCurrencyItem(mActivity);
+        TokenService.getCurrency(ConstantUtil.ETH, mCurrency.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
@@ -168,7 +168,7 @@ public class TransferPresenter {
 
     private void initAppChainQuota() {
         mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-        AppChainRpcService.getQuotaPrice(mWalletItem.address)
+        AppChainRpcService.getQuotaPrice(mWallet.address)
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {
@@ -200,8 +200,8 @@ public class TransferPresenter {
         return mQuotaLimit;
     }
 
-    public void initGasLimit(TransactionInfo transactionInfo) {
-        EthRpcService.getEthGasLimit(transactionInfo)
+    public void initGasLimit(AppTransaction appTransaction) {
+        EthRpcService.getEthGasLimit(appTransaction)
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     @Override
                     public void onError(Throwable e) {
@@ -218,8 +218,8 @@ public class TransferPresenter {
 
 
     public void handleTransferAction(String password, String transferValue, String receiveAddress) {
-        if (EtherUtil.isEther(mTokenItem)) {
-            if (ConstantUtil.ETH.equals(mTokenItem.symbol)) {
+        if (EtherUtil.isEther(mToken)) {
+            if (ConstantUtil.ETH.equals(mToken.symbol)) {
                 transferEth(password, transferValue, receiveAddress);
             } else {
                 transferEthErc20(password, transferValue, receiveAddress);
@@ -264,7 +264,7 @@ public class TransferPresenter {
      * @param value
      */
     private void transferEthErc20(String password, String value, String receiveAddress) {
-        EthRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, value, mGasPrice, mGasLimit, password)
+        EthRpcService.transferErc20(mActivity, mToken, receiveAddress, value, mGasPrice, mGasLimit, password)
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -288,12 +288,12 @@ public class TransferPresenter {
      * @param transferValue transfer value
      */
     private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
-        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
+        Chain item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mToken.getChainId());
         if (item == null)
             return;
         AppChainRpcService.setHttpProvider(item.httpProvider);
         AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
-                new BigInteger(mTokenItem.getChainId()), password)
+                new BigInteger(mToken.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -314,12 +314,12 @@ public class TransferPresenter {
      * @param transferValue
      */
     private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
-        ChainItem item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
+        Chain item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mToken.getChainId());
         if (item == null)
             return;
         try {
-            AppChainRpcService.transferErc20(mActivity, mTokenItem, receiveAddress, transferValue, mQuotaLimit.longValue(),
-                    Numeric.toBigInt(mTokenItem.getChainId()), password)
+            AppChainRpcService.transferErc20(mActivity, mToken, receiveAddress, transferValue, mQuotaLimit.longValue(),
+                    Numeric.toBigInt(mToken.getChainId()), password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
@@ -365,12 +365,12 @@ public class TransferPresenter {
         return mData;
     }
 
-    public TokenItem getTokenItem() {
-        return mTokenItem;
+    public Token getTokenItem() {
+        return mToken;
     }
 
-    public WalletItem getWalletItem() {
-        return mWalletItem;
+    public Wallet getWalletItem() {
+        return mWallet;
     }
 
     public BigInteger getGasLimit() {
@@ -405,7 +405,7 @@ public class TransferPresenter {
     public String getTransferFee() {
         if (mTokenPrice > 0) {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
-                    + " ≈ " + mCurrencyItem.getSymbol() + " "
+                    + " ≈ " + mCurrency.getSymbol() + " "
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();
@@ -417,24 +417,24 @@ public class TransferPresenter {
     }
 
     public boolean isEthERC20() {
-        return Numeric.toBigInt(mTokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0
-                && !TextUtils.isEmpty(mTokenItem.contractAddress);
+        return Numeric.toBigInt(mToken.getChainId()).compareTo(BigInteger.ZERO) < 0
+                && !TextUtils.isEmpty(mToken.contractAddress);
     }
 
     public boolean isNativeToken() {
-        return TextUtils.isEmpty(mTokenItem.contractAddress);
+        return TextUtils.isEmpty(mToken.contractAddress);
     }
 
     public boolean isEther() {
-        return Numeric.toBigInt(mTokenItem.getChainId()).compareTo(BigInteger.ZERO) < 0;
+        return Numeric.toBigInt(mToken.getChainId()).compareTo(BigInteger.ZERO) < 0;
     }
 
     public String getFeeTokenUnit() {
-        if (EtherUtil.isEther(mTokenItem)) {
+        if (EtherUtil.isEther(mToken)) {
             return " " + ConstantUtil.ETH;
         } else {
-            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTokenItem.getChainId());
-            return chainItem == null || TextUtils.isEmpty(chainItem.tokenSymbol) ? "" : " " + chainItem.tokenSymbol;
+            Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mToken.getChainId());
+            return chain == null || TextUtils.isEmpty(chain.tokenSymbol) ? "" : " " + chain.tokenSymbol;
         }
     }
 

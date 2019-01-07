@@ -10,7 +10,7 @@ import org.nervos.neuron.activity.ImportFingerTipActivity
 import org.nervos.neuron.activity.MainActivity
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.fragment.wallet.WalletFragment
-import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.crypto.WalletEntity
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -77,7 +77,7 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
     }
 
     private fun addWallet(entity: WalletEntity, name: String) {
-        var walletItem = WalletItem.fromWalletEntity(entity)
+        var walletItem = Wallet.fromWalletEntity(entity)
         walletItem.name = name
         walletItem = DBWalletUtil.initChainToCurrentWallet(activity, walletItem)
         DBWalletUtil.saveWallet(activity, walletItem)

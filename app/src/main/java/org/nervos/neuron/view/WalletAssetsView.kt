@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.view_wallet_assets.view.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.ReceiveQrCodeActivity
 import org.nervos.neuron.activity.transfer.TransferActivity
-import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.view.dialog.SimpleSelectDialog
@@ -20,7 +20,7 @@ import org.nervos.neuron.view.dialog.SimpleSelectDialog
  */
 class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
-    private lateinit var mList: List<TokenItem>
+    private lateinit var mList: List<Token>
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_wallet_assets, this)
@@ -37,7 +37,7 @@ class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout
             context.startActivity(Intent(context, ReceiveQrCodeActivity::class.java))
         }
         rl_transfer.setOnClickListener {
-            mList = DBWalletUtil.getCurrentWallet(context).tokenItems
+            mList = DBWalletUtil.getCurrentWallet(context).tokens
             var list = mutableListOf<String>()
             mList.forEach { item -> list.add(item.symbol) }
             var dialog = SimpleSelectDialog(context, list)

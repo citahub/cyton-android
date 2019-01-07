@@ -13,9 +13,9 @@ import org.nervos.neuron.activity.NBaseActivity
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.activity.TokenManageActivity
 import org.nervos.neuron.event.AddTokenRefreshEvent
-import org.nervos.neuron.item.ChainItem
-import org.nervos.neuron.item.TokenItem
-import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.Chain
+import org.nervos.neuron.item.Token
+import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -35,9 +35,9 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
     private lateinit var mTitle: TitleBar
 
     private var mChainNameList: List<String>? = null
-    private var mChainItemList: List<ChainItem>? = null
-    private var mChainItem: ChainItem? = null
-    private var mWalletItem: WalletItem? = null
+    private var mChainList: List<Chain>? = null
+    private var mChain: Chain? = null
+    private var mWallet: Wallet? = null
 
     private var manager: AddTokenManager? = null
 
@@ -55,10 +55,10 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
         AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL)
 
         manager = AddTokenManager(this)
-        mWalletItem = DBWalletUtil.getCurrentWallet(this)
-        mChainItemList = manager!!.getChainList()
-        mChainNameList = manager!!.getChainNameList(mChainItemList!!)
-        mChainItem = mChainItemList!![0]
+        mWallet = DBWalletUtil.getCurrentWallet(this)
+        mChainList = manager!!.getChainList()
+        mChainNameList = manager!!.getChainNameList(mChainList!!)
+        mChain = mChainList!![0]
 
         tv_chain_name.text = mChainNameList!![0]
     }
@@ -71,14 +71,14 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
         // add token data into local database
         btn_add_token.setOnClickListener {
             showProgressBar()
-            if (mChainItem != null) {
-                manager!!.loadErc20(mWalletItem!!.address, edit_add_token_contract_address.text!!, mChainItem!!)
-                        .subscribe(object : NeuronSubscriber<TokenItem>() {
-                            override fun onNext(tokenItem: TokenItem?) {
+            if (mChain != null) {
+                manager!!.loadErc20(mWallet!!.address, edit_add_token_contract_address.text!!, mChain!!)
+                        .subscribe(object : NeuronSubscriber<Token>() {
+                            override fun onNext(token: Token?) {
                                 dismissProgressBar()
-                                val tokenInfoDialog = TokenInfoDialog(mActivity, tokenItem!!)
+                                val tokenInfoDialog = TokenInfoDialog(mActivity, token!!)
                                 tokenInfoDialog.setOnOkListener {
-                                    DBWalletUtil.addTokenToWallet(mActivity, mWalletItem!!.name, tokenItem)
+                                    DBWalletUtil.addTokenToWallet(mActivity, mWallet!!.name, token)
                                     tokenInfoDialog.dismiss()
                                     Toast.makeText(mActivity, resources.getString(R.string.add_token_success), Toast.LENGTH_LONG).show()
                                     EventBus.getDefault().post(AddTokenRefreshEvent())
@@ -93,18 +93,18 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                         })
             } else {
                 manager!!.loadAppChain(edit_add_token_contract_address.text!!)
-                        .subscribe(object : NeuronSubscriber<ChainItem>() {
+                        .subscribe(object : NeuronSubscriber<Chain>() {
                             override fun onError(e: Throwable?) {
                                 dismissProgressBar()
                                 Toast.makeText(mActivity, resources.getString(R.string.appchain_node_error), Toast.LENGTH_LONG)
                                         .show()
                             }
 
-                            override fun onNext(chainItem: ChainItem) {
+                            override fun onNext(chain: Chain) {
                                 dismissProgressBar()
-                                var tokenInfoDialog = TokenInfoDialog(mActivity, TokenItem(chainItem))
+                                var tokenInfoDialog = TokenInfoDialog(mActivity, Token(chain))
                                 tokenInfoDialog.setOnOkListener {
-                                    DBWalletUtil.saveChainInCurrentWallet(mActivity, chainItem)
+                                    DBWalletUtil.saveChainInCurrentWallet(mActivity, chain)
                                     tokenInfoDialog.dismiss()
                                     EventBus.getDefault().post(AddTokenRefreshEvent())
                                     finish()
@@ -141,11 +141,11 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                     if (dialog.mSelected == mChainNameList!!.size - 1) {
                         tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
                         edit_add_token_contract_address.hint = R.string.input_appchain_node
-                        mChainItem = null
+                        mChain = null
                     } else {
                         tv_add_token_contract_address.text = resources.getString(R.string.contract_address)
                         edit_add_token_contract_address.hint = R.string.input_erc20_address
-                        mChainItem = mChainItemList!![dialog.mSelected]
+                        mChain = mChainList!![dialog.mSelected]
                     }
                     dialog.dismiss()
                 })

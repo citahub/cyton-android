@@ -12,10 +12,9 @@ import com.yanzhenjie.permission.Permission
 import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.constant.NeuronDAppCallback
-import org.nervos.neuron.item.NeuronDApp.DeviceMotionItem
-import org.nervos.neuron.item.NeuronDApp.GyroscopeItem
-import org.nervos.neuron.item.dapp.PermissionItem
-import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem
+import org.nervos.neuron.item.NeuronDApp.DeviceMotion
+import org.nervos.neuron.item.NeuronDApp.Gyroscope
+import org.nervos.neuron.item.dapp.BaseNeuronDAppCallback
 import org.nervos.neuron.util.JSLoadUtils
 import org.nervos.neuron.util.SensorUtils
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -68,7 +67,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
                 }
                 .onDenied { permissions ->
                     PermissionUtil.showSettingDialog(mContext, permissions)
-                    var qrCodeItem = BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                    var qrCodeItem = BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
                             NeuronDAppCallback.PERMISSION_DENIED_CODE,
                             NeuronDAppCallback.PERMISSION_DENIED)
                     JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(qrCodeItem))
@@ -91,12 +90,12 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
     @JavascriptInterface
     fun checkPermissions(info: String, callback: String) {
         var permissionList = switchPermission(info)
-        var permissionItem: PermissionItem
+        var permissionItem: org.nervos.neuron.item.dapp.Permission
         if (permissionList !== null) {
-            permissionItem = PermissionItem(AndPermission.hasPermissions(mContext, permissionList))
+            permissionItem = org.nervos.neuron.item.dapp.Permission(AndPermission.hasPermissions(mContext, permissionList))
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         } else {
-            permissionItem = PermissionItem(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            permissionItem = org.nervos.neuron.item.dapp.Permission(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         }
     }
@@ -104,24 +103,24 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
     @JavascriptInterface
     fun requestPermissions(info: String, callback: String) {
         var permissionList = switchPermission(info)
-        var permissionItem: PermissionItem
+        var permissionItem: org.nervos.neuron.item.dapp.Permission
         if (permissionList !== null) {
             AndPermission.with(mContext)
                     .runtime()
                     .permission(*permissionList)
                     .rationale(RuntimeRationale())
                     .onGranted {
-                        permissionItem = PermissionItem(true)
+                        permissionItem = org.nervos.neuron.item.dapp.Permission(true)
                         mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
                     }
                     .onDenied { permissions ->
                         PermissionUtil.showSettingDialog(mContext, permissions)
-                        permissionItem = PermissionItem(false)
+                        permissionItem = org.nervos.neuron.item.dapp.Permission(false)
                         mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
                     }
                     .start()
         } else {
-            permissionItem = PermissionItem(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            permissionItem = org.nervos.neuron.item.dapp.Permission(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         }
     }
@@ -136,8 +135,8 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
         }
         mSensorUtils.startDeviceMotionListening(interval, object : SensorUtils.OnMotionListener {
             override fun motionListener(values: FloatArray) {
-                var motion = DeviceMotionItem.Motion(values[2].toString(), values[0].toString(), values[1].toString())
-                var motionItem = DeviceMotionItem(motion)
+                var motion = DeviceMotion.Motion(values[2].toString(), values[0].toString(), values[1].toString())
+                var motionItem = DeviceMotion(motion)
                 JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(motionItem))
             }
         })
@@ -153,8 +152,8 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
         }
         mSensorUtils.startGyroscopeListening(interval, object : SensorUtils.OnGyroscopeListener {
             override fun gyroscopeListener(values: FloatArray) {
-                var gyroscope = GyroscopeItem.Gyroscope(values[0].toString(), values[1].toString(), values[2].toString())
-                var gyroscopeItem = GyroscopeItem(gyroscope)
+                var gyroscope = Gyroscope.Gyroscope(values[0].toString(), values[1].toString(), values[2].toString())
+                var gyroscopeItem = Gyroscope(gyroscope)
                 JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(gyroscopeItem))
             }
         })

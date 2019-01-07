@@ -15,7 +15,7 @@ import org.nervos.neuron.activity.AboutUsActivity;
 import org.nervos.neuron.activity.CurrencyActivity;
 import org.nervos.neuron.activity.SimpleWebActivity;
 import org.nervos.neuron.activity.WalletManageActivity;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.ConstantUtil;
@@ -70,10 +70,10 @@ public class SettingsFragment extends NBaseFragment {
 
     @Override
     public void initData() {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(getContext());
-        walletNameText.setText(walletItem.name);
-        walletAddressText.setText(walletItem.address);
-        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+        Wallet wallet = DBWalletUtil.getCurrentWallet(getContext());
+        walletNameText.setText(wallet.name);
+        walletAddressText.setText(wallet.address);
+        photoImage.setImageBitmap(Blockies.createIcon(wallet.address));
 
         updateEthNode();
 

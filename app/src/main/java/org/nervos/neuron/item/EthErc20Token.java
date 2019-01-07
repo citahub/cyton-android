@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by BaojunCZ on 2018/10/9.
  */
-public class EthErc20TokenInfoItem implements Parcelable {
+public class EthErc20Token implements Parcelable {
     public String symbol;
     public String address;
     @SerializedName("overview")
@@ -93,7 +93,7 @@ public class EthErc20TokenInfoItem implements Parcelable {
         }
     }
 
-    protected EthErc20TokenInfoItem(Parcel in) {
+    protected EthErc20Token(Parcel in) {
         symbol = in.readString();
         address = in.readString();
         overView = in.readParcelable(OverView.class.getClassLoader());
@@ -119,15 +119,15 @@ public class EthErc20TokenInfoItem implements Parcelable {
         return 0;
     }
 
-    public static final Creator<EthErc20TokenInfoItem> CREATOR = new Creator<EthErc20TokenInfoItem>() {
+    public static final Creator<EthErc20Token> CREATOR = new Creator<EthErc20Token>() {
         @Override
-        public EthErc20TokenInfoItem createFromParcel(Parcel in) {
-            return new EthErc20TokenInfoItem(in);
+        public EthErc20Token createFromParcel(Parcel in) {
+            return new EthErc20Token(in);
         }
 
         @Override
-        public EthErc20TokenInfoItem[] newArray(int size) {
-            return new EthErc20TokenInfoItem[size];
+        public EthErc20Token[] newArray(int size) {
+            return new EthErc20Token[size];
         }
     };
 }

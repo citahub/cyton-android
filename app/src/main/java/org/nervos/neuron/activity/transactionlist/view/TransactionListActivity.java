@@ -18,9 +18,9 @@ import org.nervos.neuron.activity.transactionlist.model.TransactionAdapter;
 import org.nervos.neuron.activity.transactionlist.presenter.TransactionListPresenter;
 import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.event.TransferPushEvent;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionResponse;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.TokenProfileView;
@@ -35,8 +35,8 @@ public class TransactionListActivity extends NBaseActivity {
     public static final String TRANSACTION_TOKEN = "TRANSACTION_TOKEN";
     public static final String TRANSACTION_STATUS = "TRANSACTION_STATUS";
 
-    private List<TransactionResponse> transactionResponseList = new ArrayList<>();
-    private WalletItem walletItem;
+    private List<RestTransaction> restTransactionList = new ArrayList<>();
+    private Wallet wallet;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -45,7 +45,7 @@ public class TransactionListActivity extends NBaseActivity {
     private AppCompatButton receiveButton, transferButton;
     private TokenProfileView mTokenProfile;
 
-    private TokenItem tokenItem;
+    private Token token;
     private TransactionAdapter transactionAdapter;
     private RecyclerViewLoadMoreScroll scrollListener;
     private TransactionListPresenter presenter;
@@ -70,13 +70,13 @@ public class TransactionListActivity extends NBaseActivity {
 
     @Override
     protected void initData() {
-        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        tokenItem = getIntent().getParcelableExtra(TRANSACTION_TOKEN);
-        titleBar.setTitle(tokenItem.symbol);
+        wallet = DBWalletUtil.getCurrentWallet(mActivity);
+        token = getIntent().getParcelableExtra(TRANSACTION_TOKEN);
+        titleBar.setTitle(token.symbol);
         tvTokenWarning.setVisibility(isTestToken() ? View.VISIBLE : View.GONE);
 
-        presenter = new TransactionListPresenter(this, tokenItem, listener);
-        mTokenProfile.init(tokenItem);
+        presenter = new TransactionListPresenter(this, token, listener);
+        mTokenProfile.init(token);
         initTransactionData();
     }
 
@@ -91,7 +91,7 @@ public class TransactionListActivity extends NBaseActivity {
         receiveButton.setOnClickListener(v -> startActivity(new Intent(mActivity, ReceiveQrCodeActivity.class)));
         transferButton.setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, TransferActivity.class);
-            intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
+            intent.putExtra(TransferActivity.EXTRA_TOKEN, token);
             startActivity(intent);
         });
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -110,7 +110,7 @@ public class TransactionListActivity extends NBaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        transactionAdapter = new TransactionAdapter(this, transactionResponseList, walletItem.address);
+        transactionAdapter = new TransactionAdapter(this, restTransactionList, wallet.address);
         recyclerView.setAdapter(transactionAdapter);
 
         scrollListener = new RecyclerViewLoadMoreScroll(linearLayoutManager);
@@ -124,10 +124,10 @@ public class TransactionListActivity extends NBaseActivity {
         recyclerView.addOnScrollListener(scrollListener);
 
         transactionAdapter.setOnItemClickListener((view, position) -> {
-            TransactionResponse response = transactionResponseList.get(position);
+            RestTransaction response = restTransactionList.get(position);
             Intent intent = new Intent(mActivity, TransactionDetailActivity.class);
             intent.putExtra(TransactionDetailActivity.TRANSACTION_DETAIL, response);
-            intent.putExtra(TRANSACTION_TOKEN, tokenItem);
+            intent.putExtra(TRANSACTION_TOKEN, token);
             intent.putExtra(TRANSACTION_STATUS, response.status);
             startActivity(intent);
         });
@@ -151,18 +151,18 @@ public class TransactionListActivity extends NBaseActivity {
         }
 
         @Override
-        public void updateNewList(List<TransactionResponse> list) {
+        public void updateNewList(List<RestTransaction> list) {
             mPage++;
-            transactionResponseList = list;
-            transactionAdapter.refresh(transactionResponseList);
+            restTransactionList = list;
+            transactionAdapter.refresh(restTransactionList);
         }
 
         @Override
-        public void refreshList(List<TransactionResponse> list) {
+        public void refreshList(List<RestTransaction> list) {
             mPage++;
             transactionAdapter.removeLoadingView();
-            transactionResponseList.addAll(list);
-            transactionAdapter.refresh(transactionResponseList);
+            restTransactionList.addAll(list);
+            transactionAdapter.refresh(restTransactionList);
             scrollListener.setLoaded();
         }
 
@@ -170,14 +170,14 @@ public class TransactionListActivity extends NBaseActivity {
         public void noMoreLoading() {
             transactionAdapter.removeLoadingView();
             scrollListener.setLoaded();
-            if (transactionResponseList.size() > 0) {
+            if (restTransactionList.size() > 0) {
                 Toast.makeText(mActivity, R.string.no_more_transaction_data, Toast.LENGTH_SHORT).show();
             }
         }
     };
 
     private boolean isTestToken() {
-        return "NATT".equalsIgnoreCase(tokenItem.symbol) || "MBA".equalsIgnoreCase(tokenItem.symbol);
+        return "NATT".equalsIgnoreCase(token.symbol) || "MBA".equalsIgnoreCase(token.symbol);
     }
 
 }

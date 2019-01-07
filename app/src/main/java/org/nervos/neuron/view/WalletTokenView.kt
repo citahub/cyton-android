@@ -12,8 +12,7 @@ import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity
 import org.nervos.neuron.event.TokenBalanceEvent
-import org.nervos.neuron.item.TokenItem
-import org.nervos.neuron.item.WalletTokenLoadItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.service.http.WalletService
@@ -31,7 +30,7 @@ import java.text.DecimalFormat
  */
 class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
-    private lateinit var tokenItem: WalletTokenLoadItem
+    private lateinit var tokenItem: Token
     private lateinit var address: String
 
     init {
@@ -39,7 +38,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         initAction()
     }
 
-    fun setData(address: String, item: WalletTokenLoadItem) {
+    fun setData(address: String, item: Token) {
         tokenItem = item
         this.address = address
         TokenLogoUtil.setLogo(tokenItem, context, iv_token_logo)
@@ -59,18 +58,18 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         }
         val oldBalance = tokenItem.balance
         WalletService.getTokenBalance(context, tokenItem)
-                .subscribe(object : NeuronSubscriber<TokenItem>() {
+                .subscribe(object : NeuronSubscriber<Token>() {
 
                     override fun onError(e: Throwable) {
                         tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)
                         EventBus.getDefault().post(TokenBalanceEvent(tokenItem, address))
                     }
 
-                    override fun onNext(item: TokenItem) {
+                    override fun onNext(item: Token) {
                         if (DBWalletUtil.getCurrentWallet(context).address == address && item.name == tokenItem.name) {
-                            tokenItem = WalletTokenLoadItem(item)
+                            tokenItem = Token(item)
                             if (tokenItem.balance != oldBalance) {
-                                DBWalletUtil.saveTokenBalanceCacheToWallet(context, SharePrefUtil.getCurrentWalletName(), TokenItem(tokenItem))
+                                DBWalletUtil.saveTokenBalanceCacheToWallet(context, SharePrefUtil.getCurrentWalletName(), Token(tokenItem))
                             }
                             tv_loading.visibility = View.GONE
                             tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))

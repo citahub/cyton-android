@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.view_token_profile.view.*
 import okhttp3.Request
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.SimpleWebActivity
-import org.nervos.neuron.item.EthErc20TokenInfoItem
-import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.EthErc20Token
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.service.http.HttpService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
@@ -32,38 +32,38 @@ import rx.schedulers.Schedulers
  */
 class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
-    private var mTokenItem: TokenItem? = null
+    private var mToken: Token? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_token_profile, this)
     }
 
-    fun init(item: TokenItem) {
-        mTokenItem = item
+    fun init(item: Token) {
+        mToken = item
         initData()
     }
 
     private fun initData() {
-        if (!TextUtils.isEmpty(mTokenItem!!.contractAddress)) {
-            mTokenItem!!.contractAddress = handleAddress(mTokenItem!!.contractAddress)
+        if (!TextUtils.isEmpty(mToken!!.contractAddress)) {
+            mToken!!.contractAddress = handleAddress(mToken!!.contractAddress)
         }
-        if (EtherUtil.isEther(mTokenItem!!)) {
-            if (!TextUtils.isEmpty(mTokenItem!!.contractAddress)) {
-                getDescribe(mTokenItem!!.contractAddress) { item ->
+        if (EtherUtil.isEther(mToken!!)) {
+            if (!TextUtils.isEmpty(mToken!!.contractAddress)) {
+                getDescribe(mToken!!.contractAddress) { item ->
                     visibility = View.VISIBLE
                     tv_token_symbol.text = item.symbol
                     tv_token_des_first.text = item.overView.zh
                     setDesSecondLine(item.overView.zh)
-                    TokenLogoUtil.setLogo(mTokenItem!!, context, iv_token_logo)
-                    getPrice(context, mTokenItem!!) { tv_price.text = it }
-                    setOnClickListener { SimpleWebActivity.gotoSimpleWeb(context, String.format(HttpUrls.TOKEN_ERC20_DETAIL, mTokenItem!!.contractAddress)) }
+                    TokenLogoUtil.setLogo(mToken!!, context, iv_token_logo)
+                    getPrice(context, mToken!!) { tv_price.text = it }
+                    setOnClickListener { SimpleWebActivity.gotoSimpleWeb(context, String.format(HttpUrls.TOKEN_ERC20_DETAIL, mToken!!.contractAddress)) }
                 }
             } else {
                 visibility = View.VISIBLE
                 tv_token_des_first.setText(R.string.ETH_Describe)
                 tv_token_symbol.text = ConstantUtil.ETH
                 setDesSecondLine(resources.getString(R.string.ETH_Describe))
-                getPrice(context, mTokenItem!!) { tv_price.text = it }
+                getPrice(context, mToken!!) { tv_price.text = it }
                 setOnClickListener { SimpleWebActivity.gotoSimpleWeb(context, String.format(HttpUrls.TOKEN_DETAIL, ConstantUtil.ETHEREUM)) }
             }
         } else {
@@ -95,7 +95,7 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
     /**
      * require describe info
      */
-    private fun getDescribe(address: String, method: (EthErc20TokenInfoItem) -> Unit) {
+    private fun getDescribe(address: String, method: (EthErc20Token) -> Unit) {
         Observable.just(address)
                 .flatMap {
                     val url = String.format(HttpUrls.TOKEN_DESC, it)
@@ -103,15 +103,15 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
                     val call = HttpService.getHttpClient().newCall(request)
                     val res = call.execute().body()!!.string()
                     if (!TextUtils.isEmpty(res)) {
-                        val item = Gson().fromJson(res, EthErc20TokenInfoItem::class.java)
+                        val item = Gson().fromJson(res, EthErc20Token::class.java)
                         Observable.just(item)
                     } else {
                         Observable.just(null)
                     }
                 }.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : NeuronSubscriber<EthErc20TokenInfoItem>() {
-                    override fun onNext(item: EthErc20TokenInfoItem?) {
+                .subscribe(object : NeuronSubscriber<EthErc20Token>() {
+                    override fun onNext(item: EthErc20Token?) {
                         if (item != null) {
                             method(item)
                         }
@@ -122,9 +122,9 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
     /**
      * get token price
      */
-    private fun getPrice(context: Context, mTokenItem: TokenItem, callback: (String) -> Unit) {
-        if (EtherUtil.isEther(mTokenItem)) {
-            TokenService.getCurrency(mTokenItem.symbol, CurrencyUtil.getCurrencyItem(context).name)
+    private fun getPrice(context: Context, mToken: Token, callback: (String) -> Unit) {
+        if (EtherUtil.isEther(mToken)) {
+            TokenService.getCurrency(mToken.symbol, CurrencyUtil.getCurrencyItem(context).name)
                     .subscribe(object : NeuronSubscriber<String>() {
                         override fun onNext(s: String) {
                             if (!TextUtils.isEmpty(s)) {

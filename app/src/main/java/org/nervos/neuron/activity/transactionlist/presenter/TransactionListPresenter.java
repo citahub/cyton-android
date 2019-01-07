@@ -5,10 +5,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionItem;
-import org.nervos.neuron.item.transaction.TransactionResponse;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.RpcTransaction;
+import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
@@ -30,30 +30,30 @@ public class TransactionListPresenter {
 
     private Activity activity;
     private TransactionListPresenterImpl listener;
-    private TokenItem tokenItem;
+    private Token token;
 
-    public TransactionListPresenter(Activity activity, TokenItem tokenItem, TransactionListPresenterImpl listener) {
+    public TransactionListPresenter(Activity activity, Token token, TransactionListPresenterImpl listener) {
         this.activity = activity;
         this.listener = listener;
-        this.tokenItem = tokenItem;
+        this.token = token;
     }
 
     public void getTransactionList(int page) {
-        Observable<List<TransactionResponse>> observable;
-        if (isNativeToken(tokenItem)) {
-            if (Numeric.toBigInt(tokenItem.getChainId()).longValue() > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
+        Observable<List<RestTransaction>> observable;
+        if (isNativeToken(token)) {
+            if (Numeric.toBigInt(token.getChainId()).longValue() > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
                 getUnofficialNoneData();
                 return;
             }
-            observable = EtherUtil.isEther(tokenItem)
+            observable = EtherUtil.isEther(token)
                     ? HttpService.getEtherTransactionList(activity, page)
                     : HttpService.getAppChainTransactionList(activity, page);
         } else {
-            observable = EtherUtil.isEther(tokenItem)
-                    ? HttpService.getEtherERC20TransactionList(activity, tokenItem, page)
-                    : HttpService.getAppChainERC20TransactionList(activity, tokenItem, page);
+            observable = EtherUtil.isEther(token)
+                    ? HttpService.getEtherERC20TransactionList(activity, token, page)
+                    : HttpService.getAppChainERC20TransactionList(activity, token, page);
         }
-        observable.subscribe(new Subscriber<List<TransactionResponse>>() {
+        observable.subscribe(new Subscriber<List<RestTransaction>>() {
             @Override
             public void onCompleted() {
                 listener.hideProgressBar();
@@ -69,17 +69,17 @@ public class TransactionListPresenter {
             }
 
             @Override
-            public void onNext(List<TransactionResponse> list) {
+            public void onNext(List<RestTransaction> list) {
                 if (list.size() == 0) {
                     listener.noMoreLoading();
                     return;
                 }
-                if (EtherUtil.isEther(tokenItem)) {
+                if (EtherUtil.isEther(token)) {
                     list = removeRepetition(list);
-                    for (TransactionResponse item : list) {
+                    for (RestTransaction item : list) {
                         item.chainId = EtherUtil.getEtherId();
                         item.chainName = EtherUtil.getEthNodeName();
-                        item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
+                        item.status = TextUtils.isEmpty(item.errorMessage) ? RpcTransaction.SUCCESS : RpcTransaction.FAILED;
                     }
                     list = getEtherTransactionList(activity, EtherUtil.getEtherId(), list);
                     if (page == 0) {
@@ -88,10 +88,10 @@ public class TransactionListPresenter {
                         listener.refreshList(list);
                     }
                 } else {
-                    for (TransactionResponse item : list) {
-                        item.status = TextUtils.isEmpty(item.errorMessage) ? TransactionItem.SUCCESS : TransactionItem.FAILED;
+                    for (RestTransaction item : list) {
+                        item.status = TextUtils.isEmpty(item.errorMessage) ? RpcTransaction.SUCCESS : RpcTransaction.FAILED;
                     }
-                    list = getAppChainTransactionList(activity, tokenItem.getChainId(), list);
+                    list = getAppChainTransactionList(activity, token.getChainId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
@@ -103,15 +103,15 @@ public class TransactionListPresenter {
     }
 
 
-    private List<TransactionResponse> getEtherTransactionList(Context context, String chainId, List<TransactionResponse> list) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        List<TransactionItem> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
+    private List<RestTransaction> getEtherTransactionList(Context context, String chainId, List<RestTransaction> list) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
+        List<RpcTransaction> itemList = DBEtherTransactionUtil.getAllTransactionsWithToken(context, chainId, token.contractAddress);
         if (itemList.size() > 0) {
-            Iterator<TransactionItem> iterator = itemList.iterator();
+            Iterator<RpcTransaction> iterator = itemList.iterator();
             while (iterator.hasNext()) {
-                TransactionItem dbItem = iterator.next();
-                for (TransactionResponse item : list) {
-                    if (!walletItem.address.equals(dbItem.from) && !walletItem.address.equals(dbItem.to)) {
+                RpcTransaction dbItem = iterator.next();
+                for (RestTransaction item : list) {
+                    if (!wallet.address.equals(dbItem.from) && !wallet.address.equals(dbItem.to)) {
                         iterator.remove();
                         break;
                     }
@@ -121,23 +121,23 @@ public class TransactionListPresenter {
                     }
                 }
             }
-            for (TransactionItem item : itemList) {
-                list.add(new TransactionResponse(item));
+            for (RpcTransaction item : itemList) {
+                list.add(new RestTransaction(item));
             }
             Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
         return list;
     }
 
-    private List<TransactionResponse> getAppChainTransactionList(Context context, String chainId, List<TransactionResponse> list) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-        List<TransactionItem> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, tokenItem.contractAddress);
+    private List<RestTransaction> getAppChainTransactionList(Context context, String chainId, List<RestTransaction> list) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
+        List<RpcTransaction> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, token.contractAddress);
         if (itemList.size() > 0) {
-            Iterator<TransactionItem> iterator = itemList.iterator();
+            Iterator<RpcTransaction> iterator = itemList.iterator();
             while (iterator.hasNext()) {
-                TransactionItem dbItem = iterator.next();
-                for (TransactionResponse item : list) {
-                    if (!walletItem.address.equals(dbItem.from) && !walletItem.address.equals(dbItem.to)) {
+                RpcTransaction dbItem = iterator.next();
+                for (RestTransaction item : list) {
+                    if (!wallet.address.equals(dbItem.from) && !wallet.address.equals(dbItem.to)) {
                         iterator.remove();
                         break;
                     }
@@ -147,8 +147,8 @@ public class TransactionListPresenter {
                     }
                 }
             }
-            for (TransactionItem item : itemList) {
-                list.add(new TransactionResponse(item));
+            for (RpcTransaction item : itemList) {
+                list.add(new RestTransaction(item));
             }
             Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
@@ -156,9 +156,9 @@ public class TransactionListPresenter {
     }
 
 
-    public static List<TransactionResponse> removeRepetition(List<TransactionResponse> list) {
-        List<TransactionResponse> tempList = new ArrayList<>();
-        for (TransactionResponse item : list) {
+    public static List<RestTransaction> removeRepetition(List<RestTransaction> list) {
+        List<RestTransaction> tempList = new ArrayList<>();
+        for (RestTransaction item : list) {
             if (!tempList.contains(item)) {
                 tempList.add(item);
             }
@@ -171,8 +171,8 @@ public class TransactionListPresenter {
         listener.setRefreshing(false);
     }
 
-    public boolean isNativeToken(TokenItem tokenItem) {
-        return TextUtils.isEmpty(tokenItem.contractAddress);
+    public boolean isNativeToken(Token token) {
+        return TextUtils.isEmpty(token.contractAddress);
     }
 
     public interface TransactionListPresenterImpl {
@@ -180,9 +180,9 @@ public class TransactionListPresenter {
 
         void setRefreshing(boolean refreshing);
 
-        void updateNewList(List<TransactionResponse> list);
+        void updateNewList(List<RestTransaction> list);
 
-        void refreshList(List<TransactionResponse> list);
+        void refreshList(List<RestTransaction> list);
 
         void noMoreLoading();
     }

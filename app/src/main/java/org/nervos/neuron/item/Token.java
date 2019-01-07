@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
-public class TokenItem implements Parcelable {
+public class Token implements Parcelable {
 
     private static int APPCHAIN_DECIMAL = 18;
     private static double NO_CACHE = -1.0;
@@ -24,25 +24,26 @@ public class TokenItem implements Parcelable {
     public double balance = NO_CACHE;
     public double currencyPrice;
     public boolean selected = true;
+    public boolean loaded = false;
 
-    public TokenItem() {
+    public Token() {
     }
 
-    public TokenItem(String name, String symbol, int decimals, String contractAddress) {
+    public Token(String name, String symbol, int decimals, String contractAddress) {
         this.symbol = symbol;
         this.name = name;
         this.decimals = decimals;
         this.contractAddress = contractAddress;
     }
 
-    public TokenItem(String symbol, int image, double balance, String chainId) {
+    public Token(String symbol, int image, double balance, String chainId) {
         this.symbol = symbol;
         this.image = image;
         this.balance = balance;
         this.chainIdV1 = chainId;
     }
 
-    public TokenItem(String name, String symbol, int decimals, String avatar, String chainId) {
+    public Token(String name, String symbol, int decimals, String avatar, String chainId) {
         this.name = name;
         this.symbol = symbol;
         this.decimals = decimals;
@@ -50,34 +51,23 @@ public class TokenItem implements Parcelable {
         this.chainIdV1 = chainId;
     }
 
-    public TokenItem(String name, String symbol, String chainId) {
+    public Token(String name, String symbol, String chainId) {
         this.name = name;
         this.symbol = symbol;
         this.chainIdV1 = chainId;
     }
 
 
-    public TokenItem(ChainItem chainItem) {
-        this.name = chainItem.tokenName;
-        this.symbol = chainItem.tokenSymbol;
+    public Token(Chain chain) {
+        this.name = chain.tokenName;
+        this.symbol = chain.tokenSymbol;
         this.decimals = APPCHAIN_DECIMAL;
-        this.avatar = chainItem.tokenAvatar;
-        this.chainIdV1 = chainItem.getChainId();
-        this.chainName = chainItem.name;
+        this.avatar = chain.tokenAvatar;
+        this.chainIdV1 = chain.getChainId();
+        this.chainName = chain.name;
     }
 
-    public TokenItem(TokenEntity tokenEntity) {
-        this.name = tokenEntity.name;
-        this.symbol = tokenEntity.symbol;
-        this.contractAddress = tokenEntity.address;
-        if (tokenEntity.logo != null) {
-            this.avatar = tokenEntity.logo.src;
-        }
-        this.decimals = tokenEntity.decimals;
-        this.chainIdV1 = tokenEntity.chainId;
-    }
-
-    public TokenItem(WalletTokenLoadItem tokenItem) {
+    public Token(Token tokenItem) {
         this.amount = tokenItem.amount;
         this.avatar = tokenItem.avatar;
         this.balance = tokenItem.balance;
@@ -124,7 +114,7 @@ public class TokenItem implements Parcelable {
         dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
     }
 
-    protected TokenItem(Parcel in) {
+    protected Token(Parcel in) {
         this.name = in.readString();
         this.image = in.readInt();
         this.avatar = in.readString();
@@ -140,15 +130,15 @@ public class TokenItem implements Parcelable {
         this.selected = in.readByte() != 0;
     }
 
-    public static final Creator<TokenItem> CREATOR = new Creator<TokenItem>() {
+    public static final Creator<Token> CREATOR = new Creator<Token>() {
         @Override
-        public TokenItem createFromParcel(Parcel source) {
-            return new TokenItem(source);
+        public Token createFromParcel(Parcel source) {
+            return new Token(source);
         }
 
         @Override
-        public TokenItem[] newArray(int size) {
-            return new TokenItem[size];
+        public Token[] newArray(int size) {
+            return new Token[size];
         }
     };
 }

@@ -8,19 +8,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.nervos.neuron.R
-import org.nervos.neuron.item.WalletTokenLoadItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.view.WalletTokenView
 
 /**
  * Created by BaojunCZ on 2018/11/20.
  */
-class WalletTokenAdapter(private var address: String, private var tokenItemList: List<WalletTokenLoadItem>)
+class WalletTokenAdapter(private var address: String, private var tokenItemList: List<Token>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 1
     private val VIEW_TYPE_EMPTY = 0
 
-    fun refresh(tokenItemList: List<WalletTokenLoadItem>) {
+    fun refresh(tokenItemList: List<Token>) {
         this.tokenItemList = tokenItemList
         notifyDataSetChanged()
     }

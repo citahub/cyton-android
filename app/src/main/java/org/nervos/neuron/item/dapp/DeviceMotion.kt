@@ -1,15 +1,15 @@
 package org.nervos.neuron.item.NeuronDApp
 
 import org.nervos.neuron.constant.NeuronDAppCallback
-import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem
+import org.nervos.neuron.item.dapp.BaseNeuronDAppCallback
 
 /**
  * Created by BaojunCZ on 2018/11/15.
  */
-class DeviceMotionItem(status: Int,
-                       errorCode: Int,
-                       errorMsg: String,
-                       motion: Motion) : BaseNeuronDAppCallbackItem(status, errorCode, errorMsg) {
+class DeviceMotion(status: Int,
+                   errorCode: Int,
+                   errorMsg: String,
+                   motion: Motion) : BaseNeuronDAppCallback(status, errorCode, errorMsg) {
 
     constructor(motion: Motion) : this(NeuronDAppCallback.SUCCESS_CODE, 0, "", motion)
 

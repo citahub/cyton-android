@@ -23,8 +23,8 @@ import org.nervos.neuron.activity.AdvanceSetupActivity;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
 import org.nervos.neuron.event.TransferPushEvent;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.AppTransaction;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.AddressUtil;
@@ -73,7 +73,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     private TitleBar titleBar;
     private TransferDialog transferDialog;
-    private TransactionInfo mTransactionInfo = new TransactionInfo();
+    private AppTransaction mAppTransaction = new AppTransaction();
 
     @Override
     protected int getContentLayout() {
@@ -105,10 +105,10 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     @Override
-    public void updateWalletData(WalletItem walletItem) {
-        walletAddressText.setText(walletItem.address);
-        walletNameText.setText(walletItem.name);
-        photoImage.setImageBitmap(Blockies.createIcon(walletItem.address));
+    public void updateWalletData(Wallet wallet) {
+        walletAddressText.setText(wallet.address);
+        walletNameText.setText(wallet.name);
+        photoImage.setImageBitmap(Blockies.createIcon(wallet.address));
     }
 
     @Override
@@ -274,11 +274,11 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
 
-    private TransactionInfo getTransactionInfo() {
-        TransactionInfo transactionInfo = new TransactionInfo(mPresenter.getTokenItem().contractAddress, "0");
-        transactionInfo.data = EthRpcService.createTokenTransferData(mCetReceiverAddress.getText(),
+    private AppTransaction getTransactionInfo() {
+        AppTransaction appTransaction = new AppTransaction(mPresenter.getTokenItem().contractAddress, "0");
+        appTransaction.data = EthRpcService.createTokenTransferData(mCetReceiverAddress.getText(),
                 Convert.toWei(transferValueEdit.getText().toString(), Convert.Unit.ETHER).toBigInteger());
-        return transactionInfo;
+        return appTransaction;
     }
 
     private void initAdvancedSetup() {
@@ -289,17 +289,17 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                 Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_TRANSFER, true);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_NATIVE_TOKEN, mPresenter.isNativeToken());
-                mTransactionInfo.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
-                mTransactionInfo.data = mPresenter.getData();
+                mAppTransaction.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
+                mAppTransaction.data = mPresenter.getData();
                 if (mPresenter.isEther()) {
-                    mTransactionInfo.setGasLimit(mPresenter.getGasLimit());
-                    mTransactionInfo.setGasPrice(mPresenter.getGasPrice());
-                    mTransactionInfo.chainId = EtherUtil.getEtherId();
+                    mAppTransaction.setGasLimit(mPresenter.getGasLimit());
+                    mAppTransaction.setGasPrice(mPresenter.getGasPrice());
+                    mAppTransaction.chainId = EtherUtil.getEtherId();
                 } else {
-                    mTransactionInfo.chainId = mPresenter.getTokenItem().getChainId();
-                    mTransactionInfo.setQuota(mPresenter.getQuotaLimit().toString());
+                    mAppTransaction.chainId = mPresenter.getTokenItem().getChainId();
+                    mAppTransaction.setQuota(mPresenter.getQuotaLimit().toString());
                 }
-                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mAppTransaction);
                 startActivityForResult(intent, REQUEST_CODE_TRANSACTION);
             }
         });
@@ -420,13 +420,13 @@ public class TransferActivity extends NBaseActivity implements TransferView {
             case REQUEST_CODE_TRANSACTION:
                 switch (resultCode) {
                     case AdvanceSetupActivity.RESULT_TRANSACTION:
-                        mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
-                        mPresenter.updateData(mTransactionInfo.data);
-                        if (mTransactionInfo.isEthereum()) {
-                            mPresenter.updateGasLimit(mTransactionInfo.getGasLimit());
-                            mPresenter.updateGasPrice(mTransactionInfo.getGasPrice());
+                        mAppTransaction = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
+                        mPresenter.updateData(mAppTransaction.data);
+                        if (mAppTransaction.isEthereum()) {
+                            mPresenter.updateGasLimit(mAppTransaction.getGasLimit());
+                            mPresenter.updateGasPrice(mAppTransaction.getGasPrice());
                         } else {
-                            mPresenter.updateQuotaLimit(mTransactionInfo.getQuota());
+                            mPresenter.updateQuotaLimit(mAppTransaction.getQuota());
                         }
                         break;
                     default:

@@ -7,7 +7,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import org.nervos.neuron.R
-import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.ether.EtherUtil
 import org.nervos.neuron.util.url.HttpUrls
 import org.web3j.crypto.Keys
@@ -17,9 +17,9 @@ import org.web3j.crypto.Keys
  */
 class TokenLogoUtil {
     companion object {
-        fun setLogo(tokenItem: TokenItem, context: Context, iv: ImageView) {
-            if (EtherUtil.isEther(tokenItem) && !TextUtils.isEmpty(tokenItem.contractAddress)) {
-                var address = tokenItem.contractAddress
+        fun setLogo(token: Token, context: Context, iv: ImageView) {
+            if (EtherUtil.isEther(token) && !TextUtils.isEmpty(token.contractAddress)) {
+                var address = token.contractAddress
                 if (AddressUtil.isAddressValid(address))
                     address = Keys.toChecksumAddress(address)
                 val options = RequestOptions()
@@ -31,12 +31,12 @@ class TokenLogoUtil {
                         .into(iv)
 
             } else {
-                var icon = if (EtherUtil.isEther(tokenItem)) R.drawable.ether_big else R.mipmap.ic_launcher
+                var icon = if (EtherUtil.isEther(token)) R.drawable.ether_big else R.mipmap.ic_launcher
                 val options = RequestOptions()
                         .error(icon)
                         .placeholder(icon)
                 Glide.with(context)
-                        .load(if (TextUtils.isEmpty(tokenItem.avatar)) "" else Uri.parse(tokenItem.avatar))
+                        .load(if (TextUtils.isEmpty(token.avatar)) "" else Uri.parse(token.avatar))
                         .apply(options)
                         .into(iv)
             }

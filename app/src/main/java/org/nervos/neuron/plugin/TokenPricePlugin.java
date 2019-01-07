@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import org.nervos.neuron.item.CurrencyItem;
+import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.util.CurrencyUtil;
@@ -23,8 +23,8 @@ public class TokenPricePlugin {
 
     @JavascriptInterface
     public void getTokenPrice(String symbol, String callback) {
-        CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mWebView.getContext());
-        TokenService.getCurrency(symbol, currencyItem.getName())
+        Currency currency = CurrencyUtil.getCurrencyItem(mWebView.getContext());
+        TokenService.getCurrency(symbol, currency.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
@@ -32,7 +32,7 @@ public class TokenPricePlugin {
                             JSLoadUtils.INSTANCE.loadFunc(mWebView, callback, "");
                         } else {
                             JSLoadUtils.INSTANCE.loadFunc(mWebView, callback
-                                    , currencyItem.getSymbol() + CurrencyUtil.formatCurrency(Double.valueOf(price)));
+                                    , currency.getSymbol() + CurrencyUtil.formatCurrency(Double.valueOf(price)));
                         }
                     }
                 });

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-import org.nervos.neuron.item.WalletItem;
-import org.web3j.crypto.Credentials;
-
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;

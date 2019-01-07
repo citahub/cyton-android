@@ -3,7 +3,7 @@ package org.nervos.neuron.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TitleItem implements Parcelable {
+public class AppTitle implements Parcelable {
 
 
     /**
@@ -165,24 +165,24 @@ public class TitleItem implements Parcelable {
         dest.writeParcelable(this.right, flags);
     }
 
-    public TitleItem() {
+    public AppTitle() {
     }
 
-    protected TitleItem(Parcel in) {
+    protected AppTitle(Parcel in) {
         this.title = in.readParcelable(Title.class.getClassLoader());
         this.left = in.readParcelable(Left.class.getClassLoader());
         this.right = in.readParcelable(Right.class.getClassLoader());
     }
 
-    public static final Creator<TitleItem> CREATOR = new Creator<TitleItem>() {
+    public static final Creator<AppTitle> CREATOR = new Creator<AppTitle>() {
         @Override
-        public TitleItem createFromParcel(Parcel source) {
-            return new TitleItem(source);
+        public AppTitle createFromParcel(Parcel source) {
+            return new AppTitle(source);
         }
 
         @Override
-        public TitleItem[] newArray(int size) {
-            return new TitleItem[size];
+        public AppTitle[] newArray(int size) {
+            return new AppTitle[size];
         }
     };
 

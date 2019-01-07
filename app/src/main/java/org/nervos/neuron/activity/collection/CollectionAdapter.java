@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.CollectionItem;
+import org.nervos.neuron.item.Collection;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public OnItemClickListener listener;
     private Context context;
-    private List<CollectionItem> collectionItemList;
+    private List<Collection> collectionList;
 
-    public CollectionAdapter(Context context, List<CollectionItem> collectionItemList) {
+    public CollectionAdapter(Context context, List<Collection> collectionList) {
         this.context = context;
-        this.collectionItemList = collectionItemList;
+        this.collectionList = collectionList;
         notifyDataSetChanged();
     }
 
@@ -37,8 +37,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.listener = listener;
     }
 
-    public void refresh(List<CollectionItem> collectionItemList) {
-        this.collectionItemList = collectionItemList;
+    public void refresh(List<Collection> collectionList) {
+        this.collectionList = collectionList;
         notifyDataSetChanged();
     }
 
@@ -60,14 +60,14 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof CollectionViewHolder) {
             CollectionViewHolder holder = (CollectionViewHolder) viewHolder;
-            CollectionItem collectionItem = collectionItemList.get(position);
-            holder.collectionName.setText(collectionItem.name);
-            holder.collectionContractName.setText(collectionItem.assetContract.name);
+            Collection collection = collectionList.get(position);
+            holder.collectionName.setText(collection.name);
+            holder.collectionContractName.setText(collection.assetContract.name);
             Glide.with(context)
-                    .load(collectionItem.assetContract.imageUrl)
+                    .load(collection.assetContract.imageUrl)
                     .into(holder.collectionImage);
             holder.collectionId.setText(String.format(
-                    context.getString(R.string.collection_id_place_holder), collectionItem.tokenId));
+                    context.getString(R.string.collection_id_place_holder), collection.tokenId));
             holder.root.setOnClickListener((view) -> {
                 if (listener != null)
                     listener.onItemClick(view, position);
@@ -77,15 +77,15 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if (collectionItemList.size() == 0) {
+        if (collectionList.size() == 0) {
             return 1;
         }
-        return collectionItemList.size();
+        return collectionList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (collectionItemList == null || collectionItemList.size() == 0) {
+        if (collectionList == null || collectionList.size() == 0) {
             return VIEW_TYPE_EMPTY;
         }
         return VIEW_TYPE_ITEM;

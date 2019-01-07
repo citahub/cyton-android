@@ -3,7 +3,7 @@ package org.nervos.neuron.item;
 /**
  * Created by BaojunCZ on 2018/8/3.
  */
-public class CurrencyIDItem {
+public class CurrencyId {
 
     private String id, name, symbol, websiteSlug;
 

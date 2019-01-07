@@ -81,7 +81,7 @@ public class NumberUtilTest {
 
     @Test
     public void testGetEthFromWeiForString() {
-        assertEquals("1.311767290033170312", NumberUtil.getEthFromWeiForString("0x1234556676676788"));
+        assertEquals("1.3117672900331703", NumberUtil.getEthFromWeiForString("0x1234556676676788"));
         assertEquals("1.31176729", NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt("0x1234556676676788")));
     }
 

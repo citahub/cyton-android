@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_change_wallet.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.NBaseActivity
-import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil
 import java.util.*
@@ -16,7 +16,7 @@ import java.util.*
  */
 class ChangeWalletActivity : NBaseActivity() {
 
-    private var walletItems: List<WalletItem> = ArrayList()
+    private var wallets: List<Wallet> = ArrayList()
 
     override fun getContentLayout(): Int {
         return R.layout.activity_change_wallet
@@ -29,17 +29,17 @@ class ChangeWalletActivity : NBaseActivity() {
     }
 
     override fun initData() {
-        walletItems = DBWalletUtil.getAllWallet(this)
-        for (i in walletItems.indices) {
-            if (walletItems[i].name == SharePrefUtil.getCurrentWalletName()) {
+        wallets = DBWalletUtil.getAllWallet(this)
+        for (i in wallets.indices) {
+            if (wallets[i].name == SharePrefUtil.getCurrentWalletName()) {
                 if (i != 0) {
-                    Collections.swap(walletItems, 0, i)
+                    Collections.swap(wallets, 0, i)
                 }
                 break
             }
         }
         wallet_recycler.layoutManager = LinearLayoutManager(this)
-        wallet_recycler.adapter = ChangeWalletAdapter(this, walletItems)
+        wallet_recycler.adapter = ChangeWalletAdapter(this, wallets)
     }
 
     override fun initAction() {

@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.transaction.BaseResponse;
-import org.nervos.neuron.item.transaction.TransactionResponse;
+import org.nervos.neuron.item.transaction.BaseTransaction;
+import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
@@ -27,20 +27,20 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int VIEW_TYPE_ITEM = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
-    private List<TransactionResponse> transactionResponseList;
+    private List<RestTransaction> restTransactionList;
     private String address;
     private Context context;
 
     private OnItemClickListener onItemClickListener;
 
-    public TransactionAdapter(Context context, List<TransactionResponse> transactionResponseList, String address) {
-        this.transactionResponseList = transactionResponseList;
+    public TransactionAdapter(Context context, List<RestTransaction> restTransactionList, String address) {
+        this.restTransactionList = restTransactionList;
         this.address = address;
         this.context = context;
     }
 
-    public void refresh(List<TransactionResponse> transactionResponseList) {
-        this.transactionResponseList = transactionResponseList;
+    public void refresh(List<RestTransaction> restTransactionList) {
+        this.restTransactionList = restTransactionList;
         notifyDataSetChanged();
     }
 
@@ -49,16 +49,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void addLoadingView() {
-        if (transactionResponseList.size() > 0) {
-            transactionResponseList.add(null);
-            notifyItemInserted(transactionResponseList.size() - 1);
+        if (restTransactionList.size() > 0) {
+            restTransactionList.add(null);
+            notifyItemInserted(restTransactionList.size() - 1);
         }
     }
 
     public void removeLoadingView() {
-        if (transactionResponseList.size() > 0) {
-            transactionResponseList.remove(transactionResponseList.size() - 1);
-            notifyItemRemoved(transactionResponseList.size());
+        if (restTransactionList.size() > 0) {
+            restTransactionList.remove(restTransactionList.size() - 1);
+            notifyItemRemoved(restTransactionList.size());
         }
     }
 
@@ -80,25 +80,25 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TransactionViewHolder) {
-            TransactionResponse transactionResponse = transactionResponseList.get(position);
+            RestTransaction restTransaction = restTransactionList.get(position);
             TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(transactionResponse.to) ||
-                    TextUtils.isEmpty(transactionResponse.to) ?
-                    context.getResources().getString(R.string.contract_create) : transactionResponse.to);
-            String value = (transactionResponse.from.equalsIgnoreCase(address) ? "-" : "+") +
-                    CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(Double.valueOf(transactionResponse.value)));
+            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(restTransaction.to) ||
+                    TextUtils.isEmpty(restTransaction.to) ?
+                    context.getResources().getString(R.string.contract_create) : restTransaction.to);
+            String value = (restTransaction.from.equalsIgnoreCase(address) ? "-" : "+") +
+                    CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(Double.valueOf(restTransaction.value)));
             viewHolder.transactionAmountText.setText(value);
-            viewHolder.transactionTimeText.setText(transactionResponse.getDate());
-            switch (transactionResponse.status) {
-                case BaseResponse.FAILED:
+            viewHolder.transactionTimeText.setText(restTransaction.getDate());
+            switch (restTransaction.status) {
+                case BaseTransaction.FAILED:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_failed);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.red));
                     break;
-                case BaseResponse.SUCCESS:
+                case BaseTransaction.SUCCESS:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_success);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.assist_color));
                     break;
-                case BaseResponse.PENDING:
+                case BaseTransaction.PENDING:
                 default:
                     viewHolder.transactionStatus.setText(R.string.transaction_status_pending);
                     viewHolder.transactionStatus.setTextColor(context.getResources().getColor(R.color.font_title_third));
@@ -110,17 +110,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        if (transactionResponseList.size() == 0) {
+        if (restTransactionList.size() == 0) {
             return 1;
         }
-        return transactionResponseList.size();
+        return restTransactionList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (transactionResponseList.size() == 0) {
+        if (restTransactionList.size() == 0) {
             return VIEW_TYPE_EMPTY;
-        } else if (transactionResponseList.get(position) == null) {
+        } else if (restTransactionList.get(position) == null) {
             return VIEW_TYPE_LOADING;
         }
         return VIEW_TYPE_ITEM;

@@ -14,9 +14,9 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.protocol.system.AppChainjSystemContract;
 import org.nervos.neuron.BuildConfig;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionItem;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -64,16 +64,16 @@ public class AppChainRpcService {
 
     private static Random random;
     private static int version = 0;
-    private static WalletItem walletItem;
+    private static Wallet wallet;
 
     public static void init(Context context, String httpProvider) {
         HttpService.setDebug(BuildConfig.IS_DEBUG);
         service = AppChainj.build(new HttpService(httpProvider));
-        walletItem = DBWalletUtil.getCurrentWallet(context);
+        wallet = DBWalletUtil.getCurrentWallet(context);
     }
 
     public static void init(Context context) {
-        walletItem = DBWalletUtil.getCurrentWallet(context);
+        wallet = DBWalletUtil.getCurrentWallet(context);
     }
 
     public static void setHttpProvider(String httpProvider) {
@@ -86,9 +86,9 @@ public class AppChainRpcService {
     }
 
 
-    public static TokenItem getErc20TokenInfo(String contractAddress) {
+    public static Token getErc20TokenInfo(String contractAddress) {
         try {
-            return new TokenItem(getErc20Name(contractAddress),
+            return new Token(getErc20Name(contractAddress),
                     getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
                     contractAddress);
         } catch (Exception e) {
@@ -98,11 +98,11 @@ public class AppChainRpcService {
     }
 
 
-    public static Observable<Double> getErc20Balance(TokenItem tokenItem, String address) {
+    public static Observable<Double> getErc20Balance(Token token, String address) {
         return Observable.fromCallable(new Callable<Double>() {
             @Override
             public Double call() throws IOException {
-                Call balanceCall = new Call(address, tokenItem.contractAddress,
+                Call balanceCall = new Call(address, token.contractAddress,
                         ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
                 String balanceOf = service.appCall(balanceCall,
                         DefaultBlockParameterName.LATEST).send().getValue();
@@ -110,8 +110,8 @@ public class AppChainRpcService {
                     initIntTypes();
                     Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
                     double balances = balance.getValue().doubleValue();
-                    if (tokenItem.decimals == 0) return balances;
-                    else return balances / (Math.pow(10, tokenItem.decimals));
+                    if (token.decimals == 0) return balances;
+                    else return balances / (Math.pow(10, token.decimals));
                 }
                 return 0.0;
             }
@@ -162,9 +162,9 @@ public class AppChainRpcService {
     }
 
 
-    public static Observable<AppSendTransaction> transferErc20(Context context, TokenItem tokenItem,
+    public static Observable<AppSendTransaction> transferErc20(Context context, Token token,
                                                                String address, String value, long quota, BigInteger chainId, String password) {
-        String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(tokenItem, value));
+        String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(token, value));
 
         return getValidUntilBlock()
                 .flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
@@ -173,7 +173,7 @@ public class AppChainRpcService {
                         AppMetaData.AppMetaDataResult appMetaDataResult = Objects.requireNonNull(getMetaData()).getAppMetaDataResult();
 
                         Transaction transaction = Transaction.createFunctionCallTransaction(
-                                NumberUtil.toLowerCaseWithout0x(tokenItem.contractAddress),
+                                NumberUtil.toLowerCaseWithout0x(token.contractAddress),
                                 randomNonce(), quota, validUntilBlock.longValue(), appMetaDataResult.getVersion(), chainId, "0",
                                 TextUtils.isEmpty(data) ? "" : data);
 
@@ -182,8 +182,8 @@ public class AppChainRpcService {
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
                         } else {
-                            saveLocalTransaction(context, walletItem.address, address, String.valueOf(value),
-                                    validUntilBlock.longValue(), chainId.toString(), tokenItem.contractAddress,
+                            saveLocalTransaction(context, wallet.address, address, String.valueOf(value),
+                                    validUntilBlock.longValue(), chainId.toString(), token.contractAddress,
                                     appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
                         }
                         return Observable.just(appSendTransaction);
@@ -217,7 +217,7 @@ public class AppChainRpcService {
                         if (appSendTransaction.getError() != null) {
                             Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
                         } else {
-                            saveLocalTransaction(context, walletItem.address, toAddress, String.valueOf(value),
+                            saveLocalTransaction(context, wallet.address, toAddress, String.valueOf(value),
                                     validUntilBlock.longValue(), chainId.toString(), "",
                                     appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
                         }
@@ -233,7 +233,7 @@ public class AppChainRpcService {
     }
 
     private static AppSendTransaction signTransaction(Transaction transaction, String password) throws Exception {
-        WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
+        WalletEntity walletEntity = WalletEntity.fromKeyStore(password, wallet.keystore);
         String privateKey = NumberUtil.toLowerCaseWithout0x(walletEntity.getPrivateKey());
         String rawTx = transaction.sign(privateKey, false, false);
         return service.appSendRawTransaction(rawTx).send();
@@ -244,8 +244,8 @@ public class AppChainRpcService {
                                              long validUntilBlock, String chainId, String contractAddress, String hash, String limit) {
         executorService.execute(() -> {
             String chainName = Objects.requireNonNull(DBWalletUtil.getChainItemFromCurrentWallet(context, chainId)).name;
-            TransactionItem item = new TransactionItem(from, to, value, chainId, chainName,
-                    TransactionItem.PENDING, System.currentTimeMillis(), hash);
+            RpcTransaction item = new RpcTransaction(from, to, value, chainId, chainName,
+                    RpcTransaction.PENDING, System.currentTimeMillis(), hash);
             item.gasLimit = limit;
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
@@ -292,12 +292,12 @@ public class AppChainRpcService {
         return FunctionEncoder.encode(function);
     }
 
-    private static BigInteger getERC20TransferValue(TokenItem tokenItem, String value) {
-        return BigDecimal.TEN.pow(tokenItem.decimals).multiply(new BigDecimal(value)).toBigInteger();
+    private static BigInteger getERC20TransferValue(Token token, String value) {
+        return BigDecimal.TEN.pow(token.decimals).multiply(new BigDecimal(value)).toBigInteger();
     }
 
     private static String getErc20Name(String contractAddress) throws Exception {
-        Call nameCall = new Call(walletItem.address, contractAddress, ConstantUtil.NAME_HASH);
+        Call nameCall = new Call(wallet.address, contractAddress, ConstantUtil.NAME_HASH);
         String name = service.appCall(nameCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
         if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
@@ -307,7 +307,7 @@ public class AppChainRpcService {
 
 
     private static String getErc20Symbol(String contractAddress) throws Exception {
-        Call symbolCall = new Call(walletItem.address, contractAddress, ConstantUtil.SYMBOL_HASH);
+        Call symbolCall = new Call(wallet.address, contractAddress, ConstantUtil.SYMBOL_HASH);
         String symbol = service.appCall(symbolCall, DefaultBlockParameterName.LATEST)
                 .send().getValue();
         if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
@@ -316,7 +316,7 @@ public class AppChainRpcService {
     }
 
     private static int getErc20Decimals(String contractAddress) throws Exception {
-        Call decimalsCall = new Call(walletItem.address, contractAddress, ConstantUtil.DECIMALS_HASH);
+        Call decimalsCall = new Call(wallet.address, contractAddress, ConstantUtil.DECIMALS_HASH);
         String decimals = service.appCall(decimalsCall,
                 DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {

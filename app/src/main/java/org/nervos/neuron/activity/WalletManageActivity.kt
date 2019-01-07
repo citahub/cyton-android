@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.activity_wallet_manage.*
 import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.event.TokenRefreshEvent
-import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.service.http.WalletService
 import org.nervos.neuron.util.Blockies
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -20,18 +20,18 @@ import org.nervos.neuron.view.dialog.SimpleDialog
  */
 class WalletManageActivity : NBaseActivity() {
 
-    private var walletItem: WalletItem? = null
+    private var wallet: Wallet? = null
 
     override fun getContentLayout(): Int = R.layout.activity_wallet_manage
 
     override fun initView() {}
 
     override fun initData() {
-        walletItem = DBWalletUtil.getCurrentWallet(this)
+        wallet = DBWalletUtil.getCurrentWallet(this)
 
-        wallet_name_text.text = walletItem!!.name
-        wallet_address.text = walletItem!!.address
-        wallet_photo.setImageBitmap(Blockies.createIcon(walletItem!!.address))
+        wallet_name_text.text = wallet!!.name
+        wallet_address.text = wallet!!.address
+        wallet_photo.setImageBitmap(Blockies.createIcon(wallet!!.address))
     }
 
     override fun initAction() {
@@ -82,9 +82,9 @@ class WalletManageActivity : NBaseActivity() {
             DBWalletUtil.checkWalletName(mActivity, simpleDialog.message) -> Toast.makeText(mActivity, R.string.wallet_name_exist, Toast.LENGTH_SHORT).show()
             else -> {
                 wallet_name_text.text = simpleDialog.message
-                if (DBWalletUtil.updateWalletName(mActivity, walletItem!!.name, simpleDialog.message)) {
+                if (DBWalletUtil.updateWalletName(mActivity, wallet!!.name, simpleDialog.message)) {
                     SharePrefUtil.putCurrentWalletName(simpleDialog.message)
-                    walletItem = DBWalletUtil.getCurrentWallet(this@WalletManageActivity)
+                    wallet = DBWalletUtil.getCurrentWallet(this@WalletManageActivity)
                 } else {
                     Toast.makeText(this@WalletManageActivity, R.string.change_wallet_name_failed, Toast.LENGTH_LONG).show()
                 }
@@ -96,7 +96,7 @@ class WalletManageActivity : NBaseActivity() {
     private fun exportKeystore(simpleDialog: SimpleDialog) {
         if (TextUtils.isEmpty(simpleDialog.message)) {
             Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show()
-        } else if (!WalletService.checkPassword(mActivity, simpleDialog.message, walletItem)) {
+        } else if (!WalletService.checkPassword(mActivity, simpleDialog.message, wallet)) {
             Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show()
         } else {
             generateKeystore()
@@ -105,16 +105,16 @@ class WalletManageActivity : NBaseActivity() {
     }
 
     private fun deleteWallet(deleteDialog: SimpleDialog) {
-        if (!WalletService.checkPassword(mActivity, deleteDialog.message, walletItem)) {
+        if (!WalletService.checkPassword(mActivity, deleteDialog.message, wallet)) {
             Toast.makeText(mActivity, R.string.wallet_password_error, Toast.LENGTH_SHORT).show()
         } else {
             val names = DBWalletUtil.getAllWalletName(mActivity)
             if (names.size > 1) {
-                SharePrefUtil.putCurrentWalletName(names[if (names.indexOf(walletItem!!.name) == 0) 1 else 0])
+                SharePrefUtil.putCurrentWalletName(names[if (names.indexOf(wallet!!.name) == 0) 1 else 0])
             } else if (names.size > 0) {
                 SharePrefUtil.deleteWalletName()
             }
-            DBWalletUtil.deleteWallet(mActivity, walletItem!!.name)
+            DBWalletUtil.deleteWallet(mActivity, wallet!!.name)
             deleteDialog.dismiss()
             Toast.makeText(mActivity, R.string.delete_success, Toast.LENGTH_SHORT).show()
             EventBus.getDefault().post(TokenRefreshEvent())
@@ -124,7 +124,7 @@ class WalletManageActivity : NBaseActivity() {
 
     private fun generateKeystore() {
         val intent = Intent(mActivity, ExportKeystoreActivity::class.java)
-        intent.putExtra(ExportKeystoreActivity.EXTRA_KEYSTORE, walletItem!!.keystore)
+        intent.putExtra(ExportKeystoreActivity.EXTRA_KEYSTORE, wallet!!.keystore)
         startActivity(intent)
     }
 
