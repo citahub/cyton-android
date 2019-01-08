@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * Created by duanyytop on 2018/11/23.
  */
-public class BaseResponse implements Parcelable {
+public class BaseTransaction implements Parcelable {
 
     public static final int FAILED = 0;
     public static final int SUCCESS = 1;
@@ -58,7 +58,7 @@ public class BaseResponse implements Parcelable {
         this.timestamp = timestamp;
     }
 
-    public BaseResponse(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
+    public BaseTransaction(String from, String to, String value, String chainName, int status, long timestamp, String hash) {
         this.from = from;
         this.to = to;
         this.value = value;
@@ -68,7 +68,7 @@ public class BaseResponse implements Parcelable {
         this.hash = hash;
     }
 
-    public BaseResponse() {}
+    public BaseTransaction() {}
 
     @Override
     public boolean equals(Object obj) {
@@ -76,7 +76,7 @@ public class BaseResponse implements Parcelable {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        BaseResponse other = (BaseResponse) obj;
+        BaseTransaction other = (BaseTransaction) obj;
 
         if (hash == null) {
             return other.hash == null;
@@ -110,7 +110,7 @@ public class BaseResponse implements Parcelable {
         dest.writeString(this.validUntilBlock);
     }
 
-    protected BaseResponse(Parcel in) {
+    protected BaseTransaction(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
         this.value = in.readString();
@@ -132,11 +132,11 @@ public class BaseResponse implements Parcelable {
         this.validUntilBlock = in.readString();
     }
 
-    public static final Creator<BaseResponse> CREATOR = new Creator<BaseResponse>() {
+    public static final Creator<BaseTransaction> CREATOR = new Creator<BaseTransaction>() {
         @Override
-        public BaseResponse createFromParcel(Parcel source) {return new BaseResponse(source);}
+        public BaseTransaction createFromParcel(Parcel source) {return new BaseTransaction(source);}
 
         @Override
-        public BaseResponse[] newArray(int size) {return new BaseResponse[size];}
+        public BaseTransaction[] newArray(int size) {return new BaseTransaction[size];}
     };
 }

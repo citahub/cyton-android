@@ -5,8 +5,8 @@ import org.nervos.neuron.constant.NeuronDAppCallback
 /**
  * Created by BaojunCZ on 2018/11/5.
  */
-class PermissionItem(status: Int, errorCode: Int, errorMsg: String, result: Boolean) :
-        BaseNeuronDAppCallbackItem(status, errorCode, errorMsg) {
+class Permission(status: Int, errorCode: Int, errorMsg: String, result: Boolean) :
+        BaseNeuronDAppCallback(status, errorCode, errorMsg) {
 
     constructor(result: Boolean) : this(NeuronDAppCallback.SUCCESS_CODE, 0, "", result)
 

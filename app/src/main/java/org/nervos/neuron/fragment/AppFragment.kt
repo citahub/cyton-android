@@ -22,7 +22,7 @@ class AppFragment : NBaseFragment() {
 
     companion object {
         val TAG = AppFragment::class.java.name!!
-        const val COLLECT_WEBSITE = "https://dapp.cryptape.com/mine"
+        const val COLLECT_WEBSITE = "https://app.cryptape.com/mine"
     }
 
     private var webView: WebView? = null

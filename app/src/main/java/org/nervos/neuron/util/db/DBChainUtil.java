@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.ChainItem;
+import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.util.ConstantUtil;
 
 import java.util.ArrayList;
@@ -17,32 +17,32 @@ public class DBChainUtil extends DBUtil {
 
     private static final String DB_CHAIN = "db_chain";
 
-    public static List<ChainItem> getAllChain(Context context) {
+    public static List<Chain> getAllChain(Context context) {
         synchronized (dbObject) {
-            List<ChainItem> chainItemList = new ArrayList<>();
+            List<Chain> chainList = new ArrayList<>();
             try {
                 db = openDB(context, DB_CHAIN);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
-                    ChainItem chainItem = db.getObject(key, ChainItem.class);
-                    chainItem.setChainId(getDbOrigin(key));
-                    chainItemList.add(chainItem);
+                    Chain chain = db.getObject(key, Chain.class);
+                    chain.setChainId(getDbOrigin(key));
+                    chainList.add(chain);
                 }
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
-            return chainItemList;
+            return chainList;
         }
     }
 
-    public static ChainItem getChain(Context context, String chainId) {
+    public static Chain getChain(Context context, String chainId) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_CHAIN);
-                ChainItem chainItem = db.getObject(getDbKey(chainId), ChainItem.class);
+                Chain chain = db.getObject(getDbKey(chainId), Chain.class);
                 db.close();
-                return chainItem;
+                return chain;
             } catch (SnappydbException e) {
                 handleException(db, e);
             }
@@ -54,21 +54,21 @@ public class DBChainUtil extends DBUtil {
     public static List<String> getAllChainName(Context context) {
         synchronized (dbObject) {
             List<String> chainNameList = new ArrayList<>();
-            List<ChainItem> chainItemList = getAllChain(context);
+            List<Chain> chainList = getAllChain(context);
 
-            for (ChainItem chainItem : chainItemList) {
-                chainNameList.add(chainItem.name);
+            for (Chain chain : chainList) {
+                chainNameList.add(chain.name);
             }
             return chainNameList;
         }
     }
 
 
-    public static void saveChain(Context context, ChainItem chainItem) {
+    public static void saveChain(Context context, Chain chain) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_CHAIN);
-                db.put(getDbKey(chainItem.getChainId()), chainItem);
+                db.put(getDbKey(chain.getChainId()), chain);
                 db.close();
             } catch (SnappydbException e) {
                 handleException(db, e);
@@ -77,8 +77,8 @@ public class DBChainUtil extends DBUtil {
     }
 
     public static void initChainData(Context context) {
-        saveChain(context, new ChainItem(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
-        saveChain(context, new ChainItem(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
+        saveChain(context, new Chain(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
+        saveChain(context, new Chain(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
                 ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
     }
 

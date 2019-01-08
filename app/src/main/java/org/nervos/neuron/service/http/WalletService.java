@@ -2,10 +2,12 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.nervos.neuron.item.Chain;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
@@ -26,84 +28,84 @@ import rx.schedulers.Schedulers;
  */
 public class WalletService {
 
-    public static Observable<TokenItem> getTokenBalance(Context context, TokenItem tokenItem) {
+    public static Observable<Token> getTokenBalance(Context context, Token token) {
         return Observable.just(DBWalletUtil.getCurrentWallet(context).address)
                 .flatMap(new Func1<String, Observable<Double>>() {
                     @Override
                     public Observable<Double> call(String address) {
-                        if (EtherUtil.isEther(tokenItem)) {
-                            tokenItem.chainName = ConstantUtil.ETH;
-                            return EtherUtil.isNative(tokenItem)
+                        if (EtherUtil.isEther(token)) {
+                            token.chainName = ConstantUtil.ETH;
+                            return EtherUtil.isNative(token)
                                     ? EthRpcService.getEthBalance(address)
-                                    :EthRpcService.getERC20Balance(tokenItem.contractAddress, address);
+                                    :EthRpcService.getERC20Balance(token.contractAddress, address);
                         } else {
-                            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
-                            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
-                            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
-                            return EtherUtil.isNative(tokenItem)
+                            Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
+                            token.chainName = Objects.requireNonNull(chain).name;
+                            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+                            return EtherUtil.isNative(token)
                                     ? AppChainRpcService.getBalance(address)
-                                    : AppChainRpcService.getErc20Balance(tokenItem, address);
+                                    : AppChainRpcService.getErc20Balance(token, address);
                         }
                     }
                 }).map(balance -> {
-                    tokenItem.balance = balance;
-                    return tokenItem;
+                    token.balance = balance;
+                    return token;
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<Double> getBalanceWithToken(Context context, TokenItem tokenItem) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+    public static Observable<Double> getBalanceWithToken(Context context, Token token) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         Observable<Double> balanceObservable;
-        if (EtherUtil.isEther(tokenItem)) {
-            tokenItem.chainName = ConstantUtil.ETH;
-            balanceObservable = EtherUtil.isNative(tokenItem)
-                    ? EthRpcService.getEthBalance(walletItem.address)
-                    : EthRpcService.getERC20Balance(tokenItem.contractAddress, walletItem.address);
+        if (EtherUtil.isEther(token)) {
+            token.chainName = ConstantUtil.ETH;
+            balanceObservable = EtherUtil.isNative(token)
+                    ? EthRpcService.getEthBalance(wallet.address)
+                    : EthRpcService.getERC20Balance(token.contractAddress, wallet.address);
         } else {
-            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
-            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
-            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
-            balanceObservable = EtherUtil.isNative(tokenItem)
-                    ? AppChainRpcService.getBalance(walletItem.address)
-                    : AppChainRpcService.getErc20Balance(tokenItem, walletItem.address);
+            Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
+            token.chainName = Objects.requireNonNull(chain).name;
+            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+            balanceObservable = EtherUtil.isNative(token)
+                    ? AppChainRpcService.getBalance(wallet.address)
+                    : AppChainRpcService.getErc20Balance(token, wallet.address);
         }
         return balanceObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<Double> getBalanceWithNativeToken(Context context, TokenItem tokenItem) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+    public static Observable<Double> getBalanceWithNativeToken(Context context, Token token) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         Observable<Double> balanceObservable;
-        if (EtherUtil.isEther(tokenItem)) {
-            tokenItem.chainName = ConstantUtil.ETH;
-            balanceObservable = EthRpcService.getEthBalance(walletItem.address);
+        if (EtherUtil.isEther(token)) {
+            token.chainName = ConstantUtil.ETH;
+            balanceObservable = EthRpcService.getEthBalance(wallet.address);
         } else {
-            ChainItem chainItem = DBWalletUtil.getChainItemFromCurrentWallet(context, tokenItem.getChainId());
-            tokenItem.chainName = Objects.requireNonNull(chainItem).name;
-            AppChainRpcService.init(context, Objects.requireNonNull(chainItem).httpProvider);
-            balanceObservable = AppChainRpcService.getBalance(walletItem.address);
+            Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
+            token.chainName = Objects.requireNonNull(chain).name;
+            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+            balanceObservable = AppChainRpcService.getBalance(wallet.address);
         }
         return balanceObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static boolean checkPassword(Context context, String password, WalletItem walletItem) {
+    public static boolean checkPassword(Context context, String password, Wallet wallet) {
         try {
             Credentials credentials;
-            if (!TextUtils.isEmpty(walletItem.keystore)) {
-                WalletEntity walletEntity = WalletEntity.fromKeyStore(password, walletItem.keystore);
+            if (!TextUtils.isEmpty(wallet.keystore)) {
+                WalletEntity walletEntity = WalletEntity.fromKeyStore(password, wallet.keystore);
                 credentials = walletEntity.getCredentials();
             } else {
-                String privateKey = AESCrypt.decrypt(password, walletItem.cryptPrivateKey);
+                String privateKey = AESCrypt.decrypt(password, wallet.cryptPrivateKey);
                 WalletEntity walletEntity = WalletEntity.fromPrivateKey(Numeric.toBigInt(privateKey), password);
                 credentials = walletEntity.getCredentials();
-                walletItem.keystore = walletEntity.getKeystore();
-                walletItem.cryptPrivateKey = "";
-                DBWalletUtil.saveWallet(context, walletItem);
+                wallet.keystore = walletEntity.getKeystore();
+                wallet.cryptPrivateKey = "";
+                DBWalletUtil.saveWallet(context, wallet);
                 reInitRpcService(context);
             }
-            return walletItem.address.equalsIgnoreCase(credentials.getAddress());
+            return wallet.address.equalsIgnoreCase(credentials.getAddress());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,12 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 
 import java.util.List;
 
@@ -23,12 +22,12 @@ import java.util.List;
 public class SelectWalletPopupWindow extends PopupWindow {
 
     private RecyclerView recyclerView;
-    private List<WalletItem> walletItems;
+    private List<Wallet> wallets;
     private onClickImpl listener;
 
-    public SelectWalletPopupWindow(Activity activity, List<WalletItem> walletItems, onClickImpl listener) {
+    public SelectWalletPopupWindow(Activity activity, List<Wallet> wallets, onClickImpl listener) {
         super(activity);
-        this.walletItems = walletItems;
+        this.wallets = wallets;
         this.listener = listener;
         View pop = LayoutInflater.from(activity).inflate(R.layout.popupwindow_pwd_unlock_wallet, null);
         recyclerView = pop.findViewById(R.id.recycler);
@@ -53,16 +52,16 @@ public class SelectWalletPopupWindow extends PopupWindow {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.nameTv.setText(walletItems.get(position).name);
+            holder.nameTv.setText(wallets.get(position).name);
             holder.nameTv.setOnClickListener((view) -> {
-                listener.click(walletItems.get(position));
+                listener.click(wallets.get(position));
                 dismiss();
             });
         }
 
         @Override
         public int getItemCount() {
-            return walletItems.size();
+            return wallets.size();
         }
     }
 
@@ -77,7 +76,7 @@ public class SelectWalletPopupWindow extends PopupWindow {
     }
 
     public interface onClickImpl {
-        void click(WalletItem walletItem);
+        void click(Wallet wallet);
     }
 
 }

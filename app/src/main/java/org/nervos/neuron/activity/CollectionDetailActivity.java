@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.collection.CollectActivity;
-import org.nervos.neuron.item.CollectionItem;
+import org.nervos.neuron.item.Collection;
 import org.nervos.neuron.view.TitleBar;
 import org.nervos.neuron.view.button.CommonButton;
 
@@ -29,7 +29,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
     private ImageView collectionImage;
     private CommonButton checkBtn;
     private RelativeLayout imageRl;
-    private CollectionItem collectionItem;
+    private Collection collection;
     private RecyclerView attrsRecycler;
     private View line;
 
@@ -59,22 +59,22 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
     @Override
     protected void initData() {
-        collectionItem = getIntent().getParcelableExtra(CollectActivity.EXTRA_COLLECTION);
-        nameText.setText(collectionItem.name);
-        tokenIdText.setText("ID:" + collectionItem.tokenId);
-        contractNameText.setText(collectionItem.assetContract.name);
-        if (!TextUtils.isEmpty(collectionItem.description))
-            describeText.setText(collectionItem.description);
+        collection = getIntent().getParcelableExtra(CollectActivity.EXTRA_COLLECTION);
+        nameText.setText(collection.name);
+        tokenIdText.setText("ID:" + collection.tokenId);
+        contractNameText.setText(collection.assetContract.name);
+        if (!TextUtils.isEmpty(collection.description))
+            describeText.setText(collection.description);
         else {
             collectionDescTitleText.setVisibility(View.GONE);
             describeText.setVisibility(View.GONE);
             moreText.setVisibility(View.GONE);
             line.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(collectionItem.backgroundColor))
-            imageRl.setBackgroundColor(Color.parseColor("#" + collectionItem.backgroundColor));
+        if (!TextUtils.isEmpty(collection.backgroundColor))
+            imageRl.setBackgroundColor(Color.parseColor("#" + collection.backgroundColor));
         Glide.with(this)
-                .load(collectionItem.imagePreviewUrl)
+                .load(collection.imagePreviewUrl)
                 .into(collectionImage);
         attrsRecycler.setLayoutManager(new GridLayoutManager(mActivity, 3));
         Adapter adapter = new Adapter();
@@ -103,7 +103,7 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
                 break;
             case R.id.btn_check:
                 Intent intent = new Intent(mActivity, SimpleWebActivity.class);
-                intent.putExtra(SimpleWebActivity.EXTRA_URL, collectionItem.externalLink);
+                intent.putExtra(SimpleWebActivity.EXTRA_URL, collection.externalLink);
                 startActivity(intent);
                 break;
         }
@@ -121,13 +121,13 @@ public class CollectionDetailActivity extends NBaseActivity implements View.OnCl
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.key.setText(collectionItem.traits.get(position).traitType);
-            holder.value.setText(collectionItem.traits.get(position).value);
+            holder.key.setText(collection.traits.get(position).traitType);
+            holder.value.setText(collection.traits.get(position).value);
         }
 
         @Override
         public int getItemCount() {
-            return collectionItem.traits.size();
+            return collection.traits.size();
         }
     }
 

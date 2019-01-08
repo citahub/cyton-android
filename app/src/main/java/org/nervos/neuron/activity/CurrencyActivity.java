@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CurrencyRefreshEvent;
-import org.nervos.neuron.item.CurrencyItem;
+import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
@@ -26,7 +26,7 @@ import java.util.List;
 public class CurrencyActivity extends NBaseActivity {
 
     private RecyclerView currencyRecycler;
-    private List<CurrencyItem> currencyArray;
+    private List<Currency> currencyArray;
     private TitleBar title;
 
     @Override
@@ -68,7 +68,7 @@ public class CurrencyActivity extends NBaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            CurrencyItem currency = currencyArray.get(position);
+            Currency currency = currencyArray.get(position);
             if (SharePrefUtil.getString(ConstantUtil.CURRENCY, ConstantUtil.DEFAULT_CURRENCY).equals(currency.getName())) {
                 holder.currency.setRightImageShow(true);
             } else {

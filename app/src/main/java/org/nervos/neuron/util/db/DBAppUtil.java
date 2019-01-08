@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.CollectDAppItem;
+import org.nervos.neuron.item.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class DBAppUtil extends DBUtil {
 
     private static final String DB_APP = "db_app";
 
-    public static void saveDbApp(Context context, CollectDAppItem appItem) {
+    public static void saveDbApp(Context context, App appItem) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APP);
@@ -40,14 +40,14 @@ public class DBAppUtil extends DBUtil {
         }
     }
 
-    public static List<CollectDAppItem> getAllApp(Context context) {
+    public static List<App> getAllApp(Context context) {
         synchronized (dbObject) {
-            List<CollectDAppItem> appList = new ArrayList<>();
+            List<App> appList = new ArrayList<>();
             try {
                 db = openDB(context, DB_APP);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for(String key: keys) {
-                    appList.add(db.getObject(key, CollectDAppItem.class));
+                    appList.add(db.getObject(key, App.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
@@ -72,11 +72,11 @@ public class DBAppUtil extends DBUtil {
     }
 
 
-    public static CollectDAppItem getApp(Context context, String entry) {
+    public static App getApp(Context context, String entry) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APP);
-                CollectDAppItem appItem = db.getObject(getDbKey(entry), CollectDAppItem.class);
+                App appItem = db.getObject(getDbKey(entry), App.class);
                 db.close();
                 return appItem;
             } catch (SnappydbException e) {

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.snappydb.SnappydbException;
 
-import org.nervos.neuron.item.transaction.TransactionItem;
+import org.nervos.neuron.item.transaction.RpcTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
      * @param context
      * @param item
      */
-    public static void save(Context context, TransactionItem item) {
+    public static void save(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
@@ -37,7 +37,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         }
     }
 
-    public static void delete(Context context, TransactionItem item) {
+    public static void delete(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
@@ -50,7 +50,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         }
     }
 
-    public static void update(Context context, TransactionItem item) {
+    public static void update(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
                 db = openDB(context, DB_APPCHAIN);
@@ -70,14 +70,14 @@ public class DBAppChainTransactionsUtil extends DBUtil {
      * @param context
      * @return
      */
-    public static List<TransactionItem> getAllTransactions(Context context) {
+    public static List<RpcTransaction> getAllTransactions(Context context) {
         synchronized (dbObject) {
-            List<TransactionItem> list = new ArrayList<>();
+            List<RpcTransaction> list = new ArrayList<>();
             try {
                 db = openDB(context, DB_APPCHAIN);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
-                    list.add(db.getObject(key, TransactionItem.class));
+                    list.add(db.getObject(key, RpcTransaction.class));
                 }
                 db.close();
             } catch (SnappydbException e) {
@@ -94,15 +94,15 @@ public class DBAppChainTransactionsUtil extends DBUtil {
      * @param context
      * @return
      */
-    public static List<TransactionItem> getAllTransactionsWithToken(Context context, String chainId, String contractAddress) {
+    public static List<RpcTransaction> getAllTransactionsWithToken(Context context, String chainId, String contractAddress) {
         synchronized (dbObject) {
-            List<TransactionItem> list = new ArrayList<>();
+            List<RpcTransaction> list = new ArrayList<>();
             try {
                 db = openDB(context, DB_APPCHAIN);
                 String tokenType = TextUtils.isEmpty(contractAddress) ? TOKEN : contractAddress;
                 String[] keys = db.findKeys(getDbKey(chainId + tokenType));
                 for (String key : keys) {
-                    list.add(db.getObject(key, TransactionItem.class));
+                    list.add(db.getObject(key, RpcTransaction.class));
                 }
                 db.close();
             } catch (SnappydbException e) {

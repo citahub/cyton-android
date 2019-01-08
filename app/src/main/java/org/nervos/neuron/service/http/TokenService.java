@@ -7,9 +7,9 @@ import okhttp3.Call;
 import okhttp3.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.nervos.neuron.item.CurrencyIDItem;
-import org.nervos.neuron.item.CurrencyIDList;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.CurrencyId;
+import org.nervos.neuron.item.CurrencyIdList;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.response.CollectionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.url.HttpUrls;
@@ -30,7 +30,7 @@ public class TokenService {
     private static final String PARAM_ID = "@ID";
     private static final String PARAM_CURRENCY = "@Currency";
 
-    private static ArrayList<CurrencyIDItem> list = null;
+    private static ArrayList<CurrencyId> list = null;
 
     public static Observable<String> getCurrency(String symbol, String currency) {
         return getTokenID(symbol)
@@ -88,12 +88,12 @@ public class TokenService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                list = new Gson().fromJson(response, CurrencyIDList.class).getList();
+                list = new Gson().fromJson(response, CurrencyIdList.class).getList();
             }
             return list;
         }).subscribeOn(Schedulers.newThread())
-                .flatMap((Func1<ArrayList<CurrencyIDItem>, Observable<String>>) currencyIDItems -> {
-                    for (CurrencyIDItem item : list) {
+                .flatMap((Func1<ArrayList<CurrencyId>, Observable<String>>) currencyIDItems -> {
+                    for (CurrencyId item : list) {
                         if (item.getSymbol().equals(symbol)) {
                             return Observable.just(item.getId());
                         }
@@ -110,12 +110,12 @@ public class TokenService {
      * @return
      */
     public static Observable<CollectionResponse> getCollectionList(Context context) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<CollectionResponse>() {
             @Override
             public CollectionResponse call() throws Exception {
                 Request request = new Request.Builder()
-                        .url(HttpUrls.COLLECTION_LIST_URL + walletItem.address).build();
+                        .url(HttpUrls.COLLECTION_LIST_URL + wallet.address).build();
                 Call call = HttpService.getHttpClient().newCall(request);
                 String response = "";
                 try {

@@ -6,7 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.Blockies;
 import org.nervos.neuron.util.NumberUtil;
@@ -26,7 +26,7 @@ public class ChangePasswordActivity extends NBaseActivity {
     private CircleImageView walletPhoto;
     private CommonButton button;
 
-    private WalletItem walletItem;
+    private Wallet wallet;
 
     @Override
     protected int getContentLayout() {
@@ -46,9 +46,9 @@ public class ChangePasswordActivity extends NBaseActivity {
     @Override
     protected void initData() {
         checkWalletStatus();
-        walletItem = DBWalletUtil.getCurrentWallet(this);
-        walletNameText.setText(walletItem.name);
-        walletPhoto.setImageBitmap(Blockies.createIcon(walletItem.address));
+        wallet = DBWalletUtil.getCurrentWallet(this);
+        walletNameText.setText(wallet.name);
+        walletPhoto.setImageBitmap(Blockies.createIcon(wallet.address));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ChangePasswordActivity extends NBaseActivity {
             } else if (!TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                     newRePasswordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_not_same, Toast.LENGTH_SHORT).show();
-            } else if (!WalletService.checkPassword(mActivity, oldPasswordEdit.getText().toString().trim(), walletItem)) {
+            } else if (!WalletService.checkPassword(mActivity, oldPasswordEdit.getText().toString().trim(), wallet)) {
                 Toast.makeText(mActivity, R.string.old_password_error, Toast.LENGTH_SHORT).show();
             } else if (TextUtils.equals(newPasswordEdit.getText().toString().trim(),
                     oldPasswordEdit.getText().toString().trim())) {
@@ -71,7 +71,7 @@ public class ChangePasswordActivity extends NBaseActivity {
             } else if (!NumberUtil.isPasswordOk(newPasswordEdit.getText().toString().trim())) {
                 Toast.makeText(mActivity, R.string.password_weak, Toast.LENGTH_SHORT).show();
             } else {
-                DBWalletUtil.updateWalletPassword(mActivity, walletItem.name,
+                DBWalletUtil.updateWalletPassword(mActivity, wallet.name,
                         oldPasswordEdit.getText().toString().trim(),
                         newPasswordEdit.getText().toString());
                 Toast.makeText(mActivity, R.string.update_password_success, Toast.LENGTH_SHORT).show();

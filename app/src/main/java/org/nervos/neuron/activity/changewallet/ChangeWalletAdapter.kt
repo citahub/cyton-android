@@ -14,14 +14,14 @@ import org.greenrobot.eventbus.EventBus
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.AddWalletActivity
 import org.nervos.neuron.event.TokenRefreshEvent
-import org.nervos.neuron.item.WalletItem
+import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.util.Blockies
 import org.nervos.neuron.util.db.SharePrefUtil
 
 /**
  * Created by BaojunCZ on 2018/11/23.
  */
-class ChangeWalletAdapter(private val context: Activity, private val walletItems: List<WalletItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChangeWalletAdapter(private val context: Activity, private val wallets: List<Wallet>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val WALLET = 0
     private val ADD = 1
@@ -39,7 +39,7 @@ class ChangeWalletAdapter(private val context: Activity, private val walletItems
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is WalletHolder) {
-            val walletItem = walletItems[position]
+            val walletItem = wallets[position]
             holder.nameText.text = walletItem.name
             holder.addressText.text = walletItem.address
             holder.photoImage.setImageBitmap(Blockies.createIcon(walletItem.address))
@@ -64,11 +64,11 @@ class ChangeWalletAdapter(private val context: Activity, private val walletItems
     }
 
     override fun getItemCount(): Int {
-        return walletItems.size + 1
+        return wallets.size + 1
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == walletItems.size) ADD else WALLET
+        return if (position == wallets.size) ADD else WALLET
     }
 
     internal inner class WalletHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

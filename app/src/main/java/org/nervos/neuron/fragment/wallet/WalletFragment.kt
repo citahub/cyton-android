@@ -19,7 +19,7 @@ import org.nervos.neuron.event.TokenBalanceEvent
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.fragment.NBaseFragment
 import org.nervos.neuron.fragment.token.model.WalletTokenAdapter
-import org.nervos.neuron.item.WalletTokenLoadItem
+import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.view.TitleBar
@@ -36,7 +36,7 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
 
     private var mWalletAssetsView: WalletAssetsView? = null
     private var mTitleBar: TitleBar? = null
-    private var mTokenItemList: MutableList<WalletTokenLoadItem> = mutableListOf()
+    private var mTokenItemList: MutableList<Token> = mutableListOf()
     private lateinit var mAdapter: WalletTokenAdapter
     private lateinit var mCircleAnim: Animation
 
@@ -130,11 +130,11 @@ class WalletFragment : NBaseFragment(), View.OnClickListener {
     }
 
     private fun getMyTokens() {
-        var list = DBWalletUtil.getCurrentWallet(context).tokenItems
+        var list = DBWalletUtil.getCurrentWallet(context).tokens
         mTokenItemList.clear()
         list.forEachIndexed { _, tokenItem ->
             if (tokenItem.selected)
-                mTokenItemList.add(WalletTokenLoadItem(tokenItem))
+                mTokenItemList.add(Token(tokenItem))
         }
         if (mTokenItemList.size == 0) {
             finishRefresh()

@@ -12,12 +12,12 @@ import com.google.gson.Gson;
 
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
-import org.nervos.neuron.item.AppItem;
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.CurrencyItem;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.item.App;
+import org.nervos.neuron.item.Chain;
+import org.nervos.neuron.item.Currency;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.transaction.AppTransaction;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
@@ -50,14 +50,14 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     private static final int REQUEST_CODE = 0x01;
     private static int ERROR_CODE = -1;
 
-    private TransactionInfo mTransactionInfo;
-    private WalletItem mWalletItem;
-    private TokenItem mTokenItem;
-    private AppItem mAppItem;
+    private AppTransaction mAppTransaction;
+    private Wallet mWallet;
+    private Token mToken;
+    private App mApp;
     private TextView mTvValue, mTvSymbol, mTvPayFee, mTvPayFeeTitle, mTvTotalFee,
             mTvReceiverName, mTvReceiverWebsite, mTvReceiverAddress, mTvSenderAddress;
     private TransferDialog mTransferDialog;
-    private ChainItem mChainItem;
+    private Chain mChain;
     private Double mQuota;
 
     @Override
@@ -84,10 +84,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         EthRpcService.init(this);
         String payload = getIntent().getStringExtra(AppWebActivity.EXTRA_PAYLOAD);
         if (!TextUtils.isEmpty(payload)) {
-            mTransactionInfo = new Gson().fromJson(payload, TransactionInfo.class);
+            mAppTransaction = new Gson().fromJson(payload, AppTransaction.class);
         }
-        mWalletItem = DBWalletUtil.getCurrentWallet(mActivity);
-        mAppItem = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
+        mWallet = DBWalletUtil.getCurrentWallet(mActivity);
+        mApp = getIntent().getParcelableExtra(AppWebActivity.EXTRA_CHAIN);
 
         initRemoteData();
         updateView();
@@ -96,13 +96,13 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     @SuppressLint("SetTextI18n")
     private void updateView() {
-        mTvValue.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()));
+        mTvValue.setText(NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue()));
         mTvSymbol.setText(getNativeToken());
-        mTvSenderAddress.setText(mWalletItem.address);
+        mTvSenderAddress.setText(mWallet.address);
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
-        mTvReceiverAddress.setText(mTransactionInfo.to);
-        mTvReceiverName.setText(mAppItem.name);
-        mTvPayFeeTitle.setText(mTransactionInfo.isEthereum() ? R.string.gas_fee : R.string.quota_fee);
+        mTvReceiverAddress.setText(mAppTransaction.to);
+        mTvReceiverName.setText(mApp.name);
+        mTvPayFeeTitle.setText(mAppTransaction.isEthereum() ? R.string.gas_fee : R.string.quota_fee);
     }
 
     @Override
@@ -124,13 +124,13 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void initRemoteData() {
         initBalance();
-        if (mTransactionInfo.isEthereum()) {
+        if (mAppTransaction.isEthereum()) {
             showProgressCircle();
-            if (TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasPrice())) {
+            if (TextUtils.isEmpty(mAppTransaction.getGasPrice().toString()) || BigInteger.ZERO.equals(mAppTransaction.getGasPrice())) {
                 getEtherGasPrice();
             }
 
-            if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || BigInteger.ZERO.equals(mTransactionInfo.getGasLimit())) {
+            if (TextUtils.isEmpty(mAppTransaction.getGasLimit().toString()) || BigInteger.ZERO.equals(mAppTransaction.getGasLimit())) {
                 getEtherGasLimit();
             }
 
@@ -150,24 +150,24 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             @SuppressLint("SetTextI18n")
             @Override
             public void onNext(BigInteger gasPrice) {
-                mTransactionInfo.setGasPrice(gasPrice);
+                mAppTransaction.setGasPrice(gasPrice);
                 setEthGasPrice();
             }
         });
     }
 
     private void getEtherGasLimit() {
-        EthRpcService.getEthGasLimit(mTransactionInfo)
+        EthRpcService.getEthGasLimit(mAppTransaction)
                 .subscribe(new NeuronSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
-                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_ERC20_LIMIT);
+                        mAppTransaction.setGasLimit(ConstantUtil.GAS_ERC20_LIMIT);
                         setEthGasPrice();
                     }
 
                     @Override
                     public void onNext(BigInteger gasLimit) {
-                        mTransactionInfo.setGasLimit(ConstantUtil.GAS_LIMIT_PARAMETER);
+                        mAppTransaction.setGasLimit(ConstantUtil.GAS_LIMIT_PARAMETER);
                         setEthGasPrice();
                     }
                 });
@@ -176,15 +176,15 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     @SuppressLint("SetTextI18n")
     private void setEthGasPrice() {
         dismissProgressCircle();
-        if (TextUtils.isEmpty(mTransactionInfo.getGasLimit().toString()) || TextUtils.isEmpty(mTransactionInfo.getGasPrice().toString())) {
+        if (TextUtils.isEmpty(mAppTransaction.getGasLimit().toString()) || TextUtils.isEmpty(mAppTransaction.getGasPrice().toString())) {
             return;
         }
 
-        mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mTransactionInfo.getGas()) + getNativeToken());
+        mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mAppTransaction.getGas()) + getNativeToken());
         mTvTotalFee.setText(CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(
-                mTransactionInfo.getDoubleValue() + mTransactionInfo.getGas())) + " " + getNativeToken());
-        CurrencyItem currencyItem = CurrencyUtil.getCurrencyItem(mActivity);
-        TokenService.getCurrency(ConstantUtil.ETH, currencyItem.getName())
+                mAppTransaction.getDoubleValue() + mAppTransaction.getGas())) + " " + getNativeToken());
+        Currency currency = CurrencyUtil.getCurrencyItem(mActivity);
+        TokenService.getCurrency(ConstantUtil.ETH, currency.getName())
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
@@ -192,10 +192,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                             return;
                         try {
                             String currencyPrice = NumberUtil.getDecimalValid_2(
-                                    mTransactionInfo.getGas() * Double.parseDouble(price));
+                                    mAppTransaction.getGas() * Double.parseDouble(price));
                             mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
-                                    mTransactionInfo.getGas()) + " " + getNativeToken() + " "
-                                    + "≈" + currencyItem.getSymbol() + " " + currencyPrice);
+                                    mAppTransaction.getGas()) + " " + getNativeToken() + " "
+                                    + "≈" + currency.getSymbol() + " " + currencyPrice);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
@@ -204,24 +204,24 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void getQuotaPrice() {
-        AppChainRpcService.getQuotaPrice(mWalletItem.address).subscribe(new NeuronSubscriber<String>() {
+        AppChainRpcService.getQuotaPrice(mWallet.address).subscribe(new NeuronSubscriber<String>() {
             @Override
             public void onNext(String price) {
                 super.onNext(price);
-                mQuota = NumberUtil.getEthFromWei(mTransactionInfo.getQuota().multiply(new BigInteger(price)));
+                mQuota = NumberUtil.getEthFromWei(mAppTransaction.getQuota().multiply(new BigInteger(price)));
                 mTvTotalFee.setText(String.format("%s %s",
-                        NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue() + mQuota), getNativeToken()));
+                        NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue() + mQuota), getNativeToken()));
                 mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(mQuota), getNativeToken()));
             }
         });
     }
 
     private void initBalance() {
-        mChainItem = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo.chainId);
-        if (mChainItem == null) {
+        mChain = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mAppTransaction.chainId);
+        if (mChain == null) {
             finish();
         }
-        mTokenItem = new TokenItem(mChainItem);
+        mToken = new Token(mChain);
     }
 
     @SuppressLint("SetTextI18n")
@@ -229,12 +229,12 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
         mTransferDialog = new TransferDialog(this, (password, progressBar) -> {
             if (TextUtils.isEmpty(password)) {
                 Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
-            } else if (!WalletService.checkPassword(mActivity, password, mWalletItem)) {
+            } else if (!WalletService.checkPassword(mActivity, password, mWallet)) {
                 Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             } else {
                 mTransferDialog.setButtonClickAble(false);
                 progressBar.setVisibility(View.VISIBLE);
-                if (mTransactionInfo.isEthereum()) {
+                if (mAppTransaction.isEthereum()) {
                     transferEth(password, progressBar);
                 } else {
                     transferAppChain(password, progressBar);
@@ -242,15 +242,15 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             }
         });
 
-        String fee = NumberUtil.getDecimal8ENotation(mTransactionInfo.isEthereum()
-                ? mTransactionInfo.getGas() : mQuota) + getNativeToken();
+        String fee = NumberUtil.getDecimal8ENotation(mAppTransaction.isEthereum()
+                ? mAppTransaction.getGas() : mQuota) + getNativeToken();
 
-        mTransferDialog.setConfirmData(mWalletItem.address, mTransactionInfo.to,
-                NumberUtil.getDecimal8ENotation(mTransactionInfo.getDoubleValue()) + getNativeToken(), fee);
+        mTransferDialog.setConfirmData(mWallet.address, mAppTransaction.to,
+                NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue()) + getNativeToken(), fee);
     }
 
     private void transferEth(String password, ProgressBar progressBar) {
-        Observable.just(mTransactionInfo.getGasPrice())
+        Observable.just(mAppTransaction.getGasPrice())
                 .flatMap(new Func1<BigInteger, Observable<BigInteger>>() {
                     @Override
                     public Observable<BigInteger> call(BigInteger gasPrice) {
@@ -263,10 +263,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 }).flatMap(new Func1<BigInteger, Observable<EthSendTransaction>>() {
             @Override
             public Observable<EthSendTransaction> call(BigInteger gasPrice) {
-                return EthRpcService.transferEth(mActivity, mTransactionInfo.to,
-                        mTransactionInfo.getStringValue(), gasPrice,
-                        mTransactionInfo.getGasLimit(),
-                        mTransactionInfo.data, password);
+                return EthRpcService.transferEth(mActivity, mAppTransaction.to,
+                        mAppTransaction.getStringValue(), gasPrice,
+                        mAppTransaction.getGasLimit(),
+                        mAppTransaction.data, password);
             }
         }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -288,11 +288,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void transferAppChain(String password, ProgressBar progressBar) {
-        AppChainRpcService.setHttpProvider(mChainItem.httpProvider);
-        AppChainRpcService.transferAppChain(mActivity, mTransactionInfo.to,
-                mTransactionInfo.getStringValue(),
-                mTransactionInfo.data, mTransactionInfo.getQuota().longValue(),
-                Numeric.toBigInt(mTransactionInfo.chainId), password)
+        AppChainRpcService.setHttpProvider(mChain.httpProvider);
+        AppChainRpcService.transferAppChain(mActivity, mAppTransaction.to,
+                mAppTransaction.getStringValue(),
+                mAppTransaction.data, mAppTransaction.getQuota().longValue(),
+                Numeric.toBigInt(mAppTransaction.chainId), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -363,10 +363,10 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
 
     private String getNativeToken() {
-        if (mTransactionInfo.isEthereum()) {
+        if (mAppTransaction.isEthereum()) {
             return ConstantUtil.ETH;
         } else {
-            return mChainItem == null ? "" : " " + mChainItem.tokenSymbol;
+            return mChain == null ? "" : " " + mChain.tokenSymbol;
         }
     }
 
@@ -399,7 +399,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_gas_price:
                 Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
-                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mTransactionInfo);
+                intent.putExtra(AdvanceSetupActivity.EXTRA_ADVANCE_SETUP, mAppTransaction);
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             default:
@@ -414,7 +414,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             case REQUEST_CODE:
                 switch (resultCode) {
                     case AdvanceSetupActivity.RESULT_TRANSACTION:
-                        mTransactionInfo = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
+                        mAppTransaction = data.getParcelableExtra(AdvanceSetupActivity.EXTRA_TRANSACTION);
                         updateView();
                         initRemoteData();
                         break;

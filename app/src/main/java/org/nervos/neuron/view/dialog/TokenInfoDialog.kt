@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.nervos.neuron.R
-import org.nervos.neuron.item.TokenItem
+import org.nervos.neuron.item.Token
 
 /**
  * Created by BaojunCZ on 2018/12/3.
  */
-class TokenInfoDialog(private val context: Context, private var mTokenItem: TokenItem) : BottomSheetDialog(context) {
+class TokenInfoDialog(private val context: Context, private var mToken: Token) : BottomSheetDialog(context) {
     init {
         setTitle(context.getString(R.string.token_title))
         setRecyclerView(Adapter())
@@ -32,15 +32,15 @@ class TokenInfoDialog(private val context: Context, private var mTokenItem: Toke
             when (position) {
                 0 -> {
                     holder.mTvTitle.text = context.getString(R.string.token_name_hint)
-                    holder.mTvValue.text = mTokenItem.name
+                    holder.mTvValue.text = mToken.name
                 }
                 1 -> {
                     holder.mTvTitle.text = context.getString(R.string.token_symbol_hint)
-                    holder.mTvValue.text = mTokenItem.symbol
+                    holder.mTvValue.text = mToken.symbol
                 }
                 2 -> {
                     holder.mTvTitle.text = context.getString(R.string.token_decimal_hint)
-                    holder.mTvValue.text = mTokenItem.decimals.toString()
+                    holder.mTvValue.text = mToken.decimals.toString()
                 }
             }
         }

@@ -30,13 +30,13 @@ import com.yanzhenjie.permission.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.NeuronDAppCallback;
-import org.nervos.neuron.item.AppItem;
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.TitleItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.dapp.BaseNeuronDAppCallbackItem;
-import org.nervos.neuron.item.dapp.QrCodeItem;
-import org.nervos.neuron.item.transaction.TransactionInfo;
+import org.nervos.neuron.item.App;
+import org.nervos.neuron.item.Chain;
+import org.nervos.neuron.item.AppTitle;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.dapp.BaseNeuronDAppCallback;
+import org.nervos.neuron.item.dapp.QrCode;
+import org.nervos.neuron.item.transaction.AppTransaction;
 import org.nervos.neuron.plugin.NeuronDAppPlugin;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
@@ -92,8 +92,8 @@ public class AppWebActivity extends NBaseActivity {
     private ImageView leftView;
     private WebErrorView webErrorView;
 
-    private WalletItem walletItem;
-    private TitleItem titleItem;
+    private Wallet wallet;
+    private AppTitle appTitle;
     private Transaction signTransaction;
     private String url;
     private boolean isPersonalSign = false;
@@ -119,9 +119,9 @@ public class AppWebActivity extends NBaseActivity {
     @Override
     protected void initData() {
         url = getIntent().getStringExtra(EXTRA_URL);
-        walletItem = DBWalletUtil.getCurrentWallet(mActivity);
+        wallet = DBWalletUtil.getCurrentWallet(mActivity);
 
-        if (walletItem == null || TextUtils.isEmpty(walletItem.address)) {
+        if (wallet == null || TextUtils.isEmpty(wallet.address)) {
             Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
@@ -183,7 +183,7 @@ public class AppWebActivity extends NBaseActivity {
         webView.setWebViewClient(new SimpleWebViewClient(this, webErrorView) {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                titleItem = null;
+                appTitle = null;
                 initManifest(url);
                 if (url.startsWith("weixin://") || url.startsWith("alipay")) {
                     try {
@@ -206,7 +206,7 @@ public class AppWebActivity extends NBaseActivity {
     private void initMenuView() {
         WebMenuPopupWindow popupWindow = new WebMenuPopupWindow(this);
         popupWindow.showAsDropDown(rightMenuView, 0, 10);
-        popupWindow.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
+        popupWindow.setCollectText(WebAppUtil.isApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
         popupWindow.setListener(new WebMenuPopupWindow.WebMenuListener() {
             @Override
             public void reload(PopupWindow pop) {
@@ -216,12 +216,12 @@ public class AppWebActivity extends NBaseActivity {
 
             @Override
             public void collect(WebMenuPopupWindow pop) {
-                if (WebAppUtil.isCollectApp(webView)) {
-                    WebAppUtil.cancelCollectApp(webView);
+                if (WebAppUtil.isApp(webView)) {
+                    WebAppUtil.cancelApp(webView);
                 } else {
                     WebAppUtil.collectApp(webView);
                 }
-                pop.setCollectText(WebAppUtil.isCollectApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
+                pop.setCollectText(WebAppUtil.isApp(webView) ? getString(R.string.cancel_collect) : getString(R.string.collect));
                 pop.dismiss();
             }
         });
@@ -241,7 +241,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initTitleView() {
-        if (titleItem == null) {
+        if (appTitle == null) {
             leftView.setImageResource(R.drawable.title_close);
             rightMenuView.setVisibility(View.VISIBLE);
             rightMenuView.setImageResource(R.drawable.title_more);
@@ -249,19 +249,19 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initManifest(String url) {
-        WebAppUtil.getHttpManifest(webView, url).subscribe(new NeuronSubscriber<ChainItem>() {
+        WebAppUtil.getHttpManifest(webView, url).subscribe(new NeuronSubscriber<Chain>() {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
             }
 
             @Override
-            public void onNext(ChainItem chainItem) {
-                if (TextUtils.isEmpty(chainItem.errorMessage)) {
+            public void onNext(Chain chain) {
+                if (TextUtils.isEmpty(chain.errorMessage)) {
                     WebAppUtil.addHistory();
-                    DBWalletUtil.saveChainInCurrentWallet(webView.getContext(), chainItem);
+                    DBWalletUtil.saveChainInCurrentWallet(webView.getContext(), chain);
                 } else {
-                    Toast.makeText(webView.getContext(), chainItem.errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(webView.getContext(), chain.errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -270,18 +270,18 @@ public class AppWebActivity extends NBaseActivity {
     private void signTxAction(Transaction transaction) {
         webView.post(() -> {
             this.signTransaction = transaction;
-            if (walletItem == null) {
+            if (wallet == null) {
                 Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mActivity, AddWalletActivity.class));
             } else {
                 Gson gson = new Gson();
-                TransactionInfo transactionInfo = gson.fromJson(gson.toJson(transaction), TransactionInfo.class);
-                if (DBWalletUtil.getChainItemFromCurrentWallet(mActivity, transactionInfo.chainId) == null) return;
+                AppTransaction appTransaction = gson.fromJson(gson.toJson(transaction), AppTransaction.class);
+                if (DBWalletUtil.getChainItemFromCurrentWallet(mActivity, appTransaction.chainId) == null) return;
                 try {
-                    transactionInfo.checkTransactionFormat();
+                    appTransaction.checkTransactionFormat();
                     Intent intent = new Intent(mActivity, PayTokenActivity.class);
                     intent.putExtra(EXTRA_PAYLOAD, new Gson().toJson(transaction));
-                    intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new AppItem(url) : WebAppUtil.getAppItem());
+                    intent.putExtra(EXTRA_CHAIN, WebAppUtil.getAppItem() == null ? new App(url) : WebAppUtil.getAppItem());
                     intent.putExtra(RECEIVER_WEBSITE, webView.getUrl());
                     startActivityForResult(intent, REQUEST_CODE);
                 } catch (TransactionFormatException e) {
@@ -299,7 +299,7 @@ public class AppWebActivity extends NBaseActivity {
     private void initInjectWebView() {
         webView.setChainId(1);
         webView.setRpcUrl(EtherUtil.getEthNodeUrl());
-        webView.setWalletAddress(new Address(walletItem.address));
+        webView.setWalletAddress(new Address(wallet.address));
         webView.addJavascriptInterface(mNeuronDAppPlugin, "neuron");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
         webView.setOnSignTransactionListener(transaction -> {
@@ -316,10 +316,10 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void backAction() {
-        if (titleItem != null) {
-            if (!TextUtils.isEmpty(titleItem.left.action)) {
-                JSLoadUtils.INSTANCE.loadFunc(webView, titleItem.left.action);
-            } else if (TextUtils.equals(TitleItem.ACTION_CLOSE, titleItem.left.type)) {
+        if (appTitle != null) {
+            if (!TextUtils.isEmpty(appTitle.left.action)) {
+                JSLoadUtils.INSTANCE.loadFunc(webView, appTitle.left.action);
+            } else if (TextUtils.equals(AppTitle.ACTION_CLOSE, appTitle.left.type)) {
                 finish();
             } else {
                 if (webView.canGoBack()) {
@@ -339,28 +339,28 @@ public class AppWebActivity extends NBaseActivity {
         public void getTitleBar(String data) {
             mRlTitle.post(() -> {
                 if (!TextUtils.isEmpty(data)) {
-                    titleItem = new Gson().fromJson(data, TitleItem.class);
+                    appTitle = new Gson().fromJson(data, AppTitle.class);
                     mRlTitle.setVisibility(View.VISIBLE);
-                    if (titleItem.right != null) {
-                        rightMenuView.setVisibility(titleItem.right.isShow ? View.VISIBLE : View.INVISIBLE);
-                        if (TitleItem.ACTION_MENU.equals(titleItem.right.type)) {
+                    if (appTitle.right != null) {
+                        rightMenuView.setVisibility(appTitle.right.isShow ? View.VISIBLE : View.INVISIBLE);
+                        if (AppTitle.ACTION_MENU.equals(appTitle.right.type)) {
                             rightMenuView.setImageResource(R.drawable.title_more);
-                        } else if (TitleItem.ACTION_SHARE.equals(titleItem.right.type)) {
+                        } else if (AppTitle.ACTION_SHARE.equals(appTitle.right.type)) {
                             rightMenuView.setImageResource(R.drawable.share);
                         }
                     }
 
-                    if (titleItem.left != null && !TextUtils.isEmpty(titleItem.left.type)) {
-                        if (TitleItem.ACTION_BACK.equals(titleItem.left.type)) {
+                    if (appTitle.left != null && !TextUtils.isEmpty(appTitle.left.type)) {
+                        if (AppTitle.ACTION_BACK.equals(appTitle.left.type)) {
                             leftView.setImageResource(R.drawable.black_back);
-                        } else if (TitleItem.ACTION_CLOSE.equals(titleItem.left.type)) {
+                        } else if (AppTitle.ACTION_CLOSE.equals(appTitle.left.type)) {
                             leftView.setImageResource(R.drawable.title_close);
                         }
                     }
 
-                    if (titleItem.title != null) {
-                        if (!TextUtils.isEmpty(titleItem.title.name)) {
-                            titleText.setText(titleItem.title.name);
+                    if (appTitle.title != null) {
+                        if (!TextUtils.isEmpty(appTitle.title.name)) {
+                            titleText.setText(appTitle.title.name);
                         }
                     }
                 } else {
@@ -382,7 +382,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void showSignMessageDialog(Message<Transaction> message) {
-        if (walletItem == null) {
+        if (wallet == null) {
             Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         } else {
@@ -406,7 +406,7 @@ public class AppWebActivity extends NBaseActivity {
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(mActivity, R.string.password_not_null, Toast.LENGTH_SHORT).show();
             return;
-        } else if (!WalletService.checkPassword(mActivity, password, walletItem)) {
+        } else if (!WalletService.checkPassword(mActivity, password, wallet)) {
             Toast.makeText(mActivity, R.string.password_fail, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -601,13 +601,13 @@ public class AppWebActivity extends NBaseActivity {
                             if (null != bundle && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                                 if (!TextUtils.isEmpty(mCallback)) {
                                     fail = false;
-                                    QrCodeItem qrCodeItem = new QrCodeItem(bundle.getString(CodeUtils.RESULT_STRING));
+                                    QrCode qrCodeItem = new QrCode(bundle.getString(CodeUtils.RESULT_STRING));
                                     JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(qrCodeItem));
                                 }
                             }
                             if (fail) {
                                 if (!TextUtils.isEmpty(mCallback)) {
-                                    BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                                    BaseNeuronDAppCallback errorItem = new BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
                                             NeuronDAppCallback.USER_CANCEL_CODE, NeuronDAppCallback.USER_CANCEL);
                                     JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                                 }
@@ -616,7 +616,7 @@ public class AppWebActivity extends NBaseActivity {
                         break;
                     default:
                         if (!TextUtils.isEmpty(mCallback)) {
-                            BaseNeuronDAppCallbackItem errorItem = new BaseNeuronDAppCallbackItem(NeuronDAppCallback.ERROR_CODE,
+                            BaseNeuronDAppCallback errorItem = new BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
                                     NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
                             JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                         }

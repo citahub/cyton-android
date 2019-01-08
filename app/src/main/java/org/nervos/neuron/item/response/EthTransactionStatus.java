@@ -3,7 +3,7 @@ package org.nervos.neuron.item.response;
 /**
  * Created by duanyytop on 2018/12/14.
  */
-public class EthTransactionStatusResponse {
+public class EthTransactionStatus {
 
     /**
      * status : 1

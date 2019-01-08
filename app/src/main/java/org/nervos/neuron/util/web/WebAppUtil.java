@@ -19,9 +19,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppHistoryEvent;
-import org.nervos.neuron.item.AppItem;
-import org.nervos.neuron.item.ChainItem;
-import org.nervos.neuron.item.CollectDAppItem;
+import org.nervos.neuron.item.App;
+import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.NetworkUtil;
@@ -49,10 +48,10 @@ public class WebAppUtil {
 
     private static final String WEB_ICON_PATH = "favicon.ico";
     private static final String MANIFEST = "manifest";
-    private static AppItem mAppItem = null;
+    private static App mApp = null;
 
     public static void init() {
-        mAppItem = null;
+        mApp = null;
     }
 
     /**
@@ -61,44 +60,44 @@ public class WebAppUtil {
      * @param webView
      * @param url     the web url from the third part
      */
-    public static Observable<ChainItem> getHttpManifest(WebView webView, String url) {
+    public static Observable<Chain> getHttpManifest(WebView webView, String url) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws IOException {
                 return getManifestPath(url);
             }
-        }).filter(path -> !TextUtils.isEmpty(path)).flatMap((Func1<String, Observable<AppItem>>) path -> {
+        }).filter(path -> !TextUtils.isEmpty(path)).flatMap((Func1<String, Observable<App>>) path -> {
             try {
-                mAppItem = new Gson().fromJson(getManifestResponse(handleManifestPath(url, path)), AppItem.class);
+                mApp = new Gson().fromJson(getManifestResponse(handleManifestPath(url, path)), App.class);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
                 Observable.error(throwable);
             }
-            if (mAppItem == null || mAppItem.chainSet == null || mAppItem.chainSet.size() <= 0 || mAppItem.chainSet.size() > 5) {
+            if (mApp == null || mApp.chainSet == null || mApp.chainSet.size() <= 0 || mApp.chainSet.size() > 5) {
                 Observable.error(new Throwable(new Throwable("Manifest chain set is null, please provide chain id and host")));
             }
-            return Observable.just(mAppItem);
-        }).flatMap((Func1<AppItem, Observable<ChainItem>>) appItem -> {
-            List<ChainItem> chainItemList = new ArrayList<>();
+            return Observable.just(mApp);
+        }).flatMap((Func1<App, Observable<Chain>>) appItem -> {
+            List<Chain> chainList = new ArrayList<>();
             for (Map.Entry<String, String> entry : appItem.chainSet.entrySet()) {
-                chainItemList.add(new ChainItem(entry.getKey(), mAppItem.name, entry.getValue()));
+                chainList.add(new Chain(entry.getKey(), mApp.name, entry.getValue()));
             }
-            return Observable.from(chainItemList);
-        }).flatMap(new Func1<ChainItem, Observable<ChainItem>>() {
+            return Observable.from(chainList);
+        }).flatMap(new Func1<Chain, Observable<Chain>>() {
             @Override
-            public Observable<ChainItem> call(ChainItem chainItem) {
-                AppChainRpcService.init(webView.getContext(), chainItem.httpProvider);
+            public Observable<Chain> call(Chain chain) {
+                AppChainRpcService.init(webView.getContext(), chain.httpProvider);
                 AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
                 if (ethMetaData != null) {
-                    chainItem.setChainId(ethMetaData.getChainIdV1());
-                    chainItem.name = ethMetaData.getChainName();
-                    chainItem.tokenAvatar = ethMetaData.getTokenAvatar();
-                    chainItem.tokenSymbol = ethMetaData.getTokenSymbol();
-                    chainItem.tokenName = ethMetaData.getTokenName();
+                    chain.setChainId(ethMetaData.getChainIdV1());
+                    chain.name = ethMetaData.getChainName();
+                    chain.tokenAvatar = ethMetaData.getTokenAvatar();
+                    chain.tokenSymbol = ethMetaData.getTokenSymbol();
+                    chain.tokenName = ethMetaData.getTokenName();
                 } else {
-                    Observable.error(new Throwable(webView.getContext().getString(R.string.meta_data_error) + chainItem.httpProvider));
+                    Observable.error(new Throwable(webView.getContext().getString(R.string.meta_data_error) + chain.httpProvider));
                 }
-                return Observable.just(chainItem);
+                return Observable.just(chain);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
@@ -177,18 +176,18 @@ public class WebAppUtil {
     }
 
 
-    public static boolean isCollectApp(WebView webView) {
-        return DBAppUtil.findApp(webView.getContext(), mAppItem.entry);
+    public static boolean isApp(WebView webView) {
+        return DBAppUtil.findApp(webView.getContext(), mApp.entry);
     }
 
     public static void collectApp(WebView webView) {
-        CollectDAppItem collectTime = new CollectDAppItem(mAppItem, System.currentTimeMillis());
-        DBAppUtil.saveDbApp(webView.getContext(), collectTime);
+        mApp.timestamp = System.currentTimeMillis();
+        DBAppUtil.saveDbApp(webView.getContext(), mApp);
         Toast.makeText(webView.getContext(), R.string.collect_success, Toast.LENGTH_SHORT).show();
     }
 
-    public static void cancelCollectApp(WebView webView) {
-        DBAppUtil.deleteApp(webView.getContext(), mAppItem.entry);
+    public static void cancelApp(WebView webView) {
+        DBAppUtil.deleteApp(webView.getContext(), mApp.entry);
         Toast.makeText(webView.getContext(), R.string.cancel_collect, Toast.LENGTH_SHORT).show();
     }
 
@@ -198,22 +197,22 @@ public class WebAppUtil {
     }
 
     public static void setAppItem(WebView webView) {
-        if (mAppItem != null && mAppItem.chainSet != null && mAppItem.chainSet.size() > 0) return;
+        if (mApp != null && mApp.chainSet != null && mApp.chainSet.size() > 0) return;
 
         try {
             URI uri = URI.create(webView.getUrl());
             String icon = uri.getAuthority() + "/" + uri.getPath() + "/" + WEB_ICON_PATH;
             icon = uri.getScheme() + "://" + formatUrl(icon);
             icon = UrlUtil.exists(icon) ? icon : HttpUrls.DEFAULT_WEB_IMAGE_URL;
-            mAppItem = new AppItem(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
+            mApp = new App(webView.getUrl(), icon, webView.getTitle(), webView.getUrl());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public static AppItem getAppItem() {
-        return mAppItem;
+    public static App getAppItem() {
+        return mApp;
     }
 
     @SuppressLint("SetJavaScriptEnabled")

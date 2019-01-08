@@ -4,17 +4,16 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_advance_setup.*
 import org.nervos.neuron.R
 
-import kotlinx.android.synthetic.main.activity_advance_setup.*
-import org.nervos.neuron.item.transaction.TransactionInfo
+import org.nervos.neuron.item.transaction.AppTransaction
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
-import org.nervos.neuron.util.db.DBChainUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.web3j.utils.Numeric
 import java.math.BigInteger
@@ -36,18 +35,18 @@ class AdvanceSetupActivity : NBaseActivity() {
     private var isTransfer : Boolean = false
     private var isNativeToken = false
 
-    private var mTransactionInfo: TransactionInfo? = null
+    private var mAppTransaction: AppTransaction? = null
 
     override fun getContentLayout(): Int {
         return R.layout.activity_advance_setup
     }
 
     override fun initView() {
-        mTransactionInfo = intent?.getParcelableExtra(EXTRA_ADVANCE_SETUP)
+        mAppTransaction = intent?.getParcelableExtra(EXTRA_ADVANCE_SETUP)
         isTransfer = intent.getBooleanExtra(EXTRA_TRANSFER, false)
         isNativeToken = intent.getBooleanExtra(EXTRA_NATIVE_TOKEN, false)
 
-        if (mTransactionInfo!!.isEthereum) {
+        if (mAppTransaction!!.isEthereum) {
             tv_advance_setup_gas_limit_label.setText(R.string.gas_limit)
             tv_advance_setup_gas_price_label.setText(R.string.gas_price)
             tv_advance_setup_gas_fee_label.setText(R.string.gas_fee)
@@ -60,9 +59,9 @@ class AdvanceSetupActivity : NBaseActivity() {
         et_advance_setup_gas_price.setText(mFeePrice)
         tv_advance_setup_price_unit.text = getFeeUnit()
         et_advance_setup_gas_limit.setText(
-                if (mTransactionInfo!!.isEthereum) mTransactionInfo!!.gasLimit.toString()
-                else mTransactionInfo!!.quota.toString())
-        et_advance_setup_gas_price.isEnabled = mTransactionInfo!!.isEthereum
+                if (mAppTransaction!!.isEthereum) mAppTransaction!!.gasLimit.toString()
+                else mAppTransaction!!.quota.toString())
+        et_advance_setup_gas_price.isEnabled = mAppTransaction!!.isEthereum
         if (isTransfer) {
             rl_advance_setup_data_layout.visibility = View.GONE
             hideDataLayout()
@@ -70,7 +69,7 @@ class AdvanceSetupActivity : NBaseActivity() {
             et_advance_setup_pay_data.isEnabled = false
             et_advance_setup_pay_data.hint = ""
         }
-        et_advance_setup_pay_data.setText(mTransactionInfo!!.data)
+        et_advance_setup_pay_data.setText(mAppTransaction!!.data)
 
         initFeeInfo()
     }
@@ -89,14 +88,14 @@ class AdvanceSetupActivity : NBaseActivity() {
         ll_advance_setup_sign_hex_layout.setOnClickListener {
             view_advance_setup_pay_data_left_line.visibility = View.VISIBLE
             view_advance_setup_pay_data_right_line.visibility = View.GONE
-            et_advance_setup_pay_data.setText(mTransactionInfo!!.data)
+            et_advance_setup_pay_data.setText(mAppTransaction!!.data)
         }
 
         ll_advance_setup_sign_utf8_layout.setOnClickListener {
             view_advance_setup_pay_data_left_line.visibility = View.GONE
             view_advance_setup_pay_data_right_line.visibility = View.VISIBLE
-            if (!TextUtils.isEmpty(mTransactionInfo!!.data) && Numeric.containsHexPrefix(mTransactionInfo!!.data)) {
-                et_advance_setup_pay_data.setText(NumberUtil.hexToUtf8(mTransactionInfo!!.data))
+            if (!TextUtils.isEmpty(mAppTransaction!!.data) && Numeric.containsHexPrefix(mAppTransaction!!.data)) {
+                et_advance_setup_pay_data.setText(NumberUtil.hexToUtf8(mAppTransaction!!.data))
             }
         }
 
@@ -104,17 +103,17 @@ class AdvanceSetupActivity : NBaseActivity() {
             if (TextUtils.isEmpty(et_advance_setup_gas_price.text.toString())) {
                 Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else if (mTransactionInfo!!.isEthereum && et_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
+            } else if (mAppTransaction!!.isEthereum && et_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
                 Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (TextUtils.isEmpty(et_advance_setup_gas_limit.text.toString())) {
-                Toast.makeText(mActivity, if (mTransactionInfo!!.isEthereum) R.string.input_correct_gas_limit_tip else R.string.input_correct_quota_limit_tip,
+                Toast.makeText(mActivity, if (mAppTransaction!!.isEthereum) R.string.input_correct_gas_limit_tip else R.string.input_correct_quota_limit_tip,
                         Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else if (BigInteger.valueOf(et_advance_setup_gas_limit.text.toString().trim().toLong()) < ConstantUtil.GAS_LIMIT) {
-                Toast.makeText(mActivity, if (mTransactionInfo!!.isEthereum) R.string.gas_limit_too_low else R.string.quota_limit_too_low,
+                Toast.makeText(mActivity, if (mAppTransaction!!.isEthereum) R.string.gas_limit_too_low else R.string.quota_limit_too_low,
                         Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -122,31 +121,31 @@ class AdvanceSetupActivity : NBaseActivity() {
             if (isTransfer && isNativeToken) {
                 if (!TextUtils.isEmpty(et_advance_setup_pay_data.text.toString())) {
                     if (NumberUtil.isHex(et_advance_setup_pay_data.text.toString())) {
-                        mTransactionInfo!!.data = et_advance_setup_pay_data.text.toString()
+                        mAppTransaction!!.data = et_advance_setup_pay_data.text.toString()
                     } else {
                         Toast.makeText(mActivity, R.string.input_hex_data, Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
                 } else {
-                    mTransactionInfo!!.data = ""
+                    mAppTransaction!!.data = ""
                 }
             }
-            if (mTransactionInfo!!.isEthereum) {
-                mTransactionInfo!!.gasLimit = BigInteger(et_advance_setup_gas_limit.text.toString().trim())
-                mTransactionInfo!!.gasPrice =
+            if (mAppTransaction!!.isEthereum) {
+                mAppTransaction!!.gasLimit = BigInteger(et_advance_setup_gas_limit.text.toString().trim())
+                mAppTransaction!!.gasPrice =
                         NumberUtil.getWeiFromGWeiForBigInt(et_advance_setup_gas_price.text.toString().trim().toDouble())
             } else {
-                mTransactionInfo!!.setQuota(et_advance_setup_gas_limit.text.toString().trim())
+                mAppTransaction!!.setQuota(et_advance_setup_gas_limit.text.toString().trim())
             }
             var intent = Intent()
-            intent.putExtra(EXTRA_TRANSACTION, mTransactionInfo)
+            intent.putExtra(EXTRA_TRANSACTION, mAppTransaction)
             setResult(RESULT_TRANSACTION, intent)
             finish()
         }
     }
 
     private fun initFeeInfo() {
-        if (mTransactionInfo!!.isEthereum) {
+        if (mAppTransaction!!.isEthereum) {
             initTokenPrice()
         } else {
             requestQuotaPrice()
@@ -168,25 +167,25 @@ class AdvanceSetupActivity : NBaseActivity() {
     }
 
     private fun updateGasPriceAndLimit(price: String) {
-        et_advance_setup_gas_price.setText(NumberUtil.getGWeiFromWeiForString(mTransactionInfo!!.gasPrice))
+        et_advance_setup_gas_price.setText(NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice))
 
-        var gasMoney = NumberUtil.getDecimalValid_2(price.toDouble() * mTransactionInfo!!.gas)
+        var gasMoney = NumberUtil.getDecimalValid_2(price.toDouble() * mAppTransaction!!.gas)
         tv_advance_setup_gas_fee.text =
                 String.format("%s %s ≈ %s %s",
-                        NumberUtil.getDecimal8ENotation(mTransactionInfo!!.gas),
+                        NumberUtil.getDecimal8ENotation(mAppTransaction!!.gas),
                         getNativeToken(),
                         CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
 
         tv_advance_setup_gas_fee_detail.text =
                 String.format("Gas Limit(%s)*Gas Price(%s %s)",
-                        mTransactionInfo!!.gasLimit.toString(),
-                        NumberUtil.getGWeiFromWeiForString(mTransactionInfo!!.gasPrice), getFeeUnit())
+                        mAppTransaction!!.gasLimit.toString(),
+                        NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice), getFeeUnit())
     }
 
 
 
     private fun requestQuotaPrice() {
-        AppChainRpcService.getQuotaPrice(mTransactionInfo!!.from)
+        AppChainRpcService.getQuotaPrice(mAppTransaction!!.from)
                 .subscribe(object : NeuronSubscriber<String>() {
                     override fun onNext(price: String) {
                         super.onNext(price)
@@ -200,26 +199,26 @@ class AdvanceSetupActivity : NBaseActivity() {
 
         et_advance_setup_gas_price.setText(price)
 
-        var quota = mTransactionInfo!!.quota.multiply(BigInteger(quotaPrice))
+        var quota = mAppTransaction!!.quota.multiply(BigInteger(quotaPrice))
 
         tv_advance_setup_gas_fee.text = String.format("%s %s",
                 NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(quota)), getNativeToken())
 
         tv_advance_setup_gas_fee_detail.text =
                 String.format("Quota Limit(%s)*Quota Price(%s %s)",
-                        mTransactionInfo!!.quota.toString(), price, getFeeUnit())
+                        mAppTransaction!!.quota.toString(), price, getFeeUnit())
     }
 
     private fun getNativeToken() : String? {
-        return if (mTransactionInfo!!.isEthereum) {
+        return if (mAppTransaction!!.isEthereum) {
             ConstantUtil.ETH
         } else {
-            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mTransactionInfo?.chainId)?.tokenSymbol
+            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mAppTransaction?.chainId)?.tokenSymbol
         }
     }
 
     private fun getFeeUnit() : String? {
-        return if (mTransactionInfo!!.isEthereum) getString(R.string.gwei) else getNativeToken()
+        return if (mAppTransaction!!.isEthereum) getString(R.string.gwei) else getNativeToken()
     }
 
 }

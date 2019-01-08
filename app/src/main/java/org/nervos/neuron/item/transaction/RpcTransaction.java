@@ -4,15 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-public class TransactionItem extends BaseResponse implements Parcelable {
+public class RpcTransaction extends BaseTransaction implements Parcelable {
 
     private int chainId;
     private String chainIdV1;
 
-    public TransactionItem(){}
+    public RpcTransaction(){}
 
 
-    public TransactionItem(String from, String to, String value, String chainId, String chainName, int status, long timestamp, String hash) {
+    public RpcTransaction(String from, String to, String value, String chainId, String chainName, int status, long timestamp, String hash) {
         this.from = from;
         this.to = to;
         this.value = value;
@@ -43,17 +43,17 @@ public class TransactionItem extends BaseResponse implements Parcelable {
         dest.writeString(this.chainIdV1);
     }
 
-    protected TransactionItem(Parcel in) {
+    protected RpcTransaction(Parcel in) {
         super(in);
         this.chainId = in.readInt();
         this.chainIdV1 = in.readString();
     }
 
-    public static final Creator<TransactionItem> CREATOR = new Creator<TransactionItem>() {
+    public static final Creator<RpcTransaction> CREATOR = new Creator<RpcTransaction>() {
         @Override
-        public TransactionItem createFromParcel(Parcel source) {return new TransactionItem(source);}
+        public RpcTransaction createFromParcel(Parcel source) {return new RpcTransaction(source);}
 
         @Override
-        public TransactionItem[] newArray(int size) {return new TransactionItem[size];}
+        public RpcTransaction[] newArray(int size) {return new RpcTransaction[size];}
     };
 }

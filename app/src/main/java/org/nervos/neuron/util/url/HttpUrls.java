@@ -16,7 +16,7 @@ public class HttpUrls {
     public static final String CITA_GITHUB_URL = "https://github.com/cryptape/cita";
 
     // Discover page config information
-    public static final String DISCOVER_URL = "https://dapp.cryptape.com";
+    public static final String DISCOVER_URL = "https://app.cryptape.com";
 
     //Token Currency ID Price
     public static final String TOKEN_ID = "https://api.coinmarketcap.com/v2/listings/";

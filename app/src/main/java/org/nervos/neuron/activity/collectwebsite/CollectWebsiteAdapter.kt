@@ -10,14 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import org.nervos.neuron.R
-import org.nervos.neuron.item.CollectDAppItem
+import org.nervos.neuron.item.App
 import org.nervos.neuron.util.db.DBAppUtil
 import java.text.SimpleDateFormat
 
 /**
  * Created by BaojunCZ on 2018/11/14.
  */
-class CollectWebsiteAdapter(var collectWebsites: List<CollectDAppItem>,
+class CollectWebsiteAdapter(var collectWebsites: List<App>,
                             var listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 1
@@ -54,12 +54,12 @@ class CollectWebsiteAdapter(var collectWebsites: List<CollectDAppItem>,
             val format = SimpleDateFormat("yyyy-MM-dd")
             var time: String
             try {
-                time = format.format(collectWebsites[position].collectTime)
+                time = format.format(collectWebsites[position].timestamp)
             } catch (e: Exception) {
                 var item = collectWebsites[position]
-                item.collectTime = System.currentTimeMillis()
+                item.timestamp = System.currentTimeMillis()
                 DBAppUtil.saveDbApp(context, item)
-                time = format.format(item.collectTime)
+                time = format.format(item.timestamp)
                 e.printStackTrace()
             }
             holder.mTvTime.text = time

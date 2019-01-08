@@ -2,7 +2,7 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.web3j.crypto.ECKeyPair;
@@ -25,8 +25,8 @@ public class SignService {
         return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
+                Wallet wallet = DBWalletUtil.getCurrentWallet(context);
+                String privateKey = WalletEntity.fromKeyStore(password, wallet.keystore).getPrivateKey();
                 Sign.SignatureData signatureData = Sign.signMessage(message.getBytes(),
                         ECKeyPair.create(Numeric.toBigInt(privateKey)));
                 return getSignature(signatureData);
@@ -40,8 +40,8 @@ public class SignService {
         return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
+                Wallet wallet = DBWalletUtil.getCurrentWallet(context);
+                String privateKey = WalletEntity.fromKeyStore(password, wallet.keystore).getPrivateKey();
 
                 byte[] unSignData = ("\u0019Ethereum Signed Message:\n"
                         + message.getBytes().length
@@ -62,8 +62,8 @@ public class SignService {
         return Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
-                String privateKey = WalletEntity.fromKeyStore(password, walletItem.keystore).getPrivateKey();
+                Wallet wallet = DBWalletUtil.getCurrentWallet(context);
+                String privateKey = WalletEntity.fromKeyStore(password, wallet.keystore).getPrivateKey();
                 org.nervos.appchain.crypto.Sign.SignatureData signatureData =
                         org.nervos.appchain.crypto.Sign.signMessage(message.getBytes(),
                                 org.nervos.appchain.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));

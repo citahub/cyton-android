@@ -1,15 +1,16 @@
 package org.nervos.neuron.item.response;
 
-import org.nervos.neuron.item.transaction.TransactionResponse;
+import org.nervos.neuron.item.transaction.RestTransaction;
 
 import java.util.List;
 
-public class AppChainTransactionResponse {
+public class AppChainERC20Transaction {
 
     public AppChainTransactionResult result;
+    public int count;
 
     public static class AppChainTransactionResult {
-        public List<TransactionResponse> transactions;
+        public List<RestTransaction> transfers;
     }
 
 }

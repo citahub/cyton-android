@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
-import org.nervos.neuron.item.TokenItem;
-import org.nervos.neuron.item.WalletItem;
-import org.nervos.neuron.item.response.AppChainERC20TransferResponse;
-import org.nervos.neuron.item.response.EthTransactionResponse;
-import org.nervos.neuron.item.response.AppChainTransactionResponse;
-import org.nervos.neuron.item.response.EthTransactionStatusResponse;
-import org.nervos.neuron.item.transaction.TransactionResponse;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.item.Wallet;
+import org.nervos.neuron.item.response.AppChainERC20Transaction;
+import org.nervos.neuron.item.response.EthTransaction;
+import org.nervos.neuron.item.response.AppChainTransaction;
+import org.nervos.neuron.item.response.EthTransactionStatus;
+import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.util.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -58,19 +58,19 @@ public class HttpService {
         return mOkHttpClient;
     }
 
-    public static Observable<List<TransactionResponse>> getEtherTransactionList(Context context, int page) {
+    public static Observable<List<RestTransaction>> getEtherTransactionList(Context context, int page) {
         return Observable.just(DBWalletUtil.getCurrentWallet(context))
-                .flatMap(new Func1<WalletItem, Observable<List<TransactionResponse>>>() {
+                .flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
                     @Override
-                    public Observable<List<TransactionResponse>> call(WalletItem walletItem) {
+                    public Observable<List<RestTransaction>> call(Wallet wallet) {
                         try {
-                            String ethUrl = String.format(EtherUtil.getEtherTransactionUrl(), walletItem.address, page, OFFSET);
+                            String ethUrl = String.format(EtherUtil.getEtherTransactionUrl(), wallet.address, page, OFFSET);
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
                             Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
-                            EthTransactionResponse response = new Gson().fromJson(ethCall.execute().body().string(),
-                                    EthTransactionResponse.class);
-                            List<TransactionResponse> transactionRepons = response.result;
-                            for (TransactionResponse item : transactionRepons) {
+                            EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(),
+                                    EthTransaction.class);
+                            List<RestTransaction> transactionRepons = response.result;
+                            for (RestTransaction item : transactionRepons) {
                                 item.chainName = ConstantUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.getEthFromWeiForStringDecimal8(new BigInteger(item.value)));
                                 item.symbol = ConstantUtil.ETH;
@@ -87,25 +87,25 @@ public class HttpService {
     }
 
 
-    public static Observable<List<TransactionResponse>> getEtherERC20TransactionList(Context context, TokenItem tokenItem, int page) {
+    public static Observable<List<RestTransaction>> getEtherERC20TransactionList(Context context, Token token, int page) {
         return Observable.just(DBWalletUtil.getCurrentWallet(context))
-                .flatMap(new Func1<WalletItem, Observable<List<TransactionResponse>>>() {
+                .flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
                     @Override
-                    public Observable<List<TransactionResponse>> call(WalletItem walletItem) {
+                    public Observable<List<RestTransaction>> call(Wallet wallet) {
                         try {
                             String ethUrl = String.format(EtherUtil.getEtherERC20TransactionUrl(),
-                                    tokenItem.contractAddress, walletItem.address, page, OFFSET);
+                                    token.contractAddress, wallet.address, page, OFFSET);
 
                             final Request ethRequest = new Request.Builder().url(ethUrl).build();
                             Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
-                            EthTransactionResponse response = new Gson().fromJson(ethCall.execute().body().string(),
-                                    EthTransactionResponse.class);
-                            List<TransactionResponse> transactionRepons = response.result;
-                            for (TransactionResponse item : transactionRepons) {
+                            EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(),
+                                    EthTransaction.class);
+                            List<RestTransaction> transactionRepons = response.result;
+                            for (RestTransaction item : transactionRepons) {
                                 item.chainName = ConstantUtil.ETH_MAINNET;
                                 item.value = (NumberUtil.divideDecimalSub(
-                                        new BigDecimal(item.value), tokenItem.decimals));
-                                item.symbol = tokenItem.symbol;
+                                        new BigDecimal(item.value), token.decimals));
+                                item.symbol = token.symbol;
                                 item.nativeSymbol = ConstantUtil.ETH;
                             }
                             return Observable.just(transactionRepons);
@@ -119,27 +119,27 @@ public class HttpService {
     }
 
 
-    public static Observable<List<TransactionResponse>> getAppChainTransactionList(Context context, int page) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+    public static Observable<List<RestTransaction>> getAppChainTransactionList(Context context, int page) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
                 AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
                 return Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
             }
-        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionResponse>>>() {
+        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<RestTransaction>>>() {
             @Override
-            public Observable<List<TransactionResponse>> call(AppMetaData.AppMetaDataResult result) {
+            public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
                     String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_TRANSACTION_URL,
-                            walletItem.address, page, OFFSET);
+                            wallet.address, page, OFFSET);
                     final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
                     Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
 
                     String res = appChainCall.execute().body().string();
 
-                    AppChainTransactionResponse response = new Gson().fromJson(res, AppChainTransactionResponse.class);
-                    for (TransactionResponse item : response.result.transactions) {
+                    AppChainTransaction response = new Gson().fromJson(res, AppChainTransaction.class);
+                    for (RestTransaction item : response.result.transactions) {
                         item.chainName = result.getChainName();
                         item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value));
                         item.symbol = result.getTokenSymbol();
@@ -156,29 +156,29 @@ public class HttpService {
     }
 
 
-    public static Observable<List<TransactionResponse>> getAppChainERC20TransactionList(Context context, TokenItem tokenItem, int page) {
-        WalletItem walletItem = DBWalletUtil.getCurrentWallet(context);
+    public static Observable<List<RestTransaction>> getAppChainERC20TransactionList(Context context, Token token, int page) {
+        Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
                 AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
                 return AppChainRpcService.getMetaData().getAppMetaDataResult();
             }
-        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<TransactionResponse>>>() {
+        }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<RestTransaction>>>() {
             @Override
-            public Observable<List<TransactionResponse>> call(AppMetaData.AppMetaDataResult result) {
+            public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
                     String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_ERC20_TRANSACTION_URL,
-                            tokenItem.contractAddress, walletItem.address, page, OFFSET);
+                            token.contractAddress, wallet.address, page, OFFSET);
                     final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
                     Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
 
-                    AppChainERC20TransferResponse response = new Gson().fromJson(appChainCall.execute().body().string(),
-                            AppChainERC20TransferResponse.class);
-                    for (TransactionResponse item : response.result.transfers) {
+                    AppChainERC20Transaction response = new Gson().fromJson(appChainCall.execute().body().string(),
+                            AppChainERC20Transaction.class);
+                    for (RestTransaction item : response.result.transfers) {
                         item.value = (NumberUtil.divideDecimalSub(
-                                new BigDecimal(item.value), tokenItem.decimals));
-                        item.symbol = tokenItem.symbol;
+                                new BigDecimal(item.value), token.decimals));
+                        item.symbol = token.symbol;
                         item.nativeSymbol = result.getTokenSymbol();
                     }
                     return Observable.just(response.result.transfers);
@@ -192,13 +192,13 @@ public class HttpService {
     }
 
 
-    public static EthTransactionStatusResponse getEthTransactionStatus(String hash) {
+    public static EthTransactionStatus getEthTransactionStatus(String hash) {
         String appChainUrl = String.format(EtherUtil.getEtherTransactionStatusUrl(), hash);
         final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
         Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
         try {
             return new Gson().fromJson(appChainCall.execute().body().string(),
-                    EthTransactionStatusResponse.class);
+                    EthTransactionStatus.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -5,11 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionItem implements Parcelable {
+public class Collection implements Parcelable {
 
     /**
      * token_id : 209
@@ -358,10 +357,10 @@ public class CollectionItem implements Parcelable {
         dest.writeList(this.traits);
     }
 
-    public CollectionItem() {
+    public Collection() {
     }
 
-    protected CollectionItem(Parcel in) {
+    protected Collection(Parcel in) {
         this.tokenId = in.readString();
         this.imageUrl = in.readString();
         this.imagePreviewUrl = in.readString();
@@ -377,15 +376,15 @@ public class CollectionItem implements Parcelable {
         in.readList(this.traits, TraitEntity.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<CollectionItem> CREATOR = new Parcelable.Creator<CollectionItem>() {
+    public static final Parcelable.Creator<Collection> CREATOR = new Parcelable.Creator<Collection>() {
         @Override
-        public CollectionItem createFromParcel(Parcel source) {
-            return new CollectionItem(source);
+        public Collection createFromParcel(Parcel source) {
+            return new Collection(source);
         }
 
         @Override
-        public CollectionItem[] newArray(int size) {
-            return new CollectionItem[size];
+        public Collection[] newArray(int size) {
+            return new Collection[size];
         }
     };
 }

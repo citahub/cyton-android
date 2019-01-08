@@ -17,7 +17,7 @@ import android.widget.Toast;
 import org.nervos.neuron.R;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.view.SelectWalletPopupWindow;
-import org.nervos.neuron.item.WalletItem;
+import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.button.CommonButton;
@@ -31,12 +31,12 @@ import java.util.List;
  */
 public class PwdUnlockActivity extends NBaseActivity implements View.OnClickListener {
 
-    private List<WalletItem> walletItems = new ArrayList<>();
+    private List<Wallet> wallets = new ArrayList<>();
     private TextView cancelTv, walletNameTv, walletSelectTv;
     private AppCompatEditText walletPwdEt;
     private ImageView walletSelectImg, otherImg;
     private CommonButton authBtn;
-    private WalletItem walletItem;
+    private Wallet wallet;
     private Boolean needToFinger = false;
 
     @Override
@@ -58,17 +58,17 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
 
     @Override
     protected void initData() {
-        walletItems = DBWalletUtil.getAllWallet(this);
-        for (int i = 0; i < walletItems.size(); i++) {
-            if (walletItems.get(i).name.equals(SharePrefUtil.getCurrentWalletName())) {
+        wallets = DBWalletUtil.getAllWallet(this);
+        for (int i = 0; i < wallets.size(); i++) {
+            if (wallets.get(i).name.equals(SharePrefUtil.getCurrentWalletName())) {
                 if (i != 0) {
-                    Collections.swap(walletItems, 0, i);
+                    Collections.swap(wallets, 0, i);
                 }
                 break;
             }
         }
-        walletItem = walletItems.get(0);
-        walletNameTv.setText(walletItem.name);
+        wallet = wallets.get(0);
+        walletNameTv.setText(wallet.name);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
             case R.id.iv_down_arrow:
             case R.id.tv_select_hint:
             case R.id.tv_wallet_name:
-                SelectWalletPopupWindow popupWindow = new SelectWalletPopupWindow(this, walletItems, walletItem -> {
-                    this.walletItem = walletItem;
+                SelectWalletPopupWindow popupWindow = new SelectWalletPopupWindow(this, wallets, walletItem -> {
+                    this.wallet = walletItem;
                     walletNameTv.setText(walletItem.name);
                 });
                 popupWindow.showAsDropDown(walletNameTv, 0, 10);
@@ -123,7 +123,7 @@ public class PwdUnlockActivity extends NBaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.password_button:
-                if (!WalletService.checkPassword(mActivity, walletPwdEt.getText().toString().trim(), walletItem)) {
+                if (!WalletService.checkPassword(mActivity, walletPwdEt.getText().toString().trim(), wallet)) {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_failed), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(mActivity, getResources().getString(R.string.pwd_auth_success), Toast.LENGTH_LONG).show();

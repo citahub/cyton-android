@@ -9,7 +9,7 @@ import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
-public class TransactionInfo implements Parcelable {
+public class AppTransaction implements Parcelable {
 
     private static final String TYPE_ETH = "ETH";
     private static final String TYPE_APPCHAIN = "AppChain";
@@ -27,12 +27,12 @@ public class TransactionInfo implements Parcelable {
     private String gasPrice;
     public String chainType;
 
-    public TransactionInfo(String to, String value) {
+    public AppTransaction(String to, String value) {
         this.to = to;
         this.value = NumberUtil.getWeiFromEth(value).toString();
     }
 
-    public TransactionInfo() {}
+    public AppTransaction() {}
 
     public String getStringValue() {
         return NumberUtil.getEthFromWeiForString(getBigIntegerValue().toString(16));
@@ -173,7 +173,7 @@ public class TransactionInfo implements Parcelable {
         dest.writeString(this.chainType);
     }
 
-    protected TransactionInfo(Parcel in) {
+    protected AppTransaction(Parcel in) {
         this.from = in.readString();
         this.to = in.readString();
         this.nonce = in.readString();
@@ -188,15 +188,15 @@ public class TransactionInfo implements Parcelable {
         this.chainType = in.readString();
     }
 
-    public static final Creator<TransactionInfo> CREATOR = new Creator<TransactionInfo>() {
+    public static final Creator<AppTransaction> CREATOR = new Creator<AppTransaction>() {
         @Override
-        public TransactionInfo createFromParcel(Parcel source) {
-            return new TransactionInfo(source);
+        public AppTransaction createFromParcel(Parcel source) {
+            return new AppTransaction(source);
         }
 
         @Override
-        public TransactionInfo[] newArray(int size) {
-            return new TransactionInfo[size];
+        public AppTransaction[] newArray(int size) {
+            return new AppTransaction[size];
         }
     };
 }

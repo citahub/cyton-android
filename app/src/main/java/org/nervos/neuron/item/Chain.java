@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-public class ChainItem implements Parcelable {
+public class Chain implements Parcelable {
 
     private int chainId;
     private String chainIdV1;        // hex string
@@ -19,23 +19,23 @@ public class ChainItem implements Parcelable {
     public String tokenAvatar;
     public String errorMessage;
 
-    public ChainItem(){}
+    public Chain(){}
 
-    public ChainItem(String chainId, String name, String httpProvider) {
+    public Chain(String chainId, String name, String httpProvider) {
         this.chainIdV1 = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
     }
 
-    public ChainItem(String chainId, String name, String tokenName, String tokenSymbol) {
+    public Chain(String chainId, String name, String tokenName, String tokenSymbol) {
         this.chainIdV1 = chainId;
         this.name = name;
         this.tokenName = tokenName;
         this.tokenSymbol = tokenSymbol;
     }
 
-    public ChainItem(String chainId, String name, String httpProvider, String tokenName,
-                     String tokenSymbol, String tokenAvatar) {
+    public Chain(String chainId, String name, String httpProvider, String tokenName,
+                 String tokenSymbol, String tokenAvatar) {
         this.chainIdV1 = chainId;
         this.name = name;
         this.httpProvider = httpProvider;
@@ -72,7 +72,7 @@ public class ChainItem implements Parcelable {
         dest.writeString(this.errorMessage);
     }
 
-    protected ChainItem(Parcel in) {
+    protected Chain(Parcel in) {
         this.chainId = in.readInt();
         this.chainIdV1 = in.readString();
         this.httpProvider = in.readString();
@@ -87,11 +87,11 @@ public class ChainItem implements Parcelable {
         this.errorMessage = in.readString();
     }
 
-    public static final Creator<ChainItem> CREATOR = new Creator<ChainItem>() {
+    public static final Creator<Chain> CREATOR = new Creator<Chain>() {
         @Override
-        public ChainItem createFromParcel(Parcel source) {return new ChainItem(source);}
+        public Chain createFromParcel(Parcel source) {return new Chain(source);}
 
         @Override
-        public ChainItem[] newArray(int size) {return new ChainItem[size];}
+        public Chain[] newArray(int size) {return new Chain[size];}
     };
 }

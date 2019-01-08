@@ -14,7 +14,7 @@ import org.nervos.neuron.activity.transfer.TransferActivity;
 import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.WalletFragment;
-import org.nervos.neuron.item.TokenItem;
+import org.nervos.neuron.item.Token;
 import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
@@ -237,9 +237,9 @@ public class MainActivity extends NBaseActivity {
                                     Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
                                     break;
                                 case CodeUtils.STRING_ADDRESS:
-                                    TokenItem tokenItem = new TokenItem(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
+                                    Token token = new Token(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
                                     intent = new Intent(mActivity, TransferActivity.class);
-                                    intent.putExtra(TransferActivity.EXTRA_TOKEN, tokenItem);
+                                    intent.putExtra(TransferActivity.EXTRA_TOKEN, token);
                                     intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);
                                     startActivity(intent);
                                     break;
