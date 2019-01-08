@@ -26,13 +26,7 @@ import java.math.BigInteger
  */
 class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean) -> Unit) {
 
-    companion object {
-        const val IMPORT_KEYSTORE = "1"
-        const val IMPORT_MNEMONIC = "2"
-        const val IMPORT_PRIVATEKEY = "3"
-    }
-
-    private fun importWallet(observable: Observable<WalletEntity>, name: String, id: String) {
+    private fun importWallet(observable: Observable<WalletEntity>, name: String) {
         progress(true)
         observable.map {
             if (checkWalletExist(it)) {
@@ -52,15 +46,15 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
     }
 
     fun importMnemonic(mnemonic: String, password: String, path: String, name: String) {
-        return importWallet(Observable.fromCallable { WalletEntity.fromMnemonic(mnemonic, path, password) }, name, IMPORT_MNEMONIC)
+        return importWallet(Observable.fromCallable { WalletEntity.fromMnemonic(mnemonic, path, password) }, name)
     }
 
     fun importKeystore(keystore: String, password: String, name: String) {
-        return importWallet(Observable.fromCallable { WalletEntity.fromKeyStore(password, keystore) }, name, IMPORT_KEYSTORE)
+        return importWallet(Observable.fromCallable { WalletEntity.fromKeyStore(password, keystore) }, name)
     }
 
     fun importPrivateKey(privateKey: BigInteger, password: String, name: String) {
-        return importWallet(Observable.fromCallable { WalletEntity.fromPrivateKey(privateKey, password) }, name, IMPORT_PRIVATEKEY)
+        return importWallet(Observable.fromCallable { WalletEntity.fromPrivateKey(privateKey, password) }, name)
     }
 
     private fun checkWalletExist(entity: WalletEntity): Boolean {

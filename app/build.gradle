@@ -139,8 +139,6 @@ dependencies {
     implementation 'org.abstractj.kalium:kalium:0.7.0'
     implementation 'com.google.protobuf:protobuf-java:3.5.1'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
-    implementation 'com.snappydb:snappydb-lib:0.5.2'
-    implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
     implementation 'com.google.guava:guava:24.1-android'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'

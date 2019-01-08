@@ -2,7 +2,6 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nervos.neuron.item.Chain;
