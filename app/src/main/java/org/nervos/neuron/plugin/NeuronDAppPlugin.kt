@@ -12,8 +12,8 @@ import com.yanzhenjie.permission.Permission
 import org.nervos.neuron.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import org.nervos.neuron.activity.QrCodeActivity
 import org.nervos.neuron.constant.NeuronDAppCallback
-import org.nervos.neuron.item.NeuronDApp.DeviceMotion
-import org.nervos.neuron.item.NeuronDApp.Gyroscope
+import org.nervos.neuron.item.dapp.DeviceMotion
+import org.nervos.neuron.item.dapp.Gyroscope
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallback
 import org.nervos.neuron.util.JSLoadUtils
 import org.nervos.neuron.util.SensorUtils

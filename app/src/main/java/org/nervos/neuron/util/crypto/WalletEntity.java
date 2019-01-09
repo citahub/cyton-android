@@ -21,9 +21,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 
-/**
- * 钱包
- */
 public class WalletEntity {
 
     private static final SecureRandom secureRandom = SecureRandomUtils.secureRandom();
@@ -37,31 +34,18 @@ public class WalletEntity {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    /**
-     * Credentials
-     */
     private Credentials credentials;
-    /**
-     *  KeyStore file
-     */
     private WalletFile walletFile;
     private String mnemonic;
-    /**
-     * mnemonic password
-     */
     private String passphrase;
-    /**
-     * 路径
-     */
     private String path;
-
     private String keystore;
 
     private WalletEntity() {
     }
 
     public static void initWalletMnemonic(Context context) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();

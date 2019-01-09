@@ -18,12 +18,12 @@ import org.nervos.neuron.activity.WalletManageActivity;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.fingerprint.AuthenticateResultCallback;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
-import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.constant.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.dialog.AuthFingerDialog;
 import org.nervos.neuron.view.dialog.SimpleSelectDialog;
@@ -114,7 +114,8 @@ public class SettingsFragment extends NBaseFragment {
                     });
                     mAuthFingerDialog.show();
                 } else {
-                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(getActivity(), getResources().getString(R.string.dialog_finger_setting));
+                    ToastSingleButtonDialog dialog = ToastSingleButtonDialog.getInstance(
+                            getActivity(), getResources().getString(R.string.dialog_finger_setting));
                     dialog.setOnCancelClickListener(view -> {
                         FingerPrintController.openFingerPrintSettingPage(getActivity());
                         view.dismiss();

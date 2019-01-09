@@ -41,7 +41,7 @@ import org.nervos.neuron.plugin.NeuronDAppPlugin;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.SignService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.JSLoadUtils;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.PickPicUtils;

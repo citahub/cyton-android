@@ -9,7 +9,7 @@ import org.nervos.neuron.activity.AddWebsiteActivity
 import org.nervos.neuron.activity.AppWebActivity
 import org.nervos.neuron.activity.collectwebsite.CollectWebsiteActivity
 import org.nervos.neuron.plugin.AppTabPlugin
-import org.nervos.neuron.util.url.HttpUrls
+import org.nervos.neuron.constant.url.HttpUrls
 import org.nervos.neuron.util.web.WebAppUtil
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.WebErrorView

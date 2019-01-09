@@ -1,7 +1,4 @@
-package org.nervos.neuron.util.url;
-
-import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
+package org.nervos.neuron.constant.url;
 
 /**
  * Created by duanyytop on 2018/11/18

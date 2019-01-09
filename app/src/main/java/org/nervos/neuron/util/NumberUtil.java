@@ -1,7 +1,6 @@
 package org.nervos.neuron.util;
 
 import android.support.annotation.Nullable;
-
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
@@ -23,7 +22,7 @@ public class NumberUtil {
         return String.valueOf(new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
     }
 
-    public static String getDecimal8ENotation(double value) {
+    public static String getDecimalValid_8(double value) {
         if (checkDecimal8(value)) {
             return String.valueOf(value);
         }
@@ -41,10 +40,6 @@ public class NumberUtil {
             }
         }
         return false;
-    }
-
-    public static String getDecimal8ENotation(String value) {
-        return getDecimal8ENotation(Double.parseDouble(value));
     }
 
     /**
@@ -170,7 +165,7 @@ public class NumberUtil {
 
 
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
-        return getDecimal8ENotation(getEthFromWei(value));
+        return getDecimalValid_8(getEthFromWei(value));
     }
 
     public static double getEthFromWeiForDouble(String hex) {
@@ -190,7 +185,6 @@ public class NumberUtil {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
 
-
     public static String getGWeiFromWeiForString(BigInteger num) {
         return Convert.fromWei(num.toString(), Convert.Unit.GWEI).toString();
     }
@@ -201,7 +195,7 @@ public class NumberUtil {
 
 
     public static String divideDecimalSub(BigDecimal value, int decimal) {
-        return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
+        return getDecimalValid_8(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
     }
 
     public static boolean isPasswordOk(String password) {

@@ -5,10 +5,10 @@ import android.text.TextUtils;
 import org.nervos.appchain.utils.Numeric;
 import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Token;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.util.url.HttpEtherUrls;
-import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.constant.url.HttpEtherUrls;
+import org.nervos.neuron.constant.url.HttpUrls;
 
 import java.math.BigInteger;
 

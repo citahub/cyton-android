@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.nervos.neuron.R;
 import org.nervos.neuron.event.CurrencyRefreshEvent;
 import org.nervos.neuron.item.Currency;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.view.SettingButtonView;

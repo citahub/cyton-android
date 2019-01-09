@@ -17,7 +17,7 @@ import org.nervos.neuron.event.CloseWalletInfoEvent;
 import org.nervos.neuron.event.TokenRefreshEvent;
 import org.nervos.neuron.event.WalletSaveEvent;
 import org.nervos.neuron.fragment.wallet.WalletFragment;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.util.fingerprint.FingerPrintController;
 

@@ -13,12 +13,12 @@ import org.nervos.neuron.item.response.AppChainTransaction;
 import org.nervos.neuron.item.response.EthTransaction;
 import org.nervos.neuron.item.response.EthTransactionStatus;
 import org.nervos.neuron.item.transaction.RestTransaction;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.constant.url.HttpAppChainUrls;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;

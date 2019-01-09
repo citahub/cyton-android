@@ -25,7 +25,7 @@ import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
-import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.constant.url.HttpUrls;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;

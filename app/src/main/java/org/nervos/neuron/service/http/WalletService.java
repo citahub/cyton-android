@@ -2,12 +2,11 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.crypto.AESCrypt;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBWalletUtil;

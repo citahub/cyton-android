@@ -1,11 +1,7 @@
 package org.nervos.neuron.util;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.WindowManager;
 
 public class ScreenUtils {

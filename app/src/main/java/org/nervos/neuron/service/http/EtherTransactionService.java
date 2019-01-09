@@ -15,7 +15,7 @@ import rx.Observable;
 /**
  * Created by duanyytop on 2018/11/12.
  */
-public class EtherTransactionService implements TransactionService {
+public class EtherTransactionService {
 
     private static final long ETH_BLOCK_DIFF = 200;
 

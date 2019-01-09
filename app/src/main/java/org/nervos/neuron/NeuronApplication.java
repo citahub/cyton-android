@@ -1,4 +1,4 @@
-package org.nervos.neuron.application;
+package org.nervos.neuron;
 
 import android.app.Application;
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
 /**

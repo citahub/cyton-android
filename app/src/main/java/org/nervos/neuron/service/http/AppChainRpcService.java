@@ -17,7 +17,7 @@ import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.RpcTransaction;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
@@ -63,7 +63,6 @@ public class AppChainRpcService {
     private static AppChainj service;
 
     private static Random random;
-    private static int version = 0;
     private static Wallet wallet;
 
     public static void init(Context context, String httpProvider) {

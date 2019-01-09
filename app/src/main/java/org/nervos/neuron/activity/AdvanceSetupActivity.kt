@@ -11,7 +11,7 @@ import org.nervos.neuron.item.transaction.AppTransaction
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
-import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -172,7 +172,7 @@ class AdvanceSetupActivity : NBaseActivity() {
         var gasMoney = NumberUtil.getDecimalValid_2(price.toDouble() * mAppTransaction!!.gas)
         tv_advance_setup_gas_fee.text =
                 String.format("%s %s ≈ %s %s",
-                        NumberUtil.getDecimal8ENotation(mAppTransaction!!.gas),
+                        NumberUtil.getDecimalValid_8(mAppTransaction!!.gas),
                         getNativeToken(),
                         CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
 
@@ -195,14 +195,14 @@ class AdvanceSetupActivity : NBaseActivity() {
     }
 
     private fun updateQuotaPriceAndLimit(quotaPrice: String) {
-        var price = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(quotaPrice)))
+        var price = NumberUtil.getDecimalValid_8(NumberUtil.getEthFromWei(BigInteger(quotaPrice)))
 
         et_advance_setup_gas_price.setText(price)
 
         var quota = mAppTransaction!!.quota.multiply(BigInteger(quotaPrice))
 
         tv_advance_setup_gas_fee.text = String.format("%s %s",
-                NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(quota)), getNativeToken())
+                NumberUtil.getDecimalValid_8(NumberUtil.getEthFromWei(quota)), getNativeToken())
 
         tv_advance_setup_gas_fee_detail.text =
                 String.format("Quota Limit(%s)*Quota Price(%s %s)",

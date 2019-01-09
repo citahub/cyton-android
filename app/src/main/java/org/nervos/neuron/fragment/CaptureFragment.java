@@ -41,9 +41,6 @@ import java.util.Vector;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * 自定义实现的扫描Fragment
- */
 public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Callback {
 
     private CaptureActivityHandler handler;
@@ -155,7 +152,7 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
             String path = PickPicUtils.getPath(getActivity().getApplicationContext(), data.getData());
             if (!TextUtils.isEmpty(path)) {
                 Bitmap img = BitmapUtils.getCompressedBitmap(path);
-                BitmapDecoder decoder = new BitmapDecoder(getActivity());
+                BitmapDecoder decoder = new BitmapDecoder();
                 Result result = decoder.getRawResult(img);
                 if (result != null) {
                     String qr = ResultParser.parseResult(result).toString();
@@ -249,9 +246,6 @@ public class CaptureFragment extends NBaseFragment implements SurfaceHolder.Call
 
     private void initBeepSound() {
         if (playBeep && mediaPlayer == null) {
-            // The volume on STREAM_SYSTEM is not adjustable, and users found it
-            // too loud,
-            // so we now play on the music stream.
             getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

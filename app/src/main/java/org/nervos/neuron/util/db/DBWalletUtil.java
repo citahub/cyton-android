@@ -10,7 +10,7 @@ import com.snappydb.SnappydbException;
 import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 

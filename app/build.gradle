@@ -81,23 +81,12 @@ android {
             preDexLibraries true
             maxProcessCount 8
             javaMaxHeapSize "3072m"
-            // Instead of setting the heap size for the DEX process, increase Gradle's
-            // heap size to enable dex-in-process. To learm more, read the next section.
-            // javaMaxHeapSize "2048m"
         }
     }
 
     // 渠道配置
     flavorDimensions "default"
     productFlavors {
-//        yingyongbao { dimension "default" }
-//        _360 { dimension "default" }
-//        oppo { dimension "default" }
-//        baidu { dimension "default" }
-//        huawei { dimension "default" }
-//        xiaomi { dimension "default" }
-//        vivo { dimension "default" }
-//        wandoujia { dimension "default" }
         cryptape { dimension "default" }
         dev {
             resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
@@ -105,7 +94,7 @@ android {
     }
 
     productFlavors.all { flavor ->
-        if (!name.equals("dev")) {
+        if (name != "dev") {
             flavor.manifestPlaceholders = [InstallChannelValue: name]
             flavor.multiDexEnabled = true
         }
@@ -132,14 +121,14 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.7'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.60'
     implementation 'org.abstractj.kalium:kalium:0.7.0'
     implementation 'com.google.protobuf:protobuf-java:3.5.1'
+    implementation 'com.google.guava:guava:24.1-jre'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
-    implementation 'com.google.guava:guava:24.1-android'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.snappydb:snappydb-lib:0.5.2'

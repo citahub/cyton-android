@@ -18,7 +18,6 @@ import org.nervos.neuron.event.CurrencyRefreshEvent
 import org.nervos.neuron.event.TokenBalanceEvent
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.fragment.NBaseFragment
-import org.nervos.neuron.fragment.token.model.WalletTokenAdapter
 import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.db.DBWalletUtil

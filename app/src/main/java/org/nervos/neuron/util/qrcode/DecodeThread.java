@@ -32,7 +32,6 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
- * �����߳�
  */
 final class DecodeThread extends Thread {
 
@@ -72,7 +71,7 @@ final class DecodeThread extends Thread {
         try {
             handlerInitLatch.await();
         } catch (InterruptedException ie) {
-            // continue?
+            ie.printStackTrace();
         }
         return handler;
     }

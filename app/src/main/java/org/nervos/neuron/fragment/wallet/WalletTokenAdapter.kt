@@ -1,4 +1,4 @@
-package org.nervos.neuron.fragment.token.model
+package org.nervos.neuron.fragment.wallet
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

@@ -12,7 +12,7 @@ import java.math.BigInteger;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class AppChainTransactionService implements TransactionService {
+public class AppChainTransactionService {
 
     public static void checkTransactionStatus(Context context) {
         Observable.from(DBAppChainTransactionsUtil.getAllTransactions(context))

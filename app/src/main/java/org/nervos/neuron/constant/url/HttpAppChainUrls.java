@@ -1,4 +1,4 @@
-package org.nervos.neuron.util.url;
+package org.nervos.neuron.constant.url;
 
 /**
  * Created by duanyytop on 2018/11/12.
