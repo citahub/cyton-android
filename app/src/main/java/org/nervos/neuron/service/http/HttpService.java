@@ -9,11 +9,12 @@ import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.response.AppChainERC20Transaction;
-import org.nervos.neuron.item.response.EthTransaction;
 import org.nervos.neuron.item.response.AppChainTransaction;
+import org.nervos.neuron.item.response.EthTransaction;
 import org.nervos.neuron.item.response.EthTransactionStatus;
 import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
@@ -141,7 +142,7 @@ public class HttpService {
                     AppChainTransaction response = new Gson().fromJson(res, AppChainTransaction.class);
                     for (RestTransaction item : response.result.transactions) {
                         item.chainName = result.getChainName();
-                        item.value = NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value));
+                        item.value = CurrencyUtil.fmtMicrometer(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value)));
                         item.symbol = result.getTokenSymbol();
                         item.nativeSymbol = result.getTokenSymbol();
                     }

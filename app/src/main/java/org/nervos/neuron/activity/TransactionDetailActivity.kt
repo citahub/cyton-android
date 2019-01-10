@@ -20,7 +20,10 @@ import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.item.transaction.RestTransaction
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
-import org.nervos.neuron.util.*
+import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.util.NumberUtil
+import org.nervos.neuron.util.SharePicUtils
+import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil
 import org.nervos.neuron.util.ether.EtherUtil
@@ -86,7 +89,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             }
         }
         val symbol = (if (restTransaction!!.from.equals(wallet!!.address, ignoreCase = true)) "-" else "+")
-        tv_transaction_amount.text = symbol + CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(restTransaction!!.value.toDouble()))
+        tv_transaction_amount.text = symbol + restTransaction!!.value
 
         tv_transaction_blockchain_time.text = restTransaction!!.date
 

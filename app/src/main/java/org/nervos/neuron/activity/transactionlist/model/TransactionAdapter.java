@@ -13,8 +13,6 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.BaseTransaction;
 import org.nervos.neuron.item.transaction.RestTransaction;
 import org.nervos.neuron.util.ConstantUtil;
-import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
 
@@ -85,8 +83,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(restTransaction.to) ||
                     TextUtils.isEmpty(restTransaction.to) ?
                     context.getResources().getString(R.string.contract_create) : restTransaction.to);
-            String value = (restTransaction.from.equalsIgnoreCase(address) ? "-" : "+") +
-                    CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(Double.valueOf(restTransaction.value)));
+            String value = (restTransaction.from.equalsIgnoreCase(address) ? "-" : "+") + restTransaction.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(restTransaction.getDate());
             switch (restTransaction.status) {
