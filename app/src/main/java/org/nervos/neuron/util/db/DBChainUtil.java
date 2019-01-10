@@ -5,7 +5,7 @@ import android.content.Context;
 import com.snappydb.SnappydbException;
 
 import org.nervos.neuron.item.Chain;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.List;

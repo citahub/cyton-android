@@ -18,7 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.ScreenUtils;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;

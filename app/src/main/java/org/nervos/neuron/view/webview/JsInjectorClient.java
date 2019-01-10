@@ -22,7 +22,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpEtherUrls;
 import org.nervos.neuron.view.webview.item.Address;
 
 class JsInjectorClient {

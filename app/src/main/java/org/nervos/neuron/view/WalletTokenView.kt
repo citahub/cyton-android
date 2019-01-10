@@ -48,7 +48,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             tv_loading.visibility = View.VISIBLE
             tv_token_balance.visibility = View.GONE
         } else {
-            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))
+            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimalValid_8(tokenItem.balance))
         }
         tv_token_currency.visibility = View.GONE
         if (EtherUtil.isEther(tokenItem)) {
@@ -72,7 +72,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
                                 DBWalletUtil.saveTokenBalanceCacheToWallet(context, SharePrefUtil.getCurrentWalletName(), Token(tokenItem))
                             }
                             tv_loading.visibility = View.GONE
-                            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(tokenItem.balance))
+                            tv_token_balance.text = CurrencyUtil.fmtMicrometer(NumberUtil.getDecimalValid_8(tokenItem.balance))
                             tv_token_balance.visibility = View.VISIBLE
                             if (tokenItem.balance != 0.0 && EtherUtil.isEther(tokenItem) && EtherUtil.isMainNet()) {
                                 getPrice()

@@ -6,7 +6,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.nervos.neuron.view.dialog.ProgressingDialog;
 
 /**
@@ -27,38 +26,29 @@ public class BaseFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 显示Progress Bar
-     */
     protected void showProgressBar() {
         if (dialog == null)
-            dialog = new ProgressingDialog(getActivity());
+            dialog = new ProgressingDialog(getContext());
         dialog.show();
     }
 
     protected void showProgressBar(@StringRes int message) {
         if (dialog == null)
-            dialog = new ProgressingDialog(getActivity());
+            dialog = new ProgressingDialog(getContext());
         dialog.show();
         dialog.setMsg(getString(message));
     }
 
     protected void showProgressBar(String message) {
         if (dialog == null)
-            dialog = new ProgressingDialog(getActivity());
+            dialog = new ProgressingDialog(getContext());
         dialog.show();
         dialog.setMsg(message);
     }
 
-    /**
-     * 隐藏Progress Bar
-     */
     protected void dismissProgressBar() {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
     }
 
-    @Subscribe
-    public void onEvent(Object object) {
-    }
 }

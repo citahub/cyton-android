@@ -12,7 +12,7 @@ import org.nervos.neuron.item.CurrencyIdList;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.response.CollectionResponse;
 import org.nervos.neuron.util.db.DBWalletUtil;
-import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.constant.url.HttpUrls;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;

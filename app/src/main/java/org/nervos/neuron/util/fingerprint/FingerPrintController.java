@@ -47,7 +47,7 @@ public class FingerPrintController {
     public boolean isSupportFingerprint() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return false;
-        return fpManager == null ? false : fpManager.isHardwareDetected();
+        return fpManager != null && fpManager.isHardwareDetected();
     }
 
     /**

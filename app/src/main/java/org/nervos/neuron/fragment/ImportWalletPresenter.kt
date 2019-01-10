@@ -11,7 +11,7 @@ import org.nervos.neuron.activity.MainActivity
 import org.nervos.neuron.event.TokenRefreshEvent
 import org.nervos.neuron.fragment.wallet.WalletFragment
 import org.nervos.neuron.item.Wallet
-import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.util.crypto.WalletEntity
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.db.SharePrefUtil

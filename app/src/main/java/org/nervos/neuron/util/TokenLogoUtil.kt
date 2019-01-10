@@ -9,37 +9,36 @@ import com.bumptech.glide.request.RequestOptions
 import org.nervos.neuron.R
 import org.nervos.neuron.item.Token
 import org.nervos.neuron.util.ether.EtherUtil
-import org.nervos.neuron.util.url.HttpUrls
+import org.nervos.neuron.constant.url.HttpUrls
 import org.web3j.crypto.Keys
 
 /**
  * Created by BaojunCZ on 2018/11/21.
  */
-class TokenLogoUtil {
-    companion object {
-        fun setLogo(token: Token, context: Context, iv: ImageView) {
-            if (EtherUtil.isEther(token) && !TextUtils.isEmpty(token.contractAddress)) {
-                var address = token.contractAddress
-                if (AddressUtil.isAddressValid(address))
-                    address = Keys.toChecksumAddress(address)
-                val options = RequestOptions()
-                        .error(R.drawable.ether_big)
-                        .placeholder(R.drawable.ether_big)
-                Glide.with(context)
-                        .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
-                        .apply(options)
-                        .into(iv)
+object TokenLogoUtil {
 
-            } else {
-                var icon = if (EtherUtil.isEther(token)) R.drawable.ether_big else R.mipmap.ic_launcher
-                val options = RequestOptions()
-                        .error(icon)
-                        .placeholder(icon)
-                Glide.with(context)
-                        .load(if (TextUtils.isEmpty(token.avatar)) "" else Uri.parse(token.avatar))
-                        .apply(options)
-                        .into(iv)
-            }
+    fun setLogo(token: Token, context: Context, iv: ImageView) {
+        if (EtherUtil.isEther(token) && !TextUtils.isEmpty(token.contractAddress)) {
+            var address = token.contractAddress
+            if (AddressUtil.isAddressValid(address))
+                address = Keys.toChecksumAddress(address)
+            val options = RequestOptions()
+                    .error(R.drawable.ether_big)
+                    .placeholder(R.drawable.ether_big)
+            Glide.with(context)
+                    .load(Uri.parse(String.format(HttpUrls.TOKEN_LOGO, address)))
+                    .apply(options)
+                    .into(iv)
+
+        } else {
+            var icon = if (EtherUtil.isEther(token)) R.drawable.ether_big else R.mipmap.ic_launcher
+            val options = RequestOptions()
+                    .error(icon)
+                    .placeholder(icon)
+            Glide.with(context)
+                    .load(if (TextUtils.isEmpty(token.avatar)) "" else Uri.parse(token.avatar))
+                    .apply(options)
+                    .into(iv)
         }
     }
 

@@ -6,7 +6,6 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.*;
 
-import org.nervos.neuron.util.LogUtil;
 import org.nervos.neuron.util.crypto.bip44.HdKeyNode;
 import org.nervos.neuron.util.crypto.bip44.hdpath.HdKeyPath;
 import com.fasterxml.jackson.core.JsonParser;
@@ -21,9 +20,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 
-/**
- * 钱包
- */
 public class WalletEntity {
 
     private static final SecureRandom secureRandom = SecureRandomUtils.secureRandom();
@@ -37,31 +33,18 @@ public class WalletEntity {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    /**
-     * Credentials
-     */
     private Credentials credentials;
-    /**
-     *  KeyStore file
-     */
     private WalletFile walletFile;
     private String mnemonic;
-    /**
-     * mnemonic password
-     */
     private String passphrase;
-    /**
-     * 路径
-     */
     private String path;
-
     private String keystore;
 
     private WalletEntity() {
     }
 
     public static void initWalletMnemonic(Context context) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -70,13 +53,7 @@ public class WalletEntity {
         }.start();
     }
 
-    /**
-     * create a wallet with mnemonic
-     *
-     * @param path
-     * @return
-     * @throws CipherException
-     */
+
     public static WalletEntity createWithMnemonic(String path, String password) {
 
         WalletEntity wa = new WalletEntity();
@@ -121,13 +98,6 @@ public class WalletEntity {
     }
 
 
-    /**
-     * import private key to generate a wallet
-     *
-     * @param privateKey
-     * @return wallet
-     * @throws CipherException
-     */
     public static WalletEntity fromPrivateKey(BigInteger privateKey, String password) throws CipherException {
         WalletEntity wa = new WalletEntity();
         ECKeyPair ecKeyPair = ECKeyPair.create(privateKey);
@@ -138,13 +108,6 @@ public class WalletEntity {
     }
 
 
-    /**
-     * import keystore to generate a wallet
-     *
-     * @param keystore
-     * @return wallet
-     * @throws CipherException
-     */
     public static WalletEntity fromKeyStore(String password, String keystore) throws Exception {
         WalletEntity wa = new WalletEntity();
         wa.keystore = keystore;
@@ -169,13 +132,7 @@ public class WalletEntity {
         return ECKeyPair.create(privateKeyByte);
     }
 
-    /**
-     * export a new wallet file
-     *
-     * @param privateKey
-     * @return wallet file
-     */
-    public static String exportKeyStore(String password, String privateKey){
+    public static String exportKeyStore(String password, String privateKey) {
         WalletFile walletFile = null;
         try {
             Credentials credentials = Credentials.create(privateKey);
@@ -187,12 +144,6 @@ public class WalletEntity {
         return walletFileJson(walletFile);
     }
 
-    /**
-     * json content of wallet file
-     *
-     * @param wf  wallet file
-     * @return json content
-     */
     public static String walletFileJson(WalletFile wf) {
         try {
             return objectMapper.writeValueAsString(wf);
@@ -201,12 +152,6 @@ public class WalletEntity {
         }
     }
 
-    /**
-     * get a wallet file from byte content
-     *
-     * @param content
-     * @return wallet file
-     */
     public static WalletFile createWalletFile(byte[] content) {
         try {
             ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
@@ -217,12 +162,6 @@ public class WalletEntity {
         return null;
     }
 
-    /**
-     * get a wallet file from string content
-     *
-     * @param content
-     * @return wallet file
-     */
     public static WalletFile createWalletFile(String content) {
         try {
             ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
@@ -233,12 +172,6 @@ public class WalletEntity {
         return null;
     }
 
-    /**
-     * get a wallet file from file
-     *
-     * @param file
-     * @return wallet file
-     */
     public static WalletFile createWalletFile(File file) {
         try {
             ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();

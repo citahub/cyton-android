@@ -8,7 +8,7 @@ import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.AppTransaction;
 import org.nervos.neuron.item.transaction.RpcTransaction;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;

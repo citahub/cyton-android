@@ -18,8 +18,9 @@ public class Fingerprint {
     private long mDeviceId;
 
     public Fingerprint(Object fingerprint) {
-        if(fingerprint==null)
-            return ;
+        if (fingerprint == null) {
+            return;
+        }
         Class fingerPrintClass = fingerprint.getClass();
         try {
             Method getNameMethod = fingerPrintClass.getMethod("getName");

@@ -27,11 +27,11 @@ public class NumberUtilTest {
 
     @Test
     public void testDecimal8ENotation() {
-        assertEquals("1.0E-10", NumberUtil.getDecimal8ENotation(0.0000000001));
-        assertEquals("0.00000001", NumberUtil.getDecimal8ENotation(0.00000001));
-        assertEquals("1.00000001", NumberUtil.getDecimal8ENotation(1.00000001));
-        assertEquals("1.12345678", NumberUtil.getDecimal8ENotation(1.123456789));
-        assertEquals("1", NumberUtil.getDecimal8ENotation(1.0000000001));
+        assertEquals("1.0E-10", NumberUtil.getDecimalValid_8(0.0000000001));
+        assertEquals("0.00000001", NumberUtil.getDecimalValid_8(0.00000001));
+        assertEquals("1.00000001", NumberUtil.getDecimalValid_8(1.00000001));
+        assertEquals("1.12345678", NumberUtil.getDecimalValid_8(1.123456789));
+        assertEquals("1", NumberUtil.getDecimalValid_8(1.0000000001));
     }
 
     @Test

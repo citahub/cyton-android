@@ -17,11 +17,11 @@ import org.nervos.neuron.service.http.HttpService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.util.AddressUtil
-import org.nervos.neuron.util.ConstantUtil
+import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.TokenLogoUtil
 import org.nervos.neuron.util.ether.EtherUtil
-import org.nervos.neuron.util.url.HttpUrls
+import org.nervos.neuron.constant.url.HttpUrls
 import org.web3j.crypto.Keys
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers

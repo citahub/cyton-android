@@ -2,8 +2,6 @@ package org.nervos.neuron.util.crypto;
 
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 
 import org.nervos.neuron.R;
 
@@ -12,15 +10,12 @@ import org.spongycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.spongycastle.crypto.params.KeyParameter;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.web3j.crypto.Hash.sha256;
@@ -49,6 +44,13 @@ public class MnemonicUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void initMnemonicWord() {
+        if (WORD_LIST.size() > 0) {
+            return;
+        }
+        WORD_LIST = populateWordList();
     }
 
     /**

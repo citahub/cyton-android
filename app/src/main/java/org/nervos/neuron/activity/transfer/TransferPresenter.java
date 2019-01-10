@@ -15,12 +15,12 @@ import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.constant.url.HttpAppChainUrls;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
 
@@ -188,7 +188,7 @@ public class TransferPresenter {
     private void initQuotaFee() {
         mQuota = mQuotaLimit.multiply(mQuotaPrice);
         mTransferFee = NumberUtil.getEthFromWei(mQuota);
-        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+        mTransferView.updateAppChainQuota(NumberUtil.getDecimalValid_8(mTransferFee) + getFeeTokenUnit());
     }
 
     public void updateQuotaLimit(BigInteger quotaLimit) {
@@ -396,19 +396,19 @@ public class TransferPresenter {
 
     public String balanceSubFee() {
         if (isNativeToken()) {
-            return NumberUtil.getDecimal8ENotation(new BigDecimal(mNativeTokenBalance).subtract(new BigDecimal(mTransferFee)).toString());
+            return NumberUtil.getDecimalValid_8(new BigDecimal(mNativeTokenBalance).subtract(new BigDecimal(mTransferFee)).doubleValue());
         } else {
-            return NumberUtil.getDecimal8ENotation(mTokenBalance);
+            return NumberUtil.getDecimalValid_8(mTokenBalance);
         }
     }
 
     public String getTransferFee() {
         if (mTokenPrice > 0) {
-            return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
+            return NumberUtil.getDecimalValid_8(mTransferFee) + getFeeTokenUnit()
                     + " ≈ " + mCurrency.getSymbol() + " "
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
         } else {
-            return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit();
+            return NumberUtil.getDecimalValid_8(mTransferFee) + getFeeTokenUnit();
         }
     }
 

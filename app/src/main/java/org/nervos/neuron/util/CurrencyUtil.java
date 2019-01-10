@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.item.CurrencyList;
 import org.nervos.neuron.util.db.SharePrefUtil;

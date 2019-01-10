@@ -23,7 +23,7 @@ import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
@@ -96,7 +96,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     @SuppressLint("SetTextI18n")
     private void updateView() {
-        mTvValue.setText(NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue()));
+        mTvValue.setText(NumberUtil.getDecimalValid_8(mAppTransaction.getDoubleValue()));
         mTvSymbol.setText(getNativeToken());
         mTvSenderAddress.setText(mWallet.address);
         mTvReceiverWebsite.setText(getIntent().getStringExtra(AppWebActivity.RECEIVER_WEBSITE));
@@ -180,8 +180,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             return;
         }
 
-        mTvPayFee.setText(NumberUtil.getDecimal8ENotation(mAppTransaction.getGas()) + getNativeToken());
-        mTvTotalFee.setText(CurrencyUtil.fmtMicrometer(NumberUtil.getDecimal8ENotation(
+        mTvPayFee.setText(NumberUtil.getDecimalValid_8(mAppTransaction.getGas()) + getNativeToken());
+        mTvTotalFee.setText(CurrencyUtil.fmtMicrometer(NumberUtil.getDecimalValid_8(
                 mAppTransaction.getDoubleValue() + mAppTransaction.getGas())) + " " + getNativeToken());
         Currency currency = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(ConstantUtil.ETH, currency.getName())
@@ -193,7 +193,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                         try {
                             String currencyPrice = NumberUtil.getDecimalValid_2(
                                     mAppTransaction.getGas() * Double.parseDouble(price));
-                            mTvPayFee.setText(NumberUtil.getDecimal8ENotation(
+                            mTvPayFee.setText(NumberUtil.getDecimalValid_8(
                                     mAppTransaction.getGas()) + " " + getNativeToken() + " "
                                     + "≈" + currency.getSymbol() + " " + currencyPrice);
                         } catch (NumberFormatException e) {
@@ -210,8 +210,8 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 super.onNext(price);
                 mQuota = NumberUtil.getEthFromWei(mAppTransaction.getQuota().multiply(new BigInteger(price)));
                 mTvTotalFee.setText(String.format("%s %s",
-                        NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue() + mQuota), getNativeToken()));
-                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimal8ENotation(mQuota), getNativeToken()));
+                        NumberUtil.getDecimalValid_8(mAppTransaction.getDoubleValue() + mQuota), getNativeToken()));
+                mTvPayFee.setText(String.format("%s %s", NumberUtil.getDecimalValid_8(mQuota), getNativeToken()));
             }
         });
     }
@@ -242,11 +242,11 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             }
         });
 
-        String fee = NumberUtil.getDecimal8ENotation(mAppTransaction.isEthereum()
+        String fee = NumberUtil.getDecimalValid_8(mAppTransaction.isEthereum()
                 ? mAppTransaction.getGas() : mQuota) + getNativeToken();
 
         mTransferDialog.setConfirmData(mWallet.address, mAppTransaction.to,
-                NumberUtil.getDecimal8ENotation(mAppTransaction.getDoubleValue()) + getNativeToken(), fee);
+                NumberUtil.getDecimalValid_8(mAppTransaction.getDoubleValue()) + getNativeToken(), fee);
     }
 
     private void transferEth(String password, ProgressBar progressBar) {

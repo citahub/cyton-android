@@ -19,10 +19,10 @@ import org.nervos.neuron.service.http.AppChainRpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
 import org.nervos.neuron.service.intent.EtherTransactionCheckService;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
-import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.constant.url.HttpAppChainUrls;
 
 import java.util.Timer;
 import java.util.TimerTask;

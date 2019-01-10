@@ -38,8 +38,6 @@ import java.util.Hashtable;
 
 final class DecodeHandler extends Handler {
 
-    private static final String TAG = DecodeHandler.class.getSimpleName();
-
     private final CaptureFragment fragment;
     private final MultiFormatReader multiFormatReader;
 
@@ -85,19 +83,16 @@ final class DecodeHandler extends Handler {
         try {
             rawResult = multiFormatReader.decodeWithState(bitmap);
         } catch (ReaderException re) {
-            // continue
+            re.printStackTrace();
         } finally {
             multiFormatReader.reset();
         }
 
         if (rawResult != null) {
-            long end = System.currentTimeMillis();
-            Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
             Message message = Message.obtain(fragment.getHandler(), R.id.decode_succeeded, rawResult);
             Bundle bundle = new Bundle();
             bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
             message.setData(bundle);
-            //Log.d(TAG, "Sending decode succeeded message...");
             message.sendToTarget();
         } else {
             Message message = Message.obtain(fragment.getHandler(), R.id.decode_failed);

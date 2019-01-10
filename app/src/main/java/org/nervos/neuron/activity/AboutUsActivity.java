@@ -4,7 +4,7 @@ import android.content.pm.PackageManager;
 import android.widget.TextView;
 
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.url.HttpUrls;
+import org.nervos.neuron.constant.url.HttpUrls;
 import org.nervos.neuron.view.SettingButtonView;
 import org.nervos.neuron.view.TitleBar;
 

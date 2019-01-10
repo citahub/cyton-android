@@ -15,12 +15,12 @@ import kotlinx.android.synthetic.main.activity_transaction_detail.*
 import org.nervos.neuron.R
 import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity.TRANSACTION_STATUS
 import org.nervos.neuron.activity.transactionlist.view.TransactionListActivity.TRANSACTION_TOKEN
+import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.item.Token
 import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.item.transaction.RestTransaction
 import org.nervos.neuron.service.http.AppChainRpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
-import org.nervos.neuron.util.ConstantUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
 import org.nervos.neuron.util.TokenLogoUtil
@@ -29,7 +29,7 @@ import org.nervos.neuron.util.db.SharePrefUtil
 import org.nervos.neuron.util.ether.EtherUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
-import org.nervos.neuron.util.url.HttpUrls
+import org.nervos.neuron.constant.url.HttpUrls
 import org.nervos.neuron.view.TitleBar
 import org.web3j.utils.Numeric
 import java.io.IOException
@@ -206,7 +206,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                         } else {
                             restTransaction!!.nativeSymbol
                         }
-                        tv_transaction_gas_price.text = NumberUtil.getDecimal8ENotation(NumberUtil.getEthFromWei(BigInteger(price))) + " " + tokenUnit
+                        tv_transaction_gas_price.text = NumberUtil.getDecimalValid_8(NumberUtil.getEthFromWei(BigInteger(price))) + " " + tokenUnit
                         val gas: BigInteger
                         if (mTransactionStatus == RestTransaction.PENDING) {
                             tv_transaction_gas_limit_title.text = resources.getString(R.string.quota_limit) + ":"

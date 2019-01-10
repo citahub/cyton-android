@@ -12,7 +12,9 @@ import android.widget.TextView;
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.transaction.BaseTransaction;
 import org.nervos.neuron.item.transaction.RestTransaction;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
+import org.nervos.neuron.util.CurrencyUtil;
+import org.nervos.neuron.util.NumberUtil;
 
 import java.util.List;
 
@@ -80,9 +82,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof TransactionViewHolder) {
             RestTransaction restTransaction = restTransactionList.get(position);
             TransactionViewHolder viewHolder = (TransactionViewHolder) holder;
-            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(restTransaction.to) ||
-                    TextUtils.isEmpty(restTransaction.to) ?
-                    context.getResources().getString(R.string.contract_create) : restTransaction.to);
+            viewHolder.transactionToAddressText.setText(ConstantUtil.RPC_RESULT_ZERO.equals(restTransaction.to)
+                    || TextUtils.isEmpty(restTransaction.to)
+                    ? context.getResources().getString(R.string.contract_create) : restTransaction.to);
             String value = (restTransaction.from.equalsIgnoreCase(address) ? "-" : "+") + restTransaction.value;
             viewHolder.transactionAmountText.setText(value);
             viewHolder.transactionTimeText.setText(restTransaction.getDate());

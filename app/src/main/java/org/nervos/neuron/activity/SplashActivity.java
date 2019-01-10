@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import org.nervos.neuron.R;
-import org.nervos.neuron.util.ConstantUtil;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.RootUtil;
 import org.nervos.neuron.util.db.SharePrefUtil;
-import org.nervos.neuron.view.dialog.ToastSingleButtonDialog;
 
 /**
  * Created by duanyytop on 2018/6/12
