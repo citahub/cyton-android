@@ -9,6 +9,7 @@ import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.item.CurrencyList;
 import org.nervos.neuron.util.db.SharePrefUtil;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class CurrencyUtil {
     }
 
     public static String fmtMicrometer(String text) {
-        if(text.contains("E")||text.contains("2")){
+        if (NumberUtil.checkDecimal8(new BigDecimal(text).doubleValue())) {
             return text;
         }
         DecimalFormat df = new DecimalFormat("###,##0.########");

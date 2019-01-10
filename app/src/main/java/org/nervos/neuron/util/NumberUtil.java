@@ -1,8 +1,7 @@
 package org.nervos.neuron.util;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
@@ -10,7 +9,6 @@ import org.web3j.utils.Strings;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -26,16 +24,23 @@ public class NumberUtil {
     }
 
     public static String getDecimal8ENotation(double value) {
-        if (value < 1) {
-            double decimal = value - (long) value;
-            if (decimal < 0.00000001 && decimal > 0) {
-                return String.valueOf(value);
-            }
+        if (checkDecimal8(value)) {
+            return String.valueOf(value);
         }
         DecimalFormat fmt = new DecimalFormat("0.########");
         fmt.setRoundingMode(RoundingMode.FLOOR);
         BigDecimal big = BigDecimal.valueOf(value);
         return fmt.format(big);
+    }
+
+    public static boolean checkDecimal8(double value) {
+        if (value < 1) {
+            double decimal = value - (long) value;
+            if (decimal < 0.00000001 && decimal > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String getDecimal8ENotation(String value) {
@@ -44,6 +49,7 @@ public class NumberUtil {
 
     /**
      * WARNING: not very sure
+     *
      * @param value
      * @return
      */
@@ -163,27 +169,26 @@ public class NumberUtil {
     }
 
 
-
     public static String getEthFromWeiForStringDecimal8(BigInteger value) {
         return getDecimal8ENotation(getEthFromWei(value));
     }
 
     public static double getEthFromWeiForDouble(String hex) {
-        if (Strings.isEmpty(hex)) return 0.0;
+        if (Strings.isEmpty(hex))
+            return 0.0;
         hex = Numeric.cleanHexPrefix(hex);
         return getEthFromWei(Numeric.toBigInt(hex));
     }
 
     public static String getEthFromWeiForString(String hex) {
-        if (Strings.isEmpty(hex)) return "0";
+        if (Strings.isEmpty(hex))
+            return "0";
         return String.valueOf(getEthFromWeiForDouble(hex));
     }
 
     public static double getEthFromWei(BigInteger value) {
         return Convert.fromWei(value.toString(), Convert.Unit.ETHER).doubleValue();
     }
-
-
 
 
     public static String getGWeiFromWeiForString(BigInteger num) {
@@ -195,14 +200,14 @@ public class NumberUtil {
     }
 
 
-
     public static String divideDecimalSub(BigDecimal value, int decimal) {
         return getDecimal8ENotation(value.divide(BigDecimal.TEN.pow(decimal), decimal, BigDecimal.ROUND_FLOOR).doubleValue());
     }
 
     public static boolean isPasswordOk(String password) {
         int len = password.length();
-        if (len < 8) return false;
+        if (len < 8)
+            return false;
         int flag = 0;
         for (int i = 0; i < len; i++) {
             char c = password.charAt(i);
