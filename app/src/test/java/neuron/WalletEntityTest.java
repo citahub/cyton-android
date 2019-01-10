@@ -1,22 +1,15 @@
 package neuron;
 
-import android.content.Context;
-import android.test.InstrumentationTestCase;
-import android.test.mock.MockContext;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.nervos.neuron.util.crypto.MnemonicUtils;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.robolectric.RobolectricTestRunner;
 import org.web3j.utils.Numeric;
 
 /**
  * Created by duanyytop on 2019/1/9.
  */
-@RunWith(RobolectricTestRunner.class)
 public class WalletEntityTest {
 
     private static final String PRIVATE_KEY = "0x95ba839425d01128a08722aa68984ae5da4352fdba5d5c0cfdb8d9a355a264d2";
