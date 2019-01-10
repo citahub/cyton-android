@@ -42,6 +42,9 @@ public class CurrencyUtil {
     }
 
     public static String fmtMicrometer(String text) {
+        if(text.contains("E")||text.contains("2")){
+            return text;
+        }
         DecimalFormat df = new DecimalFormat("###,##0.########");
         double number;
         try {
