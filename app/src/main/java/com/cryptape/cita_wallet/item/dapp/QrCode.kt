@@ -1,14 +1,14 @@
 package com.cryptape.cita_wallet.item.dapp
 
-import com.cryptape.cita_wallet.constant.NeuronDAppCallback
+import com.cryptape.cita_wallet.constant.CytonDAppCallback
 
 /**
  * Created by BaojunCZ on 2018/11/5.
  */
 class QrCode(status: Int, errorCode: Int, errorMsg: String, base64: String) :
-        BaseNeuronDAppCallback(status, errorCode, errorMsg) {
+        BaseCytonDAppCallback(status, errorCode, errorMsg) {
 
-    constructor(result: String) : this(NeuronDAppCallback.SUCCESS_CODE, 0, "", result)
+    constructor(result: String) : this(CytonDAppCallback.SUCCESS_CODE, 0, "", result)
 
     var info: Data
 

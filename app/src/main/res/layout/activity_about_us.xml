@@ -108,44 +108,11 @@
                 android:id="@+id/sbv_cita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
                 app:icon="@drawable/ic_about_cita"
                 app:name="CITA"
                 app:right_txt="@string/cita_describe" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="bottom|center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/default_margin"
-                android:paddingBottom="@dimen/default_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginBottom="1dp"
-                    android:text="@string/neuron_is_a"
-                    android:textColor="@color/font_title_third"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="20dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/neuron_logo" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="1dp"
-                    android:text="@string/product"
-                    android:textColor="@color/font_title_third"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

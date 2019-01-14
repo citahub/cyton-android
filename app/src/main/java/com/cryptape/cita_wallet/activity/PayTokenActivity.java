@@ -20,7 +20,7 @@ import com.cryptape.cita_wallet.item.Wallet;
 import com.cryptape.cita_wallet.item.transaction.AppTransaction;
 import com.cryptape.cita_wallet.service.http.CITARpcService;
 import com.cryptape.cita_wallet.service.http.EthRpcService;
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber;
+import com.cryptape.cita_wallet.service.http.CytonSubscriber;
 import com.cryptape.cita_wallet.service.http.TokenService;
 import com.cryptape.cita_wallet.service.http.WalletService;
 import com.cryptape.cita_wallet.util.ConstantUtil;
@@ -141,7 +141,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void getEtherGasPrice() {
-        EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
+        EthRpcService.getEthGasPrice().subscribe(new CytonSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
                 dismissProgressCircle();
@@ -158,7 +158,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
     private void getEtherGasLimit() {
         EthRpcService.getEthGasLimit(mAppTransaction)
-                .subscribe(new NeuronSubscriber<BigInteger>() {
+                .subscribe(new CytonSubscriber<BigInteger>() {
                     public void onError(Throwable e) {
                         dismissProgressCircle();
                         mAppTransaction.setGasLimit(ConstantUtil.GAS_ERC20_LIMIT);
@@ -185,7 +185,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 mAppTransaction.getDoubleValue() + mAppTransaction.getGas())) + " " + getNativeToken());
         Currency currency = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(ConstantUtil.ETH, currency.getName())
-                .subscribe(new NeuronSubscriber<String>() {
+                .subscribe(new CytonSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price))
@@ -204,7 +204,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void getQuotaPrice() {
-        CITARpcService.getQuotaPrice(mWallet.address).subscribe(new NeuronSubscriber<String>() {
+        CITARpcService.getQuotaPrice(mWallet.address).subscribe(new CytonSubscriber<String>() {
             @Override
             public void onNext(String price) {
                 super.onNext(price);
@@ -270,7 +270,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
             }
         }).subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
+                .subscribe(new CytonSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
@@ -293,7 +293,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 mAppTransaction.getStringValue(),
                 mAppTransaction.data, mAppTransaction.getQuota().longValue(),
                 Numeric.toBigInt(mAppTransaction.chainId), password)
-                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
+                .subscribe(new CytonSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);

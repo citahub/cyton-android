@@ -46335,7 +46335,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
     case 'sendTransaction':
       console.log("sendTransaction")
       txParams = payload.params[0]
-      txParams.chainType = "AppChain"
+      txParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processTransaction(txParams, cb),
@@ -46344,7 +46344,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
 
     case 'signTransaction':
       txParams = payload.params[0]
-      txParams.chainType = "AppChain"
+      txParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processSignTransaction(txParams, cb),
@@ -46362,7 +46362,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "AppChain"
+      msgParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
@@ -46372,8 +46372,8 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
     // come from personal_sign of ethereum  
     case 'neuron_sign':
       // process normally
-      const first_neuron = payload.params[1]
-      const second_neuron = payload.params[2]
+      const first_cyton = payload.params[1]
+      const second_cyton = payload.params[2]
 
       // We initially incorrectly ordered these parameters.
       // To gracefully respect users who adopted this API early,
@@ -46382,7 +46382,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       //
       // That means when the first param is definitely an address,
       // and the second param is definitely not, but is hex.
-      if (resemblesData(second_neuron) && resemblesAddress(first_neuron)) {
+      if (resemblesData(second_cyton) && resemblesAddress(first_cyton)) {
         let warning = `The eth_personalSign method requires params ordered `
         warning += `[message, address]. This was previously handled incorrectly, `
         warning += `and has been corrected automatically. `
@@ -46403,7 +46403,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "AppChain"
+      msgParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validatePersonalMessage(msgParams, cb),
         (cb) => self.processPersonalMessage(msgParams, cb),
@@ -54051,12 +54051,12 @@ var callbacks = {};
 var hookedSubProvider = void 0;
 var globalSyncOptions = {};
 
-var Neuron = {
+var Cyton = {
   init: function init(rpcUrl, options, syncOptions) {
     var engine = new ProviderEngine();
     var web3 = new Web3(engine);
     context.web3 = web3;
-    context.appchain = web3;
+    context.cita = web3;
 
     globalSyncOptions = syncOptions;
 
@@ -54068,7 +54068,7 @@ var Neuron = {
     engine.on('error', function (err) {
       return console.error(err.stack);
     });
-    engine.isNeuron = true;
+    engine.isCyton = true;
     engine.start();
 
     return engine;
@@ -54098,8 +54098,8 @@ var Neuron = {
   }
 };
 
-if (typeof context.Neuron === 'undefined') {
-  context.Neuron = Neuron;
+if (typeof context.Cyton === 'undefined') {
+  context.Cyton = Cyton;
 }
 
 ProviderEngine.prototype.setHost = function (host) {
@@ -54144,7 +54144,7 @@ ProviderEngine.prototype.send = function (payload) {
 
     // throw not-supported Error
     default:
-      var message = 'The Neuron Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
+      var message = 'The Cyton Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
       throw new Error(message);
   }
   // return the result
@@ -54164,7 +54164,7 @@ ProviderEngine.prototype.isConnected = function () {
   }).result;
 };
 
-module.exports = Neuron;
+module.exports = Cyton;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"web3":297,"web3-provider-engine":283,"web3-provider-engine/subproviders/cache.js":284,"web3-provider-engine/subproviders/filters.js":285,"web3-provider-engine/subproviders/hooked-wallet.js":286,"web3-provider-engine/subproviders/provider.js":287,"web3-provider-engine/subproviders/subscriptions.js":289}]},{},[349]);

@@ -22,7 +22,7 @@ import okhttp3.HttpUrl;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.N;
 
-public class NeuronWebViewClient extends WebViewClient {
+public class CytonWebViewClient extends WebViewClient {
 
     private final Object lock = new Object();
 
@@ -31,7 +31,7 @@ public class NeuronWebViewClient extends WebViewClient {
 
     private boolean isInjected;
 
-    public NeuronWebViewClient(JsInjectorClient jsInjectorClient, UrlHandlerManager urlHandlerManager) {
+    public CytonWebViewClient(JsInjectorClient jsInjectorClient, UrlHandlerManager urlHandlerManager) {
         this.jsInjectorClient = jsInjectorClient;
         this.urlHandlerManager = urlHandlerManager;
     }

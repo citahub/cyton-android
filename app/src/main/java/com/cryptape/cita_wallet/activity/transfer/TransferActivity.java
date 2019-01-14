@@ -43,7 +43,7 @@ import com.cryptape.cita_wallet.view.dialog.ToastDoubleButtonDialog;
 import com.cryptape.cita_wallet.view.dialog.TransferDialog;
 import com.cryptape.cita_wallet.view.dialog.listener.OnDialogCancelClickListener;
 import com.cryptape.cita_wallet.view.dialog.listener.OnDialogOKClickListener;
-import com.cryptape.cita_wallet.view.tool.NeuronTextWatcher;
+import com.cryptape.cita_wallet.view.tool.CytonTextWatcher;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 
@@ -237,7 +237,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
     @Override
     public void initTransferEditValue() {
-        mCetReceiverAddress.setTextWatcher(new NeuronTextWatcher() {
+        mCetReceiverAddress.setTextWatcher(new CytonTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
@@ -245,7 +245,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                 updateTransferEditValue();
             }
         });
-        transferValueEdit.addTextChangedListener(new NeuronTextWatcher() {
+        transferValueEdit.addTextChangedListener(new CytonTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);

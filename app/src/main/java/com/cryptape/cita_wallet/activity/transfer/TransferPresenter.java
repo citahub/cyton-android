@@ -12,7 +12,7 @@ import com.cryptape.cita_wallet.item.Wallet;
 import com.cryptape.cita_wallet.item.transaction.AppTransaction;
 import com.cryptape.cita_wallet.service.http.CITARpcService;
 import com.cryptape.cita_wallet.service.http.EthRpcService;
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber;
+import com.cryptape.cita_wallet.service.http.CytonSubscriber;
 import com.cryptape.cita_wallet.service.http.TokenService;
 import com.cryptape.cita_wallet.service.http.WalletService;
 import com.cryptape.cita_wallet.util.ConstantUtil;
@@ -72,7 +72,7 @@ public class TransferPresenter {
     }
 
     private void getTokenBalance() {
-        WalletService.getBalanceWithToken(mActivity, mToken).subscribe(new NeuronSubscriber<Double>() {
+        WalletService.getBalanceWithToken(mActivity, mToken).subscribe(new CytonSubscriber<Double>() {
             @Override
             public void onNext(Double balance) {
                 mTokenBalance = balance;
@@ -128,7 +128,7 @@ public class TransferPresenter {
     private void initEthGasInfo() {
         mGasLimit = EtherUtil.isNative(mToken) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
         mTransferView.startUpdateEthGasPrice();
-        EthRpcService.getEthGasPrice().subscribe(new NeuronSubscriber<BigInteger>() {
+        EthRpcService.getEthGasPrice().subscribe(new CytonSubscriber<BigInteger>() {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
@@ -150,7 +150,7 @@ public class TransferPresenter {
     private void initTokenPrice() {
         mCurrency = CurrencyUtil.getCurrencyItem(mActivity);
         TokenService.getCurrency(ConstantUtil.ETH, mCurrency.getName())
-                .subscribe(new NeuronSubscriber<String>() {
+                .subscribe(new CytonSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price))
@@ -169,7 +169,7 @@ public class TransferPresenter {
     private void initCITAQuota() {
         mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
         CITARpcService.getQuotaPrice(mWallet.address)
-                .subscribe(new NeuronSubscriber<String>() {
+                .subscribe(new CytonSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -202,7 +202,7 @@ public class TransferPresenter {
 
     public void initGasLimit(AppTransaction appTransaction) {
         EthRpcService.getEthGasLimit(appTransaction)
-                .subscribe(new NeuronSubscriber<BigInteger>() {
+                .subscribe(new CytonSubscriber<BigInteger>() {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -240,7 +240,7 @@ public class TransferPresenter {
      */
     private void transferEth(String password, String value, String receiveAddress) {
         EthRpcService.transferEth(mActivity, receiveAddress, value, mGasPrice, mGasLimit, mData, password)
-                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
+                .subscribe(new CytonSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         mTransferView.transferCITAFail(e);
@@ -265,7 +265,7 @@ public class TransferPresenter {
      */
     private void transferEthErc20(String password, String value, String receiveAddress) {
         EthRpcService.transferErc20(mActivity, mToken, receiveAddress, value, mGasPrice, mGasLimit, password)
-                .subscribe(new NeuronSubscriber<EthSendTransaction>() {
+                .subscribe(new CytonSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         mTransferView.transferEtherFail(e.getMessage());
@@ -294,7 +294,7 @@ public class TransferPresenter {
         CITARpcService.setHttpProvider(item.httpProvider);
         CITARpcService.transferCITA(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
                 new BigInteger(mToken.getChainId()), password)
-                .subscribe(new NeuronSubscriber<AppSendTransaction>() {
+                .subscribe(new CytonSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         mTransferView.transferCITAFail(e);
@@ -320,7 +320,7 @@ public class TransferPresenter {
         try {
             CITARpcService.transferErc20(mActivity, mToken, receiveAddress, transferValue, mQuotaLimit.longValue(),
                     Numeric.toBigInt(mToken.getChainId()), password)
-                    .subscribe(new NeuronSubscriber<AppSendTransaction>() {
+                    .subscribe(new CytonSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
                             e.printStackTrace();

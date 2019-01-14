@@ -5,7 +5,7 @@ import rx.Subscriber;
 /**
  * Created by duanyytop on 2018/9/6
  */
-public class NeuronSubscriber<T> extends Subscriber<T> {
+public class CytonSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onCompleted() {

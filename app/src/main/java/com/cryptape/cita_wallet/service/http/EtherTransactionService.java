@@ -21,7 +21,7 @@ public class EtherTransactionService implements TransactionService {
     public static void checkTransactionStatus(Context context) {
         EthRpcService.initNodeUrl();
         Observable.from(DBEtherTransactionUtil.getAllTransactions(context))
-                .subscribe(new NeuronSubscriber<RpcTransaction>() {
+                .subscribe(new CytonSubscriber<RpcTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();

@@ -14,7 +14,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.view_compress_edittext.view.*
 import com.cryptape.cita_wallet.R
-import com.cryptape.cita_wallet.view.tool.NeuronTextWatcher
+import com.cryptape.cita_wallet.view.tool.CytonTextWatcher
 
 /**
  * Created by BaojunCZ on 2018/12/19.
@@ -101,7 +101,7 @@ class CompressEditText(context: Context, attrs: AttributeSet) : ConstraintLayout
             et.setHint(value)
         }
 
-    var textWatcher: NeuronTextWatcher? = null
+    var textWatcher: CytonTextWatcher? = null
         set(value) {
             et.addTextChangedListener(value)
         }

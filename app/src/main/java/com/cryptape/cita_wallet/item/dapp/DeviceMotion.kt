@@ -1,7 +1,7 @@
-package com.cryptape.cita_wallet.item.NeuronDApp
+package com.cryptape.cita_wallet.item.CytonDApp
 
-import com.cryptape.cita_wallet.constant.NeuronDAppCallback
-import com.cryptape.cita_wallet.item.dapp.BaseNeuronDAppCallback
+import com.cryptape.cita_wallet.constant.CytonDAppCallback
+import com.cryptape.cita_wallet.item.dapp.BaseCytonDAppCallback
 
 /**
  * Created by BaojunCZ on 2018/11/15.
@@ -9,9 +9,9 @@ import com.cryptape.cita_wallet.item.dapp.BaseNeuronDAppCallback
 class DeviceMotion(status: Int,
                    errorCode: Int,
                    errorMsg: String,
-                   motion: Motion) : BaseNeuronDAppCallback(status, errorCode, errorMsg) {
+                   motion: Motion) : BaseCytonDAppCallback(status, errorCode, errorMsg) {
 
-    constructor(motion: Motion) : this(NeuronDAppCallback.SUCCESS_CODE, 0, "", motion)
+    constructor(motion: Motion) : this(CytonDAppCallback.SUCCESS_CODE, 0, "", motion)
 
     var info: Motion = motion
 

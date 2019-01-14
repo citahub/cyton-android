@@ -132,7 +132,7 @@ public class SettingsFragment extends NBaseFragment {
         });
         mSbvContactUs.setOnClickListener(() -> {
             ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData mClipData = ClipData.newPlainText("contact", "Nervos-Neuron");
+            ClipData mClipData = ClipData.newPlainText("contact", "Nervos-Cyton");
             if (cm != null) {
                 cm.setPrimaryClip(mClipData);
                 Toast.makeText(getActivity(), R.string.copy_weixin_success, Toast.LENGTH_SHORT).show();

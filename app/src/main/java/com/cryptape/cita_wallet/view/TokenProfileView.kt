@@ -14,7 +14,7 @@ import com.cryptape.cita_wallet.activity.SimpleWebActivity
 import com.cryptape.cita_wallet.item.EthErc20Token
 import com.cryptape.cita_wallet.item.Token
 import com.cryptape.cita_wallet.service.http.HttpService
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber
+import com.cryptape.cita_wallet.service.http.CytonSubscriber
 import com.cryptape.cita_wallet.service.http.TokenService
 import com.cryptape.cita_wallet.util.AddressUtil
 import com.cryptape.cita_wallet.util.ConstantUtil
@@ -110,7 +110,7 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
                     }
                 }.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : NeuronSubscriber<EthErc20Token>() {
+                .subscribe(object : CytonSubscriber<EthErc20Token>() {
                     override fun onNext(item: EthErc20Token?) {
                         if (item != null) {
                             method(item)
@@ -125,7 +125,7 @@ class TokenProfileView(context: Context, attrs: AttributeSet) : ConstraintLayout
     private fun getPrice(context: Context, mToken: Token, callback: (String) -> Unit) {
         if (EtherUtil.isEther(mToken)) {
             TokenService.getCurrency(mToken.symbol, CurrencyUtil.getCurrencyItem(context).name)
-                    .subscribe(object : NeuronSubscriber<String>() {
+                    .subscribe(object : CytonSubscriber<String>() {
                         override fun onNext(s: String) {
                             if (!TextUtils.isEmpty(s)) {
                                 callback(CurrencyUtil.getCurrencyItem(context).symbol + " " + CurrencyUtil.formatCurrency(s.toDouble()))

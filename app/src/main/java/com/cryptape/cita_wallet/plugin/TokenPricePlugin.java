@@ -5,7 +5,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.cryptape.cita_wallet.item.Currency;
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber;
+import com.cryptape.cita_wallet.service.http.CytonSubscriber;
 import com.cryptape.cita_wallet.service.http.TokenService;
 import com.cryptape.cita_wallet.util.CurrencyUtil;
 import com.cryptape.cita_wallet.util.JSLoadUtils;
@@ -25,7 +25,7 @@ public class TokenPricePlugin {
     public void getTokenPrice(String symbol, String callback) {
         Currency currency = CurrencyUtil.getCurrencyItem(mWebView.getContext());
         TokenService.getCurrency(symbol, currency.getName())
-                .subscribe(new NeuronSubscriber<String>() {
+                .subscribe(new CytonSubscriber<String>() {
                     @Override
                     public void onNext(String price) {
                         if (TextUtils.isEmpty(price)) {

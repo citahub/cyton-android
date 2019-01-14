@@ -232,7 +232,7 @@ public class WebAppUtil {
         webSettings.setBuiltInZoomControls(false);
 
         webSettings.setUserAgentString(
-                webSettings.getUserAgentString() + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+                webSettings.getUserAgentString() + "Cyton(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
 
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
     }

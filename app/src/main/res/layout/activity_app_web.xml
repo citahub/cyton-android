@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.cryptape.cita_wallet.view.webview.NeuronWebView
+            <com.cryptape.cita_wallet.view.webview.CytonWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

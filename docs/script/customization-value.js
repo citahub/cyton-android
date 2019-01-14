@@ -8,4 +8,4 @@ const default_language = 'zh-CN';
 const versionIsSupported = false;
 
 //github url for enabling Edit on GitHub
-const github_url = 'https://github.com/cryptape/Neuron-Android/blob/master/docs/';
+const github_url = 'https://github.com/cryptape/Cyton-Android/blob/master/docs/';

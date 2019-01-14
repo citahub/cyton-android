@@ -26,24 +26,16 @@
             android:src="@drawable/ic_splash_nervos_center_logo" />
 
         <RelativeLayout
-            android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <ImageView
-                android:id="@+id/iv_nervos"
-                android:layout_width="80dp"
-                android:layout_height="32dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_splash_nervos_logo" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
-                android:visibility="gone"
-                android:layout_below="@id/iv_nervos"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_secured_by"

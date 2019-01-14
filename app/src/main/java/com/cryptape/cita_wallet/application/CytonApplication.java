@@ -12,7 +12,7 @@ import com.cryptape.cita_wallet.util.db.SharePrefUtil;
 /**
  * Created by duanyytop on 2018/4/17
  */
-public class NeuronApplication extends Application {
+public class CytonApplication extends Application {
 
     @Override
     public void onCreate() {
