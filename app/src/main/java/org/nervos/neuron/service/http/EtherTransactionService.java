@@ -2,7 +2,6 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 
-
 import org.nervos.neuron.item.response.EthTransactionStatus;
 import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
@@ -48,7 +47,7 @@ public class EtherTransactionService implements TransactionService {
 
     private static final int TwelveBlockNumber = 12;
     private static boolean exceedTwelveBlock(RpcTransaction item) {
-        return AppChainRpcService.getBlockNumber()
+        return CITARpcService.getBlockNumber()
                 .subtract(Numeric.toBigInt(item.blockNumber)).longValue() > TwelveBlockNumber;
     }
 

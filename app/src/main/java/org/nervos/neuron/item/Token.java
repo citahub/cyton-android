@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 public class Token implements Parcelable {
 
-    private static int APPCHAIN_DECIMAL = 18;
+    private static int CITA_DECIMAL = 18;
     private static double NO_CACHE = -1.0;
 
     public String name;
@@ -61,7 +61,7 @@ public class Token implements Parcelable {
     public Token(Chain chain) {
         this.name = chain.tokenName;
         this.symbol = chain.tokenSymbol;
-        this.decimals = APPCHAIN_DECIMAL;
+        this.decimals = CITA_DECIMAL;
         this.avatar = chain.tokenAvatar;
         this.chainIdV1 = chain.getChainId();
         this.chainName = chain.name;

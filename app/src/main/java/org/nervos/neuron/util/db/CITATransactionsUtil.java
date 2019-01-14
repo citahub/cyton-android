@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class DBAppChainTransactionsUtil extends DBUtil {
+public class CITATransactionsUtil extends DBUtil {
 
-    private static final String DB_APPCHAIN = "db_appchain_transaction";
+    private static final String DB_CITA = "db_cita_transaction";
 
     private static final String TOKEN = "token";
 
@@ -27,7 +27,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
     public static void save(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_APPCHAIN);
+                db = openDB(context, DB_CITA);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
                 db.put(getDbKey(item.getChainId() + tokenType + item.hash), item);
                 db.close();
@@ -40,7 +40,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
     public static void delete(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_APPCHAIN);
+                db = openDB(context, DB_CITA);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
                 db.del(getDbKey(item.getChainId() + tokenType + item.hash));
                 db.close();
@@ -53,7 +53,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
     public static void update(Context context, RpcTransaction item) {
         synchronized (dbObject) {
             try {
-                db = openDB(context, DB_APPCHAIN);
+                db = openDB(context, DB_CITA);
                 String tokenType = TextUtils.isEmpty(item.contractAddress) ? TOKEN : item.contractAddress;
                 db.put(getDbKey(item.getChainId() + tokenType + item.hash), item);
                 db.close();
@@ -74,7 +74,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             List<RpcTransaction> list = new ArrayList<>();
             try {
-                db = openDB(context, DB_APPCHAIN);
+                db = openDB(context, DB_CITA);
                 String[] keys = db.findKeys(DB_PREFIX);
                 for (String key : keys) {
                     list.add(db.getObject(key, RpcTransaction.class));
@@ -98,7 +98,7 @@ public class DBAppChainTransactionsUtil extends DBUtil {
         synchronized (dbObject) {
             List<RpcTransaction> list = new ArrayList<>();
             try {
-                db = openDB(context, DB_APPCHAIN);
+                db = openDB(context, DB_CITA);
                 String tokenType = TextUtils.isEmpty(contractAddress) ? TOKEN : contractAddress;
                 String[] keys = db.findKeys(getDbKey(chainId + tokenType));
                 for (String key : keys) {

@@ -46323,7 +46323,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       return
 
 
-    // adpter to appchain
+    // adpter to cita
     case 'accounts':
       // process normally
       self.getAccounts(function(err, accounts){

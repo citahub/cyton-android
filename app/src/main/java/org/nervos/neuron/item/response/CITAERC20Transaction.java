@@ -4,12 +4,12 @@ import org.nervos.neuron.item.transaction.RestTransaction;
 
 import java.util.List;
 
-public class AppChainERC20Transaction {
+public class CITAERC20Transaction {
 
-    public AppChainTransactionResult result;
+    public CITATransactionResult result;
     public int count;
 
-    public static class AppChainTransactionResult {
+    public static class CITATransactionResult {
         public List<RestTransaction> transfers;
     }
 

@@ -2,20 +2,22 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.neuron.item.transaction.RpcTransaction;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
-import rx.Observable;
+import org.nervos.neuron.util.db.CITATransactionsUtil;
 
 import java.math.BigInteger;
+
+import rx.Observable;
 
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class AppChainTransactionService implements TransactionService {
+public class CITATransactionService implements TransactionService {
 
     public static void checkTransactionStatus(Context context) {
-        Observable.from(DBAppChainTransactionsUtil.getAllTransactions(context))
+        Observable.from(CITATransactionsUtil.getAllTransactions(context))
                 .subscribe(new NeuronSubscriber<RpcTransaction>() {
                     @Override
                     public void onError(Throwable e) {
@@ -23,18 +25,18 @@ public class AppChainTransactionService implements TransactionService {
                     }
                     @Override
                     public void onNext(RpcTransaction item) {
-                        TransactionReceipt receipt = AppChainRpcService.getTransactionReceipt(item.hash);
+                        TransactionReceipt receipt = CITARpcService.getTransactionReceipt(item.hash);
 
-                        if (receipt == null && new BigInteger(item.validUntilBlock).compareTo(AppChainRpcService.getBlockNumber()) < 0) {
+                        if (receipt == null && new BigInteger(item.validUntilBlock).compareTo(CITARpcService.getBlockNumber()) < 0) {
                             item.status = RpcTransaction.FAILED;
-                            DBAppChainTransactionsUtil.update(context, item);
+                            CITATransactionsUtil.update(context, item);
                         }
                         if (receipt != null) {
                             if (!TextUtils.isEmpty(receipt.getErrorMessage())) {
                                 item.status = RpcTransaction.FAILED;
-                                DBAppChainTransactionsUtil.update(context, item);
+                                CITATransactionsUtil.update(context, item);
                             } else {
-                                DBAppChainTransactionsUtil.delete(context, item);
+                                CITATransactionsUtil.delete(context, item);
                             }
                         }
                     }

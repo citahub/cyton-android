@@ -10,7 +10,7 @@ import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.AppTransaction;
-import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.CITARpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
@@ -20,7 +20,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.util.url.HttpAppChainUrls;
+import org.nervos.neuron.util.url.HttpCITAUrls;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
 
@@ -61,7 +61,7 @@ public class TransferPresenter {
     public void init() {
 
         EthRpcService.init(mActivity);
-        AppChainRpcService.init(mActivity, HttpAppChainUrls.APPCHAIN_NODE_URL);
+        CITARpcService.init(mActivity, HttpCITAUrls.CITA_NODE_URL);
 
         initTokenItem();
         getAddressData();
@@ -121,7 +121,7 @@ public class TransferPresenter {
             mTransferView.initTransferEditValue();
             initTokenPrice();
         } else {
-            initAppChainQuota();
+            initCITAQuota();
         }
     }
 
@@ -166,9 +166,9 @@ public class TransferPresenter {
     }
 
 
-    private void initAppChainQuota() {
+    private void initCITAQuota() {
         mQuotaLimit = TextUtils.isEmpty(getTokenItem().contractAddress) ? ConstantUtil.QUOTA_TOKEN : ConstantUtil.QUOTA_ERC20;
-        AppChainRpcService.getQuotaPrice(mWallet.address)
+        CITARpcService.getQuotaPrice(mWallet.address)
                 .subscribe(new NeuronSubscriber<String>() {
                     @Override
                     public void onError(Throwable e) {
@@ -188,7 +188,7 @@ public class TransferPresenter {
     private void initQuotaFee() {
         mQuota = mQuotaLimit.multiply(mQuotaPrice);
         mTransferFee = NumberUtil.getEthFromWei(mQuota);
-        mTransferView.updateAppChainQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
+        mTransferView.updateCITAQuota(NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit());
     }
 
     public void updateQuotaLimit(BigInteger quotaLimit) {
@@ -226,9 +226,9 @@ public class TransferPresenter {
             }
         } else {
             if (isNativeToken()) {
-                transferAppChainToken(password, transferValue, receiveAddress.toLowerCase());
+                transferCITAToken(password, transferValue, receiveAddress.toLowerCase());
             } else {
-                transferAppChainErc20(password, transferValue, receiveAddress.toLowerCase());
+                transferCITAErc20(password, transferValue, receiveAddress.toLowerCase());
             }
         }
     }
@@ -243,7 +243,7 @@ public class TransferPresenter {
                 .subscribe(new NeuronSubscriber<EthSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        mTransferView.transferAppChainFail(e);
+                        mTransferView.transferCITAFail(e);
                     }
 
                     @Override
@@ -287,22 +287,22 @@ public class TransferPresenter {
      *
      * @param transferValue transfer value
      */
-    private void transferAppChainToken(String password, String transferValue, String receiveAddress) {
+    private void transferCITAToken(String password, String transferValue, String receiveAddress) {
         Chain item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mToken.getChainId());
         if (item == null)
             return;
-        AppChainRpcService.setHttpProvider(item.httpProvider);
-        AppChainRpcService.transferAppChain(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
+        CITARpcService.setHttpProvider(item.httpProvider);
+        CITARpcService.transferCITA(mActivity, receiveAddress, transferValue, mData, mQuotaLimit.longValue(),
                 new BigInteger(mToken.getChainId()), password)
                 .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                     @Override
                     public void onError(Throwable e) {
-                        mTransferView.transferAppChainFail(e);
+                        mTransferView.transferCITAFail(e);
                     }
 
                     @Override
                     public void onNext(AppSendTransaction appSendTransaction) {
-                        mTransferView.transferAppChainSuccess(appSendTransaction);
+                        mTransferView.transferCITASuccess(appSendTransaction);
                     }
                 });
     }
@@ -313,23 +313,23 @@ public class TransferPresenter {
      *
      * @param transferValue
      */
-    private void transferAppChainErc20(String password, String transferValue, String receiveAddress) {
+    private void transferCITAErc20(String password, String transferValue, String receiveAddress) {
         Chain item = DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mToken.getChainId());
         if (item == null)
             return;
         try {
-            AppChainRpcService.transferErc20(mActivity, mToken, receiveAddress, transferValue, mQuotaLimit.longValue(),
+            CITARpcService.transferErc20(mActivity, mToken, receiveAddress, transferValue, mQuotaLimit.longValue(),
                     Numeric.toBigInt(mToken.getChainId()), password)
                     .subscribe(new NeuronSubscriber<AppSendTransaction>() {
                         @Override
                         public void onError(Throwable e) {
                             e.printStackTrace();
-                            mTransferView.transferAppChainFail(e);
+                            mTransferView.transferCITAFail(e);
                         }
 
                         @Override
                         public void onNext(AppSendTransaction appSendTransaction) {
-                            mTransferView.transferAppChainSuccess(appSendTransaction);
+                            mTransferView.transferCITASuccess(appSendTransaction);
                         }
                     });
         } catch (Exception e) {

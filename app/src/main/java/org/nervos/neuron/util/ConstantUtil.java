@@ -29,7 +29,7 @@ public class ConstantUtil {
     public static final String IMG_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
 
 
-    // AppChain Constant
+    // CITA Constant
     public static final String QUOTA_PRICE_DEFAULT = "1";
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
     public static final BigInteger QUOTA_ERC20 = new BigInteger("200000");
@@ -43,7 +43,7 @@ public class ConstantUtil {
 
     public static final String NATT_CHAIN_ID = "1";
     public static final String NATT_CHAIN_NAME = "test-chain";
-    public static final String NATT_TOKEN_NAME = "Nervos AppChain Test Token";
+    public static final String NATT_TOKEN_NAME = "Nervos CITA Test Token";
     public static final String NATT_TOKEN_SYMBOL = "NATT";
     public static final String NATT_TOKEN_AVATAR = "https://cdn.cryptape.com/icon_appchain.png";
     public static final String NATT_HTTP_PROVIDER = "https://node.cryptape.com";
@@ -52,7 +52,7 @@ public class ConstantUtil {
 
 
     public static final String TYPE_ETH = "ETH";
-    public static final String TYPE_APPCHAIN = "AppChain";
+    public static final String TYPE_CITA = "CITA";
 
     // Ether Constant
     public static final String ETH = "ETH";

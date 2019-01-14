@@ -38,6 +38,6 @@ public class HttpUrls {
     public static final String ETH_ROPSTEN_TRANSACTION_DETAIL = "https://ropsten.etherscan.io/tx/%s";
     public static final String ETH_KOVAN_TRANSACTION_DETAIL = "https://kovan.etherscan.io/tx/%s";
 
-    //AppChain Transaction Detail
-    public static final String APPCHAIN_TEST_TRANSACTION_DETAIL = "http://microscope.cryptape.com/#/transaction/%s";
+    //CITA Transaction Detail
+    public static final String CITA_TEST_TRANSACTION_DETAIL = "http://microscope.cryptape.com/#/transaction/%s";
 }

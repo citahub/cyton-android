@@ -4,11 +4,11 @@ import org.nervos.neuron.item.transaction.RestTransaction;
 
 import java.util.List;
 
-public class AppChainTransaction {
+public class CITATransaction {
 
-    public AppChainTransactionResult result;
+    public CITATransactionResult result;
 
-    public static class AppChainTransactionResult {
+    public static class CITATransactionResult {
         public List<RestTransaction> transactions;
     }
 

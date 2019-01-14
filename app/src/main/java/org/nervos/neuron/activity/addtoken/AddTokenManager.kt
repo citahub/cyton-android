@@ -9,7 +9,7 @@ import org.nervos.appchain.protocol.http.HttpService
 import org.nervos.neuron.R
 import org.nervos.neuron.item.Chain
 import org.nervos.neuron.item.Token
-import org.nervos.neuron.service.http.AppChainRpcService
+import org.nervos.neuron.service.http.CITARpcService
 import org.nervos.neuron.service.http.EthRpcService
 import org.nervos.neuron.util.AddressUtil
 import org.nervos.neuron.util.db.DBWalletUtil
@@ -28,7 +28,7 @@ class AddTokenManager(val context: Context) {
         chainList.forEach {
             list.add(it.name)
         }
-        list.add(context.resources.getString(R.string.appchain_native_token))
+        list.add(context.resources.getString(R.string.cita_native_token))
         return list
     }
 
@@ -52,7 +52,7 @@ class AddTokenManager(val context: Context) {
                     EthRpcService.getTokenInfo(contractAddress, address)
                 }
                 else -> {
-                    AppChainRpcService.getErc20TokenInfo(contractAddress)
+                    CITARpcService.getErc20TokenInfo(contractAddress)
                 }
             }
             when {
@@ -68,18 +68,18 @@ class AddTokenManager(val context: Context) {
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun loadAppChain(httpProvider: String): Observable<Chain> {
+    fun loadCITA(httpProvider: String): Observable<Chain> {
         return Observable.fromCallable {
             AppChainj.build(HttpService(httpProvider))
         }.flatMap { service ->
             try {
                 Observable.just(service.appMetaData(DefaultBlockParameterName.LATEST).send())
             } catch (e: Exception) {
-                throw Throwable(context.resources.getString(R.string.appchain_node_error))
+                throw Throwable(context.resources.getString(R.string.cita_node_error))
             }
         }.flatMap { metaData: AppMetaData? ->
             if (metaData == null) {
-                throw Throwable(context.resources.getString(R.string.appchain_node_error))
+                throw Throwable(context.resources.getString(R.string.cita_node_error))
             } else {
                 var chainItem = Chain()
                 var result = metaData.appMetaDataResult

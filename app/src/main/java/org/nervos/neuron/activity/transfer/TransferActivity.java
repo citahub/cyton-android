@@ -161,7 +161,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     @Override
-    public void updateAppChainQuota(String quotaFee) {
+    public void updateCITAQuota(String quotaFee) {
         feeValueText.setText(quotaFee);
     }
 
@@ -289,7 +289,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
                 Intent intent = new Intent(mActivity, AdvanceSetupActivity.class);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_TRANSFER, true);
                 intent.putExtra(AdvanceSetupActivity.EXTRA_NATIVE_TOKEN, mPresenter.isNativeToken());
-                mAppTransaction.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_APPCHAIN;
+                mAppTransaction.chainType = mPresenter.isEther() ? ConstantUtil.TYPE_ETH : ConstantUtil.TYPE_CITA;
                 mAppTransaction.data = mPresenter.getData();
                 if (mPresenter.isEther()) {
                     mAppTransaction.setGasLimit(mPresenter.getGasLimit());
@@ -332,7 +332,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
 
 
     @Override
-    public void transferAppChainSuccess(AppSendTransaction appSendTransaction) {
+    public void transferCITASuccess(AppSendTransaction appSendTransaction) {
         progressBar.setVisibility(View.GONE);
         if (appSendTransaction == null) {
             Toast.makeText(mActivity, R.string.transfer_fail, Toast.LENGTH_SHORT).show();
@@ -351,7 +351,7 @@ public class TransferActivity extends NBaseActivity implements TransferView {
     }
 
     @Override
-    public void transferAppChainFail(Throwable e) {
+    public void transferCITAFail(Throwable e) {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(TransferActivity.this,
                 e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class Transaction implements Parcelable {
 
     public static final String TYPE_ETH = "ETH";
-    public static final String TYPE_APPCHAIN = "AppChain";
+    public static final String TYPE_CITA = "CITA";
 
     public Address recipient;
     public Address contract;

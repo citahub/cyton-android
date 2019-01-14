@@ -172,7 +172,7 @@
     <string name="have_known">Got it</string>
     <string name="meta_data_error">Can not get MetaData from host:</string>
     <string name="contract_address_error">Incorrect Contract address</string>
-    <string name="appchain_node_error">Please input correct node url</string>
+    <string name="cita_node_error">Please input correct node url</string>
     <string name="input_receive_address_hint">Please enter recipient Address</string>
     <string name="fee_value">Miner Fee</string>
     <string name="advanced_setup">Advanced</string>
@@ -213,8 +213,8 @@
     <string name="wallet_token_no_assets">No Assets</string>
     <string name="dapp_title">ÐApp</string>
     <string name="import_keystore_error">Import Keystore fail, please input again</string>
-    <string name="qrcode_receive_tips">Please do not deposit any digital assets other than ETH and AppChain to above address</string>
-    <string name="appchain_native_token">AppChain Native Token</string>
+    <string name="qrcode_receive_tips">Please do not deposit any digital assets other than ETH and CITA to above address</string>
+    <string name="cita_native_token">CITA Native Token</string>
 
     <string name="transaction_network">Network：</string>
     <string name="transaction_receiver">To：</string>
@@ -248,7 +248,7 @@
     <string name="neuron_is_a">Neuron is a</string>
     <string name="product">product</string>
     <string name="input_erc20_address">Enter token contract</string>
-    <string name="input_appchain_node">Please input AppChain node url</string>
+    <string name="input_cita_node">Please input CITA node url</string>
     <string name="token_title">Token information</string>
     <string name="token_name_hint">Token Name</string>
     <string name="token_symbol_hint">Token Symbol</string>
@@ -519,7 +519,7 @@ Nervos foundation\n
     <string name="local_currency">Local Currency</string>
     <string name="blockchain">Blockchain</string>
     <string name="contract_address">Contract Address</string>
-    <string name="appchain_node">Node Url</string>
+    <string name="cita_node">Node Url</string>
     <string name="no_more_transaction_data">No more transaction data</string>
     <string name="approximate">≈</string>
     <string name="mnemonic_auth_fail">Mnemonic verify fail</string>

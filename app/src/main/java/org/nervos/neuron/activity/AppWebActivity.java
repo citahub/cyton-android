@@ -31,8 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import org.nervos.neuron.R;
 import org.nervos.neuron.constant.NeuronDAppCallback;
 import org.nervos.neuron.item.App;
-import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.AppTitle;
+import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.dapp.BaseNeuronDAppCallback;
 import org.nervos.neuron.item.dapp.QrCode;
@@ -413,8 +413,8 @@ public class AppWebActivity extends NBaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         if (Transaction.TYPE_ETH.equals(message.value.chainType)) {
             actionSignEth(password, message);
-        } else if (Transaction.TYPE_APPCHAIN.equals(message.value.chainType)) {
-            actionSignAppChain(password, message);
+        } else if (Transaction.TYPE_CITA.equals(message.value.chainType)) {
+            actionSignCITA(password, message);
         }
     }
 
@@ -517,8 +517,8 @@ public class AppWebActivity extends NBaseActivity {
         builder.create().show();
     }
 
-    private void actionSignAppChain(String password, Message<Transaction> message) {
-        SignService.signAppChainMessage(mActivity, message.value.data, password).subscribe(new NeuronSubscriber<String>() {
+    private void actionSignCITA(String password, Message<Transaction> message) {
+        SignService.signCITAMessage(mActivity, message.value.data, password).subscribe(new NeuronSubscriber<String>() {
             @Override
             public void onError(Throwable e) {
                 mSignDialog.dismiss();
