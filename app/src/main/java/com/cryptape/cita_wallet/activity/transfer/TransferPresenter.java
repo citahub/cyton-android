@@ -3,7 +3,7 @@ package com.cryptape.cita_wallet.activity.transfer;
 import android.app.Activity;
 import android.text.TextUtils;
 
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.item.Chain;
 import com.cryptape.cita_wallet.item.Currency;
@@ -11,8 +11,8 @@ import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.item.Wallet;
 import com.cryptape.cita_wallet.item.transaction.AppTransaction;
 import com.cryptape.cita_wallet.service.http.CITARpcService;
-import com.cryptape.cita_wallet.service.http.EthRpcService;
 import com.cryptape.cita_wallet.service.http.CytonSubscriber;
+import com.cryptape.cita_wallet.service.http.EthRpcService;
 import com.cryptape.cita_wallet.service.http.TokenService;
 import com.cryptape.cita_wallet.service.http.WalletService;
 import com.cryptape.cita_wallet.util.ConstantUtil;
@@ -21,6 +21,7 @@ import com.cryptape.cita_wallet.util.NumberUtil;
 import com.cryptape.cita_wallet.util.db.DBWalletUtil;
 import com.cryptape.cita_wallet.util.ether.EtherUtil;
 import com.cryptape.cita_wallet.util.url.HttpCITAUrls;
+
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;
 

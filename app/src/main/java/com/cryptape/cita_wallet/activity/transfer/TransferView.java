@@ -1,7 +1,8 @@
 package com.cryptape.cita_wallet.activity.transfer;
 
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita_wallet.item.Wallet;
+
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 import java.math.BigInteger;

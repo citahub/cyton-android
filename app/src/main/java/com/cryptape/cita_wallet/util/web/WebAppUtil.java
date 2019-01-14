@@ -7,14 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.greenrobot.eventbus.EventBus;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
 import com.cryptape.cita_wallet.BuildConfig;
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.event.AppHistoryEvent;
@@ -25,6 +18,13 @@ import com.cryptape.cita_wallet.service.http.HttpService;
 import com.cryptape.cita_wallet.util.NetworkUtil;
 import com.cryptape.cita_wallet.util.db.DBAppUtil;
 import com.cryptape.cita_wallet.util.url.HttpUrls;
+import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;

@@ -152,7 +152,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'org.web3j:core:3.3.1-android'
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
-    implementation 'io.reactivex:rxjava:1.2.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
@@ -160,11 +160,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/infura-3.3.1-android.jar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation files('libs/abi-0.20.jar')
-    implementation files('libs/core-0.20.jar')
-    implementation files('libs/crypto-0.20.jar')
-    implementation files('libs/protobuf-0.20.jar')
-    implementation files('libs/utils-0.20.jar')
+    implementation files('libs/abi-0.20.3.jar')
+    implementation files('libs/core-0.20.3.jar')
+    implementation files('libs/crypto-0.20.3.jar')
+    implementation files('libs/protobuf-0.20.3.jar')
+    implementation files('libs/utils-0.20.3.jar')
 }
 repositories {
     mavenCentral()

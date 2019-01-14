@@ -2,9 +2,7 @@ package com.cryptape.cita_wallet.service.http;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
 import com.cryptape.cita_wallet.BuildConfig;
 import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.item.Wallet;
@@ -18,6 +16,8 @@ import com.cryptape.cita_wallet.util.NumberUtil;
 import com.cryptape.cita_wallet.util.db.DBWalletUtil;
 import com.cryptape.cita_wallet.util.ether.EtherUtil;
 import com.cryptape.cita_wallet.util.url.HttpCITAUrls;
+import com.google.gson.Gson;
+
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;

@@ -8,9 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.item.App;
 import com.cryptape.cita_wallet.item.Chain;
@@ -19,8 +17,8 @@ import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.item.Wallet;
 import com.cryptape.cita_wallet.item.transaction.AppTransaction;
 import com.cryptape.cita_wallet.service.http.CITARpcService;
-import com.cryptape.cita_wallet.service.http.EthRpcService;
 import com.cryptape.cita_wallet.service.http.CytonSubscriber;
+import com.cryptape.cita_wallet.service.http.EthRpcService;
 import com.cryptape.cita_wallet.service.http.TokenService;
 import com.cryptape.cita_wallet.service.http.WalletService;
 import com.cryptape.cita_wallet.util.ConstantUtil;
@@ -29,6 +27,8 @@ import com.cryptape.cita_wallet.util.NumberUtil;
 import com.cryptape.cita_wallet.util.db.DBWalletUtil;
 import com.cryptape.cita_wallet.view.TitleBar;
 import com.cryptape.cita_wallet.view.dialog.TransferDialog;
+import com.google.gson.Gson;
+
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Numeric;

@@ -13,11 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
-
-import org.greenrobot.eventbus.EventBus;
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.activity.AdvanceSetupActivity;
 import com.cryptape.cita_wallet.activity.NBaseActivity;
@@ -44,6 +40,10 @@ import com.cryptape.cita_wallet.view.dialog.TransferDialog;
 import com.cryptape.cita_wallet.view.dialog.listener.OnDialogCancelClickListener;
 import com.cryptape.cita_wallet.view.dialog.listener.OnDialogOKClickListener;
 import com.cryptape.cita_wallet.view.tool.CytonTextWatcher;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+
+import org.greenrobot.eventbus.EventBus;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.utils.Convert;
 

@@ -2,7 +2,7 @@ package com.cryptape.cita_wallet.util.ether;
 
 import android.text.TextUtils;
 
-import org.nervos.appchain.utils.Numeric;
+import com.cryptape.cita.utils.Numeric;
 import com.cryptape.cita_wallet.item.Chain;
 import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.util.ConstantUtil;

@@ -3,7 +3,7 @@ package com.cryptape.cita_wallet.service.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
+import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
 import com.cryptape.cita_wallet.item.transaction.RpcTransaction;
 import com.cryptape.cita_wallet.util.db.CITATransactionsUtil;
 
