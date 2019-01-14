@@ -15,6 +15,7 @@ import com.cryptape.cita_wallet.util.ConstantUtil
 import com.cryptape.cita_wallet.util.CurrencyUtil
 import com.cryptape.cita_wallet.util.NumberUtil
 import com.cryptape.cita_wallet.util.db.DBWalletUtil
+import com.cryptape.cita_wallet.util.ether.EtherUtil
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
@@ -31,8 +32,8 @@ class AdvanceSetupActivity : NBaseActivity() {
         const val RESULT_TRANSACTION = 0x01
     }
 
-    private var mFeePrice : String = ""
-    private var isTransfer : Boolean = false
+    private var mFeePrice: String = ""
+    private var isTransfer: Boolean = false
     private var isNativeToken = false
 
     private var mAppTransaction: AppTransaction? = null
@@ -101,7 +102,8 @@ class AdvanceSetupActivity : NBaseActivity() {
 
         btn_advance_setup_confirm.setOnClickListener {
             if (TextUtils.isEmpty(et_advance_setup_gas_price.text.toString())) {
-                Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT).show()
+                Toast.makeText(mActivity, R.string.input_correct_gas_price_tip, Toast.LENGTH_SHORT)
+                        .show()
                 return@setOnClickListener
             } else if (mAppTransaction!!.isEthereum && et_advance_setup_gas_price.text.toString().trim().toDouble() < ConstantUtil.MIN_GWEI) {
                 Toast.makeText(mActivity, R.string.gas_price_too_low, Toast.LENGTH_SHORT).show()
@@ -170,18 +172,24 @@ class AdvanceSetupActivity : NBaseActivity() {
         et_advance_setup_gas_price.setText(NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice))
 
         var gasMoney = NumberUtil.getDecimalValid_2(price.toDouble() * mAppTransaction!!.gas)
-        tv_advance_setup_gas_fee.text =
-                String.format("%s %s ≈ %s %s",
-                        NumberUtil.getDecimal8ENotation(mAppTransaction!!.gas),
-                        getNativeToken(),
-                        CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
+        if (EtherUtil.isMainNet()) {
+            tv_advance_setup_gas_fee.text =
+                    String.format("%s %s ≈ %s %s",
+                            NumberUtil.getDecimal8ENotation(mAppTransaction!!.gas),
+                            getNativeToken(),
+                            CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
+        } else {
+            tv_advance_setup_gas_fee.text =
+                    String.format("%s %s",
+                            NumberUtil.getDecimal8ENotation(mAppTransaction!!.gas),
+                            getNativeToken())
+        }
 
         tv_advance_setup_gas_fee_detail.text =
-                String.format("Gas Limit(%s)*Gas Price(%s %s)",
+                String.format("≈Gas Limit(%s)*Gas Price(%s %s)",
                         mAppTransaction!!.gasLimit.toString(),
                         NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice), getFeeUnit())
     }
-
 
 
     private fun requestQuotaPrice() {
@@ -209,15 +217,16 @@ class AdvanceSetupActivity : NBaseActivity() {
                         mAppTransaction!!.quota.toString(), price, getFeeUnit())
     }
 
-    private fun getNativeToken() : String? {
+    private fun getNativeToken(): String? {
         return if (mAppTransaction!!.isEthereum) {
             ConstantUtil.ETH
         } else {
-            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mAppTransaction?.chainId)?.tokenSymbol
+            DBWalletUtil.getChainItemFromCurrentWallet(mActivity, mAppTransaction?.chainId)
+                    ?.tokenSymbol
         }
     }
 
-    private fun getFeeUnit() : String? {
+    private fun getFeeUnit(): String? {
         return if (mAppTransaction!!.isEthereum) getString(R.string.gwei) else getNativeToken()
     }
 

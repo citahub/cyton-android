@@ -404,7 +404,7 @@ public class TransferPresenter {
     }
 
     public String getTransferFee() {
-        if (mTokenPrice > 0) {
+        if (mTokenPrice > 0 && EtherUtil.isMainNet()) {
             return NumberUtil.getDecimal8ENotation(mTransferFee) + getFeeTokenUnit()
                     + " ≈ " + mCurrency.getSymbol() + " "
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);
