@@ -3,6 +3,7 @@ package org.nervos.neuron.item.transaction;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.exception.TransactionFormatException;
 import org.web3j.utils.Numeric;
@@ -12,7 +13,7 @@ import java.math.BigInteger;
 public class AppTransaction implements Parcelable {
 
     private static final String TYPE_ETH = "ETH";
-    private static final String TYPE_APPCHAIN = "AppChain";
+    private static final String TYPE_CITA = "CITA";
 
     public String from;
     public String to;

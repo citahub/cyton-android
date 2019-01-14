@@ -19,7 +19,7 @@ import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.item.Token
 import org.nervos.neuron.item.Wallet
 import org.nervos.neuron.item.transaction.RestTransaction
-import org.nervos.neuron.service.http.AppChainRpcService
+import org.nervos.neuron.service.http.CITARpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.SharePicUtils
@@ -131,7 +131,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
             }
 
             Glide.with(this)
-                    .load(R.drawable.icon_appchain_microscope)
+                    .load(R.drawable.icon_cita_microscope)
                     .into(iv_microscope)
 
             tv_chain_name.text = restTransaction!!.chainName
@@ -197,7 +197,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun initQuotaInfo() {
-        AppChainRpcService.getQuotaPrice(restTransaction!!.from)
+        CITARpcService.getQuotaPrice(restTransaction!!.from)
                 .subscribe(object : NeuronSubscriber<String>() {
                     override fun onNext(price: String) {
                         super.onNext(price)
@@ -255,7 +255,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
                 if (isEther) {
                     SimpleWebActivity.gotoSimpleWeb(this, String.format(EtherUtil.getEtherTransactionDetailUrl(), restTransaction!!.hash))
                 } else {
-                    SimpleWebActivity.gotoSimpleWeb(this, String.format(HttpUrls.APPCHAIN_TEST_TRANSACTION_DETAIL, restTransaction!!.hash))
+                    SimpleWebActivity.gotoSimpleWeb(this, String.format(HttpUrls.CITA_TEST_TRANSACTION_DETAIL, restTransaction!!.hash))
                 }
             }
         }

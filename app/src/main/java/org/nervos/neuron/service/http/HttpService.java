@@ -8,8 +8,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
-import org.nervos.neuron.item.response.AppChainERC20Transaction;
-import org.nervos.neuron.item.response.AppChainTransaction;
+import org.nervos.neuron.item.response.CITAERC20Transaction;
+import org.nervos.neuron.item.response.CITATransaction;
 import org.nervos.neuron.item.response.EthTransaction;
 import org.nervos.neuron.item.response.EthTransactionStatus;
 import org.nervos.neuron.item.transaction.RestTransaction;
@@ -18,7 +18,7 @@ import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.constant.url.HttpAppChainUrls;
+import org.nervos.neuron.constant.url.HttpCITAUrls;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
@@ -120,26 +120,26 @@ public class HttpService {
     }
 
 
-    public static Observable<List<RestTransaction>> getAppChainTransactionList(Context context, int page) {
+    public static Observable<List<RestTransaction>> getCITATransactionList(Context context, int page) {
         Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
-                return Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
+                CITARpcService.init(context, HttpCITAUrls.CITA_NODE_URL);
+                return Objects.requireNonNull(CITARpcService.getMetaData()).getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<RestTransaction>>>() {
             @Override
             public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_TRANSACTION_URL,
+                    String citaUrl = String.format(HttpCITAUrls.CITA_TRANSACTION_URL,
                             wallet.address, page, OFFSET);
-                    final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
-                    Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
+                    final Request citaRequest = new Request.Builder().url(citaUrl).build();
+                    Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
 
-                    String res = appChainCall.execute().body().string();
+                    String res = citaCall.execute().body().string();
 
-                    AppChainTransaction response = new Gson().fromJson(res, AppChainTransaction.class);
+                    CITATransaction response = new Gson().fromJson(res, CITATransaction.class);
                     for (RestTransaction item : response.result.transactions) {
                         item.chainName = result.getChainName();
                         item.value = CurrencyUtil.fmtMicrometer(NumberUtil.getEthFromWeiForStringDecimal8(Numeric.toBigInt(item.value)));
@@ -157,25 +157,25 @@ public class HttpService {
     }
 
 
-    public static Observable<List<RestTransaction>> getAppChainERC20TransactionList(Context context, Token token, int page) {
+    public static Observable<List<RestTransaction>> getCITAERC20TransactionList(Context context, Token token, int page) {
         Wallet wallet = DBWalletUtil.getCurrentWallet(context);
         return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
             @Override
             public AppMetaData.AppMetaDataResult call() {
-                AppChainRpcService.init(context, HttpAppChainUrls.APPCHAIN_NODE_URL);
-                return AppChainRpcService.getMetaData().getAppMetaDataResult();
+                CITARpcService.init(context, HttpCITAUrls.CITA_NODE_URL);
+                return CITARpcService.getMetaData().getAppMetaDataResult();
             }
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<RestTransaction>>>() {
             @Override
             public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String appChainUrl = String.format(HttpAppChainUrls.APPCHAIN_ERC20_TRANSACTION_URL,
+                    String citaUrl = String.format(HttpCITAUrls.CITA_ERC20_TRANSACTION_URL,
                             token.contractAddress, wallet.address, page, OFFSET);
-                    final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
-                    Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
+                    final Request citaRequest = new Request.Builder().url(citaUrl).build();
+                    Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
 
-                    AppChainERC20Transaction response = new Gson().fromJson(appChainCall.execute().body().string(),
-                            AppChainERC20Transaction.class);
+                    CITAERC20Transaction response = new Gson().fromJson(citaCall.execute().body().string(),
+                            CITAERC20Transaction.class);
                     for (RestTransaction item : response.result.transfers) {
                         item.value = (NumberUtil.divideDecimalSub(
                                 new BigDecimal(item.value), token.decimals));
@@ -194,11 +194,11 @@ public class HttpService {
 
 
     public static EthTransactionStatus getEthTransactionStatus(String hash) {
-        String appChainUrl = String.format(EtherUtil.getEtherTransactionStatusUrl(), hash);
-        final Request appChainRequest = new Request.Builder().url(appChainUrl).build();
-        Call appChainCall = HttpService.getHttpClient().newCall(appChainRequest);
+        String citaUrl = String.format(EtherUtil.getEtherTransactionStatusUrl(), hash);
+        final Request citaRequest = new Request.Builder().url(citaUrl).build();
+        Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
         try {
-            return new Gson().fromJson(appChainCall.execute().body().string(),
+            return new Gson().fromJson(citaCall.execute().body().string(),
                     EthTransactionStatus.class);
         } catch (IOException e) {
             e.printStackTrace();

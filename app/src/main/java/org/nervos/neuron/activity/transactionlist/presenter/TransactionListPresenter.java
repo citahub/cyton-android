@@ -4,24 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
-import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.item.transaction.RestTransaction;
+import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.service.http.HttpService;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.CITATransactionsUtil;
 import org.nervos.neuron.util.db.DBEtherTransactionUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
 import org.web3j.utils.Numeric;
-import rx.Observable;
-import rx.Subscriber;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by BaojunCZ on 2018/10/9.
@@ -47,11 +49,11 @@ public class TransactionListPresenter {
             }
             observable = EtherUtil.isEther(token)
                     ? HttpService.getEtherTransactionList(activity, page)
-                    : HttpService.getAppChainTransactionList(activity, page);
+                    : HttpService.getCITATransactionList(activity, page);
         } else {
             observable = EtherUtil.isEther(token)
                     ? HttpService.getEtherERC20TransactionList(activity, token, page)
-                    : HttpService.getAppChainERC20TransactionList(activity, token, page);
+                    : HttpService.getCITAERC20TransactionList(activity, token, page);
         }
         observable.subscribe(new Subscriber<List<RestTransaction>>() {
             @Override
@@ -91,7 +93,7 @@ public class TransactionListPresenter {
                     for (RestTransaction item : list) {
                         item.status = TextUtils.isEmpty(item.errorMessage) ? RpcTransaction.SUCCESS : RpcTransaction.FAILED;
                     }
-                    list = getAppChainTransactionList(activity, token.getChainId(), list);
+                    list = getCITATransactionList(activity, token.getChainId(), list);
                     if (page == 0) {
                         listener.updateNewList(list);
                     } else {
@@ -129,9 +131,9 @@ public class TransactionListPresenter {
         return list;
     }
 
-    private List<RestTransaction> getAppChainTransactionList(Context context, String chainId, List<RestTransaction> list) {
+    private List<RestTransaction> getCITATransactionList(Context context, String chainId, List<RestTransaction> list) {
         Wallet wallet = DBWalletUtil.getCurrentWallet(context);
-        List<RpcTransaction> itemList = DBAppChainTransactionsUtil.getAllTransactionsWithToken(context, chainId, token.contractAddress);
+        List<RpcTransaction> itemList = CITATransactionsUtil.getAllTransactionsWithToken(context, chainId, token.contractAddress);
         if (itemList.size() > 0) {
             Iterator<RpcTransaction> iterator = itemList.iterator();
             while (iterator.hasNext()) {

@@ -39,10 +39,10 @@ public class WalletService {
                         } else {
                             Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
                             token.chainName = Objects.requireNonNull(chain).name;
-                            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+                            CITARpcService.init(context, Objects.requireNonNull(chain).httpProvider);
                             return EtherUtil.isNative(token)
-                                    ? AppChainRpcService.getBalance(address)
-                                    : AppChainRpcService.getErc20Balance(token, address);
+                                    ? CITARpcService.getBalance(address)
+                                    : CITARpcService.getErc20Balance(token, address);
                         }
                     }
                 }).map(balance -> {
@@ -63,10 +63,10 @@ public class WalletService {
         } else {
             Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
             token.chainName = Objects.requireNonNull(chain).name;
-            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+            CITARpcService.init(context, Objects.requireNonNull(chain).httpProvider);
             balanceObservable = EtherUtil.isNative(token)
-                    ? AppChainRpcService.getBalance(wallet.address)
-                    : AppChainRpcService.getErc20Balance(token, wallet.address);
+                    ? CITARpcService.getBalance(wallet.address)
+                    : CITARpcService.getErc20Balance(token, wallet.address);
         }
         return balanceObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -81,8 +81,8 @@ public class WalletService {
         } else {
             Chain chain = DBWalletUtil.getChainItemFromCurrentWallet(context, token.getChainId());
             token.chainName = Objects.requireNonNull(chain).name;
-            AppChainRpcService.init(context, Objects.requireNonNull(chain).httpProvider);
-            balanceObservable = AppChainRpcService.getBalance(wallet.address);
+            CITARpcService.init(context, Objects.requireNonNull(chain).httpProvider);
+            balanceObservable = CITARpcService.getBalance(wallet.address);
         }
         return balanceObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -112,7 +112,7 @@ public class WalletService {
 
     public static void reInitRpcService(Context context) {
         EthRpcService.init(context);
-        AppChainRpcService.init(context);
+        CITARpcService.init(context);
     }
 
 }

@@ -31,11 +31,11 @@ public interface TransferView {
 
     void initTransferFeeView();
 
-    void updateAppChainQuota(String quotaFee);
+    void updateCITAQuota(String quotaFee);
 
-    void transferAppChainSuccess(AppSendTransaction appSendTransaction);
+    void transferCITASuccess(AppSendTransaction appSendTransaction);
 
-    void transferAppChainFail(Throwable e);
+    void transferCITAFail(Throwable e);
 
     void transferEtherSuccess(EthSendTransaction ethSendTransaction);
 

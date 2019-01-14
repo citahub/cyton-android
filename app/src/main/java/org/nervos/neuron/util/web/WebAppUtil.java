@@ -6,10 +6,9 @@ import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,15 +20,11 @@ import org.nervos.neuron.R;
 import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.App;
 import org.nervos.neuron.item.Chain;
-import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.CITARpcService;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
 import org.nervos.neuron.constant.url.HttpUrls;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -40,6 +35,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by duanyytop on 2018/5/24
@@ -86,8 +89,8 @@ public class WebAppUtil {
         }).flatMap(new Func1<Chain, Observable<Chain>>() {
             @Override
             public Observable<Chain> call(Chain chain) {
-                AppChainRpcService.init(webView.getContext(), chain.httpProvider);
-                AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(AppChainRpcService.getMetaData()).getAppMetaDataResult();
+                CITARpcService.init(webView.getContext(), chain.httpProvider);
+                AppMetaData.AppMetaDataResult ethMetaData = Objects.requireNonNull(CITARpcService.getMetaData()).getAppMetaDataResult();
                 if (ethMetaData != null) {
                     chain.setChainId(ethMetaData.getChainIdV1());
                     chain.name = ethMetaData.getChainName();

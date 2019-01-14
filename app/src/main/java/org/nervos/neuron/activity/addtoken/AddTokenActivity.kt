@@ -16,13 +16,13 @@ import org.nervos.neuron.event.AddTokenRefreshEvent
 import org.nervos.neuron.item.Chain
 import org.nervos.neuron.item.Token
 import org.nervos.neuron.item.Wallet
-import org.nervos.neuron.service.http.AppChainRpcService
+import org.nervos.neuron.service.http.CITARpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.qrcode.CodeUtils
-import org.nervos.neuron.constant.url.HttpAppChainUrls
+import org.nervos.neuron.constant.url.HttpCITAUrls
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.dialog.SimpleSelectDialog
 import org.nervos.neuron.view.dialog.TokenInfoDialog
@@ -52,7 +52,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
 
     override fun initData() {
         edit_add_token_contract_address.gravity = Gravity.END
-        AppChainRpcService.init(this, HttpAppChainUrls.APPCHAIN_NODE_URL)
+        CITARpcService.init(this, HttpCITAUrls.CITA_NODE_URL)
 
         manager = AddTokenManager(this)
         mWallet = DBWalletUtil.getCurrentWallet(this)
@@ -92,11 +92,11 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                             }
                         })
             } else {
-                manager!!.loadAppChain(edit_add_token_contract_address.text!!)
+                manager!!.loadCITA(edit_add_token_contract_address.text!!)
                         .subscribe(object : NeuronSubscriber<Chain>() {
                             override fun onError(e: Throwable?) {
                                 dismissProgressBar()
-                                Toast.makeText(mActivity, resources.getString(R.string.appchain_node_error), Toast.LENGTH_LONG)
+                                Toast.makeText(mActivity, resources.getString(R.string.cita_node_error), Toast.LENGTH_LONG)
                                         .show()
                             }
 
@@ -139,8 +139,8 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                 dialog.setOnOkListener(View.OnClickListener {
                     tv_chain_name.text = mChainNameList!![dialog.mSelected]
                     if (dialog.mSelected == mChainNameList!!.size - 1) {
-                        tv_add_token_contract_address.text = resources.getString(R.string.appchain_node)
-                        edit_add_token_contract_address.hint = R.string.input_appchain_node
+                        tv_add_token_contract_address.text = resources.getString(R.string.cita_node)
+                        edit_add_token_contract_address.hint = R.string.input_cita_node
                         mChain = null
                     } else {
                         tv_add_token_contract_address.text = resources.getString(R.string.contract_address)

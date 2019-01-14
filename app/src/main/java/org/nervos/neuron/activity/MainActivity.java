@@ -15,14 +15,14 @@ import org.nervos.neuron.fragment.AppFragment;
 import org.nervos.neuron.fragment.SettingsFragment;
 import org.nervos.neuron.fragment.wallet.WalletFragment;
 import org.nervos.neuron.item.Token;
-import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.CITARpcService;
 import org.nervos.neuron.service.http.EthRpcService;
-import org.nervos.neuron.service.intent.AppChainTransactionCheckService;
+import org.nervos.neuron.service.intent.CITATransactionCheckService;
 import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
-import org.nervos.neuron.constant.url.HttpAppChainUrls;
+import org.nervos.neuron.constant.url.HttpCITAUrls;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,18 +64,18 @@ public class MainActivity extends NBaseActivity {
     protected void initData() {
         fMgr = getSupportFragmentManager();
 
-        startCheckAppChainTransaction();
+        startCheckCITATransaction();
         startCheckEtherTransaction();
     }
 
-    private void startCheckAppChainTransaction() {
-        AppChainRpcService.init(mActivity, HttpAppChainUrls.APPCHAIN_NODE_URL);
+    private void startCheckCITATransaction() {
+        CITARpcService.init(mActivity, HttpCITAUrls.CITA_NODE_URL);
         Intent intent = new Intent();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                AppChainTransactionCheckService.enqueueWork(mActivity, intent);
+                CITATransactionCheckService.enqueueWork(mActivity, intent);
             }
         }, 0, APPCAHIN_TRANSACTION_FETCH_PERIOD);
     }

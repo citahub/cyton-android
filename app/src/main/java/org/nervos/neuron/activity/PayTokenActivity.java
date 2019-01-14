@@ -18,7 +18,7 @@ import org.nervos.neuron.item.Currency;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.AppTransaction;
-import org.nervos.neuron.service.http.AppChainRpcService;
+import org.nervos.neuron.service.http.CITARpcService;
 import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
@@ -204,7 +204,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
     }
 
     private void getQuotaPrice() {
-        AppChainRpcService.getQuotaPrice(mWallet.address).subscribe(new NeuronSubscriber<String>() {
+        CITARpcService.getQuotaPrice(mWallet.address).subscribe(new NeuronSubscriber<String>() {
             @Override
             public void onNext(String price) {
                 super.onNext(price);
@@ -237,7 +237,7 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 if (mAppTransaction.isEthereum()) {
                     transferEth(password, progressBar);
                 } else {
-                    transferAppChain(password, progressBar);
+                    transferCITA(password, progressBar);
                 }
             }
         });
@@ -287,9 +287,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
                 });
     }
 
-    private void transferAppChain(String password, ProgressBar progressBar) {
-        AppChainRpcService.setHttpProvider(mChain.httpProvider);
-        AppChainRpcService.transferAppChain(mActivity, mAppTransaction.to,
+    private void transferCITA(String password, ProgressBar progressBar) {
+        CITARpcService.setHttpProvider(mChain.httpProvider);
+        CITARpcService.transferCITA(mActivity, mAppTransaction.to,
                 mAppTransaction.getStringValue(),
                 mAppTransaction.data, mAppTransaction.getQuota().longValue(),
                 Numeric.toBigInt(mAppTransaction.chainId), password)
@@ -336,9 +336,9 @@ public class PayTokenActivity extends NBaseActivity implements View.OnClickListe
 
 
     /**
-     * handle appchain transfer result
+     * handle cita transfer result
      *
-     * @param appSendTransaction result of appchain transaction
+     * @param appSendTransaction result of cita transaction
      */
     private void handleTransfer(AppSendTransaction appSendTransaction) {
         mTransferDialog.setButtonClickAble(true);

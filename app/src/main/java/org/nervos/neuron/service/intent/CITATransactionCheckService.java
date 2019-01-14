@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.JobIntentService;
 
-import org.nervos.neuron.service.http.AppChainTransactionService;
+import org.nervos.neuron.service.http.CITATransactionService;
 
 /**
  * Created by BaojunCZ on 2018/10/11.
  */
-public class AppChainTransactionCheckService extends JobIntentService {
+public class CITATransactionCheckService extends JobIntentService {
 
     /**
      * Unique job ID for this service.
@@ -20,12 +20,12 @@ public class AppChainTransactionCheckService extends JobIntentService {
      * Convenience method for enqueuing work in to this service.
      */
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, AppChainTransactionCheckService.class, JOB_ID, work);
+        enqueueWork(context, CITATransactionCheckService.class, JOB_ID, work);
     }
 
     @Override
     protected void onHandleWork(Intent intent) {
-        AppChainTransactionService.checkTransactionStatus(this);
+        CITATransactionService.checkTransactionStatus(this);
     }
 
 }

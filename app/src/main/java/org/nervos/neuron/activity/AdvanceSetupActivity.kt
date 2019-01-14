@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_advance_setup.*
 import org.nervos.neuron.R
 
 import org.nervos.neuron.item.transaction.AppTransaction
-import org.nervos.neuron.service.http.AppChainRpcService
+import org.nervos.neuron.service.http.CITARpcService
 import org.nervos.neuron.service.http.NeuronSubscriber
 import org.nervos.neuron.service.http.TokenService
 import org.nervos.neuron.constant.ConstantUtil
@@ -185,7 +185,7 @@ class AdvanceSetupActivity : NBaseActivity() {
 
 
     private fun requestQuotaPrice() {
-        AppChainRpcService.getQuotaPrice(mAppTransaction!!.from)
+        CITARpcService.getQuotaPrice(mAppTransaction!!.from)
                 .subscribe(object : NeuronSubscriber<String>() {
                     override fun onNext(price: String) {
                         super.onNext(price)

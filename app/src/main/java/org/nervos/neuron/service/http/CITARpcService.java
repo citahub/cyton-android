@@ -20,7 +20,7 @@ import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
-import org.nervos.neuron.util.db.DBAppChainTransactionsUtil;
+import org.nervos.neuron.util.db.CITATransactionsUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.exception.TransactionErrorException;
 import org.web3j.abi.FunctionEncoder;
@@ -55,7 +55,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by duanyytop on 2018/4/17
  */
-public class AppChainRpcService {
+public class CITARpcService {
 
     private static final String TRANSFER_FAIL = "Transfer fail";
     private static ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -197,7 +197,7 @@ public class AppChainRpcService {
     }
 
 
-    public static Observable<AppSendTransaction> transferAppChain(Context context, String toAddress, String value,
+    public static Observable<AppSendTransaction> transferCITA(Context context, String toAddress, String value,
                                                                   String data, long quota, BigInteger chainId, String password) {
 
         return getValidUntilBlock()
@@ -248,7 +248,7 @@ public class AppChainRpcService {
             item.gasLimit = limit;
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
-            DBAppChainTransactionsUtil.save(context, item);
+            CITATransactionsUtil.save(context, item);
         });
 
     }

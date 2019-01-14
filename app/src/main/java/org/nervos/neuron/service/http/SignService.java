@@ -57,7 +57,7 @@ public class SignService {
     }
 
 
-    public static Observable<String> signAppChainMessage(
+    public static Observable<String> signCITAMessage(
             Context context, String message, String password) {
         return Observable.fromCallable(new Callable<String>() {
             @Override
