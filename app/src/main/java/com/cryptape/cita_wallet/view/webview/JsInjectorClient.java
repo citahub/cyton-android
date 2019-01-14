@@ -89,7 +89,7 @@ class JsInjectorClient {
 
     String assembleJs(Context context, String template) {
         if (TextUtils.isEmpty(jsLibrary)) {
-            jsLibrary = loadFile(context, R.raw.neuron);
+            jsLibrary = loadFile(context, R.raw.cyton);
         }
         String initJs = loadInitJs(context);
         return String.format(template, jsLibrary, initJs);

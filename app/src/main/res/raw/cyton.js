@@ -46335,7 +46335,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
     case 'sendTransaction':
       console.log("sendTransaction")
       txParams = payload.params[0]
-      txParams.chainType = "AppChain"
+      txParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processTransaction(txParams, cb),
@@ -46344,7 +46344,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
 
     case 'signTransaction':
       txParams = payload.params[0]
-      txParams.chainType = "AppChain"
+      txParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateTransaction(txParams, cb),
         (cb) => self.processSignTransaction(txParams, cb),
@@ -46362,18 +46362,18 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "AppChain"
+      msgParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validateMessage(msgParams, cb),
         (cb) => self.processMessage(msgParams, cb),
       ], end)
       return
 
-    // come from personal_sign of ethereum  
+    // come from personal_sign of ethereum
     case 'neuron_sign':
       // process normally
-      const first_neuron = payload.params[1]
-      const second_neuron = payload.params[2]
+      const first_cyton = payload.params[1]
+      const second_cyton = payload.params[2]
 
       // We initially incorrectly ordered these parameters.
       // To gracefully respect users who adopted this API early,
@@ -46382,7 +46382,7 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
       //
       // That means when the first param is definitely an address,
       // and the second param is definitely not, but is hex.
-      if (resemblesData(second_neuron) && resemblesAddress(first_neuron)) {
+      if (resemblesData(second_cyton) && resemblesAddress(first_cyton)) {
         let warning = `The eth_personalSign method requires params ordered `
         warning += `[message, address]. This was previously handled incorrectly, `
         warning += `and has been corrected automatically. `
@@ -46403,12 +46403,12 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
         from: address,
         data: message,
       })
-      msgParams.chainType = "AppChain"
+      msgParams.chainType = "CITA"
       waterfall([
         // (cb) => self.validatePersonalMessage(msgParams, cb),
         (cb) => self.processPersonalMessage(msgParams, cb),
       ], end)
-      return  
+      return
 
     default:
       next()
@@ -46995,7 +46995,7 @@ function estimateGas(provider, txParams, cb) {
       if (err.message === 'no contract code at given address') {
         return cb(null, '0xcf08')
       } else {
-        return cb(err)        
+        return cb(err)
       }
     }
     cb(null, res.result)
@@ -48427,7 +48427,7 @@ module.exports = SolidityTypeInt;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file param.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -48446,7 +48446,7 @@ var SolidityParam = function (value, offset) {
 
 /**
  * This method should be used to get length of params's dynamic part
- * 
+ *
  * @method dynamicPartLength
  * @returns {Number} length of dynamic part (in bytes)
  */
@@ -48474,7 +48474,7 @@ SolidityParam.prototype.withOffset = function (offset) {
  * @param {SolidityParam} result of combination
  */
 SolidityParam.prototype.combine = function (param) {
-    return new SolidityParam(this.value + param.value); 
+    return new SolidityParam(this.value + param.value);
 };
 
 /**
@@ -48506,8 +48506,8 @@ SolidityParam.prototype.offsetAsBytes = function () {
  */
 SolidityParam.prototype.staticPart = function () {
     if (!this.isDynamic()) {
-        return this.value; 
-    } 
+        return this.value;
+    }
     return this.offsetAsBytes();
 };
 
@@ -48539,7 +48539,7 @@ SolidityParam.prototype.encode = function () {
  * @returns {String}
  */
 SolidityParam.encodeList = function (params) {
-    
+
     // updating offsets
     var totalOffset = params.length * 32;
     var offsetParams = params.map(function (param) {
@@ -48981,13 +48981,13 @@ if (typeof XMLHttpRequest === 'undefined') {
 
 /**
  * Utils
- * 
+ *
  * @module utils
  */
 
 /**
  * Utility functions
- * 
+ *
  * @class [utils] config
  * @constructor
  */
@@ -49054,7 +49054,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file sha3.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -49985,7 +49985,7 @@ module.exports = AllSolidityEvents;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file batch.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -50030,7 +50030,7 @@ Batch.prototype.execute = function () {
                 requests[index].callback(null, (requests[index].format ? requests[index].format(result.result) : result.result));
             }
         });
-    }); 
+    });
 };
 
 module.exports = Batch;
@@ -50365,7 +50365,7 @@ module.exports = ContractFactory;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file errors.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -50641,7 +50641,7 @@ var extend = function (web3) {
         }
     };
 
-    ex.formatters = formatters; 
+    ex.formatters = formatters;
     ex.utils = utils;
     ex.Method = Method;
     ex.Property = Property;
@@ -51681,7 +51681,7 @@ module.exports = HttpProvider;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file iban.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -51881,7 +51881,7 @@ Iban.prototype.address = function () {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);
         return padLeft(asBn.toString(16), 20);
-    } 
+    }
 
     return '';
 };
@@ -51926,7 +51926,7 @@ var IpcProvider = function (path, net) {
     var _this = this;
     this.responseCallbacks = {};
     this.path = path;
-    
+
     this.connection = net.connect({path: this.path});
 
     this.connection.on('error', function(e){
@@ -51936,7 +51936,7 @@ var IpcProvider = function (path, net) {
 
     this.connection.on('end', function(){
         _this._timeout();
-    }); 
+    });
 
 
     // LISTEN FOR CONNECTION RESPONSES
@@ -51975,7 +51975,7 @@ Will parse the response and make an array out of it.
 IpcProvider.prototype._parseResponse = function(data) {
     var _this = this,
         returnValues = [];
-    
+
     // DE-CHUNKER
     var dechunkedData = data
         .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
@@ -52079,7 +52079,7 @@ IpcProvider.prototype.send = function (payload) {
         try {
             result = JSON.parse(data);
         } catch(e) {
-            throw errors.InvalidResponse(data);                
+            throw errors.InvalidResponse(data);
         }
 
         return result;
@@ -52254,7 +52254,7 @@ Method.prototype.extractCallback = function (args) {
 
 /**
  * Should be called to check if the number of arguments is correct
- * 
+ *
  * @method validateArgs
  * @param {Array} arguments
  * @throws {Error} if it is not
@@ -52267,7 +52267,7 @@ Method.prototype.validateArgs = function (args) {
 
 /**
  * Should be called to format input args of method
- * 
+ *
  * @method formatInput
  * @param {Array}
  * @return {Array}
@@ -52321,7 +52321,7 @@ Method.prototype.attachToObject = function (obj) {
         obj[name[0]] = obj[name[0]] || {};
         obj[name[0]][name[1]] = func;
     } else {
-        obj[name[0]] = func; 
+        obj[name[0]] = func;
     }
 };
 
@@ -52384,8 +52384,8 @@ var DB = function (web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
-    
-    methods().forEach(function(method) { 
+
+    methods().forEach(function(method) {
         method.attachToObject(self);
         method.setRequestManager(web3._requestManager);
     });
@@ -52810,7 +52810,7 @@ var Net = function (web3) {
 
     var self = this;
 
-    properties().forEach(function(p) { 
+    properties().forEach(function(p) {
         p.attachToObject(self);
         p.setRequestManager(web3._requestManager);
     });
@@ -53369,7 +53369,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file namereg.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -53556,7 +53556,7 @@ module.exports = Property;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file requestmanager.js
  * @author Jeffrey Wilcke <jeff@ethdev.com>
  * @author Marek Kotewicz <marek@ethdev.com>
@@ -53623,7 +53623,7 @@ RequestManager.prototype.sendAsync = function (data, callback) {
         if (err) {
             return callback(err);
         }
-        
+
         if (!Jsonrpc.isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
@@ -53656,7 +53656,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
         }
 
         callback(err, results);
-    }); 
+    });
 };
 
 /**
@@ -53760,7 +53760,7 @@ RequestManager.prototype.poll = function () {
     }
 
     var payload = Jsonrpc.toBatchPayload(pollsData);
-    
+
     // map the request id to they poll id
     var pollsIdMap = {};
     payload.forEach(function(load, index){
@@ -53790,7 +53790,7 @@ RequestManager.prototype.poll = function () {
             } else
                 return false;
         }).filter(function (result) {
-            return !!result; 
+            return !!result;
         }).filter(function (result) {
             var valid = Jsonrpc.isValidResponse(result);
             if (!valid) {
@@ -53865,16 +53865,16 @@ var pollSyncing = function(self) {
 
         self.callbacks.forEach(function (callback) {
             if (self.lastSyncState !== sync) {
-                
+
                 // call the callback with true first so the app can stop anything, before receiving the sync data
                 if(!self.lastSyncState && utils.isObject(sync))
                     callback(null, true);
-                
+
                 // call on the next CPU cycle, so the actions of the sync stop can be processes first
                 setTimeout(function() {
                     callback(null, sync);
                 }, 0);
-                
+
                 self.lastSyncState = sync;
             }
         });
@@ -53929,7 +53929,7 @@ module.exports = IsSyncing;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file transfer.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -53948,7 +53948,7 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Function} callback, callback
  */
 var transfer = function (eth, from, to, value, callback) {
-    var iban = new Iban(to); 
+    var iban = new Iban(to);
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
@@ -53956,7 +53956,7 @@ var transfer = function (eth, from, to, value, callback) {
     if (iban.isDirect()) {
         return transferToAddress(eth, from, iban.address(), value, callback);
     }
-    
+
     if (!callback) {
         var address = eth.icapNamereg().addr(iban.institution());
         return deposit(eth, from, address, value, iban.client());
@@ -53965,7 +53965,7 @@ var transfer = function (eth, from, to, value, callback) {
     eth.icapNamereg().addr(iban.institution(), function (err, address) {
         return deposit(eth, from, address, value, iban.client(), callback);
     });
-    
+
 };
 
 /**
@@ -54051,12 +54051,12 @@ var callbacks = {};
 var hookedSubProvider = void 0;
 var globalSyncOptions = {};
 
-var Neuron = {
+var Cyton = {
   init: function init(rpcUrl, options, syncOptions) {
     var engine = new ProviderEngine();
     var web3 = new Web3(engine);
     context.web3 = web3;
-    context.appchain = web3;
+    context.cita = web3;
 
     globalSyncOptions = syncOptions;
 
@@ -54068,7 +54068,7 @@ var Neuron = {
     engine.on('error', function (err) {
       return console.error(err.stack);
     });
-    engine.isNeuron = true;
+    engine.isCyton = true;
     engine.start();
 
     return engine;
@@ -54098,8 +54098,8 @@ var Neuron = {
   }
 };
 
-if (typeof context.Neuron === 'undefined') {
-  context.Neuron = Neuron;
+if (typeof context.Cyton === 'undefined') {
+  context.Cyton = Cyton;
 }
 
 ProviderEngine.prototype.setHost = function (host) {
@@ -54144,7 +54144,7 @@ ProviderEngine.prototype.send = function (payload) {
 
     // throw not-supported Error
     default:
-      var message = 'The Neuron Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
+      var message = 'The Cyton Web3 object does not support synchronous methods like ' + payload.method + ' without a callback parameter.';
       throw new Error(message);
   }
   // return the result
@@ -54164,7 +54164,7 @@ ProviderEngine.prototype.isConnected = function () {
   }).result;
 };
 
-module.exports = Neuron;
+module.exports = Cyton;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"web3":297,"web3-provider-engine":283,"web3-provider-engine/subproviders/cache.js":284,"web3-provider-engine/subproviders/filters.js":285,"web3-provider-engine/subproviders/hooked-wallet.js":286,"web3-provider-engine/subproviders/provider.js":287,"web3-provider-engine/subproviders/subscriptions.js":289}]},{},[349]);

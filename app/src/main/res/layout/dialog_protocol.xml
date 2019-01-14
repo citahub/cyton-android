@@ -10,7 +10,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="7dp"
         android:gravity="center"
-        android:text="@string/protocol_neuron_name"
+        android:text="@string/protocol_cyton_name"
         android:textColor="@color/font_title"
         android:textSize="16sp" />
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:text="@string/protocol_neuron1"
+                android:text="@string/protocol_cyton1"
                 android:textColor="@color/font_title"
                 android:textSize="14sp" />
 
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:text="@string/protocol_neuron2"
+                android:text="@string/protocol_cyton2"
                 android:textColor="@color/font_title"
                 android:textSize="14sp" />
         </LinearLayout>

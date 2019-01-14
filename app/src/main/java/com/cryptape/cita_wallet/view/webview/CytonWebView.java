@@ -30,7 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class NeuronWebView extends WebView {
+public class CytonWebView extends WebView {
     private static final String JS_PROTOCOL_CANCELLED = "cancelled";
     private static final String JS_PROTOCOL_ON_SUCCESSFUL = "onSignSuccessful(%1$s, \"%2$s\")";
     private static final String JS_PROTOCOL_ON_FAILURE = "onSignError(%1$s, \"%2$s\")";
@@ -47,19 +47,19 @@ public class NeuronWebView extends WebView {
     @Nullable
     private OnSignTypedMessageListener onSignTypedMessageListener;
     private JsInjectorClient jsInjectorClient;
-    private NeuronWebViewClient webViewClient;
+    private CytonWebViewClient webViewClient;
 
-    public NeuronWebView(@NonNull Context context) {
+    public CytonWebView(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public NeuronWebView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CytonWebView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public NeuronWebView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CytonWebView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -77,7 +77,7 @@ public class NeuronWebView extends WebView {
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
         jsInjectorClient = new JsInjectorClient(getContext());
-        webViewClient = new NeuronWebViewClient(jsInjectorClient, new UrlHandlerManager());
+        webViewClient = new CytonWebViewClient(jsInjectorClient, new UrlHandlerManager());
         WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -94,7 +94,7 @@ public class NeuronWebView extends WebView {
                 innerOnSignTransactionListener,
                 innerOnSignMessageListener,
                 innerOnSignPersonalMessageListener,
-                innerOnSignTypedMessageListener), "neuronSign");
+                innerOnSignTypedMessageListener), "cytonSign");
 
         super.setWebViewClient(webViewClient);
     }
@@ -231,11 +231,11 @@ public class NeuronWebView extends WebView {
     };
 
     private class WrapWebViewClient extends WebViewClient {
-        private final NeuronWebViewClient internalClient;
+        private final CytonWebViewClient internalClient;
         private final WebViewClient externalClient;
         private final JsInjectorClient jsInjectorClient;
 
-        public WrapWebViewClient(NeuronWebViewClient internalClient, WebViewClient externalClient, JsInjectorClient jsInjectorClient) {
+        public WrapWebViewClient(CytonWebViewClient internalClient, WebViewClient externalClient, JsInjectorClient jsInjectorClient) {
             this.internalClient = internalClient;
             this.externalClient = externalClient;
             this.jsInjectorClient = jsInjectorClient;

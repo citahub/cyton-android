@@ -29,16 +29,16 @@ import com.yanzhenjie.permission.Permission;
 
 import org.jetbrains.annotations.NotNull;
 import com.cryptape.cita_wallet.R;
-import com.cryptape.cita_wallet.constant.NeuronDAppCallback;
+import com.cryptape.cita_wallet.constant.CytonDAppCallback;
 import com.cryptape.cita_wallet.item.App;
 import com.cryptape.cita_wallet.item.AppTitle;
 import com.cryptape.cita_wallet.item.Chain;
 import com.cryptape.cita_wallet.item.Wallet;
-import com.cryptape.cita_wallet.item.dapp.BaseNeuronDAppCallback;
+import com.cryptape.cita_wallet.item.dapp.BaseCytonDAppCallback;
 import com.cryptape.cita_wallet.item.dapp.QrCode;
 import com.cryptape.cita_wallet.item.transaction.AppTransaction;
-import com.cryptape.cita_wallet.plugin.NeuronDAppPlugin;
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber;
+import com.cryptape.cita_wallet.plugin.CytonDAppPlugin;
+import com.cryptape.cita_wallet.service.http.CytonSubscriber;
 import com.cryptape.cita_wallet.service.http.SignService;
 import com.cryptape.cita_wallet.service.http.WalletService;
 import com.cryptape.cita_wallet.constant.ConstantUtil;
@@ -55,7 +55,7 @@ import com.cryptape.cita_wallet.util.web.WebAppUtil;
 import com.cryptape.cita_wallet.view.WebErrorView;
 import com.cryptape.cita_wallet.view.WebMenuPopupWindow;
 import com.cryptape.cita_wallet.view.dialog.SignDialog;
-import com.cryptape.cita_wallet.view.webview.NeuronWebView;
+import com.cryptape.cita_wallet.view.webview.CytonWebView;
 import com.cryptape.cita_wallet.view.webview.SimpleWebViewClient;
 import com.cryptape.cita_wallet.view.webview.item.Address;
 import com.cryptape.cita_wallet.view.webview.item.Message;
@@ -83,7 +83,7 @@ public class AppWebActivity extends NBaseActivity {
     public static final int RESULT_CODE_SCAN_QRCODE = 0x05;
     public static ValueCallback<Uri[]> mFilePathCallbacks;
 
-    private NeuronWebView webView;
+    private CytonWebView webView;
     private TextView titleText;
     private ProgressBar progressBar;
     private SignDialog mSignDialog;
@@ -97,7 +97,7 @@ public class AppWebActivity extends NBaseActivity {
     private Transaction signTransaction;
     private String url;
     private boolean isPersonalSign = false;
-    private NeuronDAppPlugin mNeuronDAppPlugin = null;
+    private CytonDAppPlugin mCytonDAppPlugin = null;
     private String mCallback, mPhotoPath;
 
     @Override
@@ -125,8 +125,8 @@ public class AppWebActivity extends NBaseActivity {
             Toast.makeText(mActivity, R.string.no_wallet_suggestion, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mActivity, AddWalletActivity.class));
         }
-        mNeuronDAppPlugin = new NeuronDAppPlugin(this, webView);
-        mNeuronDAppPlugin.setImpl(mNeuronDAppPluginImpl);
+        mCytonDAppPlugin = new CytonDAppPlugin(this, webView);
+        mCytonDAppPlugin.setImpl(mCytonDAppPluginImpl);
         WebAppUtil.init();
         WebAppUtil.loadUrl(webView, url);
         initManifest(url);
@@ -249,7 +249,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initManifest(String url) {
-        WebAppUtil.getHttpManifest(webView, url).subscribe(new NeuronSubscriber<Chain>() {
+        WebAppUtil.getHttpManifest(webView, url).subscribe(new CytonSubscriber<Chain>() {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
@@ -300,7 +300,7 @@ public class AppWebActivity extends NBaseActivity {
         webView.setChainId(1);
         webView.setRpcUrl(EtherUtil.getEthNodeUrl());
         webView.setWalletAddress(new Address(wallet.address));
-        webView.addJavascriptInterface(mNeuronDAppPlugin, "neuron");
+        webView.addJavascriptInterface(mCytonDAppPlugin, "cyton");
         webView.addJavascriptInterface(new WebTitleBar(), "webTitleBar");
         webView.setOnSignTransactionListener(transaction -> {
             signTxAction(transaction);
@@ -518,7 +518,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void actionSignCITA(String password, Message<Transaction> message) {
-        SignService.signCITAMessage(mActivity, message.value.data, password).subscribe(new NeuronSubscriber<String>() {
+        SignService.signCITAMessage(mActivity, message.value.data, password).subscribe(new CytonSubscriber<String>() {
             @Override
             public void onError(Throwable e) {
                 mSignDialog.dismiss();
@@ -607,8 +607,8 @@ public class AppWebActivity extends NBaseActivity {
                             }
                             if (fail) {
                                 if (!TextUtils.isEmpty(mCallback)) {
-                                    BaseNeuronDAppCallback errorItem = new BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
-                                            NeuronDAppCallback.USER_CANCEL_CODE, NeuronDAppCallback.USER_CANCEL);
+                                    BaseCytonDAppCallback errorItem = new BaseCytonDAppCallback(CytonDAppCallback.ERROR_CODE,
+                                            CytonDAppCallback.USER_CANCEL_CODE, CytonDAppCallback.USER_CANCEL);
                                     JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                                 }
                             }
@@ -616,8 +616,8 @@ public class AppWebActivity extends NBaseActivity {
                         break;
                     default:
                         if (!TextUtils.isEmpty(mCallback)) {
-                            BaseNeuronDAppCallback errorItem = new BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
-                                    NeuronDAppCallback.UNKNOWN_ERROR_CODE, NeuronDAppCallback.UNKNOWN_ERROR);
+                            BaseCytonDAppCallback errorItem = new BaseCytonDAppCallback(CytonDAppCallback.ERROR_CODE,
+                                    CytonDAppCallback.UNKNOWN_ERROR_CODE, CytonDAppCallback.UNKNOWN_ERROR);
                             JSLoadUtils.INSTANCE.loadFunc(webView, mCallback, new Gson().toJson(errorItem));
                         }
                         break;
@@ -640,7 +640,7 @@ public class AppWebActivity extends NBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private NeuronDAppPlugin.NeuronDAppPluginImpl mNeuronDAppPluginImpl = new NeuronDAppPlugin.NeuronDAppPluginImpl() {
+    private CytonDAppPlugin.CytonDAppPluginImpl mCytonDAppPluginImpl = new CytonDAppPlugin.CytonDAppPluginImpl() {
         @Override
         public void scanCode(@NotNull String callback) {
             mCallback = callback;

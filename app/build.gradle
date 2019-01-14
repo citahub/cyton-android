@@ -55,10 +55,10 @@ android {
                 output.assemble.dependsOn lintTask
 
                 if (variant.buildType.name == 'release') {
-                    def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
+                    def apkName = "cyton_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
                     outputFileName = new File(apkName)
                 } else {
-                    def apkName = "neuron_v${getVersionName(true)}.apk"
+                    def apkName = "cyton_v${getVersionName(true)}.apk"
                     outputFileName = new File(apkName)
                 }
             }

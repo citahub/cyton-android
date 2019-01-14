@@ -11,10 +11,10 @@ import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.Permission
 import com.cryptape.cita_wallet.activity.AppWebActivity.RESULT_CODE_SCAN_QRCODE
 import com.cryptape.cita_wallet.activity.QrCodeActivity
-import com.cryptape.cita_wallet.constant.NeuronDAppCallback
+import com.cryptape.cita_wallet.constant.CytonDAppCallback
 import com.cryptape.cita_wallet.item.dapp.DeviceMotion
 import com.cryptape.cita_wallet.item.dapp.Gyroscope
-import com.cryptape.cita_wallet.item.dapp.BaseNeuronDAppCallback
+import com.cryptape.cita_wallet.item.dapp.BaseCytonDAppCallback
 import com.cryptape.cita_wallet.util.JSLoadUtils
 import com.cryptape.cita_wallet.util.SensorUtils
 import com.cryptape.cita_wallet.util.db.DBWalletUtil
@@ -22,17 +22,17 @@ import com.cryptape.cita_wallet.util.permission.PermissionUtil
 import com.cryptape.cita_wallet.util.permission.RuntimeRationale
 import java.util.*
 
-class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: WebView) {
+class CytonDAppPlugin(private val mContext: Activity, private val mWebView: WebView) {
 
     companion object {
         const val PERMISSION_CAMERA = "CAMERA"
         const val PERMISSION_STORAGE = "STORAGE"
     }
 
-    private var mImpl: NeuronDAppPluginImpl? = null
+    private var mImpl: CytonDAppPluginImpl? = null
     private var mSensorUtils = SensorUtils(mContext)
 
-    fun setImpl(impl: NeuronDAppPluginImpl) {
+    fun setImpl(impl: CytonDAppPluginImpl) {
         mImpl = impl
     }
 
@@ -67,15 +67,15 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
                 }
                 .onDenied { permissions ->
                     PermissionUtil.showSettingDialog(mContext, permissions)
-                    var qrCodeItem = BaseNeuronDAppCallback(NeuronDAppCallback.ERROR_CODE,
-                            NeuronDAppCallback.PERMISSION_DENIED_CODE,
-                            NeuronDAppCallback.PERMISSION_DENIED)
+                    var qrCodeItem = BaseCytonDAppCallback(CytonDAppCallback.ERROR_CODE,
+                            CytonDAppCallback.PERMISSION_DENIED_CODE,
+                            CytonDAppCallback.PERMISSION_DENIED)
                     JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(qrCodeItem))
                 }
                 .start()
     }
 
-    interface NeuronDAppPluginImpl {
+    interface CytonDAppPluginImpl {
         fun scanCode(callback: String)
     }
 
@@ -95,7 +95,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
             permissionItem = com.cryptape.cita_wallet.item.dapp.Permission(AndPermission.hasPermissions(mContext, permissionList))
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         } else {
-            permissionItem = com.cryptape.cita_wallet.item.dapp.Permission(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            permissionItem = com.cryptape.cita_wallet.item.dapp.Permission(0, CytonDAppCallback.NO_PERMISSION_CODE, CytonDAppCallback.NO_PERMISSION, false)
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         }
     }
@@ -120,7 +120,7 @@ class NeuronDAppPlugin(private val mContext: Activity, private val mWebView: Web
                     }
                     .start()
         } else {
-            permissionItem = com.cryptape.cita_wallet.item.dapp.Permission(0, NeuronDAppCallback.NO_PERMISSION_CODE, NeuronDAppCallback.NO_PERMISSION, false)
+            permissionItem = com.cryptape.cita_wallet.item.dapp.Permission(0, CytonDAppCallback.NO_PERMISSION_CODE, CytonDAppCallback.NO_PERMISSION, false)
             mWebView.post { JSLoadUtils.loadFunc(mWebView, callback, Gson().toJson(permissionItem)) }
         }
     }

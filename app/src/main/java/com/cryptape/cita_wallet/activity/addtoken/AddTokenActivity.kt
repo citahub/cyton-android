@@ -17,7 +17,7 @@ import com.cryptape.cita_wallet.item.Chain
 import com.cryptape.cita_wallet.item.Token
 import com.cryptape.cita_wallet.item.Wallet
 import com.cryptape.cita_wallet.service.http.CITARpcService
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber
+import com.cryptape.cita_wallet.service.http.CytonSubscriber
 import com.cryptape.cita_wallet.util.db.DBWalletUtil
 import com.cryptape.cita_wallet.util.permission.PermissionUtil
 import com.cryptape.cita_wallet.util.permission.RuntimeRationale
@@ -73,7 +73,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
             showProgressBar()
             if (mChain != null) {
                 manager!!.loadErc20(mWallet!!.address, edit_add_token_contract_address.text!!, mChain!!)
-                        .subscribe(object : NeuronSubscriber<Token>() {
+                        .subscribe(object : CytonSubscriber<Token>() {
                             override fun onNext(token: Token?) {
                                 dismissProgressBar()
                                 val tokenInfoDialog = TokenInfoDialog(mActivity, token!!)
@@ -93,7 +93,7 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
                         })
             } else {
                 manager!!.loadCITA(edit_add_token_contract_address.text!!)
-                        .subscribe(object : NeuronSubscriber<Chain>() {
+                        .subscribe(object : CytonSubscriber<Chain>() {
                             override fun onError(e: Throwable?) {
                                 dismissProgressBar()
                                 Toast.makeText(mActivity, resources.getString(R.string.cita_node_error), Toast.LENGTH_LONG)

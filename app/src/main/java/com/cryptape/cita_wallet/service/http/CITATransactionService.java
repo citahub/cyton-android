@@ -19,7 +19,7 @@ public class CITATransactionService{
 
     public static void checkTransactionStatus(Context context) {
         Observable.from(CITATransactionsUtil.getAllTransactions(context))
-                .subscribe(new NeuronSubscriber<RpcTransaction>() {
+                .subscribe(new CytonSubscriber<RpcTransaction>() {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();

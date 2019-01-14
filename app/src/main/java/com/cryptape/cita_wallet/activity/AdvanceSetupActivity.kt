@@ -9,7 +9,7 @@ import com.cryptape.cita_wallet.R
 
 import com.cryptape.cita_wallet.item.transaction.AppTransaction
 import com.cryptape.cita_wallet.service.http.CITARpcService
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber
+import com.cryptape.cita_wallet.service.http.CytonSubscriber
 import com.cryptape.cita_wallet.service.http.TokenService
 import com.cryptape.cita_wallet.constant.ConstantUtil
 import com.cryptape.cita_wallet.util.CurrencyUtil
@@ -155,7 +155,7 @@ class AdvanceSetupActivity : NBaseActivity() {
 
     private fun initTokenPrice() {
         TokenService.getCurrency(ConstantUtil.ETH, CurrencyUtil.getCurrencyItem(mActivity).name)
-                .subscribe(object : NeuronSubscriber<String>() {
+                .subscribe(object : CytonSubscriber<String>() {
                     override fun onNext(price: String) {
                         if (TextUtils.isEmpty(price)) return
                         try {
@@ -194,7 +194,7 @@ class AdvanceSetupActivity : NBaseActivity() {
 
     private fun requestQuotaPrice() {
         CITARpcService.getQuotaPrice(mAppTransaction!!.from)
-                .subscribe(object : NeuronSubscriber<String>() {
+                .subscribe(object : CytonSubscriber<String>() {
                     override fun onNext(price: String) {
                         super.onNext(price)
                         updateQuotaPriceAndLimit(price)

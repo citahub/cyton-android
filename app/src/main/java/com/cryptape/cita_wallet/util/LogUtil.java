@@ -7,7 +7,7 @@ import com.cryptape.cita_wallet.BuildConfig;
 
 public class LogUtil {
 
-    private static final String TAG = "Neuron";
+    private static final String TAG = "Cyton";
 
     public static void v(String tag, String msg) {
         if (BuildConfig.IS_DEBUG && !TextUtils.isEmpty(msg)) {

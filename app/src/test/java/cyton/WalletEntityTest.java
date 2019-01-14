@@ -1,4 +1,4 @@
-package neuron;
+package cyton;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -13,7 +13,7 @@ import com.cryptape.cita_wallet.R
 import com.cryptape.cita_wallet.activity.transactionlist.view.TransactionListActivity
 import com.cryptape.cita_wallet.event.TokenBalanceEvent
 import com.cryptape.cita_wallet.item.Token
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber
+import com.cryptape.cita_wallet.service.http.CytonSubscriber
 import com.cryptape.cita_wallet.service.http.TokenService
 import com.cryptape.cita_wallet.service.http.WalletService
 import com.cryptape.cita_wallet.util.CurrencyUtil
@@ -58,7 +58,7 @@ class WalletTokenView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         }
         val oldBalance = tokenItem.balance
         WalletService.getTokenBalance(context, tokenItem)
-                .subscribe(object : NeuronSubscriber<Token>() {
+                .subscribe(object : CytonSubscriber<Token>() {
 
                     override fun onError(e: Throwable) {
                         tv_loading.text = resources.getString(R.string.wallet_token_loading_failed)

@@ -20,7 +20,7 @@ import com.cryptape.cita_wallet.item.Token
 import com.cryptape.cita_wallet.item.Wallet
 import com.cryptape.cita_wallet.item.transaction.RestTransaction
 import com.cryptape.cita_wallet.service.http.CITARpcService
-import com.cryptape.cita_wallet.service.http.NeuronSubscriber
+import com.cryptape.cita_wallet.service.http.CytonSubscriber
 import com.cryptape.cita_wallet.util.NumberUtil
 import com.cryptape.cita_wallet.util.SharePicUtils
 import com.cryptape.cita_wallet.util.TokenLogoUtil
@@ -198,7 +198,7 @@ class TransactionDetailActivity : NBaseActivity(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     private fun initQuotaInfo() {
         CITARpcService.getQuotaPrice(restTransaction!!.from)
-                .subscribe(object : NeuronSubscriber<String>() {
+                .subscribe(object : CytonSubscriber<String>() {
                     override fun onNext(price: String) {
                         super.onNext(price)
                         val tokenUnit = if (TextUtils.isEmpty(restTransaction!!.nativeSymbol)) {

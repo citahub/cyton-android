@@ -3,7 +3,7 @@ package com.cryptape.cita_wallet.constant
 /**
  * Created by BaojunCZ on 2018/11/7.
  */
-object NeuronDAppCallback {
+object CytonDAppCallback {
     const val SUCCESS_CODE = 1
     const val ERROR_CODE = 0
 
