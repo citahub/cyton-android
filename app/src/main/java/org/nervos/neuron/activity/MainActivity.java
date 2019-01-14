@@ -22,7 +22,7 @@ import org.nervos.neuron.service.intent.EtherTransactionCheckService;
 import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.qrcode.CodeUtils;
-import org.nervos.neuron.constant.url.HttpCITAUrls;
+import org.nervos.neuron.util.url.HttpCITAUrls;
 
 import java.util.Timer;
 import java.util.TimerTask;

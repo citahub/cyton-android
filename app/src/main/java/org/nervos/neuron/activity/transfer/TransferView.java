@@ -1,6 +1,7 @@
 package org.nervos.neuron.activity.transfer;
 
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
+
 import org.nervos.neuron.item.Wallet;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 

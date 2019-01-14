@@ -2,13 +2,14 @@ package org.nervos.neuron.util.ether;
 
 import android.text.TextUtils;
 
-import org.nervos.appchain.utils.Numeric;
-import org.nervos.neuron.item.Chain;
-import org.nervos.neuron.item.Token;
+import com.cryptape.cita.utils.Numeric;
+
 import org.nervos.neuron.constant.ConstantUtil;
-import org.nervos.neuron.util.db.SharePrefUtil;
 import org.nervos.neuron.constant.url.HttpEtherUrls;
 import org.nervos.neuron.constant.url.HttpUrls;
+import org.nervos.neuron.item.Chain;
+import org.nervos.neuron.item.Token;
+import org.nervos.neuron.util.db.SharePrefUtil;
 
 import java.math.BigInteger;
 

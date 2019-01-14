@@ -8,10 +8,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.google.gson.Gson;
 
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.item.App;
 import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Currency;
@@ -23,7 +24,6 @@ import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.NeuronSubscriber;
 import org.nervos.neuron.service.http.TokenService;
 import org.nervos.neuron.service.http.WalletService;
-import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;

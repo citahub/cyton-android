@@ -2,10 +2,10 @@ package org.nervos.neuron.activity.addtoken
 
 import android.content.Context
 import android.text.TextUtils
-import org.nervos.appchain.protocol.AppChainj
-import org.nervos.appchain.protocol.core.DefaultBlockParameterName
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData
-import org.nervos.appchain.protocol.http.HttpService
+import com.cryptape.cita.protocol.CITAj
+import com.cryptape.cita.protocol.core.DefaultBlockParameterName
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData
+import com.cryptape.cita.protocol.http.HttpService
 import org.nervos.neuron.R
 import org.nervos.neuron.item.Chain
 import org.nervos.neuron.item.Token
@@ -70,7 +70,7 @@ class AddTokenManager(val context: Context) {
 
     fun loadCITA(httpProvider: String): Observable<Chain> {
         return Observable.fromCallable {
-            AppChainj.build(HttpService(httpProvider))
+            CITAj.build(HttpService(httpProvider))
         }.flatMap { service ->
             try {
                 Observable.just(service.appMetaData(DefaultBlockParameterName.LATEST).send())

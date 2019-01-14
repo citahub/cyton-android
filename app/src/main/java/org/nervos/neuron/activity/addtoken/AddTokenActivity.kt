@@ -22,7 +22,7 @@ import org.nervos.neuron.util.db.DBWalletUtil
 import org.nervos.neuron.util.permission.PermissionUtil
 import org.nervos.neuron.util.permission.RuntimeRationale
 import org.nervos.neuron.util.qrcode.CodeUtils
-import org.nervos.neuron.constant.url.HttpCITAUrls
+import org.nervos.neuron.util.url.HttpCITAUrls
 import org.nervos.neuron.view.TitleBar
 import org.nervos.neuron.view.dialog.SimpleSelectDialog
 import org.nervos.neuron.view.dialog.TokenInfoDialog

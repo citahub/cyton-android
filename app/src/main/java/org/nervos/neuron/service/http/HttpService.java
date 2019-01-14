@@ -2,10 +2,11 @@ package org.nervos.neuron.service.http;
 
 import android.content.Context;
 
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
 import com.google.gson.Gson;
 
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.response.CITAERC20Transaction;
@@ -13,12 +14,11 @@ import org.nervos.neuron.item.response.CITATransaction;
 import org.nervos.neuron.item.response.EthTransaction;
 import org.nervos.neuron.item.response.EthTransactionStatus;
 import org.nervos.neuron.item.transaction.RestTransaction;
-import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.db.DBWalletUtil;
 import org.nervos.neuron.util.ether.EtherUtil;
-import org.nervos.neuron.constant.url.HttpCITAUrls;
+import org.nervos.neuron.util.url.HttpCITAUrls;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
@@ -60,80 +60,68 @@ public class HttpService {
     }
 
     public static Observable<List<RestTransaction>> getEtherTransactionList(Context context, int page) {
-        return Observable.just(DBWalletUtil.getCurrentWallet(context))
-                .flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
-                    @Override
-                    public Observable<List<RestTransaction>> call(Wallet wallet) {
-                        try {
-                            String ethUrl = String.format(EtherUtil.getEtherTransactionUrl(), wallet.address, page, OFFSET);
-                            final Request ethRequest = new Request.Builder().url(ethUrl).build();
-                            Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
-                            EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(),
-                                    EthTransaction.class);
-                            List<RestTransaction> transactionRepons = response.result;
-                            for (RestTransaction item : transactionRepons) {
-                                item.chainName = ConstantUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.getEthFromWeiForStringDecimal8(new BigInteger(item.value)));
-                                item.symbol = ConstantUtil.ETH;
-                                item.nativeSymbol = ConstantUtil.ETH;
-                            }
-                            return Observable.just(transactionRepons);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return Observable.just(null);
+        return Observable.just(DBWalletUtil.getCurrentWallet(context)).flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
+            @Override
+            public Observable<List<RestTransaction>> call(Wallet wallet) {
+                try {
+                    String ethUrl = String.format(EtherUtil.getEtherTransactionUrl(), wallet.address, page, OFFSET);
+                    final Request ethRequest = new Request.Builder().url(ethUrl).build();
+                    Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
+                    EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(), EthTransaction.class);
+                    List<RestTransaction> transactionRepons = response.result;
+                    for (RestTransaction item : transactionRepons) {
+                        item.chainName = ConstantUtil.ETH_MAINNET;
+                        item.value = (NumberUtil.getEthFromWeiForStringDecimal8(new BigInteger(item.value)));
+                        item.symbol = ConstantUtil.ETH;
+                        item.nativeSymbol = ConstantUtil.ETH;
                     }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                    return Observable.just(transactionRepons);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static Observable<List<RestTransaction>> getEtherERC20TransactionList(Context context, Token token, int page) {
-        return Observable.just(DBWalletUtil.getCurrentWallet(context))
-                .flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
-                    @Override
-                    public Observable<List<RestTransaction>> call(Wallet wallet) {
-                        try {
-                            String ethUrl = String.format(EtherUtil.getEtherERC20TransactionUrl(),
-                                    token.contractAddress, wallet.address, page, OFFSET);
+        return Observable.just(DBWalletUtil.getCurrentWallet(context)).flatMap(new Func1<Wallet, Observable<List<RestTransaction>>>() {
+            @Override
+            public Observable<List<RestTransaction>> call(Wallet wallet) {
+                try {
+                    String ethUrl = String.format(EtherUtil.getEtherERC20TransactionUrl(), token.contractAddress, wallet.address, page, OFFSET);
 
-                            final Request ethRequest = new Request.Builder().url(ethUrl).build();
-                            Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
-                            EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(),
-                                    EthTransaction.class);
-                            List<RestTransaction> transactionRepons = response.result;
-                            for (RestTransaction item : transactionRepons) {
-                                item.chainName = ConstantUtil.ETH_MAINNET;
-                                item.value = (NumberUtil.divideDecimalSub(
-                                        new BigDecimal(item.value), token.decimals));
-                                item.symbol = token.symbol;
-                                item.nativeSymbol = ConstantUtil.ETH;
-                            }
-                            return Observable.just(transactionRepons);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return Observable.just(null);
+                    final Request ethRequest = new Request.Builder().url(ethUrl).build();
+                    Call ethCall = HttpService.getHttpClient().newCall(ethRequest);
+                    EthTransaction response = new Gson().fromJson(ethCall.execute().body().string(), EthTransaction.class);
+                    List<RestTransaction> transactionRepons = response.result;
+                    for (RestTransaction item : transactionRepons) {
+                        item.chainName = ConstantUtil.ETH_MAINNET;
+                        item.value = (NumberUtil.divideDecimalSub(new BigDecimal(item.value), token.decimals));
+                        item.symbol = token.symbol;
+                        item.nativeSymbol = ConstantUtil.ETH;
                     }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                    return Observable.just(transactionRepons);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return Observable.just(null);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
     public static Observable<List<RestTransaction>> getCITATransactionList(Context context, int page) {
         Wallet wallet = DBWalletUtil.getCurrentWallet(context);
-        return Observable.fromCallable(new Callable<AppMetaData.AppMetaDataResult>() {
-            @Override
-            public AppMetaData.AppMetaDataResult call() {
-                CITARpcService.init(context, HttpCITAUrls.CITA_NODE_URL);
-                return Objects.requireNonNull(CITARpcService.getMetaData()).getAppMetaDataResult();
-            }
+        return Observable.fromCallable((Callable<AppMetaData.AppMetaDataResult>) () -> {
+            CITARpcService.init(context, HttpCITAUrls.CITA_NODE_URL);
+            return Objects.requireNonNull(CITARpcService.getMetaData()).getAppMetaDataResult();
         }).flatMap(new Func1<AppMetaData.AppMetaDataResult, Observable<List<RestTransaction>>>() {
             @Override
             public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String citaUrl = String.format(HttpCITAUrls.CITA_TRANSACTION_URL,
-                            wallet.address, page, OFFSET);
+                    String citaUrl = String.format(HttpCITAUrls.CITA_TRANSACTION_URL, wallet.address, page, OFFSET);
                     final Request citaRequest = new Request.Builder().url(citaUrl).build();
                     Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
 
@@ -152,8 +140,7 @@ public class HttpService {
                 }
                 return Observable.just(null);
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -169,16 +156,13 @@ public class HttpService {
             @Override
             public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String citaUrl = String.format(HttpCITAUrls.CITA_ERC20_TRANSACTION_URL,
-                            token.contractAddress, wallet.address, page, OFFSET);
+                    String citaUrl = String.format(HttpCITAUrls.CITA_ERC20_TRANSACTION_URL, token.contractAddress, wallet.address, page, OFFSET);
                     final Request citaRequest = new Request.Builder().url(citaUrl).build();
                     Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
 
-                    CITAERC20Transaction response = new Gson().fromJson(citaCall.execute().body().string(),
-                            CITAERC20Transaction.class);
+                    CITAERC20Transaction response = new Gson().fromJson(citaCall.execute().body().string(), CITAERC20Transaction.class);
                     for (RestTransaction item : response.result.transfers) {
-                        item.value = (NumberUtil.divideDecimalSub(
-                                new BigDecimal(item.value), token.decimals));
+                        item.value = (NumberUtil.divideDecimalSub(new BigDecimal(item.value), token.decimals));
                         item.symbol = token.symbol;
                         item.nativeSymbol = result.getTokenSymbol();
                     }
@@ -188,8 +172,7 @@ public class HttpService {
                 }
                 return Observable.just(null);
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -198,8 +181,7 @@ public class HttpService {
         final Request citaRequest = new Request.Builder().url(citaUrl).build();
         Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
         try {
-            return new Gson().fromJson(citaCall.execute().body().string(),
-                    EthTransactionStatus.class);
+            return new Gson().fromJson(citaCall.execute().body().string(), EthTransactionStatus.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

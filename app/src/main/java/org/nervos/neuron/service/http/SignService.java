@@ -64,9 +64,9 @@ public class SignService {
             public String call() throws Exception {
                 Wallet wallet = DBWalletUtil.getCurrentWallet(context);
                 String privateKey = WalletEntity.fromKeyStore(password, wallet.keystore).getPrivateKey();
-                org.nervos.appchain.crypto.Sign.SignatureData signatureData =
-                        org.nervos.appchain.crypto.Sign.signMessage(message.getBytes(),
-                                org.nervos.appchain.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
+                com.cryptape.cita.crypto.Sign.SignatureData signatureData =
+                        com.cryptape.cita.crypto.Sign.signMessage(message.getBytes(),
+                                com.cryptape.cita.crypto.ECKeyPair.create(Numeric.toBigInt(privateKey)));
 
                 return Numeric.toHexString(signatureData.get_signature());
             }

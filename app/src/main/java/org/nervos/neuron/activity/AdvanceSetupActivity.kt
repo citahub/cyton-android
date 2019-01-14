@@ -15,6 +15,7 @@ import org.nervos.neuron.constant.ConstantUtil
 import org.nervos.neuron.util.CurrencyUtil
 import org.nervos.neuron.util.NumberUtil
 import org.nervos.neuron.util.db.DBWalletUtil
+import org.nervos.neuron.util.ether.EtherUtil
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
@@ -170,14 +171,21 @@ class AdvanceSetupActivity : NBaseActivity() {
         et_advance_setup_gas_price.setText(NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice))
 
         var gasMoney = NumberUtil.getDecimalValid_2(price.toDouble() * mAppTransaction!!.gas)
-        tv_advance_setup_gas_fee.text =
-                String.format("%s %s ≈ %s %s",
-                        NumberUtil.getDecimalValid_8(mAppTransaction!!.gas),
-                        getNativeToken(),
-                        CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
+        if (EtherUtil.isMainNet()) {
+            tv_advance_setup_gas_fee.text =
+                    String.format("%s %s ≈ %s %s",
+                            NumberUtil.getDecimalValid_8(mAppTransaction!!.gas),
+                            getNativeToken(),
+                            CurrencyUtil.getCurrencyItem(mActivity).symbol, gasMoney)
+        } else {
+            tv_advance_setup_gas_fee.text =
+                    String.format("%s %s",
+                            NumberUtil.getDecimalValid_8(mAppTransaction!!.gas),
+                            getNativeToken())
+        }
 
         tv_advance_setup_gas_fee_detail.text =
-                String.format("Gas Limit(%s)*Gas Price(%s %s)",
+                String.format("≈Gas Limit(%s)*Gas Price(%s %s)",
                         mAppTransaction!!.gasLimit.toString(),
                         NumberUtil.getGWeiFromWeiForString(mAppTransaction!!.gasPrice), getFeeUnit())
     }

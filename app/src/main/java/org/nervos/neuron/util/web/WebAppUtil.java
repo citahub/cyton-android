@@ -7,6 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -14,9 +15,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.neuron.BuildConfig;
 import org.nervos.neuron.R;
+import org.nervos.neuron.constant.url.HttpUrls;
 import org.nervos.neuron.event.AppHistoryEvent;
 import org.nervos.neuron.item.App;
 import org.nervos.neuron.item.Chain;
@@ -24,7 +25,6 @@ import org.nervos.neuron.service.http.CITARpcService;
 import org.nervos.neuron.service.http.HttpService;
 import org.nervos.neuron.util.NetworkUtil;
 import org.nervos.neuron.util.db.DBAppUtil;
-import org.nervos.neuron.constant.url.HttpUrls;
 
 import java.io.IOException;
 import java.net.URI;
@@ -249,6 +249,7 @@ public class WebAppUtil {
     }
 
     private static final String ACCEPT_LANGUAGE = "Accept-Language";
+
     public static void loadUrl(WebView web, String url) {
         Map<String, String> headers = new HashMap<>();
         headers.put(ACCEPT_LANGUAGE, Locale.getDefault().getLanguage());

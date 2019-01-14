@@ -13,15 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.EventBus;
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.neuron.R;
 import org.nervos.neuron.activity.AdvanceSetupActivity;
 import org.nervos.neuron.activity.NBaseActivity;
 import org.nervos.neuron.activity.QrCodeActivity;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.event.TransferPushEvent;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.AppTransaction;
@@ -29,7 +30,6 @@ import org.nervos.neuron.service.http.EthRpcService;
 import org.nervos.neuron.service.http.WalletService;
 import org.nervos.neuron.util.AddressUtil;
 import org.nervos.neuron.util.Blockies;
-import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.CurrencyUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.ether.EtherUtil;

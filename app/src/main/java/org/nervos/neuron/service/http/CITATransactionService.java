@@ -3,7 +3,8 @@ package org.nervos.neuron.service.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
+import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+
 import org.nervos.neuron.item.transaction.RpcTransaction;
 import org.nervos.neuron.util.db.CITATransactionsUtil;
 

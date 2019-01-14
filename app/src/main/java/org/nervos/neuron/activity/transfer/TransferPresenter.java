@@ -3,7 +3,8 @@ package org.nervos.neuron.activity.transfer;
 import android.app.Activity;
 import android.text.TextUtils;
 
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
+
 import org.nervos.neuron.R;
 import org.nervos.neuron.item.Chain;
 import org.nervos.neuron.item.Currency;
@@ -403,7 +404,7 @@ public class TransferPresenter {
     }
 
     public String getTransferFee() {
-        if (mTokenPrice > 0) {
+        if (mTokenPrice > 0 && EtherUtil.isMainNet()) {
             return NumberUtil.getDecimalValid_8(mTransferFee) + getFeeTokenUnit()
                     + " ≈ " + mCurrency.getSymbol() + " "
                     + NumberUtil.getDecimalValid_2(mTransferFee * mTokenPrice);

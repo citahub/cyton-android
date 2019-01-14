@@ -3,21 +3,22 @@ package org.nervos.neuron.service.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.nervos.appchain.protocol.AppChainj;
-import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
-import org.nervos.appchain.protocol.core.methods.request.Call;
-import org.nervos.appchain.protocol.core.methods.request.Transaction;
-import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
-import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
-import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
-import org.nervos.appchain.protocol.system.AppChainjSystemContract;
+import com.cryptape.cita.protocol.CITAj;
+import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
+import com.cryptape.cita.protocol.core.methods.request.Call;
+import com.cryptape.cita.protocol.core.methods.request.Transaction;
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
+import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
+import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.cryptape.cita.protocol.system.CITAjSystemContract;
+import com.cryptape.cita.protocol.http.HttpService;
+
 import org.nervos.neuron.BuildConfig;
+import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.item.Token;
 import org.nervos.neuron.item.Wallet;
 import org.nervos.neuron.item.transaction.RpcTransaction;
-import org.nervos.neuron.constant.ConstantUtil;
 import org.nervos.neuron.util.NumberUtil;
 import org.nervos.neuron.util.crypto.WalletEntity;
 import org.nervos.neuron.util.db.CITATransactionsUtil;
@@ -60,14 +61,14 @@ public class CITARpcService {
     private static final String TRANSFER_FAIL = "Transfer fail";
     private static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    private static AppChainj service;
+    private static CITAj service;
 
     private static Random random;
     private static Wallet wallet;
 
     public static void init(Context context, String httpProvider) {
         HttpService.setDebug(BuildConfig.IS_DEBUG);
-        service = AppChainj.build(new HttpService(httpProvider));
+        service = CITAj.build(new HttpService(httpProvider));
         wallet = DBWalletUtil.getCurrentWallet(context);
     }
 
@@ -76,7 +77,7 @@ public class CITARpcService {
     }
 
     public static void setHttpProvider(String httpProvider) {
-        service = AppChainj.build(new HttpService(httpProvider));
+        service = CITAj.build(new HttpService(httpProvider));
     }
 
     private static String randomNonce() {
@@ -87,9 +88,7 @@ public class CITARpcService {
 
     public static Token getErc20TokenInfo(String contractAddress) {
         try {
-            return new Token(getErc20Name(contractAddress),
-                    getErc20Symbol(contractAddress), getErc20Decimals(contractAddress),
-                    contractAddress);
+            return new Token(getErc20Name(contractAddress), getErc20Symbol(contractAddress), getErc20Decimals(contractAddress), contractAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,8 +102,7 @@ public class CITARpcService {
             public Double call() throws IOException {
                 Call balanceCall = new Call(address, token.contractAddress,
                         ConstantUtil.BALANCE_OF_HASH + ConstantUtil.ZERO_16 + Numeric.cleanHexPrefix(address));
-                String balanceOf = service.appCall(balanceCall,
-                        DefaultBlockParameterName.LATEST).send().getValue();
+                String balanceOf = service.appCall(balanceCall, DefaultBlockParameterName.LATEST).send().getValue();
                 if (!TextUtils.isEmpty(balanceOf) && !ConstantUtil.RPC_RESULT_ZERO.equals(balanceOf)) {
                     initIntTypes();
                     Int256 balance = (Int256) FunctionReturnDecoder.decode(balanceOf, intTypes).get(0);
@@ -139,112 +137,96 @@ public class CITARpcService {
     }
 
     public static Observable<Double> getBalance(String address) {
-        return Observable.fromCallable(() ->
-                service.appGetBalance(address, DefaultBlockParameterName.LATEST).send())
+        return Observable.fromCallable(() -> service.appGetBalance(address, DefaultBlockParameterName.LATEST).send())
                 .filter(appGetBalance -> appGetBalance != null)
-                .map(appGetBalance ->
-                        NumberUtil.getEthFromWei(appGetBalance.getBalance()))
+                .map(appGetBalance -> NumberUtil.getEthFromWei(appGetBalance.getBalance()))
                 .subscribeOn(Schedulers.io());
     }
 
     public static Observable<String> getQuotaPrice(String from) {
         return Observable.fromCallable(() -> {
             try {
-                return BigInteger.valueOf(new AppChainjSystemContract(service).getQuotaPrice(from)).toString();
+                return BigInteger.valueOf(new CITAjSystemContract(service).getQuotaPrice(from)).toString();
             } catch (Exception e) {
                 e.printStackTrace();
                 Observable.error(e);
             }
             return ConstantUtil.QUOTA_PRICE_DEFAULT;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
-    public static Observable<AppSendTransaction> transferErc20(Context context, Token token,
-                                                               String address, String value, long quota, BigInteger chainId, String password) {
+    public static Observable<AppSendTransaction> transferErc20(Context context, Token token, String address, String value, long quota, BigInteger chainId, String password) {
         String data = createTokenTransferData(Numeric.cleanHexPrefix(address), getERC20TransferValue(token, value));
 
-        return getValidUntilBlock()
-                .flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
-                    try {
+        return getValidUntilBlock().flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
+            try {
 
-                        AppMetaData.AppMetaDataResult appMetaDataResult = Objects.requireNonNull(getMetaData()).getAppMetaDataResult();
+                AppMetaData.AppMetaDataResult appMetaDataResult = Objects.requireNonNull(getMetaData()).getAppMetaDataResult();
 
-                        Transaction transaction = Transaction.createFunctionCallTransaction(
-                                NumberUtil.toLowerCaseWithout0x(token.contractAddress),
-                                randomNonce(), quota, validUntilBlock.longValue(), appMetaDataResult.getVersion(), chainId, "0",
-                                TextUtils.isEmpty(data) ? "" : data);
+                Transaction transaction = Transaction.createFunctionCallTransaction(NumberUtil.toLowerCaseWithout0x(token.contractAddress), randomNonce(), quota, validUntilBlock
+                        .longValue(), appMetaDataResult.getVersion(), chainId, "0", TextUtils.isEmpty(data) ? "" : data);
 
-                        AppSendTransaction appSendTransaction = signTransaction(transaction, password);
+                AppSendTransaction appSendTransaction = signTransaction(transaction, password);
 
-                        if (appSendTransaction.getError() != null) {
-                            Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
-                        } else {
-                            saveLocalTransaction(context, wallet.address, address, String.valueOf(value),
-                                    validUntilBlock.longValue(), chainId.toString(), token.contractAddress,
-                                    appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
-                        }
-                        return Observable.just(appSendTransaction);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Observable.error(e);
-                    }
-                    return Observable.error(new Throwable(TRANSFER_FAIL));
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                if (appSendTransaction.getError() != null) {
+                    Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                } else {
+                    saveLocalTransaction(context, wallet.address, address, String.valueOf(value), validUntilBlock.longValue(), chainId.toString(), token.contractAddress, appSendTransaction
+                            .getSendTransactionResult()
+                            .getHash(), String.valueOf(quota));
+                }
+                return Observable.just(appSendTransaction);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Observable.error(e);
+            }
+            return Observable.error(new Throwable(TRANSFER_FAIL));
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
-    public static Observable<AppSendTransaction> transferCITA(Context context, String toAddress, String value,
-                                                                  String data, long quota, BigInteger chainId, String password) {
+    public static Observable<AppSendTransaction> transferCITA(Context context, String toAddress, String value, String data, long quota, BigInteger chainId, String password) {
 
-        return getValidUntilBlock()
-                .flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
-                    try {
+        return getValidUntilBlock().flatMap((Func1<BigInteger, Observable<AppSendTransaction>>) validUntilBlock -> {
+            try {
 
-                        AppMetaData.AppMetaDataResult appMetaDataResult = Objects.requireNonNull(getMetaData()).getAppMetaDataResult();
+                AppMetaData.AppMetaDataResult appMetaDataResult = Objects.requireNonNull(getMetaData()).getAppMetaDataResult();
 
-                        Transaction transaction = Transaction.createFunctionCallTransaction(
-                                NumberUtil.toLowerCaseWithout0x(toAddress),
-                                randomNonce(), quota, validUntilBlock.longValue(), appMetaDataResult.getVersion(), chainId,
-                                NumberUtil.getWeiFromEth(value).toString(), TextUtils.isEmpty(data) ? "" : data);
+                Transaction transaction = Transaction.createFunctionCallTransaction(NumberUtil.toLowerCaseWithout0x(toAddress), randomNonce(), quota, validUntilBlock
+                        .longValue(), appMetaDataResult.getVersion(), chainId, NumberUtil.getWeiFromEth(value)
+                        .toString(), TextUtils.isEmpty(data) ? "" : data);
 
-                        AppSendTransaction appSendTransaction = signTransaction(transaction, password);
+                AppSendTransaction appSendTransaction = signTransaction(transaction, password);
 
-                        if (appSendTransaction.getError() != null) {
-                            Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
-                        } else {
-                            saveLocalTransaction(context, wallet.address, toAddress, String.valueOf(value),
-                                    validUntilBlock.longValue(), chainId.toString(), "",
-                                    appSendTransaction.getSendTransactionResult().getHash(), String.valueOf(quota));
-                        }
-                        return Observable.just(appSendTransaction);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Observable.error(e);
-                    }
-                    return Observable.error(new Throwable(TRANSFER_FAIL));
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                if (appSendTransaction.getError() != null) {
+                    Observable.error(new TransactionErrorException(appSendTransaction.getError().getMessage()));
+                } else {
+                    saveLocalTransaction(context, wallet.address, toAddress, String.valueOf(value), validUntilBlock.longValue(), chainId.toString(), "", appSendTransaction
+                            .getSendTransactionResult()
+                            .getHash(), String.valueOf(quota));
+                }
+                return Observable.just(appSendTransaction);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Observable.error(e);
+            }
+            return Observable.error(new Throwable(TRANSFER_FAIL));
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     private static AppSendTransaction signTransaction(Transaction transaction, String password) throws Exception {
         WalletEntity walletEntity = WalletEntity.fromKeyStore(password, wallet.keystore);
         String privateKey = NumberUtil.toLowerCaseWithout0x(walletEntity.getPrivateKey());
-        String rawTx = transaction.sign(privateKey, false, false);
+        String rawTx = transaction.sign(privateKey, Transaction.CryptoTx.SECP256K1, false);
         return service.appSendRawTransaction(rawTx).send();
     }
 
 
-    private static void saveLocalTransaction(Context context, String from, String to, String value,
-                                             long validUntilBlock, String chainId, String contractAddress, String hash, String limit) {
+    private static void saveLocalTransaction(Context context, String from, String to, String value, long validUntilBlock, String chainId, String contractAddress, String hash, String limit) {
         executorService.execute(() -> {
             String chainName = Objects.requireNonNull(DBWalletUtil.getChainItemFromCurrentWallet(context, chainId)).name;
-            RpcTransaction item = new RpcTransaction(from, to, value, chainId, chainName,
-                    RpcTransaction.PENDING, System.currentTimeMillis(), hash);
+            RpcTransaction item = new RpcTransaction(from, to, value, chainId, chainName, RpcTransaction.PENDING, System.currentTimeMillis(), hash);
             item.gasLimit = limit;
             item.validUntilBlock = String.valueOf(validUntilBlock);
             item.contractAddress = contractAddress;
@@ -266,8 +248,8 @@ public class CITARpcService {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
-                return BigInteger.valueOf((service.appBlockNumber().send())
-                        .getBlockNumber().longValue() + ConstantUtil.VALID_BLOCK_NUMBER_DIFF);
+                return BigInteger.valueOf(
+                        (service.appBlockNumber().send()).getBlockNumber().longValue() + ConstantUtil.VALID_BLOCK_NUMBER_DIFF);
             }
         });
     }
@@ -285,8 +267,7 @@ public class CITARpcService {
 
     private static String createTokenTransferData(String to, BigInteger tokenAmount) {
         List<Type> params = Arrays.<Type>asList(new Address(to), new Uint256(tokenAmount));
-        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
-        });
+        List<TypeReference<?>> returnTypes = Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {});
         Function function = new Function(TRANSFER_METHOD, params, returnTypes);
         return FunctionEncoder.encode(function);
     }
@@ -297,8 +278,7 @@ public class CITARpcService {
 
     private static String getErc20Name(String contractAddress) throws Exception {
         Call nameCall = new Call(wallet.address, contractAddress, ConstantUtil.NAME_HASH);
-        String name = service.appCall(nameCall, DefaultBlockParameterName.LATEST)
-                .send().getValue();
+        String name = service.appCall(nameCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (TextUtils.isEmpty(name) || ConstantUtil.RPC_RESULT_ZERO.equals(name)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(name, stringTypes).get(0).toString();
@@ -307,8 +287,7 @@ public class CITARpcService {
 
     private static String getErc20Symbol(String contractAddress) throws Exception {
         Call symbolCall = new Call(wallet.address, contractAddress, ConstantUtil.SYMBOL_HASH);
-        String symbol = service.appCall(symbolCall, DefaultBlockParameterName.LATEST)
-                .send().getValue();
+        String symbol = service.appCall(symbolCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (TextUtils.isEmpty(symbol) || ConstantUtil.RPC_RESULT_ZERO.equals(symbol)) return null;
         initStringTypes();
         return FunctionReturnDecoder.decode(symbol, stringTypes).get(0).toString();
@@ -316,8 +295,7 @@ public class CITARpcService {
 
     private static int getErc20Decimals(String contractAddress) throws Exception {
         Call decimalsCall = new Call(wallet.address, contractAddress, ConstantUtil.DECIMALS_HASH);
-        String decimals = service.appCall(decimalsCall,
-                DefaultBlockParameterName.LATEST).send().getValue();
+        String decimals = service.appCall(decimalsCall, DefaultBlockParameterName.LATEST).send().getValue();
         if (!TextUtils.isEmpty(decimals) && !ConstantUtil.RPC_RESULT_ZERO.equals(decimals)) {
             initIntTypes();
             Int256 type = (Int256) FunctionReturnDecoder.decode(decimals, intTypes).get(0);
