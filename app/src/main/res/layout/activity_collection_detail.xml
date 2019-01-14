@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <org.nervos.neuron.view.TitleBar
+        <com.cryptape.cita_wallet.view.TitleBar
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -155,7 +155,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_collection_desc">
 
-            <org.nervos.neuron.view.button.CommonButton
+            <com.cryptape.cita_wallet.view.button.CommonButton
                 android:id="@+id/btn_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

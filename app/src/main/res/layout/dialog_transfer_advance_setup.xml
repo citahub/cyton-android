@@ -113,7 +113,7 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
-        <org.nervos.neuron.view.button.CommonButton
+        <com.cryptape.cita_wallet.view.button.CommonButton
             android:id="@+id/advanced_setup_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

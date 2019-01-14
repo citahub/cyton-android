@@ -163,7 +163,7 @@
             style="@style/separateLineLong"
             android:layout_marginStart="@dimen/default_margin" />
 
-        <org.nervos.neuron.view.button.CommonButton
+        <com.cryptape.cita_wallet.view.button.CommonButton
             android:id="@+id/transfer_confirm_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
