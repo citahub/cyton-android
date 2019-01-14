@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -225,7 +225,7 @@
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-    <org.nervos.neuron.view.button.CommonButton
+    <com.cryptape.cita_wallet.view.button.CommonButton
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

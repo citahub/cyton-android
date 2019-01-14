@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -70,7 +70,7 @@
 
     </RelativeLayout>
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_local_coin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
         app:icon="@drawable/ic_setting_localcoin"
         app:name="@string/setting_currency" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_fingerprint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
         app:right_text="CNY"
         app:switch_button="true" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_eth_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
         app:icon="@drawable/ic_setting_select_eth"
         app:name="@string/setting_select_eth_net" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_about_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,14 +104,14 @@
         app:icon="@drawable/ic_setting_about_us"
         app:name="@string/setting_about_us" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_contact_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_setting_contact_us"
         app:name="@string/setting_connect_us" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/sbv_forums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

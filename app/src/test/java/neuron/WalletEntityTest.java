@@ -3,8 +3,8 @@ package neuron;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.nervos.neuron.util.crypto.MnemonicUtils;
-import org.nervos.neuron.util.crypto.WalletEntity;
+import com.cryptape.cita_wallet.util.crypto.MnemonicUtils;
+import com.cryptape.cita_wallet.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
 /**

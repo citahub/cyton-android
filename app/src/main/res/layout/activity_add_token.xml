@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/default_background">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -91,7 +91,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/scan" />
 
-            <org.nervos.neuron.view.CompressEditText
+            <com.cryptape.cita_wallet.view.CompressEditText
                 android:id="@+id/edit_add_token_contract_address"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -106,7 +106,7 @@
 
     </LinearLayout>
 
-    <org.nervos.neuron.view.button.CommonButton
+    <com.cryptape.cita_wallet.view.button.CommonButton
         android:id="@+id/btn_add_token"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

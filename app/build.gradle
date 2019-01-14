@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion appConfig.compileSdkVersion
     defaultConfig {
-        applicationId "org.nervos.neuron"
+        applicationId "com.cryptape.cita_wallet"
         targetSdkVersion appConfig.targetSdkVersion
         minSdkVersion appConfig.minSdkVersion
         versionCode appConfig.versionCode

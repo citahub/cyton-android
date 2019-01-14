@@ -1,8 +1,8 @@
 package neuron;
 
 import org.junit.Test;
-import org.nervos.neuron.util.CurrencyUtil;
-import org.nervos.neuron.util.NumberUtil;
+import com.cryptape.cita_wallet.util.CurrencyUtil;
+import com.cryptape.cita_wallet.util.NumberUtil;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
