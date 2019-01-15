@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -111,14 +111,14 @@
             android:textSize="13sp" />
     </RelativeLayout>
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/change_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:name="@string/change_password" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/export_keystore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

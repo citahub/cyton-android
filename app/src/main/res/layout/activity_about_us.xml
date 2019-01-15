@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -57,7 +57,7 @@
 
             </LinearLayout>
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_source_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,22 +65,22 @@
                 app:icon="@drawable/ic_about_us_origin_code"
                 app:name="@string/about_us_source_code" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_server_private"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_about_us_server_pri"
                 app:name="@string/about_us_server_private" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_nervos_network"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dip"
                 app:icon="@drawable/ic_about_us_nervos_network"
-                app:name="AppChain Network" />
+                app:name="Nervos Network" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_infura"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 app:name="Infura"
                 app:right_txt="@string/infua_describe" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_open_sea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 app:name="Open Sea"
                 app:right_txt="@string/openSea_describe" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_peck_shield"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,48 +104,15 @@
                 app:name="PeckShield"
                 app:right_txt="@string/peckShield_describe" />
 
-            <org.nervos.neuron.view.SettingButtonView
+            <com.cryptape.cita_wallet.view.SettingButtonView
                 android:id="@+id/sbv_cita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
                 app:icon="@drawable/ic_about_cita"
                 app:name="CITA"
                 app:right_txt="@string/cita_describe" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="bottom|center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/default_margin"
-                android:paddingBottom="@dimen/default_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginBottom="1dp"
-                    android:text="@string/neuron_is_a"
-                    android:textColor="@color/font_title_third"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="20dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/neuron_logo" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="1dp"
-                    android:text="@string/product"
-                    android:textColor="@color/font_title_third"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

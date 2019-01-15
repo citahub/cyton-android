@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/currency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

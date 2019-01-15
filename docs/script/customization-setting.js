@@ -4,9 +4,9 @@
 
 var customization = {
 
-    name: 'Neuron', // name of this document
+    name: 'Cyton', // name of this document
 
-    homepage: 'neuron.md',// the home page, extension name '.md' cannot be omitted.
+    homepage: 'cyton.md',// the home page, extension name '.md' cannot be omitted.
 
     
 }

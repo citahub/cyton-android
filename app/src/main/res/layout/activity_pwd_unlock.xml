@@ -119,7 +119,7 @@
             android:background="@color/line_input"
             app:layout_constraintTop_toBottomOf="@id/view_name_under_line" />
 
-        <org.nervos.neuron.view.button.CommonButton
+        <com.cryptape.cita_wallet.view.button.CommonButton
             android:id="@+id/password_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

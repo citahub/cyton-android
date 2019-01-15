@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:title="@string/collect_title"

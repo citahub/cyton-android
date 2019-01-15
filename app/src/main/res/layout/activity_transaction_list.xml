@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -32,7 +32,7 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <org.nervos.neuron.view.TokenProfileView
+    <com.cryptape.cita_wallet.view.TokenProfileView
         android:id="@+id/view_token_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
