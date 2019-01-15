@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/made%20for-Nervos%20AppChain-blue.svg)
+[![CITA](https://img.shields.io/badge/made%20for-CITA-blue.svg)](https://www.citahub.com)
 
 # Cyton Wallet (Android)
 
