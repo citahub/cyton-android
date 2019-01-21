@@ -5,28 +5,7 @@
 Overview
 ===============
 
-Cyton is an open source blockchain wallet which supports Ethereum and [CITA](https://citahub.com/#/). It supports most tokens of Ethereum and [CITA](https://docs.nervos.org/#/), such as ETH, ERC20, ERC721, and also supports most kinds of DApps of Ethereum and [CITA](https://docs.nervos.org/#/) , such as cryptokitties, Fomo3D, 0xproject...
-
-Usage
-===============
-
-### Private key and address
-
-Cyton is a blockchain wallet which supports Ethereum and [CITA] (CITA uses same SECP256k1 signature algorithm), you can use same private key and address. **Cyton never saves your private key directly, you need to input password to sign every transaction. If you forget your private key, Neuron can not find and recover it, so you should save private key (keystore and mnemonic) carefully.**
-
-Cyton supports importing wallet through private key, keystore and mnemonic, and supports exporting keystore.
-
-### Token
-
-Cyton is a blockchain wallet which supports Ethereum, so you can visit balance of most tokens of Ethereum and tranfer tokens to other accounts. If you can not find ERC20 token you want, you can input contract address to load token information and add to your token list.
-
-[CITA] supports Ethereum solidity contract, so all ERC contracts can run on CITA directly.
-
-CITA is an open source blockchain kernel, so you can publish your blockchain coin by yourself and set any name you like. All tokens on AppChain can display in Cyton.
-
-### DApp
-
-Cyton is also a DApp browser, which supprts DApps of Ethereum and [CITA]. Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Cyton directly. Cyton also supports CITA DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an DApp on CITA](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
+Cyton is an open source blockchain wallet which supports [Ethereum](https://www.ethereum.org/) and [CITA](https://github.com/cryptape/cita). It supports most tokens of Ethereum and CITA, such as ETH, ERC20, ERC721, and also supports most kinds of DApps of Ethereum and CITA , such as cryptokitties, Fomo3D, 0xproject...
 
 Getting Started
 ===============
@@ -40,7 +19,7 @@ Getting Started
 
 ### Install from apk file
 
-You can download apk file from [release](https://github.com/cryptape/cyton-android/releases) and install directly on Andorid smart phone.
+You can download apk file from [release](https://github.com/cryptape/cyton-android/releases) and install directly on Android smart phone.
 
 Making a new build for App store (Dev only)
 ============================================
@@ -69,6 +48,4 @@ expected to follow our code of conduct.
 
 MIT License
 ============================================
-Cyton is an open sourced project under MIT License.
-
-[CITA]:https://github.com/cryptape/cita
+Cyton is an open source project under MIT License.
