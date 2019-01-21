@@ -87,7 +87,7 @@ public class CytonWebView extends WebView {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUserAgentString(webSettings.getUserAgentString()
-                + "Neuron(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
+                + "Cyton(Platform=Android&AppVersion=" + BuildConfig.VERSION_NAME + ")");
         WebView.setWebContentsDebuggingEnabled(BuildConfig.IS_DEBUG);
         addJavascriptInterface(new SignCallbackJSInterface(
                 this,
