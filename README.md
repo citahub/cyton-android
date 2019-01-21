@@ -1,4 +1,4 @@
-[![CITA](https://img.shields.io/badge/made%20for-CITA-blue.svg)](https://www.citahub.com)
+![](https://img.shields.io/badge/made%20for-CITA-blue.svg)
 
 # Cyton Wallet (Android)
 
@@ -12,7 +12,7 @@ Usage
 
 ### Private key and address
 
-Cyton is a blockchain wallet which supports Ethereum and [CITA](https://citahub.com/#/) (CITA uses same SECP256k1 signature algorithm), you can use same private key and address. **Cyton never saves your private key directly, you need to input password to sign every transaction. If you forget your private key, Cyton can not find and recover it, so you should save private key (keystore and mnemonic) carefully.**
+Cyton is a blockchain wallet which supports Ethereum and [CITA] (CITA uses same SECP256k1 signature algorithm), you can use same private key and address. **Cyton never saves your private key directly, you need to input password to sign every transaction. If you forget your private key, Neuron can not find and recover it, so you should save private key (keystore and mnemonic) carefully.**
 
 Cyton supports importing wallet through private key, keystore and mnemonic, and supports exporting keystore.
 
@@ -20,13 +20,13 @@ Cyton supports importing wallet through private key, keystore and mnemonic, and 
 
 Cyton is a blockchain wallet which supports Ethereum, so you can visit balance of most tokens of Ethereum and tranfer tokens to other accounts. If you can not find ERC20 token you want, you can input contract address to load token information and add to your token list.
 
-[CITA](https://citahub.com/#/) is a blockchain solution which includes blockchain kernel CITA, Cyton wallet, blockchain browser [Microscope](https://github.com/cryptape/microscope), cache server [ReBirth](https://github.com/cryptape/re-birth) and SDKs. [CITA](https://docs.nervos.org/#/) supports Ethereum solidity contract, so all ERC contracts can run on CITA directly.
+[CITA] supports Ethereum solidity contract, so all ERC contracts can run on CITA directly.
 
-CITA is an open source blockchain solution, so you can publish your blockchain coin by yourself and set any name you like. All tokens on CITA can display in Cyton.
+CITA is an open source blockchain kernel, so you can publish your blockchain coin by yourself and set any name you like. All tokens on AppChain can display in Cyton.
 
 ### DApp
 
-Cyton is also a DApp browser, which supprts DApps of Ethereum and [CITA](https://citahub.com/#/). Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Cyton directly. Cyton also supports CITA DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an CITA DApp](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
+Cyton is also a DApp browser, which supprts DApps of Ethereum and [CITA]. Most popular Ethereum DApps, such as cryptokitties, Fomo3D, 0xproject, can run in Cyton directly. Cyton also supports CITA DApps, which can be easily migrated from Ethereum. You can get more information about [how to develop an DApp on CITA](https://docs.nervos.org/nervos-appchain-docs/#/quick-start/build-dapp).
 
 Getting Started
 ===============
@@ -40,7 +40,7 @@ Getting Started
 
 ### Install from apk file
 
-You can download apk file from [release](https://github.com/cryptape/Cyton-android/releases) and install directly on Andorid smart phone.
+You can download apk file from [release](https://github.com/cryptape/cyton-android/releases) and install directly on Andorid smart phone.
 
 Making a new build for App store (Dev only)
 ============================================
@@ -69,4 +69,6 @@ expected to follow our code of conduct.
 
 MIT License
 ============================================
-Cyton is open sourced under MIT License.
+Cyton is an open sourced project under MIT License.
+
+[CITA]:https://github.com/cryptape/cita
