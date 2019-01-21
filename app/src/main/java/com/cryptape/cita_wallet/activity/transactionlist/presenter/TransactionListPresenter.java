@@ -11,14 +11,17 @@ import com.cryptape.cita_wallet.item.Wallet;
 import com.cryptape.cita_wallet.item.transaction.RestTransaction;
 import com.cryptape.cita_wallet.item.transaction.RpcTransaction;
 import com.cryptape.cita_wallet.service.http.HttpService;
+import com.cryptape.cita_wallet.util.LogUtil;
 import com.cryptape.cita_wallet.util.db.CITATransactionsUtil;
 import com.cryptape.cita_wallet.util.db.DBEtherTransactionUtil;
 import com.cryptape.cita_wallet.util.db.DBWalletUtil;
 import com.cryptape.cita_wallet.util.ether.EtherUtil;
+
 import org.web3j.utils.Numeric;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,17 +46,14 @@ public class TransactionListPresenter {
     public void getTransactionList(int page) {
         Observable<List<RestTransaction>> observable;
         if (isNativeToken(token)) {
-            if (Numeric.toBigInt(token.getChainId()).longValue() > 1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
+            if (Numeric.toBigInt(token.getChainId()).longValue() >
+                    1) {       // Now only support chainId = 1 (225 NATT), not support other chainId (> 1)
                 getUnofficialNoneData();
                 return;
             }
-            observable = EtherUtil.isEther(token)
-                    ? HttpService.getEtherTransactionList(activity, page)
-                    : HttpService.getCITATransactionList(activity, page);
+            observable = EtherUtil.isEther(token) ? HttpService.getEtherTransactionList(activity, page) : HttpService.getCITATransactionList(activity, page);
         } else {
-            observable = EtherUtil.isEther(token)
-                    ? HttpService.getEtherERC20TransactionList(activity, token, page)
-                    : HttpService.getCITAERC20TransactionList(activity, token, page);
+            observable = EtherUtil.isEther(token) ? HttpService.getEtherERC20TransactionList(activity, token, page) : HttpService.getCITAERC20TransactionList(activity, token, page);
         }
         observable.subscribe(new Subscriber<List<RestTransaction>>() {
             @Override
@@ -126,8 +126,8 @@ public class TransactionListPresenter {
             for (RpcTransaction item : itemList) {
                 list.add(new RestTransaction(item));
             }
-            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
+        Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         return list;
     }
 
@@ -152,8 +152,8 @@ public class TransactionListPresenter {
             for (RpcTransaction item : itemList) {
                 list.add(new RestTransaction(item));
             }
-            Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         }
+        Collections.sort(list, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
         return list;
     }
 
