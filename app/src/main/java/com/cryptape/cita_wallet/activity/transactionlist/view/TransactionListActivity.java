@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.activity.NBaseActivity;
 import com.cryptape.cita_wallet.activity.ReceiveQrCodeActivity;
@@ -28,6 +30,7 @@ import com.cryptape.cita_wallet.view.loadmore.OnLoadMoreListener;
 import com.cryptape.cita_wallet.view.loadmore.RecyclerViewLoadMoreScroll;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TransactionListActivity extends NBaseActivity {
@@ -138,8 +141,7 @@ public class TransactionListActivity extends NBaseActivity {
         presenter.getTransactionList(mPage);
     }
 
-    private TransactionListPresenter.TransactionListPresenterImpl listener
-            = new TransactionListPresenter.TransactionListPresenterImpl() {
+    private TransactionListPresenter.TransactionListPresenterImpl listener = new TransactionListPresenter.TransactionListPresenterImpl() {
         @Override
         public void hideProgressBar() {
             swipeRefreshLayout.post(() -> dismissProgressBar());
@@ -162,6 +164,7 @@ public class TransactionListActivity extends NBaseActivity {
             mPage++;
             transactionAdapter.removeLoadingView();
             restTransactionList.addAll(list);
+            Collections.sort(restTransactionList, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
             transactionAdapter.refresh(restTransactionList);
             scrollListener.setLoaded();
         }
