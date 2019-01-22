@@ -138,22 +138,9 @@ public class MainActivity extends NBaseActivity {
             transaction.commitAllowingStateLoss();
         });
 
-        setNavigationItem(AppFragment.Companion.getTAG());
+        String tag = getIntent().getStringExtra(EXTRA_TAG);
+        setNavigationItem(tag == null ? AppFragment.Companion.getTAG() : tag);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (getIntent() != null) {
-            setNavigationItem(getIntent().getStringExtra(EXTRA_TAG));
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setNavigationItem(intent.getStringExtra(EXTRA_TAG));
     }
 
     /**
@@ -200,8 +187,7 @@ public class MainActivity extends NBaseActivity {
                     return true;
                 } else {
                     if ((System.currentTimeMillis() - exitTime) > 2000) {
-                        Toast.makeText(getApplicationContext(), R.string.press_back_finish,
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.press_back_finish, Toast.LENGTH_SHORT).show();
                         exitTime = System.currentTimeMillis();
                         return false;
                     } else {
@@ -223,52 +209,51 @@ public class MainActivity extends NBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK)
-            switch (requestCode) {
-                case REQUEST_CODE_SCAN:
-                    if (null != data) {
-                        Bundle bundle = data.getExtras();
-                        if (bundle == null) return;
-                        if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                            String result = bundle.getString(CodeUtils.RESULT_STRING);
-                            Intent intent;
-                            switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
-                                case CodeUtils.STRING_UNVALID:
-                                    Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
-                                    break;
-                                case CodeUtils.STRING_ADDRESS:
-                                    Token token = new Token(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
-                                    intent = new Intent(mActivity, TransferActivity.class);
-                                    intent.putExtra(TransferActivity.EXTRA_TOKEN, token);
-                                    intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);
-                                    startActivity(intent);
-                                    break;
-                                case CodeUtils.STRING_KEYSTORE:
-                                    intent = new Intent(this, ImportWalletActivity.class);
-                                    intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
-                                    intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_KEYSTORE);
-                                    intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
-                                    startActivity(intent);
-                                    break;
-                                case CodeUtils.STRING_WEB:
-                                    SimpleWebActivity.gotoSimpleWeb(this, result);
-                                    break;
-                                case CodeUtils.STRING_PRIVATE_KEY:
-                                    intent = new Intent(this, ImportWalletActivity.class);
-                                    intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
-                                    intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_PRIVATEKEY);
-                                    intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
-                                    startActivity(intent);
-                                    break;
-                            }
-                        } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                            Toast.makeText(this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
+        if (resultCode == RESULT_OK) switch (requestCode) {
+            case REQUEST_CODE_SCAN:
+                if (null != data) {
+                    Bundle bundle = data.getExtras();
+                    if (bundle == null) return;
+                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        String result = bundle.getString(CodeUtils.RESULT_STRING);
+                        Intent intent;
+                        switch (bundle.getInt(CodeUtils.STRING_TYPE)) {
+                            case CodeUtils.STRING_UNVALID:
+                                Toast.makeText(this, R.string.address_error, Toast.LENGTH_LONG).show();
+                                break;
+                            case CodeUtils.STRING_ADDRESS:
+                                Token token = new Token(ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETHEREUM_MAIN_ID);
+                                intent = new Intent(mActivity, TransferActivity.class);
+                                intent.putExtra(TransferActivity.EXTRA_TOKEN, token);
+                                intent.putExtra(TransferActivity.EXTRA_ADDRESS, result);
+                                startActivity(intent);
+                                break;
+                            case CodeUtils.STRING_KEYSTORE:
+                                intent = new Intent(this, ImportWalletActivity.class);
+                                intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
+                                intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_KEYSTORE);
+                                intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
+                                startActivity(intent);
+                                break;
+                            case CodeUtils.STRING_WEB:
+                                SimpleWebActivity.gotoSimpleWeb(this, result);
+                                break;
+                            case CodeUtils.STRING_PRIVATE_KEY:
+                                intent = new Intent(this, ImportWalletActivity.class);
+                                intent.putExtra(ImportWalletActivity.INTENT_FROM, ImportWalletActivity.INTENT_FROM_VALUE);
+                                intent.putExtra(ImportWalletActivity.QR_CODE_TYPE, ImportWalletActivity.QR_CODE_TYPE_PRIVATEKEY);
+                                intent.putExtra(ImportWalletActivity.QR_CODE_VALUE, result);
+                                startActivity(intent);
+                                break;
                         }
+                    } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                        Toast.makeText(this, R.string.qrcode_handle_fail, Toast.LENGTH_LONG).show();
                     }
-                    break;
-                default:
-                    break;
-            }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

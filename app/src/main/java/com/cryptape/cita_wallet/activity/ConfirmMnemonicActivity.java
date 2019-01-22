@@ -128,7 +128,6 @@ public class ConfirmMnemonicActivity extends BaseActivity {
                 } else {
                     EventBus.getDefault().post(new TokenRefreshEvent());
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.Companion.getTAG());
                     startActivity(intent);
                 }
                 EventBus.getDefault().post(new CloseWalletInfoEvent());

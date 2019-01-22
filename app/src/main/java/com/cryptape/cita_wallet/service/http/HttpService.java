@@ -19,6 +19,7 @@ import com.cryptape.cita_wallet.util.NumberUtil;
 import com.cryptape.cita_wallet.util.db.DBWalletUtil;
 import com.cryptape.cita_wallet.util.ether.EtherUtil;
 import com.cryptape.cita_wallet.util.url.HttpCITAUrls;
+
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
@@ -121,7 +122,7 @@ public class HttpService {
             @Override
             public Observable<List<RestTransaction>> call(AppMetaData.AppMetaDataResult result) {
                 try {
-                    String citaUrl = String.format(HttpCITAUrls.CITA_TRANSACTION_URL, wallet.address, page, OFFSET);
+                    String citaUrl = String.format(HttpCITAUrls.CITA_TRANSACTION_URL, wallet.address, page + 1, OFFSET);
                     final Request citaRequest = new Request.Builder().url(citaUrl).build();
                     Call citaCall = HttpService.getHttpClient().newCall(citaRequest);
 

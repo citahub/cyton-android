@@ -87,7 +87,6 @@ class ImportWalletPresenter(val activity: Activity, val progress: (show: Boolean
             SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT_TIP, true)
         } else {
             val intent = Intent(activity, MainActivity::class.java)
-            intent.putExtra(MainActivity.EXTRA_TAG, WalletFragment.TAG)
             activity.startActivity(intent)
         }
         Toast.makeText(activity, R.string.wallet_export_success, Toast.LENGTH_SHORT).show()
