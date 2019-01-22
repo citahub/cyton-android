@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -35,7 +35,7 @@
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical">
 
-                <org.nervos.neuron.view.WalletAssetsView
+                <com.cryptape.cita_wallet.view.WalletAssetsView
                     android:id="@+id/view_wallet_assets"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

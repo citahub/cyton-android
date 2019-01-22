@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/default_background"
+    android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:title="@string/title_token_management"
+        app:isShowBottomLine="true"
         app:isShowLeft="true"
         app:isShowRight="true"
-        app:right_img="@drawable/add"
-        app:isShowBottomLine="true"/>
+        app:right_text="@string/edit"
+        app:title="@string/title_token_management" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/token_recycler"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@color/white" />
 
 </LinearLayout>

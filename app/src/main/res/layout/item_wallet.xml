@@ -34,10 +34,9 @@
 
     <TextView
         android:id="@+id/tv_address"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:ellipsize="middle"
-        android:maxEms="12"
         android:singleLine="true"
         android:textColor="@color/font_title_third"
         android:textSize="13sp"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="95dp"
-    android:id="@+id/root"
     android:background="@color/default_background">
 
     <android.support.constraint.ConstraintLayout
@@ -30,9 +30,24 @@
             android:layout_marginLeft="13dp"
             android:textColor="@color/font_title"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_chain_name"
             app:layout_constraintStart_toEndOf="@id/iv_token_logo"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_chain_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/font_title_third"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_token_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_token_name"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.4" />
 
         <TextView
             android:id="@+id/tv_loading"
@@ -42,6 +57,7 @@
             android:text="@string/wallet_token_loading"
             android:textColor="@color/font_title_third"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +70,7 @@
             android:gravity="end"
             android:textColor="@color/font_title"
             android:textSize="16sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/tv_token_currency"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

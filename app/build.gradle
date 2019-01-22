@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$rootDir/config.gradle"
-apply plugin: 'com.sensorsdata.analytics.android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion appConfig.compileSdkVersion
     defaultConfig {
-        applicationId "org.nervos.neuron"
+        applicationId "com.cryptape.cita_wallet"
         targetSdkVersion appConfig.targetSdkVersion
         minSdkVersion appConfig.minSdkVersion
         versionCode appConfig.versionCode
+        versionName getVersionName(appConfig.isDebug)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [InstallChannelValue: "cryptape"]
     }
@@ -55,10 +55,10 @@ android {
                 output.assemble.dependsOn lintTask
 
                 if (variant.buildType.name == 'release') {
-                    def apkName = "neuron_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
+                    def apkName = "cyton_v${getVersionName(false)}_${variant.productFlavors[0].name}.apk"
                     outputFileName = new File(apkName)
                 } else {
-                    def apkName = "neuron_v${getVersionName(true)}.apk"
+                    def apkName = "cyton_v${getVersionName(true)}.apk"
                     outputFileName = new File(apkName)
                 }
             }
@@ -81,34 +81,21 @@ android {
             preDexLibraries true
             maxProcessCount 8
             javaMaxHeapSize "3072m"
-            // Instead of setting the heap size for the DEX process, increase Gradle's
-            // heap size to enable dex-in-process. To learm more, read the next section.
-            // javaMaxHeapSize "2048m"
         }
     }
 
     // 渠道配置
     flavorDimensions "default"
     productFlavors {
-//        yingyongbao { dimension "default" }
-//        _360 { dimension "default" }
-//        oppo { dimension "default" }
-//        baidu { dimension "default" }
-//        huawei { dimension "default" }
-//        xiaomi { dimension "default" }
-//        vivo { dimension "default" }
-//        wandoujia { dimension "default" }
         cryptape { dimension "default" }
         dev {
-            versionName = appConfig.devVersionName
             resConfigs appConfig.devResConfigsEn, appConfig.devResConfigsDraw
         }
     }
 
     productFlavors.all { flavor ->
-        if (!name.equals("dev")) {
+        if (name != "dev") {
             flavor.manifestPlaceholders = [InstallChannelValue: name]
-            flavor.versionName = getVersionName(appConfig.isDebug)
             flavor.multiDexEnabled = true
         }
     }
@@ -117,6 +104,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions{
+        jvmTarget = '1.8'
+    }
+
     buildToolsVersion '28.0.3'
 }
 
@@ -127,18 +119,16 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'io.reactivex:rxandroid:1.2.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.7'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.56'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.60'
     implementation 'org.abstractj.kalium:kalium:0.7.0'
     implementation 'com.google.protobuf:protobuf-java:3.5.1'
+    implementation 'com.google.guava:guava:24.1-jre'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
-    implementation 'com.snappydb:snappydb-lib:0.5.2'
-    implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
-    implementation 'com.google.guava:guava:24.1-android'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.snappydb:snappydb-lib:0.5.2'
@@ -151,20 +141,19 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'org.web3j:core:3.3.1-android'
     implementation 'com.yanzhenjie:permission:2.0.0-rc5'
-    implementation 'io.reactivex:rxjava:1.2.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:2.1.2'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/infura-3.3.1-android.jar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation files('libs/abi-0.20.jar')
-    implementation files('libs/core-0.20.jar')
-    implementation files('libs/crypto-0.20.jar')
-    implementation files('libs/protobuf-0.20.jar')
-    implementation files('libs/utils-0.20.jar')
+    implementation files('libs/abi-0.20.3.jar')
+    implementation files('libs/core-0.20.3.jar')
+    implementation files('libs/crypto-0.20.3.jar')
+    implementation files('libs/protobuf-0.20.3.jar')
+    implementation files('libs/utils-0.20.3.jar')
 }
 repositories {
     mavenCentral()

@@ -12,7 +12,9 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             android:background="@color/warning_background"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/warning"
@@ -122,7 +124,7 @@
             android:textColor="@color/font_title_third"
             android:textSize="12sp" />
 
-        <org.nervos.neuron.view.button.CommonButton
+        <com.cryptape.cita_wallet.view.button.CommonButton
             android:id="@+id/import_private_key_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

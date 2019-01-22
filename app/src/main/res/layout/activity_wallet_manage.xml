@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -63,14 +63,12 @@
 
         <TextView
             android:id="@+id/wallet_name_text"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="85dp"
-            android:layout_toEndOf="@id/tv_name"
             android:drawableEnd="@drawable/right_arrow"
             android:drawablePadding="5dp"
-            android:ellipsize="middle"
+            android:ellipsize="end"
             android:gravity="center_vertical|end"
             android:singleLine="true"
             android:text="@string/wallet_name"
@@ -102,27 +100,25 @@
 
         <TextView
             android:id="@+id/wallet_address"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="85dp"
-            android:layout_toEndOf="@id/wallet_address_text"
+            android:layout_centerVertical="true"
             android:ellipsize="middle"
-            android:gravity="center_vertical"
-            android:maxEms="16"
+            android:gravity="end"
             android:singleLine="true"
             android:textColor="@color/font_title_second"
             android:textSize="13sp" />
     </RelativeLayout>
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/change_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:name="@string/change_password" />
 
-    <org.nervos.neuron.view.SettingButtonView
+    <com.cryptape.cita_wallet.view.SettingButtonView
         android:id="@+id/export_keystore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -136,9 +132,9 @@
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/default_margin"
         android:gravity="center"
         android:text="@string/delete_wallet"
         android:textColor="@color/colorPrimary"

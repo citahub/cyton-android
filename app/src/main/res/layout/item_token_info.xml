@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="80dp"
+    android:layout_marginStart="@dimen/default_margin">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginStart="@dimen/default_margin">
+    <ImageView
+        android:id="@+id/token_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/token_image_circle_border"
+        android:padding="5dp" />
 
-        <ImageView
-            android:id="@+id/token_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/token_image_circle_border"
-            android:padding="5dp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@id/token_image"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/token_symbol_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="15dp"
-            android:layout_toEndOf="@id/token_image"
-            android:orientation="vertical">
+            android:textColor="@color/font_title"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/token_name_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/font_title"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/token_symbol_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textColor="@color/font_title_second"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/token_contract_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="middle"
-                android:maxEms="16"
-                android:singleLine="true"
-                android:textColor="@color/font_title_third"
-                android:textSize="13sp" />
-
-        </LinearLayout>
-
-        <Switch
-            android:id="@+id/switch_token_select"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/token_chain_name_text"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/default_margin"/>
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:textColor="@color/font_title_third"
+            android:textSize="13sp" />
 
-        <View
-            style="@style/separateLineLong"
-            android:layout_alignParentBottom="true" />
+        <TextView
+            android:id="@+id/token_contract_address"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="middle"
+            android:maxEms="16"
+            android:singleLine="true"
+            android:textColor="@color/font_title_third"
+            android:textSize="13sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
+    <Switch
+        android:id="@+id/switch_token_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:visibility="visible" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/iv_drag"
+        android:layout_width="22dp"
+        android:layout_height="8dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:background="@drawable/icon_token_drag"
+        android:visibility="gone" />
+
+    <View
+        style="@style/separateLineLong"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

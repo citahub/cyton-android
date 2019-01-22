@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.nervos.neuron">
+    package="com.cryptape.cita_wallet">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
-        android:name=".application.NeuronApplication"
+        android:name=".CytonApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -54,7 +54,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activity.AddTokenActivity"
+            android:name=".activity.addtoken.AddTokenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -69,6 +69,10 @@
 
         <activity
             android:name=".activity.transfer.TransferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".activity.AdvanceSetupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -188,7 +192,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="org.nervos.neuron.fileprovider"
+            android:authorities="com.cryptape.cita_wallet.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -196,8 +200,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".application.ApplicationService" />
-        <service android:name=".service.intent.AppChainTransactionCheckService"
+        <service android:name=".service.intent.CITATransactionCheckService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 

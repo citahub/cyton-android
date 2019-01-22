@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -31,8 +31,8 @@
                 android:id="@+id/tv_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:lines="1"
                 android:textColor="@color/font_title"
@@ -47,12 +47,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:layout_marginBottom="4dp"
                 android:textColor="@color/font_title"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_value"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_value" />
+                app:layout_constraintStart_toEndOf="@id/tv_value"
+                app:layout_constraintTop_toTopOf="@id/tv_value" />
 
             <TextView
                 android:id="@+id/tv_gas_price_title"
@@ -80,8 +80,8 @@
                 android:id="@+id/tv_gas_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginEnd="5dp"
+                android:background="@color/white"
                 android:gravity="center_vertical|end"
                 android:textColor="@color/font_title"
                 android:textSize="15sp"
@@ -181,14 +181,15 @@
 
             <TextView
                 android:id="@+id/tv_receiver_address"
-                android:layout_width="222dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:gravity="start"
                 android:textColor="@color/font_title"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_receiver_address_title"
                 app:layout_constraintTop_toTopOf="@id/tv_receiver_address_title" />
 
             <View
@@ -211,20 +212,20 @@
 
             <TextView
                 android:id="@+id/tv_sender_address"
-                android:layout_width="222dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:gravity="start"
-                android:text=""
                 android:textColor="@color/font_title"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_sender_address_title"
                 app:layout_constraintTop_toTopOf="@id/tv_sender_address_title" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-    <org.nervos.neuron.view.button.CommonButton
+    <com.cryptape.cita_wallet.view.button.CommonButton
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

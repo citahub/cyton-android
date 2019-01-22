@@ -1,3 +1,3 @@
-- [Neuron 简介](neuron.md)
+- [Cyton 简介](cyton.md)
 - [隐私政策](privacy-policy.md)
 - [产品协议](product-agreement.md)

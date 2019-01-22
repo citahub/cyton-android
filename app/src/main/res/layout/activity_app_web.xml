@@ -64,12 +64,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <org.nervos.neuron.view.webview.NeuronWebView
+            <com.cryptape.cita_wallet.view.webview.CytonWebView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <org.nervos.neuron.view.WebErrorView
+            <com.cryptape.cita_wallet.view.WebErrorView
                 android:id="@+id/view_web_error"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

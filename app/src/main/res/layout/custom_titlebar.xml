@@ -8,17 +8,18 @@
 
     <RelativeLayout
         android:id="@+id/title_bar_left"
-        android:layout_width="48dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/title_bar_left_default"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:drawableStart="@drawable/black_back"
+            android:gravity="center"
             android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
             android:textColor="@color/font_title_second"
             android:textSize="16sp" />
 
@@ -46,14 +47,14 @@
 
     <RelativeLayout
         android:id="@+id/title_bar_right"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/default_margin">
 
         <TextView
             android:id="@+id/title_bar_right_default"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"

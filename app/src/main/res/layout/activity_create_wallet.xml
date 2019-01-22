@@ -6,7 +6,7 @@
     android:background="@color/default_background"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -17,7 +17,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
         android:background="@color/warning_background"
         android:drawablePadding="5dp"
         android:drawableStart="@drawable/warning"
@@ -93,7 +95,7 @@
         android:textColor="@color/font_title_third"
         android:textSize="12sp" />
 
-    <org.nervos.neuron.view.button.CommonButton
+    <com.cryptape.cita_wallet.view.button.CommonButton
         android:id="@+id/commonBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

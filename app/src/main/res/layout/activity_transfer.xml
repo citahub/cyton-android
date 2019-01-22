@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <org.nervos.neuron.view.TitleBar
+    <com.cryptape.cita_wallet.view.TitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -14,13 +14,13 @@
         app:isShowLeft="true"
         app:title="@string/title_transfer" />
 
-    <org.nervos.neuron.view.button.CommonButton
+    <com.cryptape.cita_wallet.view.button.CommonButton
         android:id="@+id/next_action_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         app:status="true"
         app:text="@string/next_action" />
 
@@ -56,8 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/wallet_photo"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
                     android:layout_toEndOf="@id/wallet_photo"
                     android:textColor="@color/font_title"
                     android:textSize="15sp" />
@@ -67,8 +67,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/wallet_photo"
-                    android:layout_marginEnd="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
                     android:layout_toEndOf="@id/wallet_photo"
                     android:ellipsize="middle"
                     android:singleLine="true"
@@ -81,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/white"
-                android:paddingEnd="@dimen/default_margin"
-                android:paddingStart="@dimen/default_margin">
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,8 +111,8 @@
                 android:gravity="start|center_vertical"
                 android:hint="@string/token_transfer_value"
                 android:inputType="numberDecimal"
-                android:paddingEnd="@dimen/default_margin"
                 android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
                 android:textSize="20sp" />
 
             <RelativeLayout
@@ -121,8 +121,8 @@
                 android:layout_marginTop="@dimen/default_margin"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/default_margin"
-                android:paddingStart="@dimen/default_margin">
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,24 +142,24 @@
 
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/transfer_address"
+            <com.cryptape.cita_wallet.view.CompressEditText
+                android:id="@+id/cet_address"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/white"
-                android:gravity="start|center_vertical"
-                android:hint="@string/input_receive_address_hint"
-                android:paddingEnd="@dimen/default_margin"
                 android:paddingStart="@dimen/default_margin"
-                android:textSize="12sp" />
+                android:paddingEnd="@dimen/default_margin"
+                app:edit_hint="@string/input_receive_address_hint"
+                app:text_color="@color/font_title"
+                app:text_size="12sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="@dimen/default_margin"
                 android:background="@color/white"
-                android:paddingEnd="@dimen/default_margin"
-                android:paddingStart="@dimen/default_margin">
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -174,9 +174,9 @@
                     android:id="@+id/fee_value_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:textColor="@color/font_title"
                     android:textSize="12sp" />
 
