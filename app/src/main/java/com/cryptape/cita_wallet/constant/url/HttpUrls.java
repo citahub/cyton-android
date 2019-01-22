@@ -7,7 +7,7 @@ public class HttpUrls {
 
     // setting module's url list
     public static final String SOURCE_CODE_GITHUB_URL = "https://github.com/cryptape/neuron-android";
-    public static final String PRODUCT_AGREEMENT_URL = "https://docs.nervos.org/neuron-android/#/product-agreement";
+    public static final String PRODUCT_AGREEMENT_URL = "https://docs.nervos.org/cyton-android/#/product-agreement";
     public static final String NERVOS_WEB_URL = "https://www.nervos.org/";
     public static final String OPEN_SEA_URL = "https://opensea.io/";
     public static final String INFURA_URL = "https://infura.io/";
