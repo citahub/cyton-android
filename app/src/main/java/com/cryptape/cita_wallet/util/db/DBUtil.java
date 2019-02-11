@@ -13,7 +13,7 @@ import com.snappydb.SnappydbException;
  */
 public class DBUtil {
 
-    static final String DB_PREFIX = "cyton-";
+    static final String DB_PREFIX = "wallet-";
 
     static DB db = null;
 
