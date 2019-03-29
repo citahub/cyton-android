@@ -52,6 +52,7 @@ class AddTokenManager(val context: Context) {
                     EthRpcService.getTokenInfo(contractAddress, address)
                 }
                 else -> {
+                    CITARpcService.setHttpProvider(chain.httpProvider)
                     CITARpcService.getErc20TokenInfo(contractAddress)
                 }
             }
