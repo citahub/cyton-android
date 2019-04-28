@@ -19,6 +19,7 @@ import com.cryptape.cita_wallet.activity.TransactionDetailActivity;
 import com.cryptape.cita_wallet.activity.transactionlist.model.TransactionAdapter;
 import com.cryptape.cita_wallet.activity.transactionlist.presenter.TransactionListPresenter;
 import com.cryptape.cita_wallet.activity.transfer.TransferActivity;
+import com.cryptape.cita_wallet.constant.ConstantUtil;
 import com.cryptape.cita_wallet.event.TransferPushEvent;
 import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.item.Wallet;
@@ -180,7 +181,7 @@ public class TransactionListActivity extends NBaseActivity {
     };
 
     private boolean isTestToken() {
-        return "NATT".equalsIgnoreCase(token.symbol) || "MBA".equalsIgnoreCase(token.symbol);
+        return ConstantUtil.DEFAULT_TOKEN_NAME.equalsIgnoreCase(token.symbol) || ConstantUtil.CMB_TOKEN_SYMBOL.equalsIgnoreCase(token.symbol);
     }
 
 }
