@@ -28,7 +28,6 @@ public class SimpleWebViewClient extends WebViewClient {
             switch (error.getErrorCode()) {
                 case ERROR_BAD_URL:
                 case ERROR_FAILED_SSL_HANDSHAKE:
-                case ERROR_HOST_LOOKUP:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
@@ -51,7 +50,6 @@ public class SimpleWebViewClient extends WebViewClient {
             switch (errorCode) {
                 case ERROR_BAD_URL:
                 case ERROR_FAILED_SSL_HANDSHAKE:
-                case ERROR_HOST_LOOKUP:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
