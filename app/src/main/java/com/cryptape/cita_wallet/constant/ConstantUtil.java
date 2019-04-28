@@ -41,12 +41,12 @@ public class ConstantUtil {
     public static final String CMB_TOKEN_AVATAR = "https://download.mba.cmbchina.biz/images/MBA-logo.jpg";
     public static final String CMB_HTTP_PROVIDER = "http://testnet.mba.cmbchina.biz:1337";
 
-    public static final String NATT_CHAIN_ID = "1";
-    public static final String NATT_CHAIN_NAME = "test-chain";
-    public static final String NATT_TOKEN_NAME = "Nervos CITA Test Token";
-    public static final String NATT_TOKEN_SYMBOL = "NATT";
-    public static final String NATT_TOKEN_AVATAR = "https://cdn.cryptape.com/icon_appchain.png";
-    public static final String NATT_HTTP_PROVIDER = "https://node.cryptape.com";
+    public static final String DEFAULT_CHAIN_ID = "1";
+    public static final String DEFAULT_CHAIN_NAME = "test-chain";
+    public static final String DEFAULT_TOKEN_NAME = "CITA Test Token";
+    public static final String DEFAULT_TOKEN_SYMBOL = "CTT";
+    public static final String DEFAULT_TOKEN_AVATAR = "https://cdn.cryptape.com/icon_appchain.png";
+    public static final String DEFAULT_HTTP_PROVIDER = "https://node.cryptape.com";
 
     public static final long VALID_BLOCK_NUMBER_DIFF = 80L;
 

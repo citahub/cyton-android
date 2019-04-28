@@ -3,15 +3,15 @@ package com.cryptape.cita_wallet.util.db;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.cryptape.cita_wallet.constant.ConstantUtil;
+import com.cryptape.cita_wallet.item.Chain;
+import com.cryptape.cita_wallet.item.Token;
+import com.cryptape.cita_wallet.item.Wallet;
+import com.cryptape.cita_wallet.util.crypto.WalletEntity;
 import com.esotericsoftware.kryo.Kryo;
 import com.snappydb.DB;
 import com.snappydb.SnappydbException;
 
-import com.cryptape.cita_wallet.item.Chain;
-import com.cryptape.cita_wallet.item.Token;
-import com.cryptape.cita_wallet.item.Wallet;
-import com.cryptape.cita_wallet.constant.ConstantUtil;
-import com.cryptape.cita_wallet.util.crypto.WalletEntity;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -45,8 +45,8 @@ public class DBWalletUtil extends DBUtil {
         wallet.chains.add(new Chain(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
         wallet.chains.add(new Chain(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
                 ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
-        wallet.chains.add(new Chain(ConstantUtil.NATT_CHAIN_ID, ConstantUtil.NATT_CHAIN_NAME, ConstantUtil.NATT_HTTP_PROVIDER,
-                ConstantUtil.NATT_TOKEN_NAME, ConstantUtil.NATT_TOKEN_SYMBOL, ConstantUtil.NATT_TOKEN_AVATAR));
+        wallet.chains.add(new Chain(ConstantUtil.DEFAULT_CHAIN_ID, ConstantUtil.DEFAULT_CHAIN_NAME, ConstantUtil.DEFAULT_HTTP_PROVIDER,
+                ConstantUtil.DEFAULT_TOKEN_NAME, ConstantUtil.DEFAULT_TOKEN_SYMBOL, ConstantUtil.DEFAULT_TOKEN_AVATAR));
         for (Chain chain : wallet.chains) {
             if (!TextUtils.isEmpty(chain.tokenName)) {
                 wallet.tokens.add(new Token(chain));
