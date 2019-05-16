@@ -181,7 +181,7 @@ public class TransactionListActivity extends NBaseActivity {
     };
 
     private boolean isTestToken() {
-        return ConstantUtil.DEFAULT_TOKEN_NAME.equalsIgnoreCase(token.symbol) || ConstantUtil.CMB_TOKEN_SYMBOL.equalsIgnoreCase(token.symbol);
+        return ConstantUtil.DEFAULT_TOKEN_NAME.equalsIgnoreCase(token.symbol) || ConstantUtil.MBA_TOKEN_SYMBOL.equalsIgnoreCase(token.symbol);
     }
 
 }

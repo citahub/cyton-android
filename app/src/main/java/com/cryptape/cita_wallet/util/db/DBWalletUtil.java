@@ -43,8 +43,8 @@ public class DBWalletUtil extends DBUtil {
 
     public static Wallet initChainToCurrentWallet(Context context, Wallet wallet) {
         wallet.chains.add(new Chain(ConstantUtil.ETHEREUM_MAIN_ID, ConstantUtil.ETH_MAINNET, ConstantUtil.ETH, ConstantUtil.ETH));
-        wallet.chains.add(new Chain(ConstantUtil.CMB_CHAIN_ID, ConstantUtil.CMB_CHAIN_NAME, ConstantUtil.CMB_HTTP_PROVIDER,
-                ConstantUtil.CMB_TOKEN_NAME, ConstantUtil.CMB_TOKEN_SYMBOL, ConstantUtil.CMB_TOKEN_AVATAR));
+        wallet.chains.add(new Chain(ConstantUtil.MBA_CHAIN_ID, ConstantUtil.MBA_CHAIN_NAME, ConstantUtil.MBA_HTTP_PROVIDER,
+                ConstantUtil.MBA_TOKEN_NAME, ConstantUtil.MBA_TOKEN_SYMBOL, ConstantUtil.MBA_TOKEN_AVATAR));
         wallet.chains.add(new Chain(ConstantUtil.DEFAULT_CHAIN_ID, ConstantUtil.DEFAULT_CHAIN_NAME, ConstantUtil.DEFAULT_HTTP_PROVIDER,
                 ConstantUtil.DEFAULT_TOKEN_NAME, ConstantUtil.DEFAULT_TOKEN_SYMBOL, ConstantUtil.DEFAULT_TOKEN_AVATAR));
         for (Chain chain : wallet.chains) {
