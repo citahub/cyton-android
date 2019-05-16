@@ -34,12 +34,12 @@ public class ConstantUtil {
     public static final BigInteger QUOTA_TOKEN = new BigInteger("21000");
     public static final BigInteger QUOTA_ERC20 = new BigInteger("200000");
 
-    public static final String CMB_CHAIN_ID = "2";
-    public static final String CMB_CHAIN_NAME = "mba-testnet";
-    public static final String CMB_TOKEN_NAME = "Merchant Base Assert";
-    public static final String CMB_TOKEN_SYMBOL = "MBA";
-    public static final String CMB_TOKEN_AVATAR = "https://download.mba.cmbchina.biz/images/MBA-logo.jpg";
-    public static final String CMB_HTTP_PROVIDER = "http://testnet.mba.cmbchina.biz:1337";
+    public static final String MBA_CHAIN_ID = "2";
+    public static final String MBA_CHAIN_NAME = "mba-testnet";
+    public static final String MBA_TOKEN_NAME = "Merchant Base Assert";
+    public static final String MBA_TOKEN_SYMBOL = "MBA";
+    public static final String MBA_TOKEN_AVATAR = "https://download.mba.cmbchina.biz/images/MBA-logo.jpg";
+    public static final String MBA_HTTP_PROVIDER = "http://testnet.mba.cmbchina.biz:1337";
 
     public static final String DEFAULT_CHAIN_ID = "1";
     public static final String DEFAULT_CHAIN_NAME = "test-chain";
