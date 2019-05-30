@@ -137,14 +137,14 @@ public class CytonWebViewClient extends WebViewClient {
         byte[] buffer = js.getBytes();
         String encoded = Base64.encodeToString(buffer, Base64.NO_WRAP);
 
-        view.post(() -> view.loadUrl("javascript:(function() {" +
+        view.post(() -> view.evaluateJavascript("javascript:(function() {" +
                 "var parent = document.getElementsByTagName('head').item(0);" +
                 "var script = document.createElement('script');" +
                 "script.type = 'text/javascript';" +
                 // Tell the browser to BASE64-decode the string into your script !!!
                 "script.innerHTML = window.atob('" + encoded + "');" +
                 "parent.appendChild(script)" +
-                "})()"));
+                "})()", null));
     }
 
     @Override
