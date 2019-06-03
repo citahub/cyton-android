@@ -7,6 +7,7 @@ import com.cryptape.cita_wallet.constant.ConstantUtil;
 import com.cryptape.cita_wallet.item.Chain;
 import com.cryptape.cita_wallet.item.Token;
 import com.cryptape.cita_wallet.item.Wallet;
+import com.cryptape.cita_wallet.util.NumberUtil;
 import com.cryptape.cita_wallet.util.crypto.WalletEntity;
 import com.esotericsoftware.kryo.Kryo;
 import com.snappydb.DB;
@@ -301,6 +302,10 @@ public class DBWalletUtil extends DBUtil {
         if (wallet != null) {
             if (wallet.chains == null) {
                 wallet.chains = new ArrayList<>();
+            }
+            if(NumberUtil.isHex(chain.getChainId())){
+               Long chainIdLong= NumberUtil.hexToLong(chain.getChainId());
+               chain.setChainId(chainIdLong.toString());
             }
             int index = checkChainInWallet(wallet, chain);
             if (index == -1) {
