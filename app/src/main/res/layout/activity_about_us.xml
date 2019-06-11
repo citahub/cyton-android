@@ -69,6 +69,7 @@
                 android:id="@+id/sbv_server_private"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:icon="@drawable/ic_about_us_server_pri"
                 app:name="@string/about_us_server_private" />
 
