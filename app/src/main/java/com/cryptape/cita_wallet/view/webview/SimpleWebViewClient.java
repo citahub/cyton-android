@@ -8,6 +8,7 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.view.WebErrorView;
 
@@ -24,10 +25,10 @@ public class SimpleWebViewClient extends WebViewClient {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         try {
-            if (!mContext.getString(R.string.about_blank).equals(view.getUrl())) mWebErrorView.setReloadUrl(view.getUrl());
+            if (!mContext.getString(R.string.about_blank).equals(view.getUrl()))
+                mWebErrorView.setReloadUrl(view.getUrl());
             switch (error.getErrorCode()) {
                 case ERROR_BAD_URL:
-                case ERROR_FAILED_SSL_HANDSHAKE:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
@@ -46,10 +47,10 @@ public class SimpleWebViewClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         try {
-            if (!view.getUrl().equals(mContext.getString(R.string.about_blank))) mWebErrorView.setReloadUrl(view.getUrl());
+            if (!view.getUrl().equals(mContext.getString(R.string.about_blank)))
+                mWebErrorView.setReloadUrl(view.getUrl());
             switch (errorCode) {
                 case ERROR_BAD_URL:
-                case ERROR_FAILED_SSL_HANDSHAKE:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
