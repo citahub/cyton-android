@@ -53,7 +53,8 @@
     <string name="confirm_transfer_action">Confirm</string>
     <string name="input_app_website_hint">Please input the decentralized web url</string>
     <string name="add_token_success">Token added</string>
-    <string name="import_mnemonic_path_err">Please input custom path</string><string name="backup_successful">Backup successful</string>
+    <string name="import_mnemonic_path_err">Please input custom path</string>
+    <string name="backup_successful">Backup successful</string>
 
 
     <string name="collection_id_place_holder">ID:%s</string>
