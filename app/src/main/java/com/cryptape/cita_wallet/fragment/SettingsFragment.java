@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.activity.AboutUsActivity;
 import com.cryptape.cita_wallet.activity.CurrencyActivity;
@@ -105,7 +107,8 @@ public class SettingsFragment extends NBaseFragment {
             if (isChecked) {
                 //setting fingerprint
                 if (mFingerPrintController.hasEnrolledFingerprints() && mFingerPrintController.getEnrolledFingerprints().size() > 0) {
-                    if (mAuthFingerDialog == null) mAuthFingerDialog = new AuthFingerDialog(getActivity());
+                    if (mAuthFingerDialog == null)
+                        mAuthFingerDialog = new AuthFingerDialog(getActivity());
                     mAuthFingerDialog.setOnShowListener((dialogInterface) -> {
                         mFingerPrintController.authenticate(authenticateResultCallback);
                     });
@@ -143,7 +146,7 @@ public class SettingsFragment extends NBaseFragment {
             SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_TALK_URL);
         });
         mSbvSelectEth.setOnClickListener(() -> {
-            SimpleSelectDialog dialog = new SimpleSelectDialog(getActivity(), ethNodeList);
+            SimpleSelectDialog dialog = new SimpleSelectDialog(getActivity(), ethNodeList, -1);
             dialog.setMSelected(ethNodeIndex);
             dialog.setOnOkListener((view -> {
                 ethNodeIndex = dialog.getMSelected();
@@ -196,7 +199,8 @@ public class SettingsFragment extends NBaseFragment {
         @Override
         public void onAuthenticationSucceeded() {
             mSbvFingerPrint.setSwitchCheck(true);
-            if (mAuthFingerDialog != null && mAuthFingerDialog.isShowing()) mAuthFingerDialog.dismiss();
+            if (mAuthFingerDialog != null && mAuthFingerDialog.isShowing())
+                mAuthFingerDialog.dismiss();
             SharePrefUtil.putBoolean(ConstantUtil.FINGERPRINT, true);
             Toast.makeText(getContext(), getResources().getString(R.string.fingerprint_setting_sucess), Toast.LENGTH_SHORT).show();
         }
