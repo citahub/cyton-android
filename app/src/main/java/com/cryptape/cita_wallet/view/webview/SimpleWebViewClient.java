@@ -28,7 +28,9 @@ public class SimpleWebViewClient extends WebViewClient {
             if (!mContext.getString(R.string.about_blank).equals(view.getUrl()))
                 mWebErrorView.setReloadUrl(view.getUrl());
             switch (error.getErrorCode()) {
-                case ERROR_BAD_URL:
+                case ERROR_CONNECT:
+                case ERROR_TIMEOUT:
+                case ERROR_HOST_LOOKUP:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
@@ -50,7 +52,9 @@ public class SimpleWebViewClient extends WebViewClient {
             if (!view.getUrl().equals(mContext.getString(R.string.about_blank)))
                 mWebErrorView.setReloadUrl(view.getUrl());
             switch (errorCode) {
-                case ERROR_BAD_URL:
+                case ERROR_CONNECT:
+                case ERROR_TIMEOUT:
+                case ERROR_HOST_LOOKUP:
                     mWebErrorView.post(() -> {
                         mWebErrorView.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
