@@ -30,7 +30,7 @@ public class HttpUrls {
     public static final String TOKEN_LOGO = "https://github.com/consenlabs/token-profile/blob/master/images/%s.png?raw=true";
     public static final String TOKEN_DESC = "https://raw.githubusercontent.com/consenlabs/token-profile/master/erc20/%s.json";
     public static final String TOKEN_ERC20_DETAIL = "https://ntp.staging.cryptape.com?token=%s";
-    public static final String TOKEN_DETAIL = "https://ntp.staging.cryptape.com?coin=%s";
+    public static final String TOKEN_DETAIL = "https://ntp.cryptape.com?coin=%s";
 
     //Eth Transaction Detail
     public static final String ETH_MAINNET_TRANSACTION_DETAIL = "https://etherscan.io/tx/%s";
