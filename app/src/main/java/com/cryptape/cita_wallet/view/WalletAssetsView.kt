@@ -40,7 +40,7 @@ class WalletAssetsView(context: Context, attrs: AttributeSet) : ConstraintLayout
             mList = DBWalletUtil.getCurrentWallet(context).tokens
             var list = mutableListOf<String>()
             mList.forEach { item -> list.add(item.symbol) }
-            var dialog = SimpleSelectDialog(context, list)
+            var dialog = SimpleSelectDialog(context, list, 0)
             dialog.setOnOkListener(View.OnClickListener {
                 val intent = Intent(context, TransferActivity::class.java)
                 intent.putExtra(TransferActivity.EXTRA_TOKEN, mList[dialog.mSelected])

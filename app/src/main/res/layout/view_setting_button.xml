@@ -23,9 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dip"
-        android:text="@string/local_currency"
         android:textColor="@color/font_title"
         android:textSize="15sp"
+        app:layout_constraintRight_toLeftOf="@id/tv_right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_setting_icon"
         app:layout_constraintTop_toTopOf="parent" />
@@ -65,12 +65,14 @@
 
     <TextView
         android:id="@+id/tv_right"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="7dp"
         android:textColor="@color/font_title_third"
         android:textSize="13sp"
         android:visibility="gone"
+        android:textAlignment="viewEnd"
+        app:layout_constraintLeft_toRightOf="@id/tv_setting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/iv_setting_open"
         app:layout_constraintTop_toTopOf="parent" />
