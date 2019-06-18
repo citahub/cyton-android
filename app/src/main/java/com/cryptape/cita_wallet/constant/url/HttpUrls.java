@@ -11,7 +11,7 @@ public class HttpUrls {
     public static final String NERVOS_WEB_URL = "https://www.nervos.org/";
     public static final String OPEN_SEA_URL = "https://opensea.io/";
     public static final String INFURA_URL = "https://infura.io/";
-    public static final String NERVOS_TALK_URL = "https://forums.nervos.org/";
+    public static final String CITAHUB_TALK_URL = "https://talk.citahub.com/";
     public static final String PECKSHEILD_URL = "https://peckshield.com/";
     public static final String CITA_GITHUB_URL = "https://github.com/cryptape/cita";
 
