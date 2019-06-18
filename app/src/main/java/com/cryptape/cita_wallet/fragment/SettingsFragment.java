@@ -143,7 +143,7 @@ public class SettingsFragment extends NBaseFragment {
             }
         });
         mSbvForums.setOnClickListener(() -> {
-            SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.NERVOS_TALK_URL);
+            SimpleWebActivity.gotoSimpleWeb(getActivity(), HttpUrls.CITAHUB_TALK_URL);
         });
         mSbvSelectEth.setOnClickListener(() -> {
             SimpleSelectDialog dialog = new SimpleSelectDialog(getActivity(), ethNodeList, -1);
