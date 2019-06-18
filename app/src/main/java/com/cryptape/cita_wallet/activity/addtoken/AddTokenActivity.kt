@@ -135,7 +135,14 @@ class AddTokenActivity : NBaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tv_chain_name, R.id.iv_triangle_spinner -> {
-                var dialog = SimpleSelectDialog(mActivity, mChainNameList!!)
+                var selectedIndex = 0
+                if (mChain == null) {
+                    selectedIndex = mChainNameList!!.size - 1
+                } else {
+                    selectedIndex = mChainNameList!!.indexOf(mChain!!.name)
+                }
+                selectedIndex = if (selectedIndex == -1) 0 else selectedIndex
+                val dialog = SimpleSelectDialog(mActivity, mChainNameList!!, selectedIndex)
                 dialog.setOnOkListener(View.OnClickListener {
                     tv_chain_name.text = mChainNameList!![dialog.mSelected]
                     if (dialog.mSelected == mChainNameList!!.size - 1) {

@@ -105,6 +105,7 @@
         app:name="@string/setting_about_us" />
 
     <com.cryptape.cita_wallet.view.SettingButtonView
+        android:visibility="gone"
         android:id="@+id/sbv_contact_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

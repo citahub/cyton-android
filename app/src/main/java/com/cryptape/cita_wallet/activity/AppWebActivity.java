@@ -152,6 +152,7 @@ public class AppWebActivity extends NBaseActivity {
     }
 
     private void initWebView() {
+        webView.init();
         initInjectWebView();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

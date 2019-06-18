@@ -13,9 +13,8 @@ import com.cryptape.cita_wallet.R
 /**
  * Created by BaojunCZ on 2018/11/22.
  */
-class SimpleSelectDialog(val context: Context, val list: List<String>) : SelectorDialog(context) {
+class SimpleSelectDialog(val context: Context, val list: List<String>, var mSelected: Int = -1) : SelectorDialog(context) {
 
-    var mSelected: Int = 0
     private var mMaxIndex: Int = 7
     private var mMaxHeight: Float = 280f
 

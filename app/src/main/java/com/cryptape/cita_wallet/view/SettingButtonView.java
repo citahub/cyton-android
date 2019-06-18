@@ -69,8 +69,12 @@ public class SettingButtonView extends ConstraintLayout {
         if (!TextUtils.isEmpty(rightStr)) {
             rightText.setVisibility(VISIBLE);
             rightText.setText(rightStr);
-        } else
+        } else{
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) nameText.getLayoutParams();
+            layoutParams.width=0;
+            nameText.setLayoutParams(layoutParams);
             rightText.setVisibility(GONE);
+        }
         boolean switchButton = ta.getBoolean(R.styleable.SettingButtonView_switch_button, false);
         endSwitch.setVisibility(switchButton ? VISIBLE : GONE);
 

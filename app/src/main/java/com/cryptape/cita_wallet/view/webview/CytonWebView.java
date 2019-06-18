@@ -51,17 +51,14 @@ public class CytonWebView extends WebView {
 
     public CytonWebView(@NonNull Context context) {
         super(context);
-        init();
     }
 
     public CytonWebView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public CytonWebView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     @Override
@@ -75,7 +72,7 @@ public class CytonWebView extends WebView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void init() {
+    public void init() {
         jsInjectorClient = new JsInjectorClient(getContext());
         webViewClient = new CytonWebViewClient(jsInjectorClient, new UrlHandlerManager());
         WebSettings webSettings = getSettings();
@@ -95,8 +92,6 @@ public class CytonWebView extends WebView {
                 innerOnSignMessageListener,
                 innerOnSignPersonalMessageListener,
                 innerOnSignTypedMessageListener), "cytonSign");
-
-        super.setWebViewClient(webViewClient);
     }
 
     public void setWalletAddress(@NonNull Address address) {
@@ -195,7 +190,7 @@ public class CytonWebView extends WebView {
     }
 
     private String getFailFunction(String param) {
-        return isJson(param)? JS_PROTOCOL_JSON_ON_FAILURE : JS_PROTOCOL_ON_FAILURE;
+        return isJson(param) ? JS_PROTOCOL_JSON_ON_FAILURE : JS_PROTOCOL_ON_FAILURE;
     }
 
     private final OnSignTransactionListener innerOnSignTransactionListener = new OnSignTransactionListener() {

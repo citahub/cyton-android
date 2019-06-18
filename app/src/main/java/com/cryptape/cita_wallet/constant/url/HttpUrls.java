@@ -11,7 +11,7 @@ public class HttpUrls {
     public static final String NERVOS_WEB_URL = "https://www.nervos.org/";
     public static final String OPEN_SEA_URL = "https://opensea.io/";
     public static final String INFURA_URL = "https://infura.io/";
-    public static final String NERVOS_TALK_URL = "https://forums.nervos.org/";
+    public static final String CITAHUB_TALK_URL = "https://talk.citahub.com/";
     public static final String PECKSHEILD_URL = "https://peckshield.com/";
     public static final String CITA_GITHUB_URL = "https://github.com/cryptape/cita";
 
@@ -30,7 +30,7 @@ public class HttpUrls {
     public static final String TOKEN_LOGO = "https://github.com/consenlabs/token-profile/blob/master/images/%s.png?raw=true";
     public static final String TOKEN_DESC = "https://raw.githubusercontent.com/consenlabs/token-profile/master/erc20/%s.json";
     public static final String TOKEN_ERC20_DETAIL = "https://ntp.staging.cryptape.com?token=%s";
-    public static final String TOKEN_DETAIL = "https://ntp.staging.cryptape.com?coin=%s";
+    public static final String TOKEN_DETAIL = "https://ntp.cryptape.com?coin=%s";
 
     //Eth Transaction Detail
     public static final String ETH_MAINNET_TRANSACTION_DETAIL = "https://etherscan.io/tx/%s";

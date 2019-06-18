@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 import com.zhy.view.flowlayout.TagView;
+
 import org.greenrobot.eventbus.EventBus;
+
 import com.cryptape.cita_wallet.R;
 import com.cryptape.cita_wallet.event.CloseWalletInfoEvent;
 import com.cryptape.cita_wallet.event.TokenRefreshEvent;
@@ -119,7 +122,7 @@ public class ConfirmMnemonicActivity extends BaseActivity {
         findViewById(R.id.backup_complete).setOnClickListener(v -> {
             if (confirmList.equals(originList)) {
                 EventBus.getDefault().post(new WalletSaveEvent());
-                Toast.makeText(ConfirmMnemonicActivity.this, "备份成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConfirmMnemonicActivity.this, R.string.backup_successful, Toast.LENGTH_SHORT).show();
                 if (new FingerPrintController(this).isSupportFingerprint() && !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT, false) &&
                         !SharePrefUtil.getBoolean(ConstantUtil.FINGERPRINT_TIP, false)) {
                     Intent intent = new Intent(ConfirmMnemonicActivity.this, ImportFingerTipActivity.class);
